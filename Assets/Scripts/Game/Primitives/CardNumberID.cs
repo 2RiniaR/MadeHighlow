@@ -2,17 +2,17 @@
 
 namespace Game.Primitives
 {
-    public readonly struct CardTypeID
+    public readonly struct CardNumberID
     {
         private const int NoneInternalValue = 0;
         private readonly int _internalValue;
 
-        private CardTypeID(int internalValue)
+        private CardNumberID(int internalValue)
         {
             _internalValue = internalValue;
         }
 
-        public bool Equals(CardTypeID other)
+        public bool Equals(CardNumberID other)
         {
             return _internalValue == other._internalValue && _internalValue != NoneInternalValue;
         }
@@ -22,11 +22,11 @@ namespace Game.Primitives
             return _internalValue;
         }
 
-        public static CardTypeID None => new CardTypeID(NoneInternalValue);
-        public static CardTypeID FromIdentity(int identity)
+        public static CardNumberID None => new CardNumberID(NoneInternalValue);
+        public static CardNumberID FromIdentity(int identity)
         {
             if (identity == NoneInternalValue) throw new ArgumentException("The identity must not be 0.");
-            return new CardTypeID(identity);
+            return new CardNumberID(identity);
         }
     }
 }

@@ -7,6 +7,6 @@ namespace Game.Entities
     /// </summary>
     public class PlayerSetting
     {
-        public List<ICharacter> SelectedUnits { get; set; }
+        public IEnumerable<ICharacter> SelectedUnits { get; set; }
     }
 }

@@ -12,5 +12,10 @@ namespace Game.Cards
         {
             ID = id;
         }
+
+        public void Effect(IGameSession session, IUnit unit)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

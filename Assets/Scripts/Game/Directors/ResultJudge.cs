@@ -1,5 +1,5 @@
-﻿using System;
-using Game.Entities;
+﻿using Game.Entities;
+using UnityEngine;
 
 namespace Game.Directors
 {
@@ -17,7 +17,7 @@ namespace Game.Directors
 
         public void Judge()
         {
-            throw new NotImplementedException();
+            Debug.Log("WHAT SHOULD I DO?");
         }
     }
 }

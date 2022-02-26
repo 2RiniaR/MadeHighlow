@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game.Entities;
 
@@ -16,14 +16,16 @@ namespace Game.Directors
             _session = session;
         }
 
-        public IEnumerator WaitPlayersSubmission()
+        public UniTask WaitPlayersSubmission(CancellationToken cancellationToken = new CancellationToken())
         {
             var players = _session.Players;
-            return UniTask.WhenAll(players.Select(async player =>
-            {
-                var action = await player.CurrentClient.SubmitAction();
-                player.NextTurnAction = action;
-            })).ToCoroutine();
+            return UniTask.WhenAll(players.Select(player => UpdateSubmission(player, cancellationToken)));
+        }
+
+        private static async UniTask UpdateSubmission(IPlayer player, CancellationToken cancellationToken = new CancellationToken())
+        {
+            var action = await player.CurrentClient.SubmitAction(cancellationToken);
+            player.NextTurnAction = action;
         }
     }
 }

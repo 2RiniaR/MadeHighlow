@@ -3,6 +3,6 @@
     public interface IPlayerTurnResult
 
     {
-        public IPlayerTurnAction TriedAction { get; set; }
+        public IPlayerTurnAction TriedAction { get; }
     }
 }

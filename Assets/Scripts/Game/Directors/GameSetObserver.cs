@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Game.Entities;
 
 namespace Game.Directors
@@ -17,7 +17,15 @@ namespace Game.Directors
 
         public bool IsGameSet()
         {
-            throw new NotImplementedException();
+            return _session.Players.Count(IsPlayerDroppedOut) <= 1;
+        }
+
+        /// <summary>
+        /// プレイヤーが脱落したかどうかを返す。
+        /// </summary>
+        private static bool IsPlayerDroppedOut(IPlayer player)
+        {
+            return player.Units.All(unit => !unit.IsLiving());
         }
     }
 }

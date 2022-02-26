@@ -8,12 +8,18 @@ namespace Game.Units
         public UnitID ID { get; }
         public int Health { get; set; }
         public int Strength { get; set; }
+
         public FieldPosition Position { get; set; }
         public FieldDirection Direction { get; set; }
 
         public SampleUnit(UnitID id)
         {
             ID = id;
+        }
+
+        public bool IsLiving()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

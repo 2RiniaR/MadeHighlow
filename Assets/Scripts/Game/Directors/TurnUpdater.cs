@@ -14,15 +14,30 @@ namespace Game.Directors
             _session = session;
         }
 
+        /// <summary>
+        /// プレイヤーが選択した行動をもとに、ターンを更新する。
+        /// </summary>
         public void Update()
         {
-            UpdateUnits();
+            ApplyPlayerActions();
+            IncrementTurnCount();
         }
 
-        private void UpdateUnits()
+        /// <summary>
+        /// プレイヤーが選択した行動を適用する。
+        /// </summary>
+        private void ApplyPlayerActions()
         {
-            // ユニットの行動順を決める
-            // 順番に、ユニットの行動を適用する
+            var actions = new ActionOrderResolver(_session).Resolve();
+            foreach (var action in actions)
+            {
+                action.UsedCard.Effect(_session, action.ActorUnit);
+            }
+        }
+
+        private void IncrementTurnCount()
+        {
+            _session.CurrentTurn++;
         }
     }
 }

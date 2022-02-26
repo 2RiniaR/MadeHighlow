@@ -7,9 +7,11 @@ namespace Game.Entities
     public interface IPlayer
     {
         public PlayerID ID { get; }
+
         public IClient CurrentClient { get; set; }
-        public IEnumerable<IUnit> Units { get; set; }
-        public IEnumerable<ICard> Cards { get; set; }
+        public IReadOnlyCollection<IUnit> Units { get; }
+        public IReadOnlyCollection<ICard> Cards { get; }
+
         [CanBeNull] public IPlayerTurnAction NextTurnAction { get; set; }
     }
 }

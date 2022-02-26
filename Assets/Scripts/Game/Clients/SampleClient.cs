@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using Game.Entities;
 using Game.Primitives;
 
@@ -13,7 +14,7 @@ namespace Game.Clients
             ID = id;
         }
 
-        public UniTask<IPlayerTurnAction> SubmitAction()
+        public UniTask<IPlayerTurnAction> SubmitAction(CancellationToken cancellationToken = new CancellationToken())
         {
             throw new System.NotImplementedException();
         }

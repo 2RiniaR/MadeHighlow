@@ -2,9 +2,9 @@
 
 namespace Game.Entities
 {
-    public interface ICardType
+    public interface ICardNumber
     {
-        public CardTypeID ID { get; }
+        public CardNumberID ID { get; }
 
         public ICard GenerateCard();
     }

@@ -1,5 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Game.Primitives;
 
 namespace Game.Entities
@@ -7,11 +8,12 @@ namespace Game.Entities
     public interface IGameSession
     {
         public GameID ID { get; }
+        public int CurrentTurn { get; set; }
         public IEnumerable<IPlayer> Players { get; set; }
         public IField Field { get; set; }
 
         public GlobalSetting Setting { get; }
 
-        public IEnumerator Run();
+        public UniTask Run(CancellationToken cancellationToken = new CancellationToken());
     }
 }

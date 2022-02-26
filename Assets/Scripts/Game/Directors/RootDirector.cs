@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
+using Game.Entities;
 
 namespace Game.Directors
 {
@@ -7,32 +9,32 @@ namespace Game.Directors
     /// </summary>
     public class RootDirector
     {
-        private readonly PlayerSubmissionObserver _players;
-        private readonly TurnUpdater _turn;
-        private readonly GameSetObserver _gameSet;
-        private readonly ResultJudge _result;
+        private readonly IGameSession _session;
 
-        public RootDirector(PlayerSubmissionObserver players, TurnUpdater turn, GameSetObserver gameSet, ResultJudge result)
+        public RootDirector(IGameSession session)
         {
-            _players = players;
-            _turn = turn;
-            _gameSet = gameSet;
-            _result = result;
+            _session = session;
         }
 
         /// <summary>
         /// ゲームを終了まで実行するコルーチン
         /// </summary>
-        public IEnumerator Run()
+        public async UniTask Run(CancellationToken cancellationToken = new CancellationToken())
         {
+            new StateInitializer(_session).Initialize();
+
             while (true)
             {
-                yield return _players.WaitPlayersSubmission();
-                _turn.Update();
-                if (_gameSet.IsGameSet()) break;
+                await new PlayerSubmissionObserver(_session).WaitPlayersSubmission(cancellationToken);
+                new TurnUpdater(_session).Update();
+
+                if (new GameSetObserver(_session).IsGameSet())
+                {
+                    break;
+                }
             }
 
-            _result.Judge();
+            new ResultJudge(_session).Judge();
         }
     }
 }
