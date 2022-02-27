@@ -15,4 +15,5 @@
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.shader filter=lfs diff=lfs merge=lfs -text
 *.cginc filter=lfs diff=lfs merge=lfs -text
+*.gitattribute filter=lfs diff=lfs merge=lfs -text
 . !text !filter !merge !diff
