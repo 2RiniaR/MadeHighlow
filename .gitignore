@@ -156,3 +156,21 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 /Assets/Photon/PhotonUnityNetworking/Resources/
+
+# large files
+Assets/Fonts/*.asset
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.psd
+*.ai
+*.mp3
+*.wav
+*.ogg
+*.mp4
+*.mov
+*.FBX
+*.fbx
+*.blend
+*.obj
