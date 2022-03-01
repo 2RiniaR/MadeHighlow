@@ -3,14 +3,16 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameView.Strategy
+namespace GameView.Strategy.Units
 {
     public class UnitHealthHearts : MonoBehaviour
     {
         [Header("Components")]
         public GridLayoutGroup grid;
-        public Image heartPrefab;
         public GameObject overflow;
+
+        [Header("Prefabs"), Space]
+        public Image heartPrefab;
 
         [Header("Properties"), Space]
         [Min(float.Epsilon)] public float healthPerHeart = 10.0f;

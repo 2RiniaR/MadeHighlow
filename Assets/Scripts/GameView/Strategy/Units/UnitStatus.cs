@@ -3,17 +3,18 @@ using General.Components;
 using General.Components.Adapters;
 using UnityEngine;
 
-namespace GameView.Strategy
+namespace GameView.Strategy.Units
 {
-    public class UnitStatusView : MonoBehaviour
+    public class UnitStatus : MonoBehaviour
     {
         [Header("Components")]
-        [SerializeReference] public ISpriteView MainImage = new UIImageSpriteView();
-        [SerializeReference] public ISpriteView IconImage = new UIImageSpriteView();
+        [SerializeReference] public ISpriteView CharacterVisualImage = new UIImageSpriteView();
+        [SerializeReference] public ISpriteView CharacterIconImage = new UIImageSpriteView();
         [SerializeReference] public ITextView NameText = new TMPTextView();
         [SerializeReference] public ITextView HealthText = new TMPTextView();
         [SerializeReference] public ITextView StrengthText = new TMPTextView();
-        [SerializeField] public UnitHealthHearts healthHearts;
+        public UnitHealthHearts healthHearts;
+        public UnitEffectIconCollection effectIcons;
 
         [Header("States"), Space]
         public CharacterData character;
@@ -45,16 +46,22 @@ namespace GameView.Strategy
 
         private void Update()
         {
+            UpdateObjectName();
             UpdateCharacterView();
             UpdateHealthText();
             UpdateStrengthText();
         }
 
+        private void UpdateObjectName()
+        {
+            gameObject.name = $"{character.displayName}";
+        }
+
         private void UpdateCharacterView()
         {
-            NameText.Content = Character.name;
-            MainImage.Image = Character.mainImage;
-            IconImage.Image = Character.iconImage;
+            NameText.Content = Character.displayName;
+            CharacterVisualImage.Image = Character.visualImage;
+            CharacterIconImage.Image = Character.iconImage;
         }
 
         private void UpdateHealthText()
