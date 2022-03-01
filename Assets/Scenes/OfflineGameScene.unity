@@ -244,6 +244,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FieldViewer
       objectReference: {fileID: 0}
+    - target: {fileID: 2183718631515049081, guid: 4a844d868d003aa44af81c50c9342f37, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2183718631515049082, guid: 4a844d868d003aa44af81c50c9342f37, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -300,6 +304,10 @@ PrefabInstance:
     - target: {fileID: 2262992817760646273, guid: fcdde8acd50eb024cbf7a56520aae2b7, type: 3}
       propertyPath: m_Name
       value: ActionPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 2262992817760646273, guid: fcdde8acd50eb024cbf7a56520aae2b7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2262992817760646302, guid: fcdde8acd50eb024cbf7a56520aae2b7, type: 3}
       propertyPath: m_RootOrder
@@ -2924,6 +2932,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1603265606}
     m_Modifications:
+    - target: {fileID: 3073580379198188030, guid: fbf6dfab7bef4b34c92d9cb2d40a5736, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3073580379198188030, guid: fbf6dfab7bef4b34c92d9cb2d40a5736, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.875
+      objectReference: {fileID: 0}
     - target: {fileID: 5950509546279261496, guid: fbf6dfab7bef4b34c92d9cb2d40a5736, type: 3}
       propertyPath: m_Name
       value: World
@@ -3029,6 +3045,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 6530129580016505133, guid: dd7f9c09f9706164182081c730ea249d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd7f9c09f9706164182081c730ea249d, type: 3}
 --- !u!1001 &7086131444231775866
@@ -3041,6 +3061,10 @@ PrefabInstance:
     - target: {fileID: 7086131445189153140, guid: be0e281a2b9c5ed49a18732ea8f4a59a, type: 3}
       propertyPath: m_Name
       value: Manual
+      objectReference: {fileID: 0}
+    - target: {fileID: 7086131445189153140, guid: be0e281a2b9c5ed49a18732ea8f4a59a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7086131445189153141, guid: be0e281a2b9c5ed49a18732ea8f4a59a, type: 3}
       propertyPath: m_RootOrder
@@ -3098,6 +3122,10 @@ PrefabInstance:
     - target: {fileID: 7271630229922240516, guid: c258dbedf8dfff749a3310eb773bd2b2, type: 3}
       propertyPath: m_Name
       value: RobotChat
+      objectReference: {fileID: 0}
+    - target: {fileID: 7271630229922240516, guid: c258dbedf8dfff749a3310eb773bd2b2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7271630229922240517, guid: c258dbedf8dfff749a3310eb773bd2b2, type: 3}
       propertyPath: m_RootOrder
