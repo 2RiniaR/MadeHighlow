@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0da4d6fec2444c3b0fb4cc8101fc641, type: 3}
-  m_Name: Regeneration
+  m_Script: {fileID: 11500000, guid: f67a33219a4b45df823dac442ab6cde5, type: 3}
+  m_Name: Shinobi
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 1bc152adfe6ce55409df3b57202f2678, type: 3}
-  displayName: "\u81EA\u52D5\u56DE\u5FA9"
+  visualImage: {fileID: 21300000, guid: 18a104e1d2fda364b9df20554332463e, type: 3}
+  iconImage: {fileID: 21300000, guid: 11d81c769bd78cd4abe744e0a25bf062, type: 3}
+  displayName: "\u30B7\u30CE\u30D3"

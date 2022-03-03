@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,7 @@ namespace GameView.Strategy.Units
         public int initialHealth;
         public int currentHealth;
 
+        private RectTransform _rectTransform;
         private List<Image> _hearts;
 
         /// <summary>
@@ -52,6 +54,11 @@ namespace GameView.Strategy.Units
         private void Awake()
         {
             _hearts = new List<Image>();
+        }
+
+        private void Start()
+        {
+            _rectTransform = GetComponent<RectTransform>();
         }
 
         private void Update()
@@ -101,6 +108,8 @@ namespace GameView.Strategy.Units
             }
 
             grid.constraintCount = column;
+            var xMargin = (_rectTransform.rect.width - column * grid.cellSize.x) / (column - 1);
+            grid.spacing = new Vector2(Mathf.Min(xMargin, 0f), grid.spacing.y);
         }
 
         /// <summary>
@@ -139,7 +148,7 @@ namespace GameView.Strategy.Units
             }
 
             var limit = column * row * healthPerHeart;
-            overflow.SetActive(limit > currentHealth);
+            overflow.SetActive(limit < currentHealth);
         }
     }
 }

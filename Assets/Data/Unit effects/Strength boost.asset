@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0da4d6fec2444c3b0fb4cc8101fc641, type: 3}
   m_Name: Strength boost
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 603a96baa8300884f8a7704ab73e5535, type: 3}
   displayName: "\u653B\u6483\u529B\u30A2\u30C3\u30D7"

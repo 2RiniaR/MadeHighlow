@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f67a33219a4b45df823dac442ab6cde5, type: 3}
-  m_Name: Slash
+  m_Name: Medica
   m_EditorClassIdentifier: 
-  visualImage: {fileID: 21300000, guid: 5e747aa58c15dd444b02495d5c486b00, type: 3}
-  iconImage: {fileID: 21300000, guid: 268ae8c155ffbd647a8db6912b0ca038, type: 3}
-  displayName: "\u30B9\u30E9\u30C3\u30B7\u30E5"
+  visualImage: {fileID: 21300000, guid: bf91f5b7dd0182944b617180523e7128, type: 3}
+  iconImage: {fileID: 21300000, guid: e27bd71628237da469198ece7d3c5c76, type: 3}
+  displayName: "\u30E1\u30C7\u30A3\u30AB"

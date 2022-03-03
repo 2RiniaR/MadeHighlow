@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0da4d6fec2444c3b0fb4cc8101fc641, type: 3}
   m_Name: Poison
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d94c6fccc4ed6874e92a6f6324e43168, type: 3}
   displayName: "\u6BD2"
