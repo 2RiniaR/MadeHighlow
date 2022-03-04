@@ -1,4 +1,5 @@
-﻿using GameView.Strategy.Players;
+﻿using GameView.Strategy.Cards;
+using GameView.Strategy.Players;
 using GameView.Strategy.Units;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace GameView.Strategy
         [Header("Components")]
         public UnitStatusCollection units;
         public PlayerStatusCollection players;
+        public CardCollection cards;
         public TimeLimit timeLimit;
         public TurnCount turnCount;
     }
