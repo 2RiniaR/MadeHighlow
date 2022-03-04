@@ -9,5 +9,7 @@ namespace GameView.Strategy
         [Header("Components")]
         public UnitStatusCollection units;
         public PlayerStatusCollection players;
+        public TimeLimit timeLimit;
+        public TurnCount turnCount;
     }
 }
