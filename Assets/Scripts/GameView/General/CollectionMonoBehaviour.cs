@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameView.General
 {
-    public class CollectionMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
+    public class CollectionMonoBehaviour<T> : MonoBehaviour where T : Component
     {
         [Header("Prefabs")]
         public T original;

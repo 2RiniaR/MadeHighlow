@@ -7,7 +7,7 @@ namespace GameView
     public class GameViewRunner : MonoBehaviour
     {
         [Header("Components")]
-        public StrategyView strategy;
+        public StrategyWindow strategy;
 
         [Header("States"), Space]
         public CharacterData character1;
