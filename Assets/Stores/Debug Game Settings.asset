@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c490bdba96404fbe4dc5b784efb4ac, type: 3}
+  m_Name: Debug Game Settings
+  m_EditorClassIdentifier: 
+  field: {fileID: 6569250302509305575, guid: 5e098a1c32062ee4c9cfdc80c03bdb51, type: 3}
+  players:
+  - name: "\u308C\u3044\u305B\u3044"
+    units:
+    - {fileID: 11400000, guid: 61d30aebf3c438c448f2cd394fc7b3d2, type: 2}
+    - {fileID: 11400000, guid: 96a8366d4b49dbb44bef5de55f9ce1a3, type: 2}
+    - {fileID: 11400000, guid: 286abccda0de2a740b806a159f75869e, type: 2}
+    - {fileID: 11400000, guid: 8260a685e74aaaf4085895ad9748601e, type: 2}
+  - name: "\u3046\u3063\u304B\u308A"
+    units:
+    - {fileID: 11400000, guid: 96a8366d4b49dbb44bef5de55f9ce1a3, type: 2}
+    - {fileID: 11400000, guid: 96a8366d4b49dbb44bef5de55f9ce1a3, type: 2}
+    - {fileID: 11400000, guid: 8260a685e74aaaf4085895ad9748601e, type: 2}
+    - {fileID: 11400000, guid: 61d30aebf3c438c448f2cd394fc7b3d2, type: 2}
+  - name: "\u305B\u3063\u304B\u3061"
+    units:
+    - {fileID: 11400000, guid: 8260a685e74aaaf4085895ad9748601e, type: 2}
+    - {fileID: 11400000, guid: 8260a685e74aaaf4085895ad9748601e, type: 2}
+    - {fileID: 11400000, guid: 286abccda0de2a740b806a159f75869e, type: 2}
+    - {fileID: 11400000, guid: 61d30aebf3c438c448f2cd394fc7b3d2, type: 2}
+  - name: "\u30AC\u30C1\u30D7\u30ED"
+    units:
+    - {fileID: 11400000, guid: 96a8366d4b49dbb44bef5de55f9ce1a3, type: 2}
+    - {fileID: 11400000, guid: 286abccda0de2a740b806a159f75869e, type: 2}
+    - {fileID: 11400000, guid: 286abccda0de2a740b806a159f75869e, type: 2}
+    - {fileID: 11400000, guid: 286abccda0de2a740b806a159f75869e, type: 2}

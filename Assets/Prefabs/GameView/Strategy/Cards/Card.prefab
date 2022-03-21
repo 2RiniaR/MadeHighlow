@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6252619679301382155}
   - component: {fileID: 5541101535278543597}
   m_Layer: 0
-  m_Name: Base image
+  m_Name: Base Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,9 +85,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7512035767094671751}
   - component: {fileID: 2498291261700873052}
+  - component: {fileID: 6441823486565496936}
   m_Layer: 0
   m_Name: Card
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardImage:
     id: 0
+  id: 0
   card: {fileID: 0}
   references:
     version: 1
@@ -133,3 +135,15 @@ MonoBehaviour:
       type: {class: UIImageSpriteView, ns: General.Components.Adapters, asm: Assembly-CSharp}
       data:
         image: {fileID: 5541101535278543597}
+--- !u!114 &6441823486565496936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6836743689183328810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad2ffe986f544b6b5625a1e151c91a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
