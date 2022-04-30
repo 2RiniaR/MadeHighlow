@@ -1,18 +1,17 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Events;
-using RineaR.MadeHighlow.Engine.Events.BigBang;
-using RineaR.MadeHighlow.Engine.Subjects;
 
-namespace RineaR.MadeHighlow.Engine.Actions.BigBang
+namespace RineaR.MadeHighlow.Actions.BigBang
 {
     public record BigBangAction() : Action(ActionType.BigBang)
     {
         [NotNull] public World World { get; init; } = new();
 
-        public override EventTimeline Run(in Session session)
+        public BigBangEvent Run(in Session session)
         {
+            if (!session.Events.Items.IsEmpty) return BigBangEvent.FailedByNotEmpty;
+
             var generatedWorld = new WorldFormatter().Format(World);
-            return new EventTimeline(new BigBangEvent { GeneratedWorld = generatedWorld });
+            return new SucceedBigBangEvent { GeneratedWorld = generatedWorld };
         }
     }
 }

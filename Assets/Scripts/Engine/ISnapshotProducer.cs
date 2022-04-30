@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
 
-namespace RineaR.MadeHighlow.Engine
+namespace RineaR.MadeHighlow
 {
     public interface ISnapshotProducer
     {

@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Players;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Players
+namespace RineaR.MadeHighlow.Queries.Players
 {
     public record UpdatePlayerQuery
     {
@@ -14,7 +12,8 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players
         {
             return world with
             {
-                Players = world.Players.ReplaceItem(player => player.ID == Locator.PlayerID, Value),
+                Players = world.Players.Items.ReplaceItem(player => player.ID == Locator.PlayerID, Value)
+                    .ToValueObjectList(),
             };
         }
     }

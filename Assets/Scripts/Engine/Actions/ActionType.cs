@@ -1,18 +1,22 @@
-﻿namespace RineaR.MadeHighlow.Engine.Actions
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     「行動」の種別
     /// </summary>
     public enum ActionType
     {
+        AddComponent,
         BigBang,
-        Command,
-        ComponentAddition,
-        Disappearance,
-        Generation,
-        Interaction,
+        CommandUnit,
+        Destroy,
+        Generate,
+        Interact,
         SupplyCard,
-        TurnIncrement,
-        Walking,
+        IncrementTurn,
+        Walk,
+        Teleport,
+        ActuateUnit,
+        BreakUnit,
+        CharmUnit,
     }
 }

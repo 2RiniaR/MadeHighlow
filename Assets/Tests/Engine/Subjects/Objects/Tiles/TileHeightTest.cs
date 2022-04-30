@@ -1,29 +1,25 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Tiles
+namespace RineaR.MadeHighlow
 {
     public class TileHeightTest
     {
         #region Tower
 
         [Test]
-        public void Tower_Get_ReturnsThatTypeIsCounterpart()
+        public void Tower_Always_ReturnsCounterpartType()
         {
-            var height = TileHeight.Tower;
+            var actual = TileHeight.Tower;
 
-            var actual = height.Type;
-
-            Assert.That(actual, Is.EqualTo(TileHeightType.Tower));
+            Assert.That(actual.Type, Is.EqualTo(TileHeightType.Tower));
         }
 
         [Test]
-        public void Tower_Get_ReturnsThatPlaceableIsFalse()
+        public void Tower_Always_ReturnsNoPlaceable()
         {
-            var height = TileHeight.Tower;
+            var actual = TileHeight.Tower;
 
-            var actual = height.Placeable;
-
-            Assert.That(actual, Is.False);
+            Assert.That(actual.Placeable, Is.False);
         }
 
         #endregion
@@ -31,23 +27,19 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Tiles
         #region Abyss
 
         [Test]
-        public void Abyss_Get_ReturnsThatPlaceableIsFalse()
+        public void Abyss_Always_ReturnsNoPlaceable()
         {
-            var height = TileHeight.Abyss;
+            var actual = TileHeight.Abyss;
 
-            var actual = height.Type;
-
-            Assert.That(actual, Is.EqualTo(TileHeightType.Abyss));
+            Assert.That(actual.Type, Is.EqualTo(TileHeightType.Abyss));
         }
 
         [Test]
-        public void Abyss_Get_ReturnsThatTypeIsCounterpart()
+        public void Abyss_Always_ReturnsCounterpartType()
         {
-            var height = TileHeight.Abyss;
+            var actual = TileHeight.Abyss;
 
-            var actual = height.Placeable;
-
-            Assert.That(actual, Is.False);
+            Assert.That(actual.Placeable, Is.False);
         }
 
         #endregion

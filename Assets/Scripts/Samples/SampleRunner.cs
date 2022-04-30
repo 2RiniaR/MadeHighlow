@@ -4,7 +4,7 @@ using RineaR.MadeHighlow.Directors;
 using RineaR.MadeHighlow.Directors.Environments;
 using UnityEngine;
 
-namespace MadeHighlow.Samples
+namespace RineaR.MadeHighlow.Samples
 {
     public class SampleRunner
     {

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Components
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「エンティティの効果」の種類

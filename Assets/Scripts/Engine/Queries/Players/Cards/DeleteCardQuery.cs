@@ -1,9 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Cards;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
+namespace RineaR.MadeHighlow.Queries.Players.Cards
 {
     public record DeleteCardQuery
     {

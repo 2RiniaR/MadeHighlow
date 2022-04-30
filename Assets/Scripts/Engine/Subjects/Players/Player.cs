@@ -1,8 +1,6 @@
-﻿using System.Collections.Immutable;
-using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Cards;
+﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Players
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「プレイヤー」を表現する
@@ -18,6 +16,6 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Players
         ///     デッキにあるカード
         /// </summary>
         [NotNull]
-        public ImmutableList<Card> Cards { get; init; } = ImmutableList<Card>.Empty;
+        public ValueObjectList<Card> Cards { get; init; } = ValueObjectList<Card>.Empty;
     }
 }

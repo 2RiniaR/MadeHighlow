@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class DistanceTest
     {
@@ -9,23 +9,19 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         [Test]
         [TestCase(0)]
         [TestCase(1)]
-        public void Constructor_Positive_ReturnsThatValueIsSame(int value)
+        public void Constructor_NonNegative_ReturnsSame(int value)
         {
-            var distance = new Distance(value);
+            var actual = new Distance(value);
 
-            var actual = distance.Value;
-
-            Assert.That(actual, Is.EqualTo(value));
+            Assert.That(actual.Value, Is.EqualTo(value));
         }
 
         [Test]
-        public void Constructor_LessThanZero_ReturnsThatValueIsZero()
+        public void Constructor_Negative_ReturnsZero()
         {
-            var distance = new Distance(-1);
+            var actual = new Distance(-1);
 
-            var actual = distance.Value;
-
-            Assert.That(actual, Is.EqualTo(0));
+            Assert.That(actual.Value, Is.EqualTo(0));
         }
 
         #endregion

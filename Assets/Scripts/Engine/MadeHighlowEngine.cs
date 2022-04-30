@@ -1,10 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Environments;
-using RineaR.MadeHighlow.Engine.Events;
-using Action = RineaR.MadeHighlow.Engine.Actions.Action;
+using RineaR.MadeHighlow.Actions.AddComponent;
+using RineaR.MadeHighlow.Actions.BigBang;
 
-namespace RineaR.MadeHighlow.Engine
+namespace RineaR.MadeHighlow
 {
     public class MadeHighlowEngine
     {
@@ -19,14 +18,64 @@ namespace RineaR.MadeHighlow.Engine
             ComponentsRegistration = componentsRegistration;
         }
 
-        [NotNull] public ISessionHolder SessionHolder { get; }
-        [NotNull] public ISnapshotCache SnapshotCache { get; }
-        [NotNull] public ComponentsRegistration ComponentsRegistration { get; }
+        [NotNull] private ISessionHolder SessionHolder { get; }
+        [NotNull] private ISnapshotCache SnapshotCache { get; }
+        [NotNull] private ComponentsRegistration ComponentsRegistration { get; }
 
         [NotNull]
-        public EventTimeline RunAction([NotNull] Action action)
+        public AddComponentEvent AddComponent([NotNull] ObjectLocator target, [NotNull] Component component)
         {
             throw new NotImplementedException();
+        }
+
+        [NotNull]
+        public BigBangEvent BigBang([NotNull] World world)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void BreakUnit([NotNull] ObjectLocator target)
+        {
+        }
+
+        public void CharmUnit([NotNull] ObjectLocator target)
+        {
+        }
+
+        public void CommandUnit([NotNull] ObjectLocator target)
+        {
+        }
+
+        public void Destroy([NotNull] ObjectLocator target)
+        {
+        }
+
+        public void Generate([NotNull] Object newObject)
+        {
+        }
+
+        public void Interact()
+        {
+        }
+
+        public void ActuateUnit()
+        {
+        }
+
+        public void SupplyCard()
+        {
+        }
+
+        public void IncrementTurn()
+        {
+        }
+
+        public void Walk()
+        {
+        }
+
+        public void Teleport()
+        {
         }
     }
 }

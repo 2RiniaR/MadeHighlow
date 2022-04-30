@@ -1,10 +1,6 @@
-﻿using System.Collections.Immutable;
-using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Components;
+﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Objects.Components
+namespace RineaR.MadeHighlow.Queries.Objects.Components
 {
     public record CreateComponentQuery
     {
@@ -18,7 +14,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Objects.Components
             return new CreateMultiComponentsQuery
             {
                 ParentLocator = ParentLocator,
-                Values = ImmutableList.Create(Value),
+                Values = ValueObjectList.Create(Value),
             }.Run(world);
         }
     }

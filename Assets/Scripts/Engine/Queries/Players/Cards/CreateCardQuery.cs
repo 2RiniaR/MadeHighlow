@@ -1,10 +1,7 @@
 ﻿using System.Collections.Immutable;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Cards;
-using RineaR.MadeHighlow.Engine.Subjects.Players;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
+namespace RineaR.MadeHighlow.Queries.Players.Cards
 {
     public record CreateCardQuery
     {
@@ -17,7 +14,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
             return new CreateMultiCardsQuery
             {
                 ParentLocator = ParentLocator,
-                Values = ImmutableList.Create(Value),
+                Values = ImmutableList.Create(Value).ToValueObjectList(),
             }.Run(world);
         }
     }

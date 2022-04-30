@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
+namespace RineaR.MadeHighlow
 {
     public class UnitHealthTest
     {
@@ -10,33 +10,27 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
         [TestCase(UnitHealth.MinValue)]
         [TestCase(UnitHealth.MinValue + 1)]
         [TestCase(UnitHealth.MaxValue)]
-        public void Constructor_InRange_ReturnsThatValueIsSame(int value)
+        public void Constructor_Valid_ReturnsSame(int value)
         {
-            var health = new UnitHealth(value);
+            var actual = new UnitHealth(value);
 
-            var actual = health.Value;
-
-            Assert.That(actual, Is.EqualTo(value));
+            Assert.That(actual.Value, Is.EqualTo(value));
         }
 
         [Test]
-        public void Constructor_LessThanMin_ReturnsThatValueIsMin()
+        public void Constructor_LessThanMin_ReturnsMin()
         {
-            var health = new UnitHealth(UnitHealth.MinValue - 1);
+            var actual = new UnitHealth(UnitHealth.MinValue - 1);
 
-            var actual = health.Value;
-
-            Assert.That(actual, Is.EqualTo(UnitHealth.MinValue));
+            Assert.That(actual.Value, Is.EqualTo(UnitHealth.MinValue));
         }
 
         [Test]
-        public void Constructor_GreaterThanMax_ReturnsThatValueIsMax()
+        public void Constructor_GreaterThanMax_ReturnsMax()
         {
-            var health = new UnitHealth(UnitHealth.MaxValue + 1);
+            var actual = new UnitHealth(UnitHealth.MaxValue + 1);
 
-            var actual = health.Value;
-
-            Assert.That(actual, Is.EqualTo(UnitHealth.MaxValue));
+            Assert.That(actual.Value, Is.EqualTo(UnitHealth.MaxValue));
         }
 
         #endregion

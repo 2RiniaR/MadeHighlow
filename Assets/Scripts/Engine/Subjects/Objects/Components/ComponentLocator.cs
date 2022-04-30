@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Components
+﻿namespace RineaR.MadeHighlow
 {
     public record ComponentLocator : ObjectLocator
     {

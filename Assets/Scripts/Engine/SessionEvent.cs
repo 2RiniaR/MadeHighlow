@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Events;
+using RineaR.MadeHighlow.Actions;
 
-namespace RineaR.MadeHighlow.Engine
+namespace RineaR.MadeHighlow
 {
     public record SessionEvent(
         ID<SessionEvent> ID,

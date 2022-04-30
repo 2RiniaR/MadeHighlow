@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units.Personalities
+namespace RineaR.MadeHighlow.Personalities
 {
     /// <summary>
     ///     「ユニットの性格」の種類

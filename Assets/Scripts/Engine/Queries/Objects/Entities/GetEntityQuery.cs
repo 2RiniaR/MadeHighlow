@@ -1,10 +1,7 @@
-﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Exceptions;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Entities;
+﻿using System;
+using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Objects.Entities
+namespace RineaR.MadeHighlow.Queries.Objects.Entities
 {
     public record GetEntityQuery
     {
@@ -14,8 +11,8 @@ namespace RineaR.MadeHighlow.Engine.Queries.Objects.Entities
         public Entity Run([NotNull] in World world)
         {
             var foundObject = new GetObjectQuery { Locator = Locator }.Run(world);
-            if (foundObject.ObjectType != ObjectType.Entity) throw new NotExistException();
-            return foundObject as Entity ?? throw new DataTypeContradictionException();
+            if (foundObject.ObjectType != ObjectType.Entity) throw new NullReferenceException();
+            return (Entity)foundObject;
         }
     }
 }

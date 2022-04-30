@@ -1,8 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Units.Personalities;
-using RineaR.MadeHighlow.Engine.Subjects.Players;
+using RineaR.MadeHighlow.Personalities;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「ユニット」を表現する
@@ -35,8 +34,8 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
         /// <summary>
         ///     性格
         /// </summary>
-        [CanBeNull]
-        public Personality Personality { get; init; } = null;
+        [NotNull]
+        public Personality Personality { get; init; } = new NonePersonality();
 
         /// <summary>
         ///     所属しているプレイヤーのID
@@ -47,6 +46,6 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
         ///     現在受けている命令
         /// </summary>
         [CanBeNull]
-        public CommandOperation CurrentOperation { get; init; } = null;
+        public CommandOperation CurrentOperation { get; init; }
     }
 }

@@ -1,7 +1,4 @@
-﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Events;
-
-namespace RineaR.MadeHighlow.Engine.Actions
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     ゲームの状態に影響を及ぼす「行動」
@@ -13,8 +10,5 @@ namespace RineaR.MadeHighlow.Engine.Actions
         ///     「行動」の種別
         /// </summary>
         public ActionType Type { get; } = Type;
-
-        [NotNull]
-        public abstract EventTimeline Run([NotNull] in Session session);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Expressions
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「期限」
@@ -19,5 +21,11 @@
         ///     無期限の「期限」
         /// </summary>
         public static Duration Unlimited => new(DurationType.Unlimited);
+
+        [CanBeNull]
+        public virtual Duration Decrement()
+        {
+            return this;
+        }
     }
 }

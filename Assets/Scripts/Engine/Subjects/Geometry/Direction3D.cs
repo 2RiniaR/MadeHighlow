@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「フィールド」上での方向

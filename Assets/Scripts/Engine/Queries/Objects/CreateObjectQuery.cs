@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Objects
+namespace RineaR.MadeHighlow.Queries.Objects
 {
     public record CreateObjectQuery
     {
@@ -14,7 +12,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Objects
             if (Value == null) return world;
             return world with
             {
-                Objects = world.Objects.Add(Value),
+                Objects = world.Objects.Items.Add(Value).ToValueObjectList(),
             };
         }
     }

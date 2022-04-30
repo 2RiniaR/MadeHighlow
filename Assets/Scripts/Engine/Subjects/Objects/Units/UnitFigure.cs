@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
+﻿namespace RineaR.MadeHighlow
 {
     public enum UnitFigure
     {

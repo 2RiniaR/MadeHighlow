@@ -1,4 +1,4 @@
-﻿using RineaR.MadeHighlow.Engine.Subjects.Objects.Units.Personalities;
+﻿using RineaR.MadeHighlow.Personalities;
 
 namespace RineaR.MadeHighlow.Components.Personalities
 {

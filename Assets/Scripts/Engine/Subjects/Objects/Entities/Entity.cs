@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Entities
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「エンティティ」

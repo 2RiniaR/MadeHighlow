@@ -1,19 +1,17 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class HeightTest
     {
         #region AddOperator
 
         [Test]
-        public void AddOperator_Int_ReturnsThatValueIsAddedValue()
+        public void AddOperator_Always_ReturnsAdded()
         {
-            var height = new Height() + 1;
+            var actual = new Height(1) + 1;
 
-            var actual = height.Value;
-
-            Assert.That(actual, Is.EqualTo(1));
+            Assert.That(actual, Is.EqualTo(new Height(2)));
         }
 
         #endregion
@@ -21,13 +19,11 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region SubtractOperator
 
         [Test]
-        public void SubtractOperator_Int_ReturnsThatValueIsSubtractedValue()
+        public void SubtractOperator_Always_ReturnsSubtracted()
         {
-            var height = new Height(2) - 1;
+            var actual = new Height(2) - 1;
 
-            var actual = height.Value;
-
-            Assert.That(actual, Is.EqualTo(1));
+            Assert.That(actual, Is.EqualTo(new Height(1)));
         }
 
         #endregion
@@ -38,33 +34,27 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         [TestCase(Height.MinValue)]
         [TestCase(Height.MinValue + 1)]
         [TestCase(Height.MaxValue)]
-        public void Constructor_InRange_ReturnsThatValueIsSame(int value)
+        public void Constructor_Valid_ReturnsSame(int value)
         {
-            var height = new Height(value);
+            var actual = new Height(value);
 
-            var actual = height.Value;
-
-            Assert.That(actual, Is.EqualTo(value));
+            Assert.That(actual.Value, Is.EqualTo(value));
         }
 
         [Test]
-        public void Constructor_LessThanMin_ReturnsThatValueIsMin()
+        public void Constructor_LessThanMin_ReturnsMin()
         {
-            var height = new Height(Height.MinValue - 1);
+            var actual = new Height(Height.MinValue - 1);
 
-            var actual = height.Value;
-
-            Assert.That(actual, Is.EqualTo(Height.MinValue));
+            Assert.That(actual.Value, Is.EqualTo(Height.MinValue));
         }
 
         [Test]
-        public void Constructor_GreaterThanMax_ReturnsThatValueIsMax()
+        public void Constructor_GreaterThanMax_ReturnsMax()
         {
-            var height = new Height(Height.MaxValue + 1);
+            var actual = new Height(Height.MaxValue + 1);
 
-            var actual = height.Value;
-
-            Assert.That(actual, Is.EqualTo(Height.MaxValue));
+            Assert.That(actual.Value, Is.EqualTo(Height.MaxValue));
         }
 
         #endregion

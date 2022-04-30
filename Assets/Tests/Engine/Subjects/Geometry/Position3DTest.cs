@@ -1,13 +1,13 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class Position3DTest
     {
         #region Zero
 
         [Test]
-        public void Zero_Get_ReturnsThatAllAxesAreZero()
+        public void Zero_Always_ReturnsAllZero()
         {
             var actual = Position3D.Zero;
 
@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region AddOperator
 
         [Test]
-        public void AddOperator_Vector3D_ReturnsThatAllAxesAreAddedValue()
+        public void AddOperator_Always_ReturnsAllAdded()
         {
             var position = new Position3D { X = new Horizontal(1), Y = new Vertical(2), Z = new Height(1) };
             var vector = new Vector3D { X = 3, Y = 4, Z = 1 };
@@ -40,7 +40,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region SubtractOperator
 
         [Test]
-        public void SubtractOperator_Vector3D_ReturnsThatAllAxesAreSubtractedValue()
+        public void SubtractOperator_Always_ReturnsAllSubtracted()
         {
             var position = new Position3D { X = new Horizontal(1), Y = new Vertical(2), Z = new Height(1) };
             var vector = new Vector3D { X = 3, Y = 4, Z = 1 };
@@ -58,7 +58,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region MoveTo
 
         [Test]
-        public void MoveTo_Values_ReturnsThatMovedPosition()
+        public void MoveTo_Always_ReturnsMoved()
         {
             var position = new Position3D { X = new Horizontal(1), Y = new Vertical(2), Z = new Height(1) };
             var direction = Direction3D.XPositive;
@@ -77,7 +77,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region To2D
 
         [Test]
-        public void To2D_Get_ReturnsThatAllAxesAreSameValue()
+        public void To2D_Always_ReturnsAllSame()
         {
             var position = new Position3D { X = new Horizontal(1), Y = new Vertical(2), Z = new Height(1) };
 

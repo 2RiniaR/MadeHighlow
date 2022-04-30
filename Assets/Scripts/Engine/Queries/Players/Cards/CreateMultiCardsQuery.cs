@@ -1,15 +1,11 @@
-﻿using System.Collections.Immutable;
-using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Cards;
-using RineaR.MadeHighlow.Engine.Subjects.Players;
+﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
+namespace RineaR.MadeHighlow.Queries.Players.Cards
 {
     public record CreateMultiCardsQuery
     {
         [NotNull] public PlayerLocator ParentLocator { get; init; } = new();
-        [NotNull] [ItemNotNull] public ImmutableList<Card> Values { get; init; } = ImmutableList<Card>.Empty;
+        [NotNull] [ItemNotNull] public ValueObjectList<Card> Values { get; init; } = ValueObjectList<Card>.Empty;
 
         [NotNull]
         public World Run([NotNull] in World world)
@@ -20,7 +16,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
                 Locator = ParentLocator,
                 Value = player with
                 {
-                    Cards = player.Cards.AddRange(Values),
+                    Cards = player.Cards.Items.AddRange(Values.Items).ToValueObjectList(),
                 },
             }.Run(world);
         }

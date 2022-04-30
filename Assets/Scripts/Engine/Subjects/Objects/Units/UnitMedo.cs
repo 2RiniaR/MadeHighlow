@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     ユニットの「メド」

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Cards.Commands
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「カード」の指令

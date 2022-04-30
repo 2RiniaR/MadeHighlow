@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Cards
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     カードの種別。

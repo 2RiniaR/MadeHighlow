@@ -1,41 +1,59 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Expressions
+namespace RineaR.MadeHighlow
 {
     public class TurnDurationTest
     {
         #region Construtor
 
         [Test]
-        public void Constructor_Get_ReturnsThatTypeIsCounterpart()
+        public void Constructor_Always_ReturnsCounterpartType()
         {
-            var duration = new TurnDuration();
+            var actual = new TurnDuration();
 
-            var actual = duration.Type;
-
-            Assert.That(actual, Is.EqualTo(DurationType.FromTurn));
+            Assert.That(actual.Type, Is.EqualTo(DurationType.FromTurn));
         }
 
         [Test]
         [TestCase(0)]
         [TestCase(1)]
-        public void Constructor_Positive_ReturnsThatValueIsSame(int value)
+        public void Constructor_NonNegative_ReturnsSame(int value)
         {
-            var duration = new TurnDuration(value);
+            var actual = new TurnDuration(value);
 
-            var actual = duration.Value;
-
-            Assert.That(actual, Is.EqualTo(value));
+            Assert.That(actual.Value, Is.EqualTo(value));
         }
 
         [Test]
-        public void Constructor_LessThanZero_ReturnsThatValueIsZero()
+        public void Constructor_Negative_ReturnsZero()
         {
-            var duration = new TurnDuration(-1);
+            var actual = new TurnDuration(-1);
 
-            var actual = duration.Value;
+            Assert.That(actual.Value, Is.EqualTo(0));
+        }
 
-            Assert.That(actual, Is.EqualTo(0));
+        #endregion
+
+        #region Decrement
+
+        [Test]
+        public void Decrement_Positive_ReturnsSubtracted()
+        {
+            var duration = new TurnDuration(1);
+
+            var actual = duration.Decrement();
+
+            Assert.That(actual, Is.EqualTo(new TurnDuration()));
+        }
+
+        [Test]
+        public void Decrement_Zero_ReturnsNull()
+        {
+            var duration = new TurnDuration();
+
+            var actual = duration.Decrement();
+
+            Assert.That(actual, Is.Null);
         }
 
         #endregion

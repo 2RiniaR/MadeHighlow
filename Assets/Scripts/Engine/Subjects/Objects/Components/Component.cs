@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Expressions;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Components
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「エンティティ」の効果

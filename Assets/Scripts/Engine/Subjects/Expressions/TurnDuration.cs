@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Expressions
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     ターン数指定の「期限」
@@ -11,5 +11,11 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Expressions
         ///     ターン数
         /// </summary>
         public int Value { get; } = Math.Max(0, Value);
+
+        public override Duration Decrement()
+        {
+            if (Value == 0) return null;
+            return new TurnDuration(Value - 1);
+        }
     }
 }

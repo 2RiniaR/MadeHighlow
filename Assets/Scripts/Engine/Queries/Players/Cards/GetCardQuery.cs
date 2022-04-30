@@ -1,9 +1,7 @@
-﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Exceptions;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Cards;
+﻿using System;
+using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
+namespace RineaR.MadeHighlow.Queries.Players.Cards
 {
     public record GetCardQuery
     {
@@ -13,7 +11,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players.Cards
         public Card Run([NotNull] in World world)
         {
             return new GetPlayerQuery { Locator = Locator }.Run(world)
-                .Cards.Find(card => card.ID == Locator.CardID) ?? throw new NotExistException();
+                .Cards.Items.Find(card => card.ID == Locator.CardID) ?? throw new NullReferenceException();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using RineaR.MadeHighlow.Engine.Subjects.Objects.Components;
-
-namespace RineaR.MadeHighlow.Components.UnitEffects
+﻿namespace RineaR.MadeHighlow.Components.UnitEffects
 {
     /// <summary>
     ///     「毒」

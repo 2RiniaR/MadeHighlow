@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class Direction2DTest
     {

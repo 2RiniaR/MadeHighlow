@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Geometry;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Tiles
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     タイル上の「高さ」のうち、「地面」

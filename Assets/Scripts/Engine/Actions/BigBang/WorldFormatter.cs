@@ -1,32 +1,26 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Exceptions;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Entities;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Tiles;
-using RineaR.MadeHighlow.Engine.Subjects.Players;
 
-namespace RineaR.MadeHighlow.Engine.Actions.BigBang
+namespace RineaR.MadeHighlow.Actions.BigBang
 {
     public class WorldFormatter
     {
         [NotNull]
         public World Format([NotNull] in World world)
         {
-            var objects = ImmutableList.CreateBuilder<Object>();
+            var objects = new List<Object>();
 
-            foreach (var @object in world.Objects)
+            foreach (var @object in world.Objects.Items)
                 if (@object.ObjectType == ObjectType.Tile)
-                    objects.Add(Format(@object as Tile ?? throw new DataTypeContradictionException()));
+                    objects.Add(Format((Tile)@object));
                 else if (@object.ObjectType == ObjectType.Entity)
-                    objects.Add(Format(@object as Entity ?? throw new DataTypeContradictionException()));
+                    objects.Add(Format((Entity)@object));
 
             return new World
             {
-                Players = world.Players.Select(Format).ToImmutableList(),
-                Objects = objects.ToImmutable(),
+                Players = world.Players.Items.Select(Format).ToValueObjectList(),
+                Objects = objects.ToValueObjectList(),
                 CurrentTurn = new Turn(),
             };
         }

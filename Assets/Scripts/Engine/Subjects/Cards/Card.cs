@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Cards.Commands;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Cards
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「カード」
@@ -18,7 +17,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Cards
         /// <summary>
         ///     機能
         /// </summary>
-        [CanBeNull]
-        public Command Command { get; init; } = null;
+        [NotNull]
+        public Command Command { get; init; } = new NoneCommand();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Tiles
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     タイル上の「高さ」

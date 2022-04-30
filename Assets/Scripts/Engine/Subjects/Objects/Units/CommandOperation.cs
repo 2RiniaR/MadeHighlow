@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Cards;
-using RineaR.MadeHighlow.Engine.Subjects.Cards.Commands;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
+namespace RineaR.MadeHighlow
 {
     public record CommandOperation
     {

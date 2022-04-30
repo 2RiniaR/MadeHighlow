@@ -1,5 +1,4 @@
-﻿using RineaR.MadeHighlow.Engine.Actions;
-using UnityEngine;
+﻿using UnityEngine;
 using Views.Manual;
 using Views.Menu;
 using Views.RobotChat;
@@ -30,8 +29,6 @@ namespace Views.Strategy
         public RobotChatWindow robotChatWindow;
 
         [Header("States")] [Space] public Transform child;
-
-        public Action selectingAction;
 
         private void Start()
         {

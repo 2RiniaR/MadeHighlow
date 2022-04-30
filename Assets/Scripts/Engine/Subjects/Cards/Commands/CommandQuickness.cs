@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Cards.Commands
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     カードによる行動の早さ。

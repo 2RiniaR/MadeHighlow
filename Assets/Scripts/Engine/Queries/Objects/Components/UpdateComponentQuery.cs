@@ -1,8 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Components;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Objects.Components
+namespace RineaR.MadeHighlow.Queries.Objects.Components
 {
     public record UpdateComponentQuery
     {
@@ -19,10 +17,11 @@ namespace RineaR.MadeHighlow.Engine.Queries.Objects.Components
                 Locator = Locator,
                 Value = @object with
                 {
-                    Components = @object.Components.ReplaceItem(
-                        component => component.ID == Locator.ComponentID,
-                        Value
-                    ),
+                    Components = @object.Components.Items.ReplaceItem(
+                            component => component.ID == Locator.ComponentID,
+                            Value
+                        )
+                        .ToValueObjectList(),
                 },
             }.Run(world);
         }

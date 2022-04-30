@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Geometry;
 
 namespace RineaR.MadeHighlow.Components.Expressions.Colliders
 {

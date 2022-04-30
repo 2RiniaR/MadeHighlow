@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Players
+﻿namespace RineaR.MadeHighlow
 {
     public record PlayerLocator
     {

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Engine.Subjects.Expressions
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「期限」の種別

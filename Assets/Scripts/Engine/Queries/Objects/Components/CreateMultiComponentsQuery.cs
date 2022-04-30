@@ -1,15 +1,14 @@
-﻿using System.Collections.Immutable;
-using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Components;
+﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Objects.Components
+namespace RineaR.MadeHighlow.Queries.Objects.Components
 {
     public record CreateMultiComponentsQuery
     {
         [NotNull] public ObjectLocator ParentLocator { get; init; } = new();
-        [NotNull] [ItemNotNull] public ImmutableList<Component> Values { get; init; } = ImmutableList<Component>.Empty;
+
+        [NotNull]
+        [ItemNotNull]
+        public ValueObjectList<Component> Values { get; init; } = ValueObjectList<Component>.Empty;
 
         [NotNull]
         public World Run([NotNull] in World world)
@@ -18,7 +17,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Objects.Components
             return new UpdateObjectQuery
             {
                 Locator = ParentLocator,
-                Value = player with { Components = player.Components.AddRange(Values) },
+                Value = player with { Components = player.Components.Items.AddRange(Values.Items).ToValueObjectList() },
             }.Run(world);
         }
     }

@@ -1,20 +1,16 @@
-﻿using NUnit.Framework;
-using RineaR.MadeHighlow.Engine.Exceptions;
+﻿using System;
+using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine
+namespace RineaR.MadeHighlow
 {
     public class IDTest
     {
-        #region None
+        #region From
 
         [Test]
-        public void None_Get_ReturnsThatInternalValueIsNoneInternalValue()
+        public void From_0_ThrowsArgumentException()
         {
-            var id = ID<Sample>.None;
-
-            var actual = id.InternalValue;
-
-            Assert.That(actual, Is.EqualTo(ID<Sample>.NoneInternalValue));
+            Assert.That(() => ID<Sample>.From(0), Throws.TypeOf<ArgumentException>());
         }
 
         #endregion
@@ -26,30 +22,6 @@ namespace RineaR.MadeHighlow.Engine
         private class Another
         {
         }
-
-        #region From
-
-        [Test]
-        [TestCase(0)]
-        public void From_CallWithN_ReturnsThatInternalValueIsN(int n)
-        {
-            var id = ID<Sample>.From(n);
-
-            var actual = id.InternalValue;
-
-            Assert.That(actual, Is.EqualTo(n));
-        }
-
-        [Test]
-        public void From_NoneInternalValue_ThrowsInvalidIDException()
-        {
-            Assert.That(
-                () => ID<Sample>.From(ID<Sample>.NoneInternalValue),
-                Throws.TypeOf<InvalidIDException>()
-            );
-        }
-
-        #endregion
 
         #region Equals
 
@@ -67,7 +39,7 @@ namespace RineaR.MadeHighlow.Engine
         [Test]
         public void Equals_NoneAndValue_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(0);
+            var id1 = ID<Sample>.From(1);
             var id2 = ID<Sample>.None;
 
             var actual = id1.Equals(id2);
@@ -78,8 +50,8 @@ namespace RineaR.MadeHighlow.Engine
         [Test]
         public void Equals_DifferentValue_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(0);
-            var id2 = ID<Sample>.From(1);
+            var id1 = ID<Sample>.From(1);
+            var id2 = ID<Sample>.From(2);
 
             var actual = id1.Equals(id2);
 
@@ -89,8 +61,8 @@ namespace RineaR.MadeHighlow.Engine
         [Test]
         public void Equals_SameValue_ReturnsTrue()
         {
-            var id1 = ID<Sample>.From(0);
-            var id2 = ID<Sample>.From(0);
+            var id1 = ID<Sample>.From(1);
+            var id2 = ID<Sample>.From(1);
 
             var actual = id1.Equals(id2);
 
@@ -100,8 +72,8 @@ namespace RineaR.MadeHighlow.Engine
         [Test]
         public void Equals_DifferentType_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(0);
-            var id2 = ID<Another>.From(0);
+            var id1 = ID<Sample>.From(1);
+            var id2 = ID<Another>.From(1);
 
             // ReSharper disable once SuspiciousTypeConversion.Global
             var actual = id1.Equals(id2);
@@ -114,10 +86,10 @@ namespace RineaR.MadeHighlow.Engine
         #region CompareTo
 
         [Test]
-        public void CompareTo_GreaterInternalValue_ReturnsTrue()
+        public void CompareTo_Greater_ReturnsTrue()
         {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Sample>.From(0);
+            var id1 = ID<Sample>.From(2);
+            var id2 = ID<Sample>.From(1);
 
             var actual = id1.CompareTo(id2);
 
@@ -125,10 +97,10 @@ namespace RineaR.MadeHighlow.Engine
         }
 
         [Test]
-        public void CompareTo_SameInternalValue_ReturnsZero()
+        public void CompareTo_Same_ReturnsZero()
         {
-            var id1 = ID<Sample>.From(0);
-            var id2 = ID<Sample>.From(0);
+            var id1 = ID<Sample>.From(1);
+            var id2 = ID<Sample>.From(1);
 
             var actual = id1.CompareTo(id2);
 
@@ -136,10 +108,10 @@ namespace RineaR.MadeHighlow.Engine
         }
 
         [Test]
-        public void CompareTo_LessInternalValue_ReturnsFalse()
+        public void CompareTo_Less_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(0);
-            var id2 = ID<Sample>.From(1);
+            var id1 = ID<Sample>.From(1);
+            var id2 = ID<Sample>.From(2);
 
             var actual = id1.CompareTo(id2);
 

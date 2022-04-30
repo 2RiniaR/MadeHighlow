@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
+namespace RineaR.MadeHighlow
 {
     public class UnitStrengthTest
     {
@@ -10,33 +10,27 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Units
         [TestCase(UnitStrength.MinValue)]
         [TestCase(UnitStrength.MinValue + 1)]
         [TestCase(UnitStrength.MaxValue)]
-        public void Constructor_InRange_ReturnsThatValueIsSame(int value)
+        public void Constructor_Valid_ReturnsSame(int value)
         {
-            var strength = new UnitStrength(value);
+            var actual = new UnitStrength(value);
 
-            var actual = strength.Value;
-
-            Assert.That(actual, Is.EqualTo(value));
+            Assert.That(actual.Value, Is.EqualTo(value));
         }
 
         [Test]
-        public void Constructor_LessThanMin_ReturnsThatValueIsMin()
+        public void Constructor_LessThanMin_ReturnsMin()
         {
-            var strength = new UnitStrength(UnitStrength.MinValue - 1);
+            var actual = new UnitStrength(UnitStrength.MinValue - 1);
 
-            var actual = strength.Value;
-
-            Assert.That(actual, Is.EqualTo(UnitStrength.MinValue));
+            Assert.That(actual.Value, Is.EqualTo(UnitStrength.MinValue));
         }
 
         [Test]
-        public void Constructor_GreaterThanMax_ReturnsThatValueIsMax()
+        public void Constructor_GreaterThanMax_ReturnsMax()
         {
-            var strength = new UnitStrength(UnitStrength.MaxValue + 1);
+            var actual = new UnitStrength(UnitStrength.MaxValue + 1);
 
-            var actual = strength.Value;
-
-            Assert.That(actual, Is.EqualTo(UnitStrength.MaxValue));
+            Assert.That(actual.Value, Is.EqualTo(UnitStrength.MaxValue));
         }
 
         #endregion

@@ -1,9 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Units;
 
-namespace RineaR.MadeHighlow.Engine.Actions
+namespace RineaR.MadeHighlow.Actions
 {
     public interface IUnitStatusEffector
     {

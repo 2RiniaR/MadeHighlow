@@ -1,13 +1,13 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class Vector3DTest
     {
         #region Zero
 
         [Test]
-        public void Zero_Get_ReturnsThatAllAxesAreZero()
+        public void Zero_Always_ReturnsAllZero()
         {
             var actual = Vector3D.Zero;
 
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region XPositive
 
         [Test]
-        public void XPositive_Get_ReturnsThatXIsPositiveUnitAndOthersAreZero()
+        public void XPositive_Always_ReturnsUnit()
         {
             var actual = Vector3D.XPositive;
 
@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region XNegative
 
         [Test]
-        public void XNegative_Get_ReturnsThatXIsNegativeUnitAndOthersAreZero()
+        public void XNegative_Always_ReturnsUnit()
         {
             var actual = Vector3D.XNegative;
 
@@ -43,7 +43,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region YPositive
 
         [Test]
-        public void YPositive_Get_ReturnsThatYIsPositiveUnitAndOthersAreZero()
+        public void YPositive_Always_ReturnsUnit()
         {
             var actual = Vector3D.YPositive;
 
@@ -55,7 +55,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region YNegative
 
         [Test]
-        public void YNegative_Get_ReturnsThatYIsNegativeUnitAndOthersAreZero()
+        public void YNegative_Always_ReturnsUnit()
         {
             var actual = Vector3D.YNegative;
 
@@ -67,7 +67,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region ZPositive
 
         [Test]
-        public void ZPositive_Get_ReturnsThatZIsPositiveUnitAndOthersAreZero()
+        public void ZPositive_Always_ReturnsUnit()
         {
             var actual = Vector3D.ZPositive;
 
@@ -79,7 +79,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region ZNegative
 
         [Test]
-        public void ZNegative_Get_ReturnsThatZIsNegativeUnitAndOthersAreZero()
+        public void ZNegative_Always_ReturnsUnit()
         {
             var actual = Vector3D.ZNegative;
 
@@ -91,7 +91,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region AddOperator
 
         [Test]
-        public void AddOperator_Vector3D_ReturnsThatAllAxesAreAddedValue()
+        public void AddOperator_Always_ReturnsAllAdded()
         {
             var vector1 = new Vector3D { X = 1, Y = 2, Z = 1 };
             var vector2 = new Vector3D { X = 3, Y = 4, Z = 1 };
@@ -106,7 +106,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region SubtractOperator
 
         [Test]
-        public void SubtractOperator_Vector3D_ReturnsThatAllAxesAreSubtractedValue()
+        public void SubtractOperator_Always_ReturnsAllSubtracted()
         {
             var vector1 = new Vector3D { X = 1, Y = 2, Z = 1 };
             var vector2 = new Vector3D { X = 3, Y = 4, Z = 1 };
@@ -121,7 +121,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region InverseOperator
 
         [Test]
-        public void InverseOperator_Vector3D_ReturnsThatAllAxesAreInversedValue()
+        public void InverseOperator_Always_ReturnsAllInversed()
         {
             var vector = new Vector3D { X = 1, Y = 2, Z = 1 };
 
@@ -135,7 +135,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region MultipleOperator
 
         [Test]
-        public void MultipleOperator_Int_ReturnsThatAllAxesAreMultipleValue()
+        public void MultipleOperator_Always_ReturnsAllMultiple()
         {
             var vector = new Vector3D { X = 1, Y = 2, Z = 1 };
             var multiplier = 2;
@@ -150,7 +150,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region ExtendTo
 
         [Test]
-        public void ExtendTo_Values_ReturnsThatExtendedVector()
+        public void ExtendTo_Always_ReturnsExtended()
         {
             var vector = new Vector3D { X = 1, Y = 2, Z = 1 };
             var direction = Direction3D.XPositive;

@@ -1,6 +1,4 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects.Geometry;
-using RineaR.MadeHighlow.Engine.Subjects.Objects.Components;
 
 namespace RineaR.MadeHighlow.Components.UnitEffects
 {

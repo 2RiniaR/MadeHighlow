@@ -1,13 +1,10 @@
-﻿using System.Collections.Immutable;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Engine
+namespace RineaR.MadeHighlow
 {
-    public record Session(
-        [NotNull] [ItemNotNull] ImmutableList<SessionEvent> Events
-    )
+    public record Session([NotNull] ValueObjectList<SessionEvent> Events)
     {
-        public Session(params SessionEvent[] events) : this(ImmutableList.Create(events))
+        public Session(params SessionEvent[] events) : this(events.ToValueObjectList())
         {
         }
     }

@@ -1,13 +1,13 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class Position2DTest
     {
         #region Zero
 
         [Test]
-        public void Zero_Get_ReturnsThatAllAxesAreZero()
+        public void Zero_Always_ReturnsAllZero()
         {
             var actual = Position2D.Zero;
 
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region AddOperator
 
         [Test]
-        public void AddOperator_Vector2D_ReturnsThatAllAxesAreAddedValue()
+        public void AddOperator_Always_ReturnsAllAdded()
         {
             var position = new Position2D { X = new Horizontal(1), Y = new Vertical(2) };
             var vector = new Vector2D { X = 3, Y = 4 };
@@ -34,7 +34,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region SubtractOperator
 
         [Test]
-        public void SubtractOperator_Vector2D_ReturnsThatAllAxesAreSubtractedValue()
+        public void SubtractOperator_Always_ReturnsAllSubtracted()
         {
             var position = new Position2D { X = new Horizontal(1), Y = new Vertical(2) };
             var vector = new Vector2D { X = 3, Y = 4 };
@@ -49,7 +49,7 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region MoveTo
 
         [Test]
-        public void MoveTo_Values_ReturnsThatMovedPosition()
+        public void MoveTo_Always_ReturnsMoved()
         {
             var position = new Position2D { X = new Horizontal(1), Y = new Vertical(2) };
             var direction = Direction2D.XPositive;

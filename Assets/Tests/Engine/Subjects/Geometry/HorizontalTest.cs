@@ -1,19 +1,17 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
+namespace RineaR.MadeHighlow
 {
     public class HorizontalTest
     {
         #region AddOperator
 
         [Test]
-        public void AddOperator_Int_ReturnsThatValueIsAddedValue()
+        public void AddOperator_Always_ReturnsAdded()
         {
-            var horizontal = new Horizontal() + 1;
+            var actual = new Horizontal(1) + 1;
 
-            var actual = horizontal.Value;
-
-            Assert.That(actual, Is.EqualTo(1));
+            Assert.That(actual, Is.EqualTo(new Horizontal(2)));
         }
 
         #endregion
@@ -21,13 +19,11 @@ namespace RineaR.MadeHighlow.Engine.Subjects.Geometry
         #region SubtractOperator
 
         [Test]
-        public void SubtractOperator_Int_ReturnsThatValueIsSubtractedValue()
+        public void SubtractOperator_Always_ReturnsSubtracted()
         {
-            var horizontal = new Horizontal(2) - 1;
+            var actual = new Horizontal(2) - 1;
 
-            var actual = horizontal.Value;
-
-            Assert.That(actual, Is.EqualTo(1));
+            Assert.That(actual, Is.EqualTo(new Horizontal(1)));
         }
 
         #endregion

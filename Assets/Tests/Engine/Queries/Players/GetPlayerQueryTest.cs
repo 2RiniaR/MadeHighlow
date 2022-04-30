@@ -1,11 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿using System;
 using JetBrains.Annotations;
 using NUnit.Framework;
-using RineaR.MadeHighlow.Engine.Exceptions;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Players;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Players
+namespace RineaR.MadeHighlow.Queries.Players
 {
     public class GetPlayerQueryTest
     {
@@ -14,7 +11,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players
         {
             return new World
             {
-                Players = ImmutableList.Create(
+                Players = new ValueObjectList<Player>(
                     new Player { ID = ID<Player>.From(1) },
                     new Player { ID = ID<Player>.From(3) },
                     new Player { ID = ID<Player>.From(4) },
@@ -23,7 +20,7 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players
             };
         }
 
-        private static GetPlayerQuery CreateQuery(int id)
+        private static GetPlayerQuery CreateQuery(uint id)
         {
             return new GetPlayerQuery
             {
@@ -33,27 +30,23 @@ namespace RineaR.MadeHighlow.Engine.Queries.Players
 
 
         [Test]
-        [TestCase(1)]
-        [TestCase(4)]
-        public void Run_Exist_ReturnsItem(int id)
+        public void Run_Exist_ReturnsItem()
         {
             var world = CreateDefaultWorld();
-            var query = CreateQuery(id);
+            var query = CreateQuery(1);
 
             var actual = query.Run(world);
 
-            Assert.That(actual.ID, Is.EqualTo(ID<Player>.From(id)));
+            Assert.That(actual.ID, Is.EqualTo(ID<Player>.From(1)));
         }
 
         [Test]
-        [TestCase(2)]
-        [TestCase(-5)]
-        public void Run_NotExist_ThrowsNotExistException(int id)
+        public void Run_NotExist_ThrowsNullReferenceException()
         {
             var world = CreateDefaultWorld();
-            var query = CreateQuery(id);
+            var query = CreateQuery(2);
 
-            Assert.That(() => query.Run(world), Throws.TypeOf<NotExistException>());
+            Assert.That(() => query.Run(world), Throws.TypeOf<NullReferenceException>());
         }
     }
 }

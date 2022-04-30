@@ -1,13 +1,17 @@
 ﻿using System;
-using RineaR.MadeHighlow.Engine.Exceptions;
 
-namespace RineaR.MadeHighlow.Engine
+namespace RineaR.MadeHighlow
 {
     public struct ID<T> : IComparable<ID<T>>
     {
+        public override int GetHashCode()
+        {
+            return (int)InternalValue;
+        }
+
         public bool Equals(ID<T> other)
         {
-            return InternalValue != NoneInternalValue && InternalValue == other.InternalValue;
+            return InternalValue != 0 && InternalValue == other.InternalValue;
         }
 
         public override bool Equals(object obj)
@@ -15,25 +19,18 @@ namespace RineaR.MadeHighlow.Engine
             return obj is ID<T> other && Equals(other);
         }
 
-        public override int GetHashCode()
-        {
-            return InternalValue;
-        }
-
-        public const int NoneInternalValue = -1;
-
-        private ID(int internalValue)
+        private ID(uint internalValue)
         {
             InternalValue = internalValue;
         }
 
-        public int InternalValue { get; }
+        private uint InternalValue { get; }
 
-        public static ID<T> None => new(NoneInternalValue);
+        public static ID<T> None => new(0);
 
-        public static ID<T> From(int value)
+        public static ID<T> From(uint value)
         {
-            if (value == NoneInternalValue) throw new InvalidIDException();
+            if (value == 0) throw new ArgumentException();
             return new ID<T>(value);
         }
 

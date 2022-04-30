@@ -1,19 +1,17 @@
 ﻿using NUnit.Framework;
 
-namespace RineaR.MadeHighlow.Engine.Subjects.Objects.Tiles
+namespace RineaR.MadeHighlow
 {
     public class GroundTileHeightTest
     {
         #region Constructor
 
         [Test]
-        public void Constructor_Get_ReturnsThatTypeIsCounterpart()
+        public void Constructor_Always_ReturnsCounterpartType()
         {
-            var height = new GroundTileHeight();
+            var actual = new GroundTileHeight();
 
-            var actual = height.Type;
-
-            Assert.That(actual, Is.EqualTo(TileHeightType.Ground));
+            Assert.That(actual.Type, Is.EqualTo(TileHeightType.Ground));
         }
 
         #endregion

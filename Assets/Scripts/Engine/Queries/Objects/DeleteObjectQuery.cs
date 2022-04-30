@@ -1,9 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Engine.Subjects;
-using RineaR.MadeHighlow.Engine.Subjects.Objects;
 
-namespace RineaR.MadeHighlow.Engine.Queries.Objects
+namespace RineaR.MadeHighlow.Queries.Objects
 {
     public record DeleteObjectQuery
     {
