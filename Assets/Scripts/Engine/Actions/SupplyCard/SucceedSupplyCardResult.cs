@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Players.Cards;
+using RineaR.MadeHighlow.Queries.Cards;
 
 namespace RineaR.MadeHighlow.Actions
 {

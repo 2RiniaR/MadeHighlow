@@ -11,17 +11,17 @@ namespace RineaR.MadeHighlow.Actions
         ///     コンポーネントを追加する対象
         /// </summary>
         [NotNull]
-        public ObjectLocator ObjectLocator { get; init; } = new();
+        public EntityLocator EntityLocator { get; init; } = new();
 
         /// <summary>
         ///     追加するコンポーネント
         /// </summary>
         [NotNull]
-        public Component Component { get; init; } = new EmptyComponent();
+        public EntityComponent EntityComponent { get; init; } = EntityComponent.Empty;
 
         public Result Run(in Session session)
         {
-            return new AddComponentResult { Target = ObjectLocator, AddedComponent = Component };
+            return new AddComponentResult { Target = EntityLocator, AddedEntityComponent = EntityComponent };
         }
     }
 }

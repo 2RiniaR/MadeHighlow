@@ -6,5 +6,5 @@
     /// <remarks>
     ///     毎ターン、自身の周囲 N マス以内にいる味方ユニットがダメージを受ける。
     /// </remarks>
-    public record Curse() : Component(new ComponentType(nameof(Curse)));
+    public record Curse : EntityComponent;
 }

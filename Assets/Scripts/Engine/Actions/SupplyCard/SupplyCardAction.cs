@@ -1,6 +1,5 @@
-﻿using System.Linq;
-using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Players;
+﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Queries;
 
 namespace RineaR.MadeHighlow.Actions
 {
@@ -12,12 +11,12 @@ namespace RineaR.MadeHighlow.Actions
         public SupplyCardResult Run(in ISessionModel session)
         {
             var player = new GetPlayerQuery { Locator = Target }.Run(session.Current());
-            var deckCapacity = player.DeckSize.Value - player.Cards.Items.Count;
+            var deckCapacity = player.DeckSize.Value - player.Cards.Count;
 
             return new SucceedSupplyCardResult
             {
                 Target = Target,
-                SuppliedCards = Cards.Items.Select(card => card with { ID = ID<Card>.None }).ToValueObjectList(),
+                SuppliedCards = Cards.Select(card => card with { ID = ID<Card>.None }).ToValueObjectList(),
             };
         }
     }

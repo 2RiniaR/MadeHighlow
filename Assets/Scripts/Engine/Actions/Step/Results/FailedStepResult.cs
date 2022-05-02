@@ -8,7 +8,6 @@ namespace RineaR.MadeHighlow.Actions
         {
         }
 
-        public static FailedStepResult InvalidActor => new(StepResultCode.InvalidActor);
         public static FailedStepResult NoEntry => new(StepResultCode.NoEntry);
         public static FailedStepResult CostOver => new(StepResultCode.CostOver);
 

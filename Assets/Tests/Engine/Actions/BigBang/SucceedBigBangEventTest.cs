@@ -16,10 +16,15 @@ namespace RineaR.MadeHighlow.Actions.BigBang
                     new Player { ID = ID<Player>.From(3) },
                     new Player { ID = ID<Player>.From(4) }
                 ),
-                Objects = new ValueObjectList<Object>(
-                    new Tile { ID = ID<Object>.From(1) },
-                    new Tile { ID = ID<Object>.From(2) },
-                    new Tile { ID = ID<Object>.From(3) }
+                Entities = new ValueObjectList<Entity>(
+                    new Entity { ID = ID<Entity>.From(1) },
+                    new Entity { ID = ID<Entity>.From(2) },
+                    new Entity { ID = ID<Entity>.From(3) }
+                ),
+                Tiles = new ValueObjectList<Tile>(
+                    new Tile { ID = ID<Tile>.From(1) },
+                    new Tile { ID = ID<Tile>.From(2) },
+                    new Tile { ID = ID<Tile>.From(3) }
                 ),
                 CurrentTurn = new Turn(),
             };

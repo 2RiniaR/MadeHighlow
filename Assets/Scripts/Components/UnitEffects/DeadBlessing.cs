@@ -6,5 +6,5 @@
     /// <remarks>
     ///     自身の周囲 N マス以内にいる味方ユニットが、ダウンしたときに爆発して呪いをばら撒くようになる。
     /// </remarks>
-    public record DeadBlessing() : Component(new ComponentType(nameof(DeadBlessing)));
+    public record DeadBlessing : EntityComponent;
 }

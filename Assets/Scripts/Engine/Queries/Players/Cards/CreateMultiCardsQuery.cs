@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Queries.Players.Cards
+namespace RineaR.MadeHighlow.Queries.Cards
 {
     public record CreateMultiCardsQuery
     {
@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Queries.Players.Cards
                 Locator = ParentLocator,
                 Value = player with
                 {
-                    Cards = player.Cards.Items.AddRange(Values.Items).ToValueObjectList(),
+                    Cards = player.Cards.AddRange(Values),
                 },
             }.Run(world);
         }

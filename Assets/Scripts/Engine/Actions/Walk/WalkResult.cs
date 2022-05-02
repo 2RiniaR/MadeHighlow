@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace RineaR.MadeHighlow.Actions
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     オブジェクトがフィールド上を歩いて移動するアクションの結果
@@ -10,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions
         /// <summary>
         ///     行動したユニット
         /// </summary>
-        public ObjectLocator Actor { get; init; } = new();
+        public EntityLocator Actor { get; init; } = new();
 
         /// <summary>
         ///     ステップ
@@ -19,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions
 
         public override World Simulate(in World world)
         {
-            return Steps.Items.Aggregate(world, (currentWorld, step) => step.Simulate(currentWorld));
+            return Steps.Aggregate(world, (currentWorld, step) => step.Simulate(currentWorld));
         }
     }
 }

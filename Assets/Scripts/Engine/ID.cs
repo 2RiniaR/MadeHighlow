@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public struct ID<T> : IComparable<ID<T>>
+    public readonly struct ID<T> : IComparable<ID<T>>
     {
         public override int GetHashCode()
         {

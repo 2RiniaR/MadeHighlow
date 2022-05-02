@@ -6,10 +6,10 @@
         {
             return world with
             {
-                Objects = world.Objects.Items.ConvertAll(
+                Entities = world.Entities.Select(
                         @object => @object with
                         {
-                            Components = @object.Components.Items.ConvertAll(
+                            Components = @object.Components.Select(
                                     component => component with
                                     {
                                         Duration = component.Duration.Decrement(),

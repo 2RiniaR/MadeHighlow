@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions
 
         public BigBangResult Run(in Session session)
         {
-            if (!session.Events.Items.IsEmpty) return BigBangResult.FailedByNotEmpty;
+            if (!session.Events.IsEmpty) return BigBangResult.FailedByNotEmpty;
 
             var generatedWorld = new WorldFormatter().Format(World);
             return new SucceedBigBangResult { GeneratedWorld = generatedWorld };

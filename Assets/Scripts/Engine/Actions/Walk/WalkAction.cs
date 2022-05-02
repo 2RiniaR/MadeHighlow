@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     行動するユニット
         /// </summary>
         [NotNull]
-        public ObjectLocator Actor { get; init; } = new();
+        public EntityLocator Actor { get; init; } = new();
 
         /// <summary>
         ///     ステップ
@@ -27,7 +27,7 @@ namespace RineaR.MadeHighlow.Actions
         {
             var stepResults = new List<StepResult>();
 
-            foreach (var step in Steps.Items)
+            foreach (var step in Steps)
             {
                 var formattedStep = step with { Actor = Actor };
                 var stepResult = formattedStep.Run(session);

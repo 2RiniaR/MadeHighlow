@@ -6,8 +6,8 @@ namespace RineaR.MadeHighlow.Actions
     {
         public ValueObjectList<StepCostEffect> EffectStepCost(
             [NotNull] in ISessionModel session,
-            [NotNull] in ObjectLocator actor,
-            [NotNull] in ObjectLocator reactor
+            [NotNull] in EntityLocator actor,
+            [NotNull] in EntityLocator reactor
         );
     }
 }

@@ -1,17 +1,17 @@
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Objects;
+using RineaR.MadeHighlow.Queries;
 
 namespace RineaR.MadeHighlow.Actions
 {
     public record GenerateResult() : Result(ActionType.Generate)
     {
-        [CanBeNull] public Object Object { get; init; } = null;
+        [NotNull] public Entity Entity { get; init; } = Entity.Empty;
 
         public override World Simulate(in World world)
         {
-            return new CreateObjectQuery
+            return new CreateEntityQuery
             {
-                Value = Object,
+                Value = Entity,
             }.Run(world);
         }
     }

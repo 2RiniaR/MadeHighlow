@@ -6,5 +6,5 @@
     /// <remarks>
     ///     自身が受けるダメージを減少させる。
     /// </remarks>
-    public record DamageReduction() : Component(new ComponentType(nameof(DamageReduction)));
+    public record DamageReduction : EntityComponent;
 }

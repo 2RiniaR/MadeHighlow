@@ -1,18 +1,17 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Objects;
-using RineaR.MadeHighlow.Queries.Objects.Units;
+using RineaR.MadeHighlow.Queries;
 
 namespace RineaR.MadeHighlow.Actions
 {
     public record SucceedCommandUnitResult() : CommandUnitResult(CommandUnitResultCode.Succeed)
     {
-        [NotNull] public ObjectLocator Target { get; init; } = new();
+        [NotNull] public EntityLocator Target { get; init; } = new();
         [CanBeNull] public UnitOperation Operation { get; init; } = null;
 
         public override World Simulate(in World world)
         {
             var unit = new GetUnitQuery { Locator = Target }.Run(world);
-            return new UpdateObjectQuery
+            return new UpdateEntityQuery
             {
                 Locator = Target,
                 Value = unit with { CurrentOperation = Operation },

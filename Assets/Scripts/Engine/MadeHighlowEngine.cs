@@ -8,21 +8,21 @@ namespace RineaR.MadeHighlow
     {
         public MadeHighlowEngine(
             [NotNull] ISessionHolder sessionHolder,
-            [NotNull] ISnapshotCache snapshotCache,
-            [NotNull] ComponentsRegistration componentsRegistration
+            [NotNull] ISnapshotCache snapshotCache
         )
         {
             SessionHolder = sessionHolder;
             SnapshotCache = snapshotCache;
-            ComponentsRegistration = componentsRegistration;
         }
 
         [NotNull] private ISessionHolder SessionHolder { get; }
         [NotNull] private ISnapshotCache SnapshotCache { get; }
-        [NotNull] private ComponentsRegistration ComponentsRegistration { get; }
 
         [NotNull]
-        public AddComponentResult AddComponent([NotNull] ObjectLocator target, [NotNull] Component component)
+        public AddComponentResult AddComponent(
+            [NotNull] EntityLocator target,
+            [NotNull] EntityComponent entityComponent
+        )
         {
             throw new NotImplementedException();
         }
@@ -33,23 +33,23 @@ namespace RineaR.MadeHighlow
             throw new NotImplementedException();
         }
 
-        public void BreakUnit([NotNull] ObjectLocator target)
+        public void BreakUnit([NotNull] EntityLocator target)
         {
         }
 
-        public void CharmUnit([NotNull] ObjectLocator target)
+        public void CharmUnit([NotNull] EntityLocator target)
         {
         }
 
-        public void CommandUnit([NotNull] ObjectLocator target)
+        public void CommandUnit([NotNull] EntityLocator target)
         {
         }
 
-        public void Destroy([NotNull] ObjectLocator target)
+        public void Destroy([NotNull] EntityLocator target)
         {
         }
 
-        public void Generate([NotNull] Object newObject)
+        public void Generate([NotNull] object newObject)
         {
         }
 

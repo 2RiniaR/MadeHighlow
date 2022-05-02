@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     行動したユニット
         /// </summary>
         [NotNull]
-        public ObjectLocator Actor { get; init; } = new();
+        public EntityLocator Actor { get; init; } = new();
 
         /// <summary>
         ///     移動した方向

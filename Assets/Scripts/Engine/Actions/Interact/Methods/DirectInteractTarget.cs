@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Methods
 {
     public record DirectInteractTarget
     {
-        [NotNull] public ObjectLocator Pointer { get; init; } = new();
+        [NotNull] public EntityLocator Pointer { get; init; } = new();
 
         [NotNull]
         [ItemNotNull]

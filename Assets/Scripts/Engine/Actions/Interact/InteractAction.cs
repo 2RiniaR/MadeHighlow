@@ -7,6 +7,6 @@ namespace RineaR.MadeHighlow.Actions
     /// </summary>
     public abstract record InteractAction() : Action(ActionType.Interact)
     {
-        [NotNull] public ObjectLocator Actor { get; init; } = new();
+        [NotNull] public EntityLocator Actor { get; init; } = new();
     }
 }

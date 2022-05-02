@@ -3,5 +3,5 @@
     /// <summary>
     ///     「ドロン」
     /// </summary>
-    public record Hiding() : Component(new ComponentType(nameof(Hiding)));
+    public record Hiding : EntityComponent;
 }

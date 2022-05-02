@@ -1,0 +1,20 @@
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Queries
+{
+    public record GetMultiEntitiesQuery
+    {
+        [CanBeNull] public Position2D Position2D { get; init; }
+        [CanBeNull] public Position3D Position3D { get; init; }
+
+        [NotNull]
+        [ItemNotNull]
+        public ValueObjectList<Entity> Run([NotNull] in World world)
+        {
+            return world.Entities.FindAll(
+                entity => (Position2D == null || entity.Position3D.To2D() == Position2D) &&
+                          (Position3D == null || entity.Position3D == Position3D)
+            );
+        }
+    }
+}

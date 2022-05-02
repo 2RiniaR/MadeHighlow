@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions
     public class ActuateUnitOrderer
     {
         [NotNull]
-        public ValueObjectList<ObjectLocator> Resolve(ValueObjectList<ObjectLocator> units)
+        public ValueObjectList<EntityLocator> Resolve(ValueObjectList<EntityLocator> units)
         {
             throw new NotImplementedException();
         }

@@ -3,5 +3,5 @@
     /// <summary>
     ///     「掴み」
     /// </summary>
-    public record Holding() : Component(new ComponentType(nameof(Holding)));
+    public record Holding : EntityComponent;
 }

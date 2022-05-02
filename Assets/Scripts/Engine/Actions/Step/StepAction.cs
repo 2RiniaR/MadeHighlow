@@ -1,8 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Objects;
-using RineaR.MadeHighlow.Queries.Objects.Components;
-using RineaR.MadeHighlow.Queries.Objects.Tiles;
+using RineaR.MadeHighlow.Queries;
 
 namespace RineaR.MadeHighlow.Actions
 {
@@ -15,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     行動するユニット
         /// </summary>
         [NotNull]
-        public ObjectLocator Actor { get; init; } = new();
+        public EntityLocator Actor { get; init; } = new();
 
         /// <summary>
         ///     方向
@@ -39,31 +37,26 @@ namespace RineaR.MadeHighlow.Actions
         public StepResult Run([NotNull] in ISessionModel session)
         {
             var world = session.Current();
-            var actor = new GetObjectQuery { Locator = Actor }.Run(world);
+            var actor = new GetEntityQuery { Locator = Actor }.Run(world);
 
-            // タイルはタイルの上を移動しない
-            if (actor.ObjectType == ObjectType.Tile) return FailedStepResult.InvalidActor;
-
-            var originPosition = actor.Position2D;
-            var originTile = new Get2DPositionedTileQuery { Position2D = originPosition }.Run(world);
-
-            var destPosition = actor.Position2D.MoveTo(Direction2D, new Distance(1));
-            var destTile = new Get2DPositionedTileQuery { Position2D = destPosition }.Run(world);
+            var originPosition = actor.Position3D.To2D();
+            var originTile = new GetTileByPositionQuery { Position2D = originPosition }.Run(world);
+            var destPosition = originPosition.MoveTo(Direction2D, new Distance(1));
+            var destTile = new GetTileByPositionQuery { Position2D = destPosition }.Run(world);
 
             // 移動先のタイルがない場合、移動しない
             if (destTile == null) return FailedStepResult.NoEntry;
 
-            var objects = new Get2DPositionedObjectsQuery { Position2D = originPosition }.Run(world);
-            foreach (var @object in objects.Items)
+            var entities = new GetMultiEntitiesQuery { Position2D = originPosition }.Run(world);
+            foreach (var entity in entities)
             {
-                var objectLocator = new ObjectLocator { ObjectID = @object.ID };
-                var reactors = new GetTypedComponentsQuery<IStepOutReactor>
-                    { ParentLocator = objectLocator }.Run(world);
+                var entityLocator = new EntityLocator { EntityID = entity.ID };
+                var reactors = entity.Components.WhereType<IStepOutReactor>();
 
-                foreach (var reactor in reactors.Items)
+                foreach (var reactor in reactors)
                 {
-                    var reactions = reactor.OnSteppedOut(session, Actor, objectLocator);
-                    foreach (var reaction in reactions.Items) session.Advance(reaction.Result);
+                    var reactions = reactor.OnSteppedOut(session, Actor, entityLocator);
+                    foreach (var reaction in reactions) session.Advance(reaction.Result);
                 }
             }
 

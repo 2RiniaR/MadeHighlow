@@ -3,5 +3,5 @@
     /// <summary>
     ///     「不意打ち」
     /// </summary>
-    public record SurpriseAttack() : Component(new ComponentType(nameof(SurpriseAttack)));
+    public record SurpriseAttack : EntityComponent;
 }

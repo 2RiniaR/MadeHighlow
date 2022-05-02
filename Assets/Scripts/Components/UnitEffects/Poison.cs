@@ -3,5 +3,5 @@
     /// <summary>
     ///     「毒」
     /// </summary>
-    public record Poison() : Component(new ComponentType(nameof(Poison)));
+    public record Poison : EntityComponent;
 }

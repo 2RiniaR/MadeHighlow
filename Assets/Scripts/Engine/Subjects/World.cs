@@ -20,10 +20,16 @@ namespace RineaR.MadeHighlow
         public ValueObjectList<Player> Players { get; init; } = ValueObjectList<Player>.Empty;
 
         /// <summary>
+        ///     フィールド上のタイル
+        /// </summary>
+        [NotNull]
+        public ValueObjectList<Tile> Tiles { get; init; } = ValueObjectList<Tile>.Empty;
+
+        /// <summary>
         ///     フィールド上のオブジェクト
         /// </summary>
         [NotNull]
-        public ValueObjectList<Object> Objects { get; init; } = ValueObjectList<Object>.Empty;
+        public ValueObjectList<Entity> Entities { get; init; } = ValueObjectList<Entity>.Empty;
 
         /// <summary>
         ///     現在のターン

@@ -3,5 +3,5 @@
     /// <summary>
     ///     「ロイヤルカウンター」
     /// </summary>
-    public record RoyalCounter() : Component(new ComponentType(nameof(RoyalCounter)));
+    public record RoyalCounter : EntityComponent;
 }

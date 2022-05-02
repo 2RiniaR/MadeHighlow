@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Objects.Components;
+using RineaR.MadeHighlow.Queries;
 
 namespace RineaR.MadeHighlow.Actions
 {
@@ -12,20 +12,20 @@ namespace RineaR.MadeHighlow.Actions
         ///     コンポーネントが追加された対象
         /// </summary>
         [NotNull]
-        public ObjectLocator Target { get; init; } = new();
+        public EntityLocator Target { get; init; } = new();
 
         /// <summary>
         ///     追加されたコンポーネント
         /// </summary>
         [NotNull]
-        public Component AddedComponent { get; init; } = new EmptyComponent();
+        public EntityComponent AddedEntityComponent { get; init; } = EntityComponent.Empty;
 
         public override World Simulate(in World world)
         {
-            var query = new CreateComponentQuery
+            var query = new CreateEntityComponentQuery
             {
                 ParentLocator = Target,
-                Value = AddedComponent,
+                Value = AddedEntityComponent,
             };
 
             return query.Run(world);

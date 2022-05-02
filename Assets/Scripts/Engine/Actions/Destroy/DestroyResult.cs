@@ -1,15 +1,15 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries.Objects;
+using RineaR.MadeHighlow.Queries;
 
 namespace RineaR.MadeHighlow.Actions
 {
     public record DestroyResult() : Result(ActionType.Destroy)
     {
-        [NotNull] public ObjectLocator Actor { get; init; } = new();
+        [NotNull] public EntityLocator Actor { get; init; } = new();
 
         public override World Simulate(in World world)
         {
-            return new DeleteObjectQuery
+            return new DeleteEntityQuery
             {
                 Locator = Actor,
             }.Run(world);

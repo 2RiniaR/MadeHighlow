@@ -8,25 +8,26 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull]
         public World Format([NotNull] in World world)
         {
-            var objects = new List<Object>();
             var idGenerator = new IDGenerator();
 
-            foreach (var @object in world.Objects.Items)
-                if (@object.ObjectType == ObjectType.Tile)
-                {
-                    Tile after;
-                    (after, idGenerator) = Format((Tile)@object, idGenerator);
-                    objects.Add(after);
-                }
-                else if (@object.ObjectType == ObjectType.Entity)
-                {
-                    Entity after;
-                    (after, idGenerator) = Format((Entity)@object, idGenerator);
-                    objects.Add(after);
-                }
+            var tiles = new List<Tile>();
+            foreach (var tile in world.Tiles)
+            {
+                Tile after;
+                (after, idGenerator) = Format(tile, idGenerator);
+                tiles.Add(after);
+            }
+
+            var entities = new List<Entity>();
+            foreach (var tile in world.Entities)
+            {
+                Entity after;
+                (after, idGenerator) = Format(tile, idGenerator);
+                entities.Add(after);
+            }
 
             var players = new List<Player>();
-            foreach (var player in world.Players.Items)
+            foreach (var player in world.Players)
             {
                 Player after;
                 (after, idGenerator) = Format(player, idGenerator);
@@ -36,7 +37,8 @@ namespace RineaR.MadeHighlow.Actions
             return new World
             {
                 Players = players.ToValueObjectList(),
-                Objects = objects.ToValueObjectList(),
+                Entities = entities.ToValueObjectList(),
+                Tiles = tiles.ToValueObjectList(),
                 CurrentTurn = new Turn(),
                 IDGenerator = idGenerator,
             };
@@ -44,7 +46,7 @@ namespace RineaR.MadeHighlow.Actions
 
         private (Entity, IDGenerator) Format([NotNull] in Entity entity, [NotNull] in IDGenerator idGenerator)
         {
-            var (id, idGeneratorAfter) = idGenerator.Generate<Object>();
+            var (id, idGeneratorAfter) = idGenerator.Generate<Entity>();
             return (entity with { ID = id }, idGeneratorAfter);
         }
 
@@ -56,7 +58,7 @@ namespace RineaR.MadeHighlow.Actions
 
         private (Tile, IDGenerator) Format([NotNull] in Tile tile, [NotNull] in IDGenerator idGenerator)
         {
-            var (id, idGeneratorAfter) = idGenerator.Generate<Object>();
+            var (id, idGeneratorAfter) = idGenerator.Generate<Tile>();
             return (tile with { ID = id }, idGeneratorAfter);
         }
     }

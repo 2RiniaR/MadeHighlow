@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Queries.Players.Cards
+namespace RineaR.MadeHighlow.Queries.Cards
 {
     public record GetCardQuery
     {
@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Queries.Players.Cards
         public Card Run([NotNull] in World world)
         {
             return new GetPlayerQuery { Locator = Locator }.Run(world)
-                .Cards.Items.Find(card => card.ID == Locator.CardID) ?? throw new NullReferenceException();
+                .Cards.Find(card => card.ID == Locator.CardID) ?? throw new NullReferenceException();
         }
     }
 }
