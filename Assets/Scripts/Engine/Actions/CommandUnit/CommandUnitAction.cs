@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.CommandUnit
+namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     ユニットに命令する
@@ -9,9 +9,10 @@ namespace RineaR.MadeHighlow.Actions.CommandUnit
     public record CommandUnitAction() : Action(ActionType.CommandUnit)
     {
         [NotNull] public PlayerLocator Actor { get; init; } = new();
-        [NotNull] public CommandApplication Application { get; init; } = new();
+        [NotNull] public ObjectLocator Target { get; init; } = new();
+        [NotNull] public UnitOperation Operation { get; init; } = new();
 
-        public Event Run(in Session session)
+        public Result Run(in Session session)
         {
             throw new NotImplementedException();
         }

@@ -1,15 +1,13 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.ActuateUnit
+namespace RineaR.MadeHighlow.Actions
 {
     public record ActuateUnitAction() : Action(ActionType.ActuateUnit)
     {
-        [NotNull]
-        [ItemNotNull]
-        public ValueObjectList<ObjectLocator> Units { get; init; } = ValueObjectList<ObjectLocator>.Empty;
+        [NotNull] public ValueObjectList<ObjectLocator> Units { get; init; } = ValueObjectList<ObjectLocator>.Empty;
 
-        public Event Run(in Session session)
+        public ActuateUnitResult Run(in Session session)
         {
             throw new NotImplementedException();
         }

@@ -8,6 +8,6 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public Session Current();
 
-        public void Append([NotNull] in Event timeline);
+        public void Append([NotNull] in Result timeline);
     }
 }

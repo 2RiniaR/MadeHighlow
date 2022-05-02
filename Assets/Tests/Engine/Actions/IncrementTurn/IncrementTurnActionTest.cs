@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
 
             var actual = @event.Run(new Session());
 
-            Assert.That(actual, Is.EqualTo(new IncrementTurnEvent()));
+            Assert.That(actual, Is.EqualTo(new IncrementTurnResult()));
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
 
             var actual = @event.Run(new Session());
 
-            Assert.That(actual, Is.EqualTo(new IncrementTurnEvent()));
+            Assert.That(actual, Is.EqualTo(new IncrementTurnResult()));
         }
 
         #endregion

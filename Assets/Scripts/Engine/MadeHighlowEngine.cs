@@ -1,7 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.BigBang;
+using RineaR.MadeHighlow.Actions;
 
 namespace RineaR.MadeHighlow
 {
@@ -23,13 +22,13 @@ namespace RineaR.MadeHighlow
         [NotNull] private ComponentsRegistration ComponentsRegistration { get; }
 
         [NotNull]
-        public AddComponentEvent AddComponent([NotNull] ObjectLocator target, [NotNull] Component component)
+        public AddComponentResult AddComponent([NotNull] ObjectLocator target, [NotNull] Component component)
         {
             throw new NotImplementedException();
         }
 
         [NotNull]
-        public BigBangEvent BigBang([NotNull] World world)
+        public BigBangResult BigBang([NotNull] World world)
         {
             throw new NotImplementedException();
         }

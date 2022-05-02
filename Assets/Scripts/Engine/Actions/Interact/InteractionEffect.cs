@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Interact
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     「攻撃」の効果

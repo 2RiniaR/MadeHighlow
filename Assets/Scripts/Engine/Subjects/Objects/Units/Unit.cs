@@ -46,6 +46,6 @@ namespace RineaR.MadeHighlow
         ///     現在受けている命令
         /// </summary>
         [CanBeNull]
-        public CommandOperation CurrentOperation { get; init; }
+        public UnitOperation CurrentOperation { get; init; }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.BigBang
+namespace RineaR.MadeHighlow.Actions
 {
     public class WorldFormatter
     {
@@ -10,37 +9,55 @@ namespace RineaR.MadeHighlow.Actions.BigBang
         public World Format([NotNull] in World world)
         {
             var objects = new List<Object>();
+            var idGenerator = new IDGenerator();
 
             foreach (var @object in world.Objects.Items)
                 if (@object.ObjectType == ObjectType.Tile)
-                    objects.Add(Format((Tile)@object));
+                {
+                    Tile after;
+                    (after, idGenerator) = Format((Tile)@object, idGenerator);
+                    objects.Add(after);
+                }
                 else if (@object.ObjectType == ObjectType.Entity)
-                    objects.Add(Format((Entity)@object));
+                {
+                    Entity after;
+                    (after, idGenerator) = Format((Entity)@object, idGenerator);
+                    objects.Add(after);
+                }
+
+            var players = new List<Player>();
+            foreach (var player in world.Players.Items)
+            {
+                Player after;
+                (after, idGenerator) = Format(player, idGenerator);
+                players.Add(after);
+            }
 
             return new World
             {
-                Players = world.Players.Items.Select(Format).ToValueObjectList(),
+                Players = players.ToValueObjectList(),
                 Objects = objects.ToValueObjectList(),
                 CurrentTurn = new Turn(),
+                IDGenerator = idGenerator,
             };
         }
 
-        [NotNull]
-        private Entity Format([NotNull] Entity entity)
+        private (Entity, IDGenerator) Format([NotNull] in Entity entity, [NotNull] in IDGenerator idGenerator)
         {
-            return entity with { ID = ID<Object>.None };
+            var (id, idGeneratorAfter) = idGenerator.Generate<Object>();
+            return (entity with { ID = id }, idGeneratorAfter);
         }
 
-        [NotNull]
-        private Player Format([NotNull] Player player)
+        private (Player, IDGenerator) Format([NotNull] in Player player, [NotNull] in IDGenerator idGenerator)
         {
-            return player with { ID = ID<Player>.None };
+            var (id, idGeneratorAfter) = idGenerator.Generate<Player>();
+            return (player with { ID = id }, idGeneratorAfter);
         }
 
-        [NotNull]
-        private Tile Format([NotNull] Tile tile)
+        private (Tile, IDGenerator) Format([NotNull] in Tile tile, [NotNull] in IDGenerator idGenerator)
         {
-            return tile with { ID = ID<Object>.None };
+            var (id, idGeneratorAfter) = idGenerator.Generate<Object>();
+            return (tile with { ID = id }, idGeneratorAfter);
         }
     }
 }

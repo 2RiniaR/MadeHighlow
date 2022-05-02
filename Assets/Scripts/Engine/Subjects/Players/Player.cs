@@ -17,5 +17,11 @@ namespace RineaR.MadeHighlow
         /// </summary>
         [NotNull]
         public ValueObjectList<Card> Cards { get; init; } = ValueObjectList<Card>.Empty;
+
+        /// <summary>
+        ///     デッキの大きさ
+        /// </summary>
+        [NotNull]
+        public PlayerDeckSize DeckSize { get; init; } = new();
     }
 }

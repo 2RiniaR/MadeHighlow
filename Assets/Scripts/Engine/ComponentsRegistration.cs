@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow
     public record ComponentsRegistration
     {
         [NotNull]
-        private ImmutableDictionary<ComponentType, IUnitStatusEffector> UnitStatusEffectors { get; init; } =
-            ImmutableDictionary<ComponentType, IUnitStatusEffector>.Empty;
+        private ImmutableDictionary<ComponentType, IUnitReferenceEffector> UnitStatusEffectors { get; init; } =
+            ImmutableDictionary<ComponentType, IUnitReferenceEffector>.Empty;
     }
 }

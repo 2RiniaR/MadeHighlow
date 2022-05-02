@@ -5,8 +5,8 @@ namespace RineaR.MadeHighlow
     public interface ISnapshotCache
     {
         [CanBeNull]
-        public World TryGetCache([NotNull] in ID<SessionEvent> id);
+        public World TryGetCache(in ID<SessionEvent> id);
 
-        public void SetCache([NotNull] in ID<SessionEvent> id, [NotNull] in World value);
+        public void SetCache(in ID<SessionEvent> id, [NotNull] in World value);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Interact.Methods
+namespace RineaR.MadeHighlow.Actions.Methods
 {
     public record DirectInteractAction : InteractAction
     {
@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Actions.Interact.Methods
         public ValueObjectList<DirectInteractTarget> Targets { get; init; } =
             ValueObjectList<DirectInteractTarget>.Empty;
 
-        public Event Run(in Session session)
+        public Result Run(in Session session)
         {
             throw new NotImplementedException();
         }

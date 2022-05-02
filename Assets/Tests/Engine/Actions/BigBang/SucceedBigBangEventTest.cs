@@ -26,9 +26,9 @@ namespace RineaR.MadeHighlow.Actions.BigBang
         }
 
         [NotNull]
-        private static SucceedBigBangEvent CreateDefaultEvent()
+        private static SucceedBigBangResult CreateDefaultEvent()
         {
-            return new SucceedBigBangEvent { GeneratedWorld = CreateDefaultWorld() };
+            return new SucceedBigBangResult { GeneratedWorld = CreateDefaultWorld() };
         }
 
         [Test]

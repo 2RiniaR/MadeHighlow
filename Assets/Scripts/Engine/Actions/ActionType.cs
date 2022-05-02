@@ -5,7 +5,9 @@
     /// </summary>
     public enum ActionType
     {
+        Empty,
         AddComponent,
+        RemoveComponent,
         BigBang,
         CommandUnit,
         Destroy,
@@ -14,9 +16,12 @@
         SupplyCard,
         IncrementTurn,
         Walk,
+        Step,
         Teleport,
         ActuateUnit,
-        BreakUnit,
-        CharmUnit,
+        Death,
+        KnockBack,
+        Damage,
+        Heal,
     }
 }

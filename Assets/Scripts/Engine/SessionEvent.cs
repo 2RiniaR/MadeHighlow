@@ -3,8 +3,9 @@ using RineaR.MadeHighlow.Actions;
 
 namespace RineaR.MadeHighlow
 {
-    public record SessionEvent(
-        ID<SessionEvent> ID,
-        [NotNull] Event Event
-    );
+    public record SessionEvent
+    {
+        public ID<SessionEvent> ID { get; init; } = new();
+        [NotNull] public Result Result { get; init; } = new EmptyResult();
+    }
 }

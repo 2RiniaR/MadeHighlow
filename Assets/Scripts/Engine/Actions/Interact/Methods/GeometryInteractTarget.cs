@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Interact.Methods
+namespace RineaR.MadeHighlow.Actions.Methods
 {
     public record GeometryInteractTarget
     {

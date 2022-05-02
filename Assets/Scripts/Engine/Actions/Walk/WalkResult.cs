@@ -1,0 +1,25 @@
+﻿using System.Linq;
+
+namespace RineaR.MadeHighlow.Actions
+{
+    /// <summary>
+    ///     オブジェクトがフィールド上を歩いて移動するアクションの結果
+    /// </summary>
+    public record WalkResult() : Result(ActionType.Walk)
+    {
+        /// <summary>
+        ///     行動したユニット
+        /// </summary>
+        public ObjectLocator Actor { get; init; } = new();
+
+        /// <summary>
+        ///     ステップ
+        /// </summary>
+        public ValueObjectList<StepResult> Steps { get; init; } = ValueObjectList<StepResult>.Empty;
+
+        public override World Simulate(in World world)
+        {
+            return Steps.Items.Aggregate(world, (currentWorld, step) => step.Simulate(currentWorld));
+        }
+    }
+}

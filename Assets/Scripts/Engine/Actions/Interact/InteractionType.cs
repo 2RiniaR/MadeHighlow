@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Interact
+﻿namespace RineaR.MadeHighlow.Actions
 {
     public enum InteractionType
     {

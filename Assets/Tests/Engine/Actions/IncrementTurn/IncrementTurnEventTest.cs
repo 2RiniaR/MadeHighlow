@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
         [Test]
         public void Simulate_Always_ReturnsTurnIncremented()
         {
-            var @event = new IncrementTurnEvent();
+            var @event = new IncrementTurnResult();
             var world = new World { CurrentTurn = new Turn() };
 
             var actual = @event.Simulate(world);
@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
         [Test]
         public void Simulate_Always_ReturnsAllComponentsDurationDecremented()
         {
-            var @event = new IncrementTurnEvent();
+            var @event = new IncrementTurnResult();
             var duration = new TurnDuration(1);
             var component = new EmptyComponent { Duration = duration };
             var @object = new Entity { Components = new ValueObjectList<Component>(component, component) };

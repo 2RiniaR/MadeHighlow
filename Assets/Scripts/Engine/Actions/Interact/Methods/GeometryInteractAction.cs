@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Interact.Methods
+namespace RineaR.MadeHighlow.Actions.Methods
 {
     public record GeometryInteractAction : InteractAction
     {
@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Actions.Interact.Methods
         public ValueObjectList<GeometryInteractTarget> Targets { get; init; } =
             ValueObjectList<GeometryInteractTarget>.Empty;
 
-        public Event Run(in Session session)
+        public Result Run(in Session session)
         {
             throw new NotImplementedException();
         }

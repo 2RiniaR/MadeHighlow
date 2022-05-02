@@ -1,18 +1,27 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.AddComponent
+namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
-    ///     ユニットが自身にエフェクトを追加する
+    ///     コンポーネントを追加するアクション
     /// </summary>
     public record AddComponentAction() : Action(ActionType.AddComponent)
     {
-        [NotNull] public ObjectLocator ObjectLocator { get; init; } = new();
-        [NotNull] public Component Component { get; init; }
+        /// <summary>
+        ///     コンポーネントを追加する対象
+        /// </summary>
+        [NotNull]
+        public ObjectLocator ObjectLocator { get; init; } = new();
 
-        public Event Run(in Session session)
+        /// <summary>
+        ///     追加するコンポーネント
+        /// </summary>
+        [NotNull]
+        public Component Component { get; init; } = new EmptyComponent();
+
+        public Result Run(in Session session)
         {
-            return new AddComponentEvent { ObjectLocator = ObjectLocator, Component = Component };
+            return new AddComponentResult { Target = ObjectLocator, AddedComponent = Component };
         }
     }
 }
