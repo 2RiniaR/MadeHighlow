@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ユニットが現在受けている命令を実行するアクション
     /// </summary>
-    public record ActuateUnitAction : IValidatable
+    public record ActuateUnitAction : Action<ActuateUnitResult>
     {
         /// <summary>
         ///     実行を命令するユニット
@@ -14,13 +14,9 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public ValueObjectList<UnitEnsuredID> TargetsID { get; init; } = ValueObjectList<UnitEnsuredID>.Empty;
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         [NotNull]
-        public ActuateUnitResult Validate([NotNull] in IActionContext context)
+        public override ActuateUnitResult Validate([NotNull] in IActionContext context)
         {
             var currentWorld = context.CurrentWorld();
 

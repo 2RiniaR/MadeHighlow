@@ -3,15 +3,10 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record DeathAction : IValidatable
+    public record DeathAction : Action<DeathResult>
     {
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
-
         [NotNull]
-        public DeathResult Validate([NotNull] in IActionContext context)
+        public override DeathResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

@@ -3,17 +3,13 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record GenerateTileAction : IValidatable
+    public record GenerateTileAction : Action<GenerateTileResult>
     {
         [NotNull] public Tile Initial { get; init; } = Tile.Empty;
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         [NotNull]
-        public GenerateTileResult Validate([NotNull] in IActionContext context)
+        public override GenerateTileResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

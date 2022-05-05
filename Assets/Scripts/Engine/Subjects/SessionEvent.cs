@@ -16,6 +16,6 @@ namespace RineaR.MadeHighlow
         ///     アクションの結果
         /// </summary>
         [NotNull]
-        public ISimulatable Result { get; init; } = ISimulatable.Empty;
+        public Result Result { get; init; } = Result.Empty;
     }
 }

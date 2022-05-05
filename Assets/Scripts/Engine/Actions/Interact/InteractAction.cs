@@ -6,17 +6,13 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     相互作用の発生
     /// </summary>
-    public abstract record InteractAction : IValidatable
+    public abstract record InteractAction : Action<InteractResult>
     {
         [NotNull] public EntityEnsuredID Actor { get; init; } = new();
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         [NotNull]
-        public InteractResult Validate([NotNull] in IActionContext context)
+        public override InteractResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

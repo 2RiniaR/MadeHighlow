@@ -5,12 +5,12 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     アクションの結果
     /// </summary>
-    public interface ISimulatable
+    public abstract record Result
     {
         /// <summary>
         ///     空のアクションの結果
         /// </summary>
-        public static ISimulatable Empty => new EmptyImpl();
+        public static Result Empty => new EmptyImpl();
 
         /// <summary>
         ///     実行後のワールドをシミュレーションする
@@ -18,11 +18,11 @@ namespace RineaR.MadeHighlow
         /// <param name="world">実行前のワールド</param>
         /// <returns>実行後のワールド</returns>
         [NotNull]
-        public World Simulate([NotNull] in World world);
+        public abstract World Simulate([NotNull] in World world);
 
-        private record EmptyImpl : ISimulatable
+        private record EmptyImpl : Result
         {
-            public World Simulate(in World world)
+            public override World Simulate(in World world)
             {
                 return world;
             }

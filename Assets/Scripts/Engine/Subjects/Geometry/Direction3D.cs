@@ -63,12 +63,36 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public static Direction3D FromVector([NotNull] in Vector3D vector)
         {
-            if (vector == Vector3D.XPositive) return XPositive;
-            if (vector == Vector3D.XNegative) return XNegative;
-            if (vector == Vector3D.YPositive) return YPositive;
-            if (vector == Vector3D.YNegative) return YNegative;
-            if (vector == Vector3D.ZPositive) return ZPositive;
-            if (vector == Vector3D.ZNegative) return ZNegative;
+            if (vector == Vector3D.XPositive)
+            {
+                return XPositive;
+            }
+
+            if (vector == Vector3D.XNegative)
+            {
+                return XNegative;
+            }
+
+            if (vector == Vector3D.YPositive)
+            {
+                return YPositive;
+            }
+
+            if (vector == Vector3D.YNegative)
+            {
+                return YNegative;
+            }
+
+            if (vector == Vector3D.ZPositive)
+            {
+                return ZPositive;
+            }
+
+            if (vector == Vector3D.ZNegative)
+            {
+                return ZNegative;
+            }
+
             throw new ArgumentException("The vector could not be convert to direction.");
         }
 

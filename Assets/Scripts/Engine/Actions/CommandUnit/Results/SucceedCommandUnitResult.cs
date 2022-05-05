@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow
         {
             var unit = TargetID.Get(world) ?? throw new NullReferenceException();
             var modifiedUnit = unit with { CurrentOperation = Operation };
-            return modifiedUnit.Update(world);
+            return modifiedUnit.UpdateIn(world);
         }
     }
 }

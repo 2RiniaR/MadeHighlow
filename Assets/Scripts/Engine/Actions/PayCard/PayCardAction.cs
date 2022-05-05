@@ -1,27 +1,31 @@
-﻿using JetBrains.Annotations;
-
-namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     カードを対価として支払うアクション
     /// </summary>
-    public record PayCardAction : IValidatable
+    public record PayCardAction : Action<PayCardResult>
     {
         /// <summary>
         ///     対価として支払うカードのID
         /// </summary>
         public CardEnsuredID PaidCardID { get; init; } = new();
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
+        public override PayCardResult Validate(in IActionContext context)
         {
-            return Validate(context);
-        }
+            var world = context.CurrentWorld();
 
-        [NotNull]
-        public PayCardResult Validate([NotNull] in IActionContext context)
-        {
-            // 失敗するパターンは今のところない
-            return new PayCardResult { PaidCardID = PaidCardID };
+            foreach (var effector in Component.GetAllOfTypeFrom<IPayCardEffector>(world))
+            {
+                var effect = effector.EffectOnPayCard(context, this);
+
+                // 「この効果が発動してるときは、カードを使っても消費されない」みたいなのができそうだよね
+                if (effect.Exempted)
+                {
+                    return new ExemptedPayCardResult { DecidedComponentID = effector.EnsuredID };
+                }
+            }
+
+            return new SucceedPayCardResult { PaidCardID = PaidCardID };
         }
     }
 }

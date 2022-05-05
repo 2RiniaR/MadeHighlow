@@ -12,9 +12,9 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public World WorldAt(ID id);
 
-        public void Append([NotNull] ISimulatable result);
+        public void Append([NotNull] Result result);
 
-        public void AppendRange([NotNull] [ItemNotNull] params ISimulatable[] results);
+        public void AppendRange([NotNull] [ItemNotNull] params Result[] results);
 
         public ID NewID();
     }

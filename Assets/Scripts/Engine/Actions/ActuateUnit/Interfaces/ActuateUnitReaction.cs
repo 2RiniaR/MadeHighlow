@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Interfaces
+﻿namespace RineaR.MadeHighlow
 {
     public class ActuateUnitReaction
     {

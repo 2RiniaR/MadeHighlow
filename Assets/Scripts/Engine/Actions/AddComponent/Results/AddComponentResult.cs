@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     コンポーネントを追加するアクションの結果
     /// </summary>
-    public record AddComponentResult : ISimulatable
+    public record AddComponentResult : Result
     {
         /// <summary>
         ///     追加されたコンポーネント
@@ -13,9 +13,9 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public Component AddedComponent { get; init; } = Component.Empty;
 
-        public virtual World Simulate(in World world)
+        public override World Simulate(in World world)
         {
-            return AddedComponent.Create(world);
+            return AddedComponent.CreateIn(world);
         }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public abstract record SupplyCardResult(in SupplyCardResultCode Code) : ISimulatable
+    public abstract record SupplyCardResult(in SupplyCardResultCode Code) : Result
     {
-        public World Simulate(in World world)
+        public override World Simulate(in World world)
         {
             throw new NotImplementedException();
         }

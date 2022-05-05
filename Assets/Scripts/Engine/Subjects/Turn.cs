@@ -10,7 +10,11 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public Turn Increment()
         {
-            if (Value == int.MaxValue) return this;
+            if (Value == int.MaxValue)
+            {
+                return this;
+            }
+
             return new Turn(Value + 1);
         }
     }

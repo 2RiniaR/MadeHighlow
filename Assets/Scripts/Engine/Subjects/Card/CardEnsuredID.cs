@@ -7,19 +7,19 @@ namespace RineaR.MadeHighlow
     {
         public ID Content { get; init; } = ID.None;
 
-        IAttachable IAttachableEnsuredID.Get(in World world)
+        IAttachable IAttachableEnsuredID.GetFrom(in World world)
         {
-            return Get(world);
+            return GetFrom(world);
         }
 
         [CanBeNull]
-        public Card Get([NotNull] in World world)
+        public Card GetFrom([NotNull] in World world)
         {
-            return Card.All(world).Find(card => card.EnsuredID == this);
+            return Card.GetAllFrom(world).Find(card => card.EnsuredID == this);
         }
 
         [NotNull]
-        public World Delete([NotNull] in World world)
+        public World DeleteFrom([NotNull] in World world)
         {
             throw new NotImplementedException();
         }

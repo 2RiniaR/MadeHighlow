@@ -2,13 +2,13 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record GenerateEntityResult : ISimulatable
+    public record GenerateEntityResult : Result
     {
         [NotNull] public Entity Entity { get; init; } = Entity.Empty;
 
-        public World Simulate(in World world)
+        public override World Simulate(in World world)
         {
-            return Entity.Create(world);
+            return Entity.CreateIn(world);
         }
     }
 }

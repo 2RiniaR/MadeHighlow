@@ -45,10 +45,26 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public static Direction2D FromVector([NotNull] in Vector2D vector)
         {
-            if (vector == Vector2D.XPositive) return XPositive;
-            if (vector == Vector2D.XNegative) return XNegative;
-            if (vector == Vector2D.YPositive) return YPositive;
-            if (vector == Vector2D.YNegative) return YNegative;
+            if (vector == Vector2D.XPositive)
+            {
+                return XPositive;
+            }
+
+            if (vector == Vector2D.XNegative)
+            {
+                return XNegative;
+            }
+
+            if (vector == Vector2D.YPositive)
+            {
+                return YPositive;
+            }
+
+            if (vector == Vector2D.YNegative)
+            {
+                return YNegative;
+            }
+
             throw new ArgumentException("The vector could not be convert to direction.");
         }
 

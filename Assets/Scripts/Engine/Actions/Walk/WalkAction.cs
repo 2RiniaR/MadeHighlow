@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     オブジェクトがフィールド上を歩いて移動するアクション
     /// </summary>
-    public record WalkAction : IValidatable
+    public record WalkAction : Action<WalkResult>
     {
         /// <summary>
         ///     行動するオブジェクト
@@ -20,16 +20,12 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public ValueObjectList<StepAction> Steps { get; init; } = ValueObjectList<StepAction>.Empty;
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         /// <summary>
         ///     アクションを実行した結果を返す
         /// </summary>
         [NotNull]
-        public WalkResult Validate([NotNull] in IActionContext context)
+        public override WalkResult Validate([NotNull] in IActionContext context)
         {
             var stepResults = new List<StepResult>();
 

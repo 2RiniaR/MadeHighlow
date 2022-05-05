@@ -3,15 +3,10 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record LeavePlayerAction : IValidatable
+    public record LeavePlayerAction : Action<LeavePlayerResult>
     {
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
-
         [NotNull]
-        public LeavePlayerResult Validate([NotNull] in IActionContext context)
+        public override LeavePlayerResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

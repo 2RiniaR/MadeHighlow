@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record JoinPlayerResult : ISimulatable
+    public record JoinPlayerResult : Result
     {
-        public World Simulate(in World world)
+        public override World Simulate(in World world)
         {
             throw new NotImplementedException();
         }

@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Methods
         public ValueObjectList<GeometryInteractTarget> Targets { get; init; } =
             ValueObjectList<GeometryInteractTarget>.Empty;
 
-        public ISimulatable Run(in Session session)
+        public Result Run(in Session session)
         {
             throw new NotImplementedException();
         }

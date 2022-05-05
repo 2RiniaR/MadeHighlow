@@ -21,12 +21,12 @@ namespace RineaR.MadeHighlow
             throw new NotImplementedException();
         }
 
-        public void Append(ISimulatable result)
+        public void Append(Result result)
         {
             throw new NotImplementedException();
         }
 
-        public void AppendRange(params ISimulatable[] results)
+        public void AppendRange(params Result[] results)
         {
             throw new NotImplementedException();
         }

@@ -2,13 +2,13 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyEntityResult : ISimulatable
+    public record DestroyEntityResult : Result
     {
         [NotNull] public EntityEnsuredID Actor { get; init; } = new();
 
-        public World Simulate(in World world)
+        public override World Simulate(in World world)
         {
-            return Actor.Delete(world);
+            return Actor.DeleteFrom(world);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow
         public IAttachable WithComponents([NotNull] [ItemNotNull] ValueObjectList<Component> components);
 
         [NotNull]
-        public World Update([NotNull] in World world);
+        public World UpdateIn([NotNull] in World world);
 
         private record EmptyAttachable : IAttachable
         {
@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow
                 return Empty;
             }
 
-            public World Update(in World world)
+            public World UpdateIn(in World world)
             {
                 return world;
             }

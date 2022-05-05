@@ -35,14 +35,14 @@ namespace RineaR.MadeHighlow
 
         IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
 
-        public World Update(in World world)
+        public World UpdateIn(in World world)
         {
-            var player = PlayerID.Get(world) ?? throw new NullReferenceException();
+            var player = PlayerID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedPlayer = player with
             {
                 Cards = player.Cards.ReplaceItem(card => card.EnsuredID == EnsuredID, this),
             };
-            return modifiedPlayer.Update(world);
+            return modifiedPlayer.UpdateIn(world);
         }
 
         /// <summary>
@@ -51,17 +51,17 @@ namespace RineaR.MadeHighlow
         public ID ID { get; init; } = ID.None;
 
         [NotNull]
-        public World Create([NotNull] in World world)
+        public World CreateIn([NotNull] in World world)
         {
-            var player = PlayerID.Get(world) ?? throw new NullReferenceException();
+            var player = PlayerID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedPlayer = player with { Cards = player.Cards.Add(this) };
-            return modifiedPlayer.Update(world);
+            return modifiedPlayer.UpdateIn(world);
         }
 
         [NotNull]
-        public static ValueObjectList<Card> All([NotNull] in World world)
+        public static ValueObjectList<Card> GetAllFrom([NotNull] in World world)
         {
-            return Player.All(world).SelectMany(player => player.Cards);
+            return Player.GetAllFrom(world).SelectMany(player => player.Cards);
         }
 
         [NotNull]

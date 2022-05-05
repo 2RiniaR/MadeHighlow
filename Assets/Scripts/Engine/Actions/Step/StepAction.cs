@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     オブジェクトがフィールド上を歩いて1マス移動するアクション
     /// </summary>
-    public record StepAction : IValidatable
+    public record StepAction : Action<StepResult>
     {
         /// <summary>
         ///     行動するオブジェクト
@@ -24,7 +24,7 @@ namespace RineaR.MadeHighlow
         ///     追加効果
         /// </summary>
         [NotNull]
-        public ValueObjectList<IValidatable> AfterActions { get; init; } = ValueObjectList<IValidatable>.Empty;
+        public ValueObjectList<Action> AfterActions { get; init; } = ValueObjectList<Action>.Empty;
 
         /// <summary>
         ///     使用可能な移動コスト
@@ -32,16 +32,12 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public StepCost AvailableCost { get; init; } = new();
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         [NotNull]
-        public StepResult Validate([NotNull] in IActionContext context)
+        public override StepResult Validate([NotNull] in IActionContext context)
         {
             var world = context.CurrentWorld();
-            var actor = Actor.Get(world) ?? throw new NullReferenceException();
+            var actor = Actor.GetFrom(world) ?? throw new NullReferenceException();
 
             var originPosition = actor.Position3D.To2D();
             var originTile = originPosition.GetTile(world);
@@ -49,7 +45,10 @@ namespace RineaR.MadeHighlow
             var destTile = destPosition.GetTile(world);
 
             // 移動先のタイルがない場合、移動しない
-            if (destTile == null) return FailedStepResult.NoEntry;
+            if (destTile == null)
+            {
+                return FailedStepResult.NoEntry;
+            }
 
             var entities = new EntityCondition { Position2D = originPosition }.Search(world);
             foreach (var entity in entities)
@@ -59,7 +58,10 @@ namespace RineaR.MadeHighlow
                 foreach (var reactor in reactors)
                 {
                     var reactions = reactor.OnSteppedOut(context, Actor);
-                    foreach (var reaction in reactions) context.Append(reaction.Result);
+                    foreach (var reaction in reactions)
+                    {
+                        context.Append(reaction.Result);
+                    }
                 }
             }
 
@@ -67,7 +69,10 @@ namespace RineaR.MadeHighlow
 
 
             // コストオーバーだったら、移動しない
-            if (AvailableCost.Value < cost.Value) return FailedStepResult.CostOver;
+            if (AvailableCost.Value < cost.Value)
+            {
+                return FailedStepResult.CostOver;
+            }
 
             var afterActionResults = RunAfterActions(context);
 
@@ -84,7 +89,7 @@ namespace RineaR.MadeHighlow
         ///     ステップ後アクションを実行する
         /// </summary>
         [NotNull]
-        private ValueObjectList<ISimulatable> RunAfterActions([NotNull] in IActionContext session)
+        private ValueObjectList<Result> RunAfterActions([NotNull] in IActionContext session)
         {
             throw new NotImplementedException();
         }

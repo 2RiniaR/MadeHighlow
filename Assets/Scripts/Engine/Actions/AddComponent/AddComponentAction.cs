@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     コンポーネントを追加するアクション
     /// </summary>
-    public record AddComponentAction : IValidatable
+    public record AddComponentAction : Action<AddComponentResult>
     {
         /// <summary>
         ///     コンポーネントを追加する対象
@@ -18,13 +18,9 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public Component Component { get; init; } = Component.Empty;
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         [NotNull]
-        public AddComponentResult Validate([NotNull] in IActionContext context)
+        public override AddComponentResult Validate([NotNull] in IActionContext context)
         {
             return new AddComponentResult { AddedComponent = Component };
         }

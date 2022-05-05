@@ -41,7 +41,11 @@ namespace RineaR.MadeHighlow
         /// <exception cref="ArgumentException">`0`が入力されたとき。</exception>
         public static ID From(uint value)
         {
-            if (value == 0) throw new ArgumentException();
+            if (value == 0)
+            {
+                throw new ArgumentException();
+            }
+
             return new ID(value);
         }
 

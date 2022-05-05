@@ -14,7 +14,11 @@ namespace RineaR.MadeHighlow
 
         public override Duration Decrement()
         {
-            if (Value == 0) return null;
+            if (Value == 0)
+            {
+                return null;
+            }
+
             return new TurnDuration(Value - 1);
         }
     }

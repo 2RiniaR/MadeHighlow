@@ -6,8 +6,6 @@ namespace RineaR.MadeHighlow.Methods
     {
         [NotNull] public EntityEnsuredID Pointer { get; init; } = new();
 
-        [NotNull]
-        [ItemNotNull]
-        public ValueObjectList<IValidatable> Effects { get; init; } = ValueObjectList<IValidatable>.Empty;
+        [NotNull] [ItemNotNull] public ValueObjectList<Action> Effects { get; init; } = ValueObjectList<Action>.Empty;
     }
 }

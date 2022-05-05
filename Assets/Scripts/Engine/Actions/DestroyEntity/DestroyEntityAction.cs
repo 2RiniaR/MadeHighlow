@@ -2,17 +2,13 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyEntityAction : IValidatable
+    public record DestroyEntityAction : Action<DestroyEntityResult>
     {
         [NotNull] public EntityEnsuredID EntityID { get; init; } = new();
 
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
 
         [NotNull]
-        public DestroyEntityResult Validate([NotNull] in IActionContext context)
+        public override DestroyEntityResult Validate([NotNull] in IActionContext context)
         {
             return new DestroyEntityResult { Actor = EntityID };
         }

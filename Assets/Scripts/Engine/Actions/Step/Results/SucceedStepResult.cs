@@ -34,7 +34,7 @@ namespace RineaR.MadeHighlow
         ///     追加効果の結果
         /// </summary>
         [NotNull]
-        public ValueObjectList<ISimulatable> AfterActionResults { get; init; } = ValueObjectList<ISimulatable>.Empty;
+        public ValueObjectList<Result> AfterActionResults { get; init; } = ValueObjectList<Result>.Empty;
 
         /// <summary>
         ///     使用可能だった移動コスト
@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public StepCost AvailableCost { get; init; } = new();
 
-        public World Simulate(in World world)
+        public override World Simulate(in World world)
         {
             throw new NotImplementedException();
         }

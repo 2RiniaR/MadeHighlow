@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record BigBangResult : ISimulatable
+    public record BigBangResult : Result
     {
         protected BigBangResult(BigBangResultCode resultCode)
         {
@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow
 
         public static BigBangResult FailedByNotEmpty => new(BigBangResultCode.FailedByNotEmpty);
 
-        public virtual World Simulate(in World world)
+        public override World Simulate(in World world)
         {
             throw new InvalidOperationException("The BigBang event could not simulate when session was not empty.");
         }

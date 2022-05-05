@@ -3,6 +3,6 @@
     public record StepOutReaction
     {
         public EntityEnsuredID Reactor { get; init; } = new();
-        public ISimulatable Result { get; init; } = ISimulatable.Empty;
+        public Result Result { get; init; } = Result.Empty;
     }
 }

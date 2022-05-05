@@ -3,15 +3,10 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record ElevateTileAction : IValidatable
+    public record ElevateTileAction : Action<ElevateTileResult>
     {
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
-
         [NotNull]
-        public ElevateTileResult Validate([NotNull] in IActionContext context)
+        public override ElevateTileResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Interfaces
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     ユニットが現在受けている命令を実行するアクションの結果に対して、副次的にアクションを実行するもの

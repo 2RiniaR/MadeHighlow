@@ -6,10 +6,8 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     「エンティティ」の効果
     /// </summary>
-    public abstract record Component : IIdentified
+    public abstract record Component : IIdentified, IComponent
     {
-        [NotNull] public IAttachableEnsuredID AttachedID { get; init; } = IAttachableEnsuredID.Empty;
-
         /// <summary>
         ///     有効期間
         /// </summary>
@@ -17,6 +15,7 @@ namespace RineaR.MadeHighlow
         public Duration Duration { get; init; } = Duration.Unlimited;
 
         public static Component Empty => new EmptyComponent();
+        public IAttachableEnsuredID AttachedID { get; init; } = IAttachableEnsuredID.Empty;
 
         public ComponentEnsuredID EnsuredID => new() { Content = ID };
 
@@ -26,26 +25,31 @@ namespace RineaR.MadeHighlow
         public ID ID { get; init; } = ID.None;
 
         [NotNull]
-        public World Create([NotNull] in World world)
+        public World CreateIn([NotNull] in World world)
         {
-            var attached = AttachedID.Get(world) ?? throw new NullReferenceException();
+            var attached = AttachedID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedAttached = attached.WithComponents(attached.Components.Add(this));
-            return modifiedAttached.Update(world);
+            return modifiedAttached.UpdateIn(world);
         }
 
         [NotNull]
-        public World Update([NotNull] in World world)
+        public World UpdateIn([NotNull] in World world)
         {
-            var attached = AttachedID.Get(world) ?? throw new NullReferenceException();
+            var attached = AttachedID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedAttached = attached.WithComponents(
                 attached.Components.ReplaceItem(card => card.EnsuredID == EnsuredID, this)
             );
-            return modifiedAttached.Update(world);
+            return modifiedAttached.UpdateIn(world);
         }
 
-        public static ValueObjectList<Component> All([NotNull] in World world)
+        public static ValueObjectList<Component> GetAllFrom([NotNull] in World world)
         {
             return world.GetChildren().WhereType<IAttachable>().SelectMany(item => item.Components);
+        }
+
+        public static ValueObjectList<T> GetAllOfTypeFrom<T>([NotNull] in World world) where T : class
+        {
+            return GetAllFrom(world).WhereType<T>();
         }
 
         [NotNull]

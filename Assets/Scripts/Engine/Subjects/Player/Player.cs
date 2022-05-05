@@ -33,7 +33,7 @@ namespace RineaR.MadeHighlow
             return this with { Components = components };
         }
 
-        public World Update(in World world)
+        public World UpdateIn(in World world)
         {
             return world with { Players = world.Players.ReplaceItem(player => player.EnsuredID == EnsuredID, this) };
         }
@@ -44,13 +44,13 @@ namespace RineaR.MadeHighlow
         public ID ID { get; init; } = ID.None;
 
         [NotNull]
-        public World Create([NotNull] in World world)
+        public World CreateIn([NotNull] in World world)
         {
             return world with { Players = world.Players.Add(this) };
         }
 
         [NotNull]
-        public static ValueObjectList<Player> All([NotNull] in World world)
+        public static ValueObjectList<Player> GetAllFrom([NotNull] in World world)
         {
             return world.Players;
         }

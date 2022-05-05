@@ -1,8 +1,8 @@
 ﻿namespace RineaR.MadeHighlow
 {
-    public record IncrementTurnResult : ISimulatable
+    public record IncrementTurnResult : Result
     {
-        public World Simulate(in World world)
+        public override World Simulate(in World world)
         {
             return world with
             {

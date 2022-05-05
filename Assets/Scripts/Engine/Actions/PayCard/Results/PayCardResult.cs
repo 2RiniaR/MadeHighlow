@@ -1,20 +1,13 @@
-﻿using System;
-
-namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     カードを対価として支払うアクションの結果
     /// </summary>
-    public record PayCardResult : ISimulatable
+    public abstract record PayCardResult : Result
     {
         /// <summary>
-        ///     対価として支払ったカードのID
+        ///     発生したリアクションの結果
         /// </summary>
-        public CardEnsuredID PaidCardID { get; init; } = new();
-
-        public World Simulate(in World world)
-        {
-            throw new NotImplementedException();
-        }
+        public ValueObjectList<Result> Reactions { get; init; } = ValueObjectList<Result>.Empty;
     }
 }

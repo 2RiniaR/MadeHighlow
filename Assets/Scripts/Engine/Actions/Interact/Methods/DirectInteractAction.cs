@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Methods
         public ValueObjectList<DirectInteractTarget> Targets { get; init; } =
             ValueObjectList<DirectInteractTarget>.Empty;
 
-        public ISimulatable Run(in Session session)
+        public Result Run(in Session session)
         {
             throw new NotImplementedException();
         }

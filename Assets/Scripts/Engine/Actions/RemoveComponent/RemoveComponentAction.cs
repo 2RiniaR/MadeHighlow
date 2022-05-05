@@ -3,15 +3,10 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.RemoveComponent
 {
-    public record RemoveComponentAction : IValidatable
+    public record RemoveComponentAction : Action<RemoveComponentResult>
     {
-        ISimulatable IValidatable.Validate(in IActionContext context)
-        {
-            return Validate(context);
-        }
-
         [NotNull]
-        public RemoveComponentResult Validate([NotNull] in IActionContext context)
+        public override RemoveComponentResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

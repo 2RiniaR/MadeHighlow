@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow
         [NotNull] public static IAttachableEnsuredID Empty => new EmptyAttachableEnsuredID();
 
         [CanBeNull]
-        public IAttachable Get([NotNull] in World world);
+        public IAttachable GetFrom([NotNull] in World world);
 
         private record EmptyAttachableEnsuredID : IAttachableEnsuredID
         {
             public ID Content { get; init; } = ID.None;
 
-            public IAttachable Get(in World world)
+            public IAttachable GetFrom(in World world)
             {
                 return IAttachable.Empty;
             }

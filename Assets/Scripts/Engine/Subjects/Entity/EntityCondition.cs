@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow
         [ItemNotNull]
         public ValueObjectList<Entity> Search([NotNull] in World world)
         {
-            return Entity.All(world)
+            return Entity.GetAllFrom(world)
                 .Where(
                     entity => (Position2D == null || entity.Position3D.To2D() == Position2D) &&
                               (Position3D == null || entity.Position3D == Position3D)
