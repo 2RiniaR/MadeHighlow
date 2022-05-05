@@ -35,5 +35,10 @@ namespace RineaR.MadeHighlow
         {
             throw new NotImplementedException();
         }
+
+        public float GetRandom()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

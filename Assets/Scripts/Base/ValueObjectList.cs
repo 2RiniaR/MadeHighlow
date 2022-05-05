@@ -125,6 +125,13 @@ public sealed class ValueObjectList<T> : IEnumerable<T>
         return Items.Select(selector).ToValueObjectList();
     }
 
+    [NotNull]
+    [ItemNotNull]
+    public ValueObjectList<T> Sort(Comparison<T> comparison)
+    {
+        return Items.Sort(comparison).ToValueObjectList();
+    }
+
     public TResult Aggregate<TResult>(TResult seed, Func<TResult, T, TResult> func)
     {
         return Items.Aggregate(seed, func);

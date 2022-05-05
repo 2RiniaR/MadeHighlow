@@ -17,5 +17,7 @@ namespace RineaR.MadeHighlow
         public void AppendRange([NotNull] [ItemNotNull] params Result[] results);
 
         public ID NewID();
+
+        public float GetRandom();
     }
 }

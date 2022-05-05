@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow
 
         public override World Simulate(in World world)
         {
-            var unit = TargetID.Get(world) ?? throw new NullReferenceException();
+            var unit = TargetID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedUnit = unit with { CurrentOperation = Operation };
             return modifiedUnit.UpdateIn(world);
         }

@@ -12,18 +12,11 @@ namespace RineaR.MadeHighlow
         ///     実行を命令するユニット
         /// </summary>
         [NotNull]
-        public ValueObjectList<UnitEnsuredID> TargetsID { get; init; } = ValueObjectList<UnitEnsuredID>.Empty;
+        public UnitEnsuredID TargetID { get; init; } = new();
 
-
-        [NotNull]
-        public override ActuateUnitResult Validate([NotNull] in IActionContext context)
+        public override ActuateUnitResult Validate(in IActionContext context)
         {
-            var currentWorld = context.CurrentWorld();
-
-            // 命令を実行する順番を解決する
-            var orderedUnits = new ActuateUnitOrderer { TargetsID = TargetsID }.Resolve(currentWorld);
-
-            // 順番に命令を実行する
+            var world = context.CurrentWorld();
 
             // カードを消費する
 
