@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     ///     ユニットの「攻撃力」
     /// </summary>
     /// <param name="Value">値</param>
-    public record UnitStrength(in int Value = 0)
+    public sealed record UnitStrength(in int Value = 0)
     {
         public const int MinValue = 0;
         public const int MaxValue = 999;

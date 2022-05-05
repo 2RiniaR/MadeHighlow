@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     「カード」
     /// </summary>
-    public record Card : IIdentified, IAttachable
+    public abstract record Card : IIdentified, IAttachable
     {
         public PlayerEnsuredID PlayerID { get; init; } = new();
 
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow
         ///     機能
         /// </summary>
         [NotNull]
-        public Command Command { get; init; } = Command.None;
+        public Command Command { get; init; } = Command.Empty;
 
         public CardEnsuredID EnsuredID => new() { Content = ID };
 
@@ -73,5 +73,16 @@ namespace RineaR.MadeHighlow
                 Components.SelectMany(item => item.GetChildren())
             );
         }
+    }
+
+    public sealed record Card<TCommand> : Card where TCommand : Command<TCommand>
+    {
+        public new CardEnsuredID<TCommand> EnsuredID => new() { Content = ID };
+
+        /// <summary>
+        ///     機能
+        /// </summary>
+        [NotNull]
+        public new Command<TCommand> Command { get; init; } = Command<TCommand>.Empty;
     }
 }

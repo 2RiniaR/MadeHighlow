@@ -24,4 +24,13 @@ namespace RineaR.MadeHighlow
             throw new NotImplementedException();
         }
     }
+
+    public sealed record CardEnsuredID<TCommand> : CardEnsuredID where TCommand : Command<TCommand>
+    {
+        [CanBeNull]
+        public new Card<TCommand> GetFrom([NotNull] in World world)
+        {
+            return Card.GetAllFrom(world).Find(card => card.EnsuredID == this) as Card<TCommand>;
+        }
+    }
 }

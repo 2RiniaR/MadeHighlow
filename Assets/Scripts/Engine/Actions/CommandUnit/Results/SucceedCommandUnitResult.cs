@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     public record SucceedCommandUnitResult() : CommandUnitResult(CommandUnitResultCode.Succeed)
     {
         [NotNull] public UnitEnsuredID TargetID { get; init; } = new();
-        [NotNull] public UnitOperation Operation { get; init; } = new();
+        [NotNull] public UnitOperation Operation { get; init; } = UnitOperation.Empty;
 
         public override World Simulate(in World world)
         {

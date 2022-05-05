@@ -12,9 +12,7 @@
 
         public override PayCardResult Validate(in IActionContext context)
         {
-            var world = context.CurrentWorld();
-
-            foreach (var effector in Component.GetAllOfTypeFrom<IPayCardEffector>(world))
+            foreach (var effector in Component.GetAllOfTypeFrom<IPayCardEffector>(context.World))
             {
                 var effect = effector.EffectOnPayCard(context, this);
 

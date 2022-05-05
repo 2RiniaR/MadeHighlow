@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     空のアクション
         /// </summary>
-        public Action Empty => new EmptyImpl();
+        public static Action Empty => new EmptyImpl();
 
         /// <summary>
         ///     アクションを検証し、結果を返す

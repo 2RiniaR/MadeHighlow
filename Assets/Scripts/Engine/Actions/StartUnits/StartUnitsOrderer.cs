@@ -36,7 +36,7 @@ namespace RineaR.MadeHighlow
             [NotNull] in IActionContext context
         )
         {
-            var world = context.CurrentWorld();
+            var world = context.World;
 
             // (1) 「コマンドの早さ」が早い順に行動する。
             var quicknessCompare = CompareCommandQuickness(operation1, operation2, world);

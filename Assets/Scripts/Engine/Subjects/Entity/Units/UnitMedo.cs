@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     ///     ユニットの「メド」
     /// </summary>
     /// <param name="Value">値</param>
-    public record UnitMedo(in int Value = 0)
+    public sealed record UnitMedo(in int Value = 0)
     {
         public const int MinValue = -4;
         public const int MaxValue = 4;

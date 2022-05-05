@@ -36,7 +36,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public override StepResult Validate([NotNull] in IActionContext context)
         {
-            var world = context.CurrentWorld();
+            var world = context.World;
             var actor = Actor.GetFrom(world) ?? throw new NullReferenceException();
 
             var originPosition = actor.Position3D.To2D();
@@ -60,7 +60,7 @@ namespace RineaR.MadeHighlow
                     var reactions = reactor.OnSteppedOut(context, Actor);
                     foreach (var reaction in reactions)
                     {
-                        context.Append(reaction.Result);
+                        context.Appended(reaction.Result);
                     }
                 }
             }

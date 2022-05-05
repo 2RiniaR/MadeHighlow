@@ -1,17 +1,57 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「カード」の指令
+    ///     カードによる命令
     /// </summary>
     public abstract record Command
     {
         /// <summary>
-        ///     早さ
+        ///     命令の早さ
         /// </summary>
         public CommandQuickness Quickness { get; init; } = CommandQuickness.Last;
 
-        public static Command None => new NoneCommand();
+        /// <summary>
+        ///     空の命令
+        /// </summary>
+        [NotNull]
+        public static Command Empty => new EmptyImpl();
 
-        private record NoneCommand : Command;
+        private record EmptyImpl : Command;
+    }
+
+    /// <summary>
+    ///     カードによる命令
+    /// </summary>
+    public abstract record Command<TCommand> : Command where TCommand : Command<TCommand>
+    {
+        /// <summary>
+        ///     空の命令
+        /// </summary>
+        [NotNull]
+        public new static Command<TCommand> Empty => new EmptyImpl();
+
+        /// <summary>
+        ///     指定された追加データから、アクションを生成する
+        /// </summary>
+        [NotNull]
+        public abstract Action GenerateAction(
+            [NotNull] CommandOption<TCommand> option,
+            [NotNull] UnitEnsuredID unitID,
+            [NotNull] IActionContext context
+        );
+
+        private record EmptyImpl : Command<TCommand>
+        {
+            public override Action GenerateAction(
+                CommandOption<TCommand> option,
+                UnitEnsuredID unitID,
+                IActionContext context
+            )
+            {
+                return Action.Empty;
+            }
+        }
     }
 }

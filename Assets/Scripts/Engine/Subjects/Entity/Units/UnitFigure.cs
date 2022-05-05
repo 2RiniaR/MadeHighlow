@@ -7,8 +7,8 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public abstract record UnitFigure
     {
-        [NotNull] public static UnitFigure Empty => new EmptyUnitFigure();
+        [NotNull] public static UnitFigure Empty => new EmptyImpl();
 
-        private record EmptyUnitFigure : UnitFigure;
+        private record EmptyImpl : UnitFigure;
     }
 }

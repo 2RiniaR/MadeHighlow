@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record EntityCondition
+    public sealed record EntityCondition
     {
         [CanBeNull] public Position2D Position2D { get; init; }
         [CanBeNull] public Position3D Position3D { get; init; }

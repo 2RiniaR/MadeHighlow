@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     「ユニット」を表現する
     /// </summary>
-    public record Unit : Entity
+    public sealed record Unit : Entity
     {
         /// <summary>
         ///     攻撃力
@@ -43,7 +43,7 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        public new static ValueObjectList<Unit> All([NotNull] in World world)
+        public static ValueObjectList<Unit> All([NotNull] in World world)
         {
             return world.Entities.WhereType<Unit>();
         }

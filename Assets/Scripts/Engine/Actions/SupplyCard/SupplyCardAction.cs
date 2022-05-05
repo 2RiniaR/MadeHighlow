@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public override SupplyCardResult Validate([NotNull] in IActionContext context)
         {
-            var player = Target.GetFrom(context.CurrentWorld()) ?? throw new NullReferenceException();
+            var player = Target.GetFrom(context.World) ?? throw new NullReferenceException();
             var deckCapacity = player.DeckSize.Value - player.Cards.Count;
 
             return new SucceedSupplyCardResult

@@ -3,10 +3,10 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     ユニットの「体力」
+    ///     エンティティの「体力」
     /// </summary>
     /// <param name="Value">値</param>
-    public record UnitHealth(in int Value = 0)
+    public sealed record EntityHealth(in int Value = 0)
     {
         public const int MinValue = 0;
         public const int MaxValue = 999;

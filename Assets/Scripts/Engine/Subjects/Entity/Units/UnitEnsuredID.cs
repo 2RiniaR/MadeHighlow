@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record UnitEnsuredID : EntityEnsuredID
+    public sealed record UnitEnsuredID : EntityEnsuredID
     {
         [CanBeNull]
         public new Unit GetFrom([NotNull] in World world)

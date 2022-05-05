@@ -11,22 +11,19 @@ namespace RineaR.MadeHighlow
 
         public Session Session { get; }
 
-        public World CurrentWorld()
-        {
-            throw new NotImplementedException();
-        }
+        public World World => throw new NotImplementedException();
 
         public World WorldAt(ID id)
         {
             throw new NotImplementedException();
         }
 
-        public void Append(Result result)
+        public IActionContext Appended(Result result)
         {
             throw new NotImplementedException();
         }
 
-        public void AppendRange(params Result[] results)
+        public IActionContext AppendedRange(params Result[] results)
         {
             throw new NotImplementedException();
         }

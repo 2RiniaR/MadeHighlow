@@ -2,19 +2,19 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record EntityVitality
+    public sealed record EntityVitality
     {
         /// <summary>
         ///     体力
         /// </summary>
         [NotNull]
-        public UnitHealth Health { get; init; } = new();
+        public EntityHealth Health { get; init; } = new();
 
         /// <summary>
         ///     最大体力
         /// </summary>
         [NotNull]
-        public UnitHealth MaxHealth { get; init; } = new();
+        public EntityHealth MaxHealth { get; init; } = new();
 
         public bool IsDead => Health.Value <= MaxHealth.Value;
     }

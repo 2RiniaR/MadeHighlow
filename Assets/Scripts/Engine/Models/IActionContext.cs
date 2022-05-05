@@ -2,19 +2,41 @@
 
 namespace RineaR.MadeHighlow
 {
+    /// <summary>
+    ///     `Session` のラッパーオブジェクト
+    /// </summary>
+    /// <remarks>ステートフルだが依存先がキャッシュのため、実質イミュータブルのように扱ってよい。</remarks>
     public interface IActionContext
     {
-        [NotNull] public Session Session { get; }
-
+        /// <summary>
+        ///     現在のセッション
+        /// </summary>
         [NotNull]
-        public World CurrentWorld();
+        public Session Session { get; }
 
+        /// <summary>
+        ///     現在のワールドの状態
+        /// </summary>
+        [NotNull]
+        public World World { get; }
+
+        /// <summary>
+        ///     特定の時点でのワールドの状態
+        /// </summary>
         [NotNull]
         public World WorldAt(ID id);
 
-        public void Append([NotNull] Result result);
+        /// <summary>
+        ///     セッションに追記する
+        /// </summary>
+        [NotNull]
+        public IActionContext Appended([NotNull] Result result);
 
-        public void AppendRange([NotNull] [ItemNotNull] params Result[] results);
+        /// <summary>
+        ///     セッションに追記する
+        /// </summary>
+        [NotNull]
+        public IActionContext AppendedRange([NotNull] [ItemNotNull] params Result[] results);
 
         public ID NewID();
 

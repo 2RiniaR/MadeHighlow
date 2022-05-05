@@ -61,7 +61,7 @@ namespace RineaR.MadeHighlow.Directors.Orders
             return medo1.Value.CompareTo(medo2.Value);
         }
 
-        private static int Compare(UnitHealth health1, UnitHealth health2)
+        private static int Compare(EntityHealth health1, EntityHealth health2)
         {
             return health2.Value.CompareTo(health1.Value);
         }

@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow
     {
         public ID ActorID { get; init; } = ID.None;
         public ID TargetID { get; init; } = ID.None;
-        [NotNull] public UnitOperation Operation { get; init; } = new();
+        [NotNull] public UnitOperation Operation { get; init; } = UnitOperation.Empty;
 
 
         [NotNull]

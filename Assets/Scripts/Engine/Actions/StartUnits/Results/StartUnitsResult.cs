@@ -1,15 +1,26 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     ユニットが現在受けている命令を実行するアクションの結果
+    ///     命令を実行するアクションの結果
     /// </summary>
     public record StartUnitsResult : Result
     {
+        /// <summary>
+        ///     実行した命令
+        /// </summary>
+        [NotNull]
+        [ItemNotNull]
+        public ValueObjectList<RunOperationResult> Operations { get; init; } =
+            ValueObjectList<RunOperationResult>.Empty;
+
         public override World Simulate(in World world)
         {
-            throw new NotImplementedException();
+            return Operations.Aggregate(
+                world,
+                (currentWorld, operationResult) => operationResult.Simulate(currentWorld)
+            );
         }
     }
 }

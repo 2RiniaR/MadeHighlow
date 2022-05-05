@@ -33,7 +33,7 @@ namespace RineaR.MadeHighlow
             {
                 var formattedStep = step with { Actor = Actor };
                 var stepResult = formattedStep.Validate(context);
-                context.Append(stepResult);
+                context.Appended(stepResult);
                 stepResults.Add(stepResult);
             }
 

@@ -7,12 +7,12 @@ namespace RineaR.MadeHighlow
         #region Constructor
 
         [Test]
-        [TestCase(UnitHealth.MinValue)]
-        [TestCase(UnitHealth.MinValue + 1)]
-        [TestCase(UnitHealth.MaxValue)]
+        [TestCase(EntityHealth.MinValue)]
+        [TestCase(EntityHealth.MinValue + 1)]
+        [TestCase(EntityHealth.MaxValue)]
         public void Constructor_Valid_ReturnsSame(int value)
         {
-            var actual = new UnitHealth(value);
+            var actual = new EntityHealth(value);
 
             Assert.That(actual.Value, Is.EqualTo(value));
         }
@@ -20,17 +20,17 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Constructor_LessThanMin_ReturnsMin()
         {
-            var actual = new UnitHealth(UnitHealth.MinValue - 1);
+            var actual = new EntityHealth(EntityHealth.MinValue - 1);
 
-            Assert.That(actual.Value, Is.EqualTo(UnitHealth.MinValue));
+            Assert.That(actual.Value, Is.EqualTo(EntityHealth.MinValue));
         }
 
         [Test]
         public void Constructor_GreaterThanMax_ReturnsMax()
         {
-            var actual = new UnitHealth(UnitHealth.MaxValue + 1);
+            var actual = new EntityHealth(EntityHealth.MaxValue + 1);
 
-            Assert.That(actual.Value, Is.EqualTo(UnitHealth.MaxValue));
+            Assert.That(actual.Value, Is.EqualTo(EntityHealth.MaxValue));
         }
 
         #endregion
