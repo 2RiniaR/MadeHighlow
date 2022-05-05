@@ -78,7 +78,7 @@ public sealed class ValueObjectList<T> : IEnumerable<T>
 
     [NotNull]
     [ItemNotNull]
-    public ValueObjectList<T> FindAll(Predicate<T> predicate)
+    public ValueObjectList<T> Where(Predicate<T> predicate)
     {
         return Items.FindAll(predicate).ToValueObjectList();
     }
@@ -161,5 +161,10 @@ public static class ValueObjectList
     public static ValueObjectList<T> Create<T>(params T[] items)
     {
         return ImmutableList.Create(items).ToValueObjectList();
+    }
+
+    public static ValueObjectList<T> Concat<T>(params ValueObjectList<T>[] lists)
+    {
+        return lists.SelectMany(list => list).ToValueObjectList();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     「ダメージ」の参照方法

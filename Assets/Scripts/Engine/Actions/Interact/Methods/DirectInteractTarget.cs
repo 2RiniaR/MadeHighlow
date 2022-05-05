@@ -1,13 +1,13 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Methods
+namespace RineaR.MadeHighlow.Methods
 {
     public record DirectInteractTarget
     {
-        [NotNull] public EntityLocator Pointer { get; init; } = new();
+        [NotNull] public EntityEnsuredID Pointer { get; init; } = new();
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<InteractionEffect> Effects { get; init; } = ValueObjectList<InteractionEffect>.Empty;
+        public ValueObjectList<IValidatable> Effects { get; init; } = ValueObjectList<IValidatable>.Empty;
     }
 }

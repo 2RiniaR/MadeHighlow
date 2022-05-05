@@ -3,5 +3,5 @@
     /// <summary>
     ///     「ガード」
     /// </summary>
-    public record Guard : EntityComponent;
+    public record Guard : Component;
 }

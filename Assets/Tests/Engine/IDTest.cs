@@ -10,26 +10,18 @@ namespace RineaR.MadeHighlow
         [Test]
         public void From_0_ThrowsArgumentException()
         {
-            Assert.That(() => ID<Sample>.From(0), Throws.TypeOf<ArgumentException>());
+            Assert.That(() => ID.From(0), Throws.TypeOf<ArgumentException>());
         }
 
         #endregion
-
-        private class Sample
-        {
-        }
-
-        private class Another
-        {
-        }
 
         #region Equals
 
         [Test]
         public void Equals_NoneAndNone_ReturnsFalse()
         {
-            var id1 = ID<Sample>.None;
-            var id2 = ID<Sample>.None;
+            var id1 = ID.None;
+            var id2 = ID.None;
 
             var actual = id1.Equals(id2);
 
@@ -39,8 +31,8 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Equals_NoneAndValue_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Sample>.None;
+            var id1 = ID.From(1);
+            var id2 = ID.None;
 
             var actual = id1.Equals(id2);
 
@@ -50,8 +42,8 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Equals_DifferentValue_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Sample>.From(2);
+            var id1 = ID.From(1);
+            var id2 = ID.From(2);
 
             var actual = id1.Equals(id2);
 
@@ -61,24 +53,12 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Equals_SameValue_ReturnsTrue()
         {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Sample>.From(1);
+            var id1 = ID.From(1);
+            var id2 = ID.From(1);
 
             var actual = id1.Equals(id2);
 
             Assert.That(actual, Is.True);
-        }
-
-        [Test]
-        public void Equals_DifferentType_ReturnsFalse()
-        {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Another>.From(1);
-
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            var actual = id1.Equals(id2);
-
-            Assert.That(actual, Is.False);
         }
 
         #endregion
@@ -88,8 +68,8 @@ namespace RineaR.MadeHighlow
         [Test]
         public void CompareTo_Greater_ReturnsTrue()
         {
-            var id1 = ID<Sample>.From(2);
-            var id2 = ID<Sample>.From(1);
+            var id1 = ID.From(2);
+            var id2 = ID.From(1);
 
             var actual = id1.CompareTo(id2);
 
@@ -99,8 +79,8 @@ namespace RineaR.MadeHighlow
         [Test]
         public void CompareTo_Same_ReturnsZero()
         {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Sample>.From(1);
+            var id1 = ID.From(1);
+            var id2 = ID.From(1);
 
             var actual = id1.CompareTo(id2);
 
@@ -110,8 +90,8 @@ namespace RineaR.MadeHighlow
         [Test]
         public void CompareTo_Less_ReturnsFalse()
         {
-            var id1 = ID<Sample>.From(1);
-            var id2 = ID<Sample>.From(2);
+            var id1 = ID.From(1);
+            var id2 = ID.From(2);
 
             var actual = id1.CompareTo(id2);
 

@@ -1,13 +1,12 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     public interface IStepCostEffector
     {
         public ValueObjectList<StepCostEffect> EffectStepCost(
-            [NotNull] in ISessionModel session,
-            [NotNull] in EntityLocator actor,
-            [NotNull] in EntityLocator reactor
+            [NotNull] in IActionContext session,
+            [NotNull] in EntityEnsuredID actor
         );
     }
 }

@@ -5,8 +5,6 @@ namespace RineaR.MadeHighlow.Directors
 {
     public record GameResult
     {
-        [NotNull]
-        [ItemNotNull]
-        public ImmutableList<ID<Player>> Ranking { get; init; } = ImmutableList<ID<Player>>.Empty;
+        [NotNull] public ImmutableList<ID> Ranking { get; init; } = ImmutableList<ID>.Empty;
     }
 }

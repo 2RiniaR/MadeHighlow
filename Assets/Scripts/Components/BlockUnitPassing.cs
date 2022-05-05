@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Components
 {
-    public record BlockUnitPassing : EntityComponent;
+    public record BlockUnitPassing : Component;
 }

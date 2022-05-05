@@ -1,14 +1,13 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     public interface IStepOutReactor
     {
         [NotNull]
         public ValueObjectList<StepOutReaction> OnSteppedOut(
-            [NotNull] in ISessionModel session,
-            [NotNull] in EntityLocator actor,
-            [NotNull] in EntityLocator reactor
+            [NotNull] in IActionContext session,
+            [NotNull] in EntityEnsuredID actor
         );
     }
 }

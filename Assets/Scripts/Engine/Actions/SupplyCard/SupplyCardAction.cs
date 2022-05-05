@@ -1,22 +1,28 @@
-﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Queries;
+﻿using System;
+using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
-    public record SupplyCardAction() : Action(ActionType.SupplyCard)
+    public record SupplyCardAction : IValidatable
     {
-        [NotNull] public PlayerLocator Target { get; init; } = new();
+        [NotNull] public PlayerEnsuredID Target { get; init; } = new();
         [NotNull] public ValueObjectList<Card> Cards { get; init; } = ValueObjectList<Card>.Empty;
 
-        public SupplyCardResult Run(in ISessionModel session)
+        ISimulatable IValidatable.Validate(in IActionContext context)
         {
-            var player = new GetPlayerQuery { Locator = Target }.Run(session.Current());
+            return Validate(context);
+        }
+
+        [NotNull]
+        public SupplyCardResult Validate([NotNull] in IActionContext context)
+        {
+            var player = Target.Get(context.CurrentWorld()) ?? throw new NullReferenceException();
             var deckCapacity = player.DeckSize.Value - player.Cards.Count;
 
             return new SucceedSupplyCardResult
             {
                 Target = Target,
-                SuppliedCards = Cards.Select(card => card with { ID = ID<Card>.None }).ToValueObjectList(),
+                SuppliedCards = Cards.Select(card => card with { ID = ID.None }).ToValueObjectList(),
             };
         }
     }

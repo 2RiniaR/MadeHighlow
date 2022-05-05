@@ -3,5 +3,5 @@
     /// <summary>
     ///     「不意打ち」
     /// </summary>
-    public record SurpriseAttack : EntityComponent;
+    public record SurpriseAttack : Component;
 }

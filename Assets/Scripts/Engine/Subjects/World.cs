@@ -36,5 +36,19 @@ namespace RineaR.MadeHighlow
         /// </summary>
         [NotNull]
         public Turn CurrentTurn { get; init; } = new();
+
+        [NotNull]
+        [ItemNotNull]
+        public ValueObjectList<IObject> GetChildren()
+        {
+            return ValueObjectList.Concat(
+                Players.Select(item => item as IObject),
+                Players.SelectMany(player => player.GetChildren()),
+                Tiles.Select(item => item as IObject),
+                Tiles.SelectMany(player => player.GetChildren()),
+                Entities.Select(item => item as IObject),
+                Entities.SelectMany(player => player.GetChildren())
+            );
+        }
     }
 }

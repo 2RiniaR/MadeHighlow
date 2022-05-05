@@ -3,5 +3,5 @@
     /// <summary>
     ///     「ロイヤルカウンター」
     /// </summary>
-    public record RoyalCounter : EntityComponent;
+    public record RoyalCounter : Component;
 }

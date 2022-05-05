@@ -1,12 +1,17 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
-    public record TeleportAction() : Action(ActionType.Teleport)
+    public record TeleportAction : IValidatable
     {
+        ISimulatable IValidatable.Validate(in IActionContext context)
+        {
+            return Validate(context);
+        }
+
         [NotNull]
-        public TeleportResult Run([NotNull] Session session)
+        public TeleportResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

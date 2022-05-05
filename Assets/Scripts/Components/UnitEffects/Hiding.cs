@@ -3,5 +3,5 @@
     /// <summary>
     ///     「ドロン」
     /// </summary>
-    public record Hiding : EntityComponent;
+    public record Hiding : Component;
 }

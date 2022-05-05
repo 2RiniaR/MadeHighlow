@@ -2,21 +2,21 @@
 
 namespace RineaR.MadeHighlow
 {
-    public readonly struct ID<T> : IComparable<ID<T>>
+    public readonly struct ID : IComparable<ID>
     {
         public override int GetHashCode()
         {
             return (int)InternalValue;
         }
 
-        public bool Equals(ID<T> other)
+        public bool Equals(ID other)
         {
             return InternalValue != 0 && InternalValue == other.InternalValue;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is ID<T> other && Equals(other);
+            return obj is ID other && Equals(other);
         }
 
         private ID(uint internalValue)
@@ -26,25 +26,36 @@ namespace RineaR.MadeHighlow
 
         private uint InternalValue { get; }
 
-        public static ID<T> None => new(0);
+        /// <summary>
+        ///     識別されない番号
+        /// </summary>
+        /// <remarks>`None`同士の比較はfalseとなる。</remarks>
+        public static ID None => new(0);
 
-        public static ID<T> From(uint value)
+        /// <summary>
+        ///     内部値からIDを生成する
+        /// </summary>
+        /// <remarks>`0`は識別しない番号として確保されているため、入力できない。</remarks>
+        /// <param name="value">内部値</param>
+        /// <returns>生成したID</returns>
+        /// <exception cref="ArgumentException">`0`が入力されたとき。</exception>
+        public static ID From(uint value)
         {
             if (value == 0) throw new ArgumentException();
-            return new ID<T>(value);
+            return new ID(value);
         }
 
-        public static bool operator ==(ID<T> item1, ID<T> item2)
+        public static bool operator ==(ID item1, ID item2)
         {
             return item1.Equals(item2);
         }
 
-        public static bool operator !=(ID<T> item1, ID<T> item2)
+        public static bool operator !=(ID item1, ID item2)
         {
             return !(item1 == item2);
         }
 
-        public int CompareTo(ID<T> other)
+        public int CompareTo(ID other)
         {
             return InternalValue.CompareTo(other.InternalValue);
         }

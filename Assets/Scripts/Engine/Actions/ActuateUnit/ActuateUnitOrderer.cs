@@ -1,12 +1,17 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
-    public class ActuateUnitOrderer
+    /// <summary>
+    ///     ユニットが現在受けている命令を実行する際の、行動順を決定するクエリ
+    /// </summary>
+    public record ActuateUnitOrderer
     {
+        public ValueObjectList<UnitEnsuredID> TargetsID { get; init; } = ValueObjectList<UnitEnsuredID>.Empty;
+
         [NotNull]
-        public ValueObjectList<EntityLocator> Resolve(ValueObjectList<EntityLocator> units)
+        public ValueObjectList<Unit> Resolve([NotNull] in World world)
         {
             throw new NotImplementedException();
         }

@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     オブジェクトがフィールド上を歩いて移動するアクション
     /// </summary>
-    public record WalkAction() : Action(ActionType.Walk)
+    public record WalkAction : IValidatable
     {
         /// <summary>
-        ///     行動するユニット
+        ///     行動するオブジェクト
         /// </summary>
         [NotNull]
-        public EntityLocator Actor { get; init; } = new();
+        public EntityEnsuredID Actor { get; init; } = new();
 
         /// <summary>
         ///     ステップ
@@ -20,18 +20,24 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull]
         public ValueObjectList<StepAction> Steps { get; init; } = ValueObjectList<StepAction>.Empty;
 
+        ISimulatable IValidatable.Validate(in IActionContext context)
+        {
+            return Validate(context);
+        }
+
         /// <summary>
         ///     アクションを実行した結果を返す
         /// </summary>
-        public WalkResult Run(in ISessionModel session)
+        [NotNull]
+        public WalkResult Validate([NotNull] in IActionContext context)
         {
             var stepResults = new List<StepResult>();
 
             foreach (var step in Steps)
             {
                 var formattedStep = step with { Actor = Actor };
-                var stepResult = formattedStep.Run(session);
-                session.Advance(stepResult);
+                var stepResult = formattedStep.Validate(context);
+                context.Append(stepResult);
                 stepResults.Add(stepResult);
             }
 

@@ -3,5 +3,5 @@
     /// <summary>
     ///     「攻撃力ブースト」
     /// </summary>
-    public record StrengthBoost : EntityComponent;
+    public record StrengthBoost : Component;
 }

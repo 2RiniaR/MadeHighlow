@@ -3,5 +3,5 @@
     /// <summary>
     ///     「防御」
     /// </summary>
-    public record Defence : EntityComponent;
+    public record Defence : Component;
 }

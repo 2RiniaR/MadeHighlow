@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     public class WorldFormatter
     {
@@ -46,19 +46,19 @@ namespace RineaR.MadeHighlow.Actions
 
         private (Entity, IDGenerator) Format([NotNull] in Entity entity, [NotNull] in IDGenerator idGenerator)
         {
-            var (id, idGeneratorAfter) = idGenerator.Generate<Entity>();
+            var (id, idGeneratorAfter) = idGenerator.Generate();
             return (entity with { ID = id }, idGeneratorAfter);
         }
 
         private (Player, IDGenerator) Format([NotNull] in Player player, [NotNull] in IDGenerator idGenerator)
         {
-            var (id, idGeneratorAfter) = idGenerator.Generate<Player>();
+            var (id, idGeneratorAfter) = idGenerator.Generate();
             return (player with { ID = id }, idGeneratorAfter);
         }
 
         private (Tile, IDGenerator) Format([NotNull] in Tile tile, [NotNull] in IDGenerator idGenerator)
         {
-            var (id, idGeneratorAfter) = idGenerator.Generate<Tile>();
+            var (id, idGeneratorAfter) = idGenerator.Generate();
             return (tile with { ID = id }, idGeneratorAfter);
         }
     }

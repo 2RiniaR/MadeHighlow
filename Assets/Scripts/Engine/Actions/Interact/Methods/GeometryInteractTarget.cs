@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Methods
+namespace RineaR.MadeHighlow.Methods
 {
     public record GeometryInteractTarget
     {
@@ -8,6 +8,6 @@ namespace RineaR.MadeHighlow.Actions.Methods
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<InteractionEffect> Effects { get; init; } = ValueObjectList<InteractionEffect>.Empty;
+        public ValueObjectList<IValidatable> Effects { get; init; } = ValueObjectList<IValidatable>.Empty;
     }
 }

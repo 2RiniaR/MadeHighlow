@@ -1,18 +1,24 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     ユニットに命令する
     /// </summary>
-    public record CommandUnitAction() : Action(ActionType.CommandUnit)
+    public record CommandUnitAction : IValidatable
     {
-        [NotNull] public PlayerLocator Actor { get; init; } = new();
-        [NotNull] public EntityLocator Target { get; init; } = new();
+        public ID ActorID { get; init; } = ID.None;
+        public ID TargetID { get; init; } = ID.None;
         [NotNull] public UnitOperation Operation { get; init; } = new();
 
-        public Result Run(in Session session)
+        ISimulatable IValidatable.Validate(in IActionContext context)
+        {
+            return Validate(context);
+        }
+
+        [NotNull]
+        public CommandUnitResult Validate([NotNull] in IActionContext context)
         {
             throw new NotImplementedException();
         }

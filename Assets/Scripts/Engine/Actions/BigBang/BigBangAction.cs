@@ -1,14 +1,20 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
-    public record BigBangAction() : Action(ActionType.BigBang)
+    public record BigBangAction : IValidatable
     {
         [NotNull] public World World { get; init; } = new();
 
-        public BigBangResult Run(in Session session)
+        ISimulatable IValidatable.Validate(in IActionContext context)
         {
-            if (!session.Events.IsEmpty) return BigBangResult.FailedByNotEmpty;
+            return Validate(context);
+        }
+
+        [NotNull]
+        public BigBangResult Validate([NotNull] in IActionContext context)
+        {
+            if (!context.Session.Events.IsEmpty) return BigBangResult.FailedByNotEmpty;
 
             var generatedWorld = new WorldFormatter().Format(World);
             return new SucceedBigBangResult { GeneratedWorld = generatedWorld };

@@ -3,5 +3,5 @@
     /// <summary>
     ///     「エナジーバリア」
     /// </summary>
-    public record EnergyBarrier : EntityComponent;
+    public record EnergyBarrier : Component;
 }

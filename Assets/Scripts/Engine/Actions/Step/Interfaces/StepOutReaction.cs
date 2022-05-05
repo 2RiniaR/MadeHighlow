@@ -1,8 +1,8 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿namespace RineaR.MadeHighlow
 {
     public record StepOutReaction
     {
-        public EntityLocator Reactor { get; init; } = new();
-        public Result Result { get; init; } = new EmptyResult();
+        public EntityEnsuredID Reactor { get; init; } = new();
+        public ISimulatable Result { get; init; } = ISimulatable.Empty;
     }
 }

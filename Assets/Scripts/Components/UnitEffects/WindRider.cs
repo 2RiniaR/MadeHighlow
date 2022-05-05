@@ -3,5 +3,5 @@
     /// <summary>
     ///     「風乗り」
     /// </summary>
-    public record WindRider : EntityComponent;
+    public record WindRider : Component;
 }

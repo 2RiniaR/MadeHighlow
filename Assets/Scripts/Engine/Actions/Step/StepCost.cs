@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     フィールド上を歩く移動コスト

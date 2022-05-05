@@ -3,5 +3,5 @@
     /// <summary>
     ///     「掴まれ」
     /// </summary>
-    public record Holden : EntityComponent;
+    public record Holden : Component;
 }

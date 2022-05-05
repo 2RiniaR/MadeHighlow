@@ -1,0 +1,77 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
+{
+    /// <summary>
+    ///     「カード」
+    /// </summary>
+    public record Card : IIdentified, IAttachable
+    {
+        public PlayerEnsuredID PlayerID { get; init; } = new();
+
+        /// <summary>
+        ///     種類
+        /// </summary>
+        public CardGenre Genre { get; init; } = CardGenre.Common;
+
+        /// <summary>
+        ///     機能
+        /// </summary>
+        [NotNull]
+        public Command Command { get; init; } = Command.None;
+
+        public CardEnsuredID EnsuredID => new() { Content = ID };
+
+        public IAttachable WithComponents(ValueObjectList<Component> components)
+        {
+            return this with { Components = components };
+        }
+
+        /// <summary>
+        ///     コンポーネント
+        /// </summary>
+        public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
+
+        IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
+
+        public World Update(in World world)
+        {
+            var player = PlayerID.Get(world) ?? throw new NullReferenceException();
+            var modifiedPlayer = player with
+            {
+                Cards = player.Cards.ReplaceItem(card => card.EnsuredID == EnsuredID, this),
+            };
+            return modifiedPlayer.Update(world);
+        }
+
+        /// <summary>
+        ///     セッション内での識別子
+        /// </summary>
+        public ID ID { get; init; } = ID.None;
+
+        [NotNull]
+        public World Create([NotNull] in World world)
+        {
+            var player = PlayerID.Get(world) ?? throw new NullReferenceException();
+            var modifiedPlayer = player with { Cards = player.Cards.Add(this) };
+            return modifiedPlayer.Update(world);
+        }
+
+        [NotNull]
+        public static ValueObjectList<Card> All([NotNull] in World world)
+        {
+            return Player.All(world).SelectMany(player => player.Cards);
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        public ValueObjectList<IObject> GetChildren()
+        {
+            return ValueObjectList.Concat(
+                Components.Select(item => item as IObject),
+                Components.SelectMany(item => item.GetChildren())
+            );
+        }
+    }
+}

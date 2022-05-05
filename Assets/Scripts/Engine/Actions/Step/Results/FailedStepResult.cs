@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     public record FailedStepResult : StepResult
     {

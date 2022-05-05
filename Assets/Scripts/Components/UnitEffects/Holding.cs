@@ -3,5 +3,5 @@
     /// <summary>
     ///     「掴み」
     /// </summary>
-    public record Holding : EntityComponent;
+    public record Holding : Component;
 }

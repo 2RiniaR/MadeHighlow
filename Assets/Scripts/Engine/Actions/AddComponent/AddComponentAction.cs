@@ -1,27 +1,32 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     コンポーネントを追加するアクション
     /// </summary>
-    public record AddComponentAction() : Action(ActionType.AddComponent)
+    public record AddComponentAction : IValidatable
     {
         /// <summary>
         ///     コンポーネントを追加する対象
         /// </summary>
-        [NotNull]
-        public EntityLocator EntityLocator { get; init; } = new();
+        public ID TargetID { get; init; } = ID.None;
 
         /// <summary>
         ///     追加するコンポーネント
         /// </summary>
         [NotNull]
-        public EntityComponent EntityComponent { get; init; } = EntityComponent.Empty;
+        public Component Component { get; init; } = Component.Empty;
 
-        public Result Run(in Session session)
+        ISimulatable IValidatable.Validate(in IActionContext context)
         {
-            return new AddComponentResult { Target = EntityLocator, AddedEntityComponent = EntityComponent };
+            return Validate(context);
+        }
+
+        [NotNull]
+        public AddComponentResult Validate([NotNull] in IActionContext context)
+        {
+            return new AddComponentResult { AddedComponent = Component };
         }
     }
 }

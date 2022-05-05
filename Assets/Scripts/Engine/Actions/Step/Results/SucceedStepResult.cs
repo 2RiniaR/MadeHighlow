@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow
 {
     public record SucceedStepResult() : StepResult(StepResultCode.Succeed)
     {
@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     行動したユニット
         /// </summary>
         [NotNull]
-        public EntityLocator Actor { get; init; } = new();
+        public EntityEnsuredID Actor { get; init; } = new();
 
         /// <summary>
         ///     移動した方向
@@ -34,7 +34,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     追加効果の結果
         /// </summary>
         [NotNull]
-        public ValueObjectList<Result> AfterActionResults { get; init; } = ValueObjectList<Result>.Empty;
+        public ValueObjectList<ISimulatable> AfterActionResults { get; init; } = ValueObjectList<ISimulatable>.Empty;
 
         /// <summary>
         ///     使用可能だった移動コスト
@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull]
         public StepCost AvailableCost { get; init; } = new();
 
-        public override World Simulate(in World world)
+        public World Simulate(in World world)
         {
             throw new NotImplementedException();
         }
