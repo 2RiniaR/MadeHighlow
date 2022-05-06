@@ -24,7 +24,7 @@ namespace RineaR.MadeHighlow
             InternalValue = internalValue;
         }
 
-        private uint InternalValue { get; }
+        public uint InternalValue { get; }
 
         /// <summary>
         ///     識別されない番号

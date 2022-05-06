@@ -17,5 +17,7 @@ namespace RineaR.MadeHighlow
         public EntityHealth MaxHealth { get; init; } = new();
 
         public bool IsDead => Health.Value <= MaxHealth.Value;
+
+        public EntityVitality Dead => this with { Health = new EntityHealth() };
     }
 }

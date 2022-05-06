@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.RemoveComponent
+namespace RineaR.MadeHighlow
 {
     public interface IFinalizableComponent
     {

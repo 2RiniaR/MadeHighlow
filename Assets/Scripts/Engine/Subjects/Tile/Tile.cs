@@ -8,6 +8,11 @@ namespace RineaR.MadeHighlow
     public record Tile : IIdentified, IAttachable
     {
         /// <summary>
+        ///     セッション内での識別子
+        /// </summary>
+        public ID ID { get; init; } = ID.None;
+
+        /// <summary>
         ///     位置
         /// </summary>
         [NotNull]
@@ -26,6 +31,11 @@ namespace RineaR.MadeHighlow
         public TileHeight Height { get; init; } = new GroundTileHeight();
 
         /// <summary>
+        ///     コンポーネント
+        /// </summary>
+        public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
+
+        /// <summary>
         ///     空のタイル
         /// </summary>
         [NotNull]
@@ -34,11 +44,6 @@ namespace RineaR.MadeHighlow
         public TileEnsuredID EnsuredID => new() { Content = ID };
 
         IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
-
-        /// <summary>
-        ///     コンポーネント
-        /// </summary>
-        public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {
@@ -49,11 +54,6 @@ namespace RineaR.MadeHighlow
         {
             return world with { Tiles = world.Tiles.ReplaceItem(tile => tile.EnsuredID == EnsuredID, this) };
         }
-
-        /// <summary>
-        ///     セッション内での識別子
-        /// </summary>
-        public ID ID { get; init; } = ID.None;
 
         [NotNull]
         public World CreateIn([NotNull] in World world)

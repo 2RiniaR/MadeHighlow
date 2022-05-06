@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow
     public abstract record Action
     {
         /// <summary>
-        ///     空のアクション
+        ///     中身がないアクション
         /// </summary>
         public static Action Empty => new EmptyImpl();
 

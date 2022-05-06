@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow
     public abstract record Result
     {
         /// <summary>
-        ///     空のアクションの結果
+        ///     中身がないアクションの結果
         /// </summary>
         public static Result Empty => new EmptyImpl();
 

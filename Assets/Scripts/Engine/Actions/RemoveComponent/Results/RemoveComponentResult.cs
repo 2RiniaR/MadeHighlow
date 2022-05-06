@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow.RemoveComponent
+namespace RineaR.MadeHighlow
 {
     public record RemoveComponentResult : Result
     {

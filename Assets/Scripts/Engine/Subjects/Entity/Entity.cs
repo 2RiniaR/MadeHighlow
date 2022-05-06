@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow
         ///     生命力
         /// </summary>
         [CanBeNull]
-        public EntityVitality Vitality { get; init; } = null;
+        public EntityVitality Vitality { get; init; }
 
         /// <summary>
         ///     空のエンティティ

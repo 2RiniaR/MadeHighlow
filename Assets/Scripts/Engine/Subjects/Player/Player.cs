@@ -8,6 +8,11 @@ namespace RineaR.MadeHighlow
     public record Player : IIdentified, IAttachable
     {
         /// <summary>
+        ///     セッション内での識別子
+        /// </summary>
+        public ID ID { get; init; } = ID.None;
+
+        /// <summary>
         ///     デッキにあるカード
         /// </summary>
         [NotNull]
@@ -19,12 +24,12 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public PlayerDeckSize DeckSize { get; init; } = new();
 
-        public PlayerEnsuredID EnsuredID => new() { Content = ID };
-
         /// <summary>
         ///     コンポーネント
         /// </summary>
         public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
+
+        public PlayerEnsuredID EnsuredID => new() { Content = ID };
 
         IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
 
@@ -37,11 +42,6 @@ namespace RineaR.MadeHighlow
         {
             return world with { Players = world.Players.ReplaceItem(player => player.EnsuredID == EnsuredID, this) };
         }
-
-        /// <summary>
-        ///     セッション内での識別子
-        /// </summary>
-        public ID ID { get; init; } = ID.None;
 
         [NotNull]
         public World CreateIn([NotNull] in World world)

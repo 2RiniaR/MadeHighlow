@@ -6,9 +6,7 @@ namespace RineaR.MadeHighlow
     {
         [NotNull] public World World { get; init; } = new();
 
-
-        [NotNull]
-        public override BigBangResult Validate([NotNull] in IActionContext context)
+        public override BigBangResult Validate(in IActionContext context)
         {
             if (!context.Session.Events.IsEmpty)
             {

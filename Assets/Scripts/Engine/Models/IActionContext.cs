@@ -38,8 +38,6 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public IActionContext AppendedRange([NotNull] [ItemNotNull] params Result[] results);
 
-        public ID NewID();
-
         public float GetRandom();
     }
 }

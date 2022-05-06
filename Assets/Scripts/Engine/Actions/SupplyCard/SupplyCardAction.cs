@@ -3,14 +3,24 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
+    /// <summary>
+    ///     プレイヤーにカードを供給するアクション
+    /// </summary>
     public record SupplyCardAction : Action<SupplyCardResult>
     {
-        [NotNull] public PlayerEnsuredID Target { get; init; } = new();
-        [NotNull] public ValueObjectList<Card> Cards { get; init; } = ValueObjectList<Card>.Empty;
-
-
+        /// <summary>
+        ///     供給されるプレイヤー
+        /// </summary>
         [NotNull]
-        public override SupplyCardResult Validate([NotNull] in IActionContext context)
+        public PlayerEnsuredID Target { get; init; } = new();
+
+        /// <summary>
+        ///     供給するカード
+        /// </summary>
+        [NotNull]
+        public ValueObjectList<Card> Cards { get; init; } = ValueObjectList<Card>.Empty;
+
+        public override SupplyCardResult Validate(in IActionContext context)
         {
             var player = Target.GetFrom(context.World) ?? throw new NullReferenceException();
             var deckCapacity = player.DeckSize.Value - player.Cards.Count;

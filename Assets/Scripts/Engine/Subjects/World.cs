@@ -8,10 +8,9 @@ namespace RineaR.MadeHighlow
     public record World
     {
         /// <summary>
-        ///     次のID生成値
+        ///     最後に生成したID
         /// </summary>
-        [NotNull]
-        public IDGenerator IDGenerator { get; init; } = new();
+        public ID LatestGeneratedID { get; init; } = ID.None;
 
         /// <summary>
         ///     参加しているプレイヤー

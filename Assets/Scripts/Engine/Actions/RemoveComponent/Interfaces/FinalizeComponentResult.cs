@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.RemoveComponent
+﻿namespace RineaR.MadeHighlow
 {
     public record FinalizeComponentResult;
 }

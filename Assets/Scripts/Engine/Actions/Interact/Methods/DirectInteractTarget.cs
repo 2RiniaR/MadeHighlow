@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Methods
+namespace RineaR.MadeHighlow
 {
     public record DirectInteractTarget
     {

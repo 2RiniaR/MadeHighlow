@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -16,6 +17,13 @@ namespace RineaR.MadeHighlow
         public override RunOperationResult Validate(in IActionContext context)
         {
             var currentContext = context;
+            var actor = Operation.UnitID.GetFrom(currentContext.World) ?? throw new NullReferenceException();
+
+            // 死者は行動できないよ。
+            if (actor.Vitality != null && actor.Vitality.IsDead)
+            {
+                return new FailedRunOperationResult { Reason = FailedRunOperationReason.Dead };
+            }
 
             var effectors = Component.GetAllOfTypeFrom<IRunOperationEffector>(currentContext.World);
             foreach (var effector in effectors)
@@ -29,6 +37,7 @@ namespace RineaR.MadeHighlow
                 }
             }
 
+            // 命令の実行前にカードを削除するよ。前払い。
             var payCardResult = PayCard(currentContext);
             currentContext = currentContext.Appended(payCardResult);
 

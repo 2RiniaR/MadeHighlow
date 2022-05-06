@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record SucceedSupplyCardResult() : SupplyCardResult(SupplyCardResultCode.Succeed)
+    public record SucceedSupplyCardResult : SupplyCardResult
     {
         [NotNull] public PlayerEnsuredID Target { get; init; } = new();
         [NotNull] public ValueObjectList<Card> SuppliedCards { get; init; } = ValueObjectList<Card>.Empty;

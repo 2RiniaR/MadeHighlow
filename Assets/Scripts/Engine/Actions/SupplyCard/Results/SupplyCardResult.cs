@@ -1,12 +1,17 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public abstract record SupplyCardResult(in SupplyCardResultCode Code) : Result
+    public abstract record SupplyCardResult : Result
     {
-        public override World Simulate(in World world)
+        [NotNull] public new static SupplyCardResult Empty => new EmptyImpl();
+
+        private record EmptyImpl : SupplyCardResult
         {
-            throw new NotImplementedException();
+            public override World Simulate(in World world)
+            {
+                return world;
+            }
         }
     }
 }
