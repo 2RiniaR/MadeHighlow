@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow
 {
     public record DestroyTileAction : Action<DestroyTileResult>
     {
-        [NotNull] public TileEnsuredID EntityID { get; init; } = new();
+        [NotNull] public TileID EntityID { get; init; } = new();
 
 
         [NotNull]

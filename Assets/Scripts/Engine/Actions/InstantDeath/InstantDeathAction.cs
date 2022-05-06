@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     即死効果を受けるエンティティのID
         /// </summary>
-        public EntityEnsuredID TargetID { get; init; } = new();
+        public EntityID TargetID { get; init; } = new();
 
         public override InstantDeathResult Validate(in IActionContext context)
         {

@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public ValueObjectList<StepOutReaction> OnSteppedOut(
             [NotNull] in IActionContext session,
-            [NotNull] in EntityEnsuredID actor
+            [NotNull] in EntityID actor
         );
     }
 }

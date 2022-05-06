@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「ゲーム全体の状態」を表現する
+    ///     ゲーム全体の状態
     /// </summary>
     public record World
     {
@@ -35,6 +35,13 @@ namespace RineaR.MadeHighlow
         /// </summary>
         [NotNull]
         public Turn CurrentTurn { get; init; } = new();
+
+        /// <summary>
+        ///     予約されているコマンド
+        /// </summary>
+        [NotNull]
+        [ItemNotNull]
+        public ValueObjectList<Command> ReservedCommands { get; init; } = ValueObjectList<Command>.Empty;
 
         [NotNull]
         [ItemNotNull]

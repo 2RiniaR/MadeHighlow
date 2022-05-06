@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow
 {
     public record DestroyEntityAction : Action<DestroyEntityResult>
     {
-        [NotNull] public EntityEnsuredID EntityID { get; init; } = new();
+        [NotNull] public EntityID EntityID { get; init; } = new();
 
 
         [NotNull]

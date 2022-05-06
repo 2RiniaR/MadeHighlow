@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow
         ///     供給されるプレイヤー
         /// </summary>
         [NotNull]
-        public PlayerEnsuredID Target { get; init; } = new();
+        public PlayerID Target { get; init; } = new();
 
         /// <summary>
         ///     供給するカード

@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     治癒効果を受けたエンティティのID
         /// </summary>
-        public EntityEnsuredID TargetID { get; init; } = new();
+        public EntityID TargetID { get; init; } = new();
 
         /// <summary>
         ///     与えようとした治癒効果の量

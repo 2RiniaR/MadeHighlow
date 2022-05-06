@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow
 {
     public interface IComponent
     {
-        [NotNull] public IAttachableEnsuredID AttachedID { get; }
-        [NotNull] public ComponentEnsuredID EnsuredID { get; }
+        [NotNull] public IAttachableID AttachedID { get; }
+        [NotNull] public ComponentID EnsuredID { get; }
     }
 }

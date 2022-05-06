@@ -31,9 +31,9 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public static Entity Empty => new();
 
-        public EntityEnsuredID EnsuredID => new() { Content = ID };
+        public EntityID EnsuredID => new() { Content = ID };
 
-        IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.EnsuredID => EnsuredID;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {

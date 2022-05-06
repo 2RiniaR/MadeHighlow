@@ -1,0 +1,36 @@
+﻿using System;
+using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
+{
+    public record CardID : IAttachableID
+    {
+        public ID Content { get; init; } = ID.None;
+
+        IAttachable IAttachableID.GetFrom(in World world)
+        {
+            return GetFrom(world);
+        }
+
+        [CanBeNull]
+        public Card GetFrom([NotNull] in World world)
+        {
+            return Card.GetAllFrom(world).Find(card => card.EnsuredID == this);
+        }
+
+        [NotNull]
+        public World DeleteFrom([NotNull] in World world)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public record CardID<TOption> : CardID
+    {
+        [CanBeNull]
+        public new Card<TOption> GetFrom([NotNull] in World world)
+        {
+            return Card.GetAllFrom(world).Find(card => card.EnsuredID == this) as Card<TOption>;
+        }
+    }
+}

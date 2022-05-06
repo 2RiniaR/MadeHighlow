@@ -8,7 +8,7 @@
         /// <summary>
         ///     対価として支払ったカードのID
         /// </summary>
-        public CardEnsuredID PaidCardID { get; init; } = new();
+        public CardID PaidCardID { get; init; } = new();
 
         public override World Simulate(in World world)
         {

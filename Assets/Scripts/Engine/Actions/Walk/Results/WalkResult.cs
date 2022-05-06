@@ -8,7 +8,7 @@
         /// <summary>
         ///     行動したユニット
         /// </summary>
-        public EntityEnsuredID Actor { get; init; } = new();
+        public EntityID Actor { get; init; } = new();
 
         /// <summary>
         ///     ステップ

@@ -16,7 +16,8 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     所持しているプレイヤーのID
         /// </summary>
-        public PlayerEnsuredID PlayerID { get; init; } = new();
+        [NotNull]
+        public PlayerID PlayerID { get; init; } = new();
 
         /// <summary>
         ///     種類
@@ -24,24 +25,23 @@ namespace RineaR.MadeHighlow
         public CardGenre Genre { get; init; } = CardGenre.Common;
 
         /// <summary>
-        ///     機能
+        ///     命令の早さ
         /// </summary>
-        [NotNull]
-        public Command Command { get; init; } = Command.Empty;
+        public Quickness Quickness { get; init; } = Quickness.Last;
 
         /// <summary>
         ///     コンポーネント
         /// </summary>
         public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
 
-        public CardEnsuredID EnsuredID => new() { Content = ID };
+        public CardID EnsuredID => new() { Content = ID };
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {
             return this with { Components = components };
         }
 
-        IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.EnsuredID => EnsuredID;
 
         public World UpdateIn(in World world)
         {
@@ -76,16 +76,28 @@ namespace RineaR.MadeHighlow
                 Components.SelectMany(item => item.GetChildren())
             );
         }
+
+        private record EmptyImpl : Card;
+
+        [NotNull] public static Card Empty => new EmptyImpl();
     }
 
-    public sealed record Card<TCommand> : Card where TCommand : Command<TCommand>
+    public abstract record Card<TOption> : Card
     {
-        public new CardEnsuredID<TCommand> EnsuredID => new() { Content = ID };
-
         /// <summary>
-        ///     機能
+        ///     指定された追加データから、アクションを生成する
         /// </summary>
         [NotNull]
-        public new Command<TCommand> Command { get; init; } = Command<TCommand>.Empty;
+        public abstract Action GenerateAction([NotNull] TOption option, [NotNull] UnitID unitID);
+
+        private record EmptyImpl : Card<TOption>
+        {
+            public override Action GenerateAction(TOption option, UnitID unitID)
+            {
+                return Action.Empty;
+            }
+        }
+
+        [NotNull] public new static Card<TOption> Empty => new EmptyImpl();
     }
 }

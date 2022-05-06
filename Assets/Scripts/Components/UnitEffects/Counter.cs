@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     /// </remarks>
     public record Counter : Component, IStepInReactor
     {
-        public ValueObjectList<StepInReaction> OnSteppedIn(in IActionContext session, in EntityEnsuredID actor)
+        public ValueObjectList<StepInReaction> OnSteppedIn(in IActionContext session, in EntityID actor)
         {
             throw new NotImplementedException();
         }

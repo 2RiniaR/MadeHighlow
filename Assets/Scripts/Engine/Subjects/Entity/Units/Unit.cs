@@ -33,13 +33,7 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     所属しているプレイヤーのID
         /// </summary>
-        public PlayerEnsuredID FollowingPlayerID { get; init; } = new();
-
-        /// <summary>
-        ///     現在受けている命令
-        /// </summary>
-        [CanBeNull]
-        public UnitOperation CurrentOperation { get; init; }
+        public PlayerID FollowingPlayerID { get; init; } = new();
 
         [NotNull]
         [ItemNotNull]

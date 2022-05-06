@@ -29,9 +29,9 @@ namespace RineaR.MadeHighlow
         /// </summary>
         public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
 
-        public PlayerEnsuredID EnsuredID => new() { Content = ID };
+        public PlayerID EnsuredID => new() { Content = ID };
 
-        IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.EnsuredID => EnsuredID;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {

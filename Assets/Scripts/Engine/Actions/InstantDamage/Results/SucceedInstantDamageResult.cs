@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     ダメージを受けたエンティティのID
         /// </summary>
-        public EntityEnsuredID TargetID { get; init; } = new();
+        public EntityID TargetID { get; init; } = new();
 
         /// <summary>
         ///     与えようとしたダメージ量

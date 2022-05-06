@@ -15,9 +15,9 @@ namespace RineaR.MadeHighlow
         public Duration Duration { get; init; } = Duration.Unlimited;
 
         public static Component Empty => new EmptyComponent();
-        public IAttachableEnsuredID AttachedID { get; init; } = IAttachableEnsuredID.Empty;
+        public IAttachableID AttachedID { get; init; } = IAttachableID.Empty;
 
-        public ComponentEnsuredID EnsuredID => new() { Content = ID };
+        public ComponentID EnsuredID => new() { Content = ID };
 
         /// <summary>
         ///     セッション内での識別子

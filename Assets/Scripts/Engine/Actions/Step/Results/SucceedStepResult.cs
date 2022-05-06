@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow
         ///     行動したユニット
         /// </summary>
         [NotNull]
-        public EntityEnsuredID Actor { get; init; } = new();
+        public EntityID Actor { get; init; } = new();
 
         /// <summary>
         ///     移動した方向

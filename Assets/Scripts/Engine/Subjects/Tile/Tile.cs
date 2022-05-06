@@ -41,9 +41,9 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public static Tile Empty => new();
 
-        public TileEnsuredID EnsuredID => new() { Content = ID };
+        public TileID EnsuredID => new() { Content = ID };
 
-        IAttachableEnsuredID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.EnsuredID => EnsuredID;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {

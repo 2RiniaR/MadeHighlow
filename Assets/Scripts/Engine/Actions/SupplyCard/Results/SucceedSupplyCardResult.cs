@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
 {
     public record SucceedSupplyCardResult : SupplyCardResult
     {
-        [NotNull] public PlayerEnsuredID Target { get; init; } = new();
+        [NotNull] public PlayerID Target { get; init; } = new();
         [NotNull] public ValueObjectList<Card> SuppliedCards { get; init; } = ValueObjectList<Card>.Empty;
         [NotNull] public ValueObjectList<Card> OverflowedCards { get; init; } = ValueObjectList<Card>.Empty;
         [NotNull] public ValueObjectList<Card> InvalidCards { get; init; } = ValueObjectList<Card>.Empty;

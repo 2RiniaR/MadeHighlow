@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow
         ///     無効化を決定したコンポーネントのID
         /// </summary>
         [NotNull]
-        public ComponentEnsuredID DecidedComponentID { get; init; } = new();
+        public ComponentID DecidedComponentID { get; init; } = new();
 
         public override World Simulate(in World world)
         {

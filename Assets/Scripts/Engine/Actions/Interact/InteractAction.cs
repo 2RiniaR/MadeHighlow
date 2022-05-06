@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public abstract record InteractAction : Action<InteractResult>
     {
-        [NotNull] public EntityEnsuredID Actor { get; init; } = new();
+        [NotNull] public EntityID Actor { get; init; } = new();
 
 
         [NotNull]
