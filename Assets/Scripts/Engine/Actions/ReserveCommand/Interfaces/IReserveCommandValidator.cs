@@ -5,11 +5,11 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     プレイヤーによるユニットの命令が、許可されるかどうかをチェックする
     /// </summary>
-    public interface IReserveCommandValidator<TOption>
+    public interface IReserveCommandValidator
     {
         public ReserveCommandValidation ValidateReserveCommand(
             [NotNull] in IActionContext session,
-            [NotNull] in ReserveCommandAction<TOption> action
+            [NotNull] in ReserveCommandAction action
         );
     }
 }
