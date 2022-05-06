@@ -3,13 +3,9 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record GenerateEntityAction : Action<GenerateEntityResult>
+    public record GenerateEntityAction([NotNull] in Entity InitialEntity) : Action<GenerateEntityResult>
     {
-        [NotNull] public Entity Initial { get; init; } = Entity.Empty;
-
-
-        [NotNull]
-        public override GenerateEntityResult Validate([NotNull] in IActionContext context)
+        public override GenerateEntityResult Validate(in IActionContext context)
         {
             throw new NotImplementedException();
         }

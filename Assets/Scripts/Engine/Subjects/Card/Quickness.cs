@@ -1,7 +1,7 @@
 ﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     カードによる行動の早さ。
+    ///     カードによる行動の早さ
     /// </summary>
     public enum Quickness
     {

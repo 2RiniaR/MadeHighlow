@@ -2,13 +2,11 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyTileResult : Result
+    public record DestroyTileResult([NotNull] in TileID DestroyedTileID) : Result
     {
-        [NotNull] public TileID Actor { get; init; } = new();
-
         public override World Simulate(in World world)
         {
-            return Actor.DeleteFrom(world);
+            return DestroyedTileID.DeleteFrom(world);
         }
     }
 }

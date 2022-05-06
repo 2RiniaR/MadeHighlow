@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Constructor_Always_ReturnsCounterpartType()
         {
-            var actual = new GroundTileHeight();
+            var actual = new GroundElevation();
 
             Assert.That(actual.Type, Is.EqualTo(TileHeightType.Ground));
         }

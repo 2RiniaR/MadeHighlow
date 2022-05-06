@@ -4,36 +4,32 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record JoinPlayerAction : Action<JoinPlayerResult>
+    public record JoinPlayerAction([NotNull] in Player InitialPlayer) : Action<JoinPlayerResult>
     {
-        [NotNull] public Player Initial { get; init; } = new();
-
         public override JoinPlayerResult Validate(in IActionContext context)
         {
             var currentContext = context;
 
-            var registerResult = new RegisterPlayerAction
-            {
-                DeckSize = Initial.DeckSize,
-            }.Validate(currentContext);
+            var registerResult = new RegisterPlayerAction(InitialPlayer.DeckSize).Validate(currentContext);
             currentContext = currentContext.Appended(registerResult);
 
-            var supplyCardResult = new SupplyCardAction
+            var supplyCardResults = new List<SupplyCardResult>();
+            foreach (var card in InitialPlayer.Cards)
             {
-                Target = registerResult.Registered.EnsuredID,
-                Cards = Initial.Cards,
-            }.Validate(currentContext);
-            currentContext = currentContext.Appended(supplyCardResult);
+                var result =
+                    new SupplyCardAction(registerResult.RegisteredPlayer.PlayerID, card).Validate(currentContext);
+                currentContext = currentContext.Appended(result);
+                supplyCardResults.Add(result);
+            }
 
             var addComponentResults = new List<AddComponentResult>();
-            foreach (var component in Initial.Components)
+            foreach (var component in InitialPlayer.Components)
             {
-                var result = new AddComponentAction
-                {
-                    TargetID = registerResult.Registered.ID,
-                    Component = component,
-                }.Validate(currentContext);
+                var result =
+                    new AddComponentAction(registerResult.RegisteredPlayer.PlayerID, component)
+                        .Validate(currentContext);
                 currentContext = currentContext.Appended(result);
+                addComponentResults.Add(result);
             }
 
             throw new NotImplementedException();

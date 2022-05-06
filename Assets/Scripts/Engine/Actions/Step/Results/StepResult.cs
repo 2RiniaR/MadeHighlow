@@ -1,7 +1,7 @@
 ﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     オブジェクトがフィールド上を歩いて1マス移動するアクションの結果
+    ///     フィールド上を歩いて1マス移動するアクションの結果
     /// </summary>
-    public abstract record StepResult(StepResultCode Code) : Result;
+    public abstract record StepResult : Result;
 }

@@ -3,13 +3,10 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     ターン数指定の「期限」
+    ///     ターン数の期限
     /// </summary>
-    public record TurnDuration(int Value = 0) : Duration(DurationType.FromTurn)
+    public sealed record TurnDuration(in int Value = 0) : Duration
     {
-        /// <summary>
-        ///     ターン数
-        /// </summary>
         public int Value { get; } = Math.Max(0, Value);
 
         public override Duration Decrement()

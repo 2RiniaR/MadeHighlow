@@ -6,17 +6,13 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ユニットが現在受けている命令を実行する際の、行動順を決定するクエリ
     /// </summary>
-    public record StartCommandsOrderer
+    public record StartCommandsOrderer([NotNull] [ItemNotNull] in ValueObjectList<Command> Commands)
     {
-        /// <summary>
-        ///     行動順を決定する命令
-        /// </summary>
-        public ValueObjectList<Command> Commands { get; init; } = ValueObjectList<Command>.Empty;
-
         /// <summary>
         ///     命令の実行順を決定する
         /// </summary>
         [NotNull]
+        [ItemNotNull]
         public ValueObjectList<Command> Resolve([NotNull] IActionContext context)
         {
             return Commands.Sort((unit1, unit2) => Compare(unit1, unit2, context));
@@ -31,8 +27,8 @@ namespace RineaR.MadeHighlow
         ///     `operation1`と`operation2`の優先度が等しければ、0を返す。
         /// </returns>
         private int Compare(
-            [NotNull] Command operation1,
-            [NotNull] Command operation2,
+            [NotNull] in Command operation1,
+            [NotNull] in Command operation2,
             [NotNull] in IActionContext context
         )
         {
@@ -67,9 +63,9 @@ namespace RineaR.MadeHighlow
         }
 
         private static int CompareCommandQuickness(
-            [NotNull] Command operation1,
-            [NotNull] Command operation2,
-            [NotNull] World world
+            [NotNull] in Command operation1,
+            [NotNull] in Command operation2,
+            [NotNull] in World world
         )
         {
             var card1 = operation1.CardID.GetFrom(world) ?? throw new NullReferenceException();
@@ -81,7 +77,7 @@ namespace RineaR.MadeHighlow
             return quickness1.CompareTo(quickness2);
         }
 
-        private static int CompareMedo(Unit unit1, Unit unit2)
+        private static int CompareMedo([NotNull] in Unit unit1, [NotNull] in Unit unit2)
         {
             var medo1 = unit1.Medo;
             var medo2 = unit2.Medo;
@@ -89,7 +85,7 @@ namespace RineaR.MadeHighlow
             return medo1.Value.CompareTo(medo2.Value);
         }
 
-        private static int CompareHealth(Unit unit1, Unit unit2)
+        private static int CompareHealth([NotNull] in Unit unit1, [NotNull] in Unit unit2)
         {
             if (unit1.Vitality == null)
             {
@@ -107,7 +103,7 @@ namespace RineaR.MadeHighlow
             return health2.Value.CompareTo(health1.Value);
         }
 
-        private static int CompareRandom(IActionContext context)
+        private static int CompareRandom([NotNull] in IActionContext context)
         {
             return context.GetRandom() > 1 / 2f ? 1 : 0;
         }

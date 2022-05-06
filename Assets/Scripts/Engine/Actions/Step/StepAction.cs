@@ -4,40 +4,19 @@ using JetBrains.Annotations;
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     オブジェクトがフィールド上を歩いて1マス移動するアクション
+    ///     フィールド上を歩いて1マス移動するアクション
     /// </summary>
-    public record StepAction : Action<StepResult>
+    public record StepAction(
+        [NotNull] in EntityID ActorEntityID,
+        [NotNull] in Direction2D Direction2D,
+        [NotNull] [ItemNotNull] in ValueObjectList<Action> AfterActions,
+        [NotNull] in StepCost AvailableStepCost
+    ) : Action<StepResult>
     {
-        /// <summary>
-        ///     行動するオブジェクト
-        /// </summary>
-        [NotNull]
-        public EntityID Actor { get; init; } = new();
-
-        /// <summary>
-        ///     方向
-        /// </summary>
-        [NotNull]
-        public Direction2D Direction2D { get; init; } = new();
-
-        /// <summary>
-        ///     追加効果
-        /// </summary>
-        [NotNull]
-        public ValueObjectList<Action> AfterActions { get; init; } = ValueObjectList<Action>.Empty;
-
-        /// <summary>
-        ///     使用可能な移動コスト
-        /// </summary>
-        [NotNull]
-        public StepCost AvailableCost { get; init; } = new();
-
-
-        [NotNull]
-        public override StepResult Validate([NotNull] in IActionContext context)
+        public override StepResult Validate(in IActionContext context)
         {
             var world = context.World;
-            var actor = Actor.GetFrom(world) ?? throw new NullReferenceException();
+            var actor = ActorEntityID.GetFrom(world) ?? throw new NullReferenceException();
 
             var originPosition = actor.Position3D.To2D();
             var originTile = originPosition.GetTile(world);
@@ -47,7 +26,7 @@ namespace RineaR.MadeHighlow
             // 移動先のタイルがない場合、移動しない
             if (destTile == null)
             {
-                return FailedStepResult.NoEntry;
+                return new FailedStepResult();
             }
 
             var entities = new EntityCondition { Position2D = originPosition }.Search(world);
@@ -57,7 +36,7 @@ namespace RineaR.MadeHighlow
 
                 foreach (var reactor in reactors)
                 {
-                    var reactions = reactor.OnSteppedOut(context, Actor);
+                    var reactions = reactor.OnSteppedOut(context, ActorEntityID);
                     foreach (var reaction in reactions)
                     {
                         context.Appended(reaction.Result);
@@ -69,20 +48,14 @@ namespace RineaR.MadeHighlow
 
 
             // コストオーバーだったら、移動しない
-            if (AvailableCost.Value < cost.Value)
+            if (AvailableStepCost.Value < cost.Value)
             {
-                return FailedStepResult.CostOver;
+                return new FailedStepResult();
             }
 
             var afterActionResults = RunAfterActions(context);
 
-            return new SucceedStepResult
-            {
-                Actor = Actor,
-                Direction2D = Direction2D,
-                AfterActionResults = afterActionResults,
-                AvailableCost = AvailableCost,
-            };
+            throw new NotImplementedException();
         }
 
         /// <summary>

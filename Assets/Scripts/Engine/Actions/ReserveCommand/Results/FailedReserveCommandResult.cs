@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record FailedReserveCommandResult(ReserveCommandFailedReason Code) : ReserveCommandResult
+    public record FailedReserveCommandResult(in ReserveCommandFailedReason Code) : ReserveCommandResult
     {
         public override World Simulate(in World world)
         {

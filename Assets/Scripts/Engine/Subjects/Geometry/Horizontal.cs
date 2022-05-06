@@ -2,7 +2,10 @@
 
 namespace RineaR.MadeHighlow
 {
-    public sealed record Horizontal(in int Value = 0)
+    /// <summary>
+    ///     フィールド上での横方向の座標
+    /// </summary>
+    public sealed record Horizontal(in int Value)
     {
         [NotNull]
         public static Horizontal operator +([NotNull] in Horizontal l, in int r)

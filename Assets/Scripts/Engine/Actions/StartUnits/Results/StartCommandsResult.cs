@@ -5,19 +5,11 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     命令を実行するアクションの結果
     /// </summary>
-    public record StartCommandsResult : Result
+    public record StartCommandsResult([NotNull] [ItemNotNull] ValueObjectList<RunCommandResult> Results) : Result
     {
-        /// <summary>
-        ///     実行した命令
-        /// </summary>
-        [NotNull]
-        [ItemNotNull]
-        public ValueObjectList<RunCommandResult> Operations { get; init; } =
-            ValueObjectList<RunCommandResult>.Empty;
-
         public override World Simulate(in World world)
         {
-            return Operations.Aggregate(
+            return Results.Aggregate(
                 world,
                 (currentWorld, operationResult) => operationResult.Simulate(currentWorld)
             );

@@ -7,5 +7,5 @@
     ///     固有カードを使用したとき、「メド」が上昇する。
     ///     共通カードを使用したとき、「メド」が下降する。
     /// </remarks>
-    public record Repulsion : UnitFigure;
+    public record Repulsion : Figure;
 }

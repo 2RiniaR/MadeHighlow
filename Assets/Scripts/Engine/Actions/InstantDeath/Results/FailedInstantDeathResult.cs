@@ -3,10 +3,8 @@
     /// <summary>
     ///     ダメージを与えることに失敗した結果
     /// </summary>
-    public record FailedInstantDeathResult : InstantDeathResult
+    public record FailedInstantDeathResult(FailedInstantDeathReason Reason) : InstantDeathResult
     {
-        public FailedInstantDeathReason Reason { get; init; }
-
         public override World Simulate(in World world)
         {
             return world;

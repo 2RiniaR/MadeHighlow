@@ -7,5 +7,5 @@
     ///     味方ユニットが自身の近くにいる時、「メド」が上昇する。
     ///     味方ユニットが自身の近くにいない時、「メド」が下降する。
     /// </remarks>
-    public record Lonely : UnitFigure;
+    public record Lonely : Figure;
 }

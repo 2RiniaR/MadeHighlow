@@ -1,20 +1,19 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record BigBangAction : Action<BigBangResult>
+    public record BigBangAction([NotNull] in World World) : Action<BigBangResult>
     {
-        [NotNull] public World World { get; init; } = new();
-
         public override BigBangResult Validate(in IActionContext context)
         {
             if (!context.Session.Events.IsEmpty)
             {
-                return BigBangResult.FailedByNotEmpty;
+                throw new InvalidOperationException();
             }
 
             var generatedWorld = new WorldFormatter().Format(World);
-            return new SucceedBigBangResult { GeneratedWorld = generatedWorld };
+            return new SucceedBigBangResult(generatedWorld);
         }
     }
 }

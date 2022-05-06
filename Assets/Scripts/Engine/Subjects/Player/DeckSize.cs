@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record PlayerDeckSize(in int Value = 1)
+    public record DeckSize(in int Value)
     {
         public int Value { get; } = Math.Max(1, Value);
     }

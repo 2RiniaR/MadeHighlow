@@ -3,14 +3,11 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record GeometryInteractAction : InteractAction
+    public record GeometryInteractAction(
+        [NotNull] [ItemNotNull] in ValueObjectList<GeometryInteractTarget> Targets
+    ) : InteractAction
     {
-        [ItemNotNull]
-        [NotNull]
-        public ValueObjectList<GeometryInteractTarget> Targets { get; init; } =
-            ValueObjectList<GeometryInteractTarget>.Empty;
-
-        public Result Run(in Session session)
+        public override InteractResult Validate(in IActionContext context)
         {
             throw new NotImplementedException();
         }

@@ -6,31 +6,16 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ダメージを与えた結果
     /// </summary>
-    public record SucceedInstantDamageResult : InstantDamageResult
+    public record SucceedInstantDamageResult(
+        in ID SourceID,
+        [NotNull] in EntityID TargetEntityID,
+        [NotNull] in Damage InitialDamage,
+        [NotNull] [ItemNotNull] in ValueObjectList<DamageReduction> Reductions
+    ) : InstantDamageResult
     {
-        /// <summary>
-        ///     ダメージを与えたオブジェクトのID
-        /// </summary>
-        public ID SourceID { get; init; } = ID.None;
-
-        /// <summary>
-        ///     ダメージを受けたエンティティのID
-        /// </summary>
-        public EntityID TargetID { get; init; } = new();
-
-        /// <summary>
-        ///     与えようとしたダメージ量
-        /// </summary>
-        public Damage Damage { get; init; } = new();
-
-        /// <summary>
-        ///     影響したダメージ軽減効果
-        /// </summary>
-        public ValueObjectList<DamageReduction> Reductions { get; init; } = ValueObjectList<DamageReduction>.Empty;
-
         public override World Simulate(in World world)
         {
-            var entity = TargetID.GetFrom(world) ?? throw new NullReferenceException();
+            var entity = TargetEntityID.GetFrom(world) ?? throw new NullReferenceException();
             var vitality = entity.Vitality ?? throw new NullReferenceException();
             var modifiedHealth = CalculatedDamage().Caused(vitality.Health);
             return EntityModifiedWith(entity, modifiedHealth).UpdateIn(world);
@@ -42,14 +27,14 @@ namespace RineaR.MadeHighlow
         [NotNull]
         private Damage CalculatedDamage()
         {
-            return Reductions.Aggregate(Damage, (damage, reduction) => reduction.Caused(damage));
+            return Reductions.Aggregate(InitialDamage, (damage, reduction) => reduction.Caused(damage));
         }
 
         /// <summary>
         ///     体力を変更したエンティティを取得する
         /// </summary>
         [NotNull]
-        private Entity EntityModifiedWith([NotNull] in Entity original, [NotNull] in EntityHealth health)
+        private Entity EntityModifiedWith([NotNull] in Entity original, [NotNull] in Health health)
         {
             var vitality = original.Vitality ?? throw new NullReferenceException();
             return original with

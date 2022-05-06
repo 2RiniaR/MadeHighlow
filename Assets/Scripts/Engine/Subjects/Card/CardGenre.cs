@@ -1,7 +1,7 @@
 ﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     カードの種別。
+    ///     カードの種別
     /// </summary>
     public enum CardGenre
     {

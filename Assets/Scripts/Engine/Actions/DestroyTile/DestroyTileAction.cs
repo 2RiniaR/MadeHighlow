@@ -2,15 +2,11 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyTileAction : Action<DestroyTileResult>
+    public record DestroyTileAction([NotNull] in TileID TargetTileID) : Action<DestroyTileResult>
     {
-        [NotNull] public TileID EntityID { get; init; } = new();
-
-
-        [NotNull]
-        public override DestroyTileResult Validate([NotNull] in IActionContext context)
+        public override DestroyTileResult Validate(in IActionContext context)
         {
-            return new DestroyTileResult { Actor = EntityID };
+            return new DestroyTileResult(TargetTileID);
         }
     }
 }

@@ -3,26 +3,22 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「フィールド」上でのベクトル
+    ///     フィールド上での3次元ベクトル
     /// </summary>
-    public sealed record Vector3D
+    public sealed record Vector3D(in int X, in int Y, in int Z)
     {
-        public int X { get; init; }
-        public int Y { get; init; }
-        public int Z { get; init; }
-
-        [NotNull] public static Vector3D Zero => new();
-        [NotNull] public static Vector3D XPositive => new() { X = 1 };
-        [NotNull] public static Vector3D XNegative => new() { X = -1 };
-        [NotNull] public static Vector3D YPositive => new() { Y = 1 };
-        [NotNull] public static Vector3D YNegative => new() { Y = -1 };
-        [NotNull] public static Vector3D ZPositive => new() { Z = 1 };
-        [NotNull] public static Vector3D ZNegative => new() { Z = -1 };
+        [NotNull] public static Vector3D Zero => new(0, 0, 0);
+        [NotNull] public static Vector3D XPositive => new(1, 0, 0);
+        [NotNull] public static Vector3D XNegative => new(-1, 0, 0);
+        [NotNull] public static Vector3D YPositive => new(0, 1, 0);
+        [NotNull] public static Vector3D YNegative => new(0, -1, 0);
+        [NotNull] public static Vector3D ZPositive => new(0, 0, 1);
+        [NotNull] public static Vector3D ZNegative => new(0, 0, -1);
 
         [NotNull]
         public static Vector3D operator +([NotNull] in Vector3D l, [NotNull] in Vector3D r)
         {
-            return new Vector3D { X = l.X + r.X, Y = l.Y + r.Y, Z = l.Z + r.Z };
+            return new Vector3D(l.X + r.X, l.Y + r.Y, l.Z + r.Z);
         }
 
         [NotNull]
@@ -34,13 +30,13 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public static Vector3D operator -([NotNull] in Vector3D l)
         {
-            return new Vector3D { X = -l.X, Y = -l.Y, Z = -l.Z };
+            return new Vector3D(-l.X, -l.Y, -l.Z);
         }
 
         [NotNull]
         public static Vector3D operator *([NotNull] in Vector3D l, in int r)
         {
-            return new Vector3D { X = l.X * r, Y = l.Y * r, Z = l.Z * r };
+            return new Vector3D(l.X * r, l.Y * r, l.Z * r);
         }
 
         [NotNull]
@@ -53,7 +49,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public Vector2D To2D()
         {
-            return new Vector2D { X = X, Y = Y };
+            return new Vector2D(X, Y);
         }
     }
 }

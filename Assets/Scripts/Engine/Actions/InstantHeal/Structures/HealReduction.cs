@@ -6,11 +6,8 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     治癒効果の軽減
     /// </summary>
-    public record HealReduction(in int Value = 0)
+    public record HealReduction(in int Value)
     {
-        /// <summary>
-        ///     値
-        /// </summary>
         public int Value { get; } = Math.Max(0, Value);
 
         /// <summary>

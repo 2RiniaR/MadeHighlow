@@ -3,10 +3,8 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record CardID : IAttachableID
+    public record CardID(ID Content) : IAttachableID
     {
-        public ID Content { get; init; } = ID.None;
-
         IAttachable IAttachableID.GetFrom(in World world)
         {
             return GetFrom(world);
@@ -15,7 +13,7 @@ namespace RineaR.MadeHighlow
         [CanBeNull]
         public Card GetFrom([NotNull] in World world)
         {
-            return Card.GetAllFrom(world).Find(card => card.EnsuredID == this);
+            return Card.GetAllFrom(world).Find(card => card.CardID == this);
         }
 
         [NotNull]
@@ -25,12 +23,12 @@ namespace RineaR.MadeHighlow
         }
     }
 
-    public record CardID<TOption> : CardID
+    public record CardID<TOption>(ID Content) : CardID(Content)
     {
         [CanBeNull]
         public new Card<TOption> GetFrom([NotNull] in World world)
         {
-            return Card.GetAllFrom(world).Find(card => card.EnsuredID == this) as Card<TOption>;
+            return Card.GetAllFrom(world).Find(card => card.CardID == this) as Card<TOption>;
         }
     }
 }

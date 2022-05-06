@@ -6,20 +6,17 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ダメージ
     /// </summary>
-    public record Damage(in int Value = 0)
+    public record Damage(in int Value)
     {
-        /// <summary>
-        ///     値
-        /// </summary>
         public int Value { get; } = Math.Max(0, Value);
 
         /// <summary>
         ///     ダメージを与えた後の体力を返す
         /// </summary>
         [NotNull]
-        public EntityHealth Caused([NotNull] in EntityHealth health)
+        public Health Caused([NotNull] in Health health)
         {
-            return new EntityHealth(health.Value - Value);
+            return new Health(health.Value - Value);
         }
     }
 }

@@ -1,24 +1,22 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     プレイヤーを新規登録するアクション
     /// </summary>
-    public record RegisterPlayerAction : Action<RegisterPlayerResult>
+    public record RegisterPlayerAction([NotNull] in DeckSize DeckSize) : Action<RegisterPlayerResult>
     {
-        public PlayerDeckSize DeckSize { get; init; } = new();
-
         public override RegisterPlayerResult Validate(in IActionContext context)
         {
-            return new RegisterPlayerResult
-            {
-                Registered = new Player
-                {
-                    ID = new AllocateIDAction().Validate(context).Allocated,
-                    Cards = ValueObjectList<Card>.Empty,
-                    Components = ValueObjectList<Component>.Empty,
-                    DeckSize = DeckSize,
-                },
-            };
+            return new RegisterPlayerResult(
+                new Player(
+                    new AllocateIDAction().Validate(context).AllocatedID,
+                    ValueObjectList<Card>.Empty,
+                    Components: ValueObjectList<Component>.Empty,
+                    DeckSize: DeckSize
+                )
+            );
         }
     }
 }

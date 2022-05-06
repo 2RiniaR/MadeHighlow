@@ -3,13 +3,8 @@
     /// <summary>
     ///     カードを対価として支払うアクション
     /// </summary>
-    public record PayCardAction : Action<PayCardResult>
+    public record PayCardAction(CardID PaidCardID) : Action<PayCardResult>
     {
-        /// <summary>
-        ///     対価として支払うカードのID
-        /// </summary>
-        public CardID PaidCardID { get; init; } = new();
-
         public override PayCardResult Validate(in IActionContext context)
         {
             foreach (var effector in Component.GetAllOfTypeFrom<IPayCardEffector>(context.World))
@@ -19,11 +14,11 @@
                 // 「この効果が発動してるときは、カードを使っても消費されない」みたいなのができそうだよね
                 if (effect.Exempted)
                 {
-                    return new ExemptedPayCardResult { DecidedComponentID = effector.EnsuredID };
+                    return new ExemptedPayCardResult(effector.ComponentID);
                 }
             }
 
-            return new SucceedPayCardResult { PaidCardID = PaidCardID };
+            return new SucceedPayCardResult(PaidCardID);
         }
     }
 }

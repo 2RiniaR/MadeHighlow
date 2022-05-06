@@ -6,8 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     命令を実行するアクション
     /// </summary>
-    /// <param name="Command">実行する命令</param>
-    public record RunCommandAction(Command Command) : Action<RunCommandResult>
+    public record RunCommandAction([NotNull] in Command Command) : Action<RunCommandResult>
     {
         public override RunCommandResult Validate(in IActionContext context)
         {
@@ -17,7 +16,7 @@ namespace RineaR.MadeHighlow
             // 死者は行動できないよ。
             if (actor.Vitality != null && actor.Vitality.IsDead)
             {
-                return new FailedRunCommandResult { Reason = FailedRunCommandReason.Dead };
+                return new FailedRunCommandResult(FailedRunCommandReason.Dead);
             }
 
             var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(currentContext.World);
@@ -36,19 +35,15 @@ namespace RineaR.MadeHighlow
             var payCardResult = PayCard(currentContext);
             currentContext = currentContext.Appended(payCardResult);
 
-            var commandResult = ActuateCommand(currentContext);
+            var commandActionResult = ActuateCommand(currentContext);
 
-            return new SucceedRunCommandResult
-            {
-                PayCard = payCardResult,
-                Command = commandResult,
-            };
+            return new SucceedRunCommandResult(payCardResult, commandActionResult);
         }
 
         [NotNull]
         public PayCardResult PayCard([NotNull] in IActionContext context)
         {
-            var payCardAction = new PayCardAction { PaidCardID = Command.CardID };
+            var payCardAction = new PayCardAction(Command.CardID);
             return payCardAction.Validate(context);
         }
 

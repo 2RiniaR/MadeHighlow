@@ -1,6 +1,8 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
-    public record SucceedReserveCommandResult<TOption>(Command<TOption> Command) : ReserveCommandResult
+    public record SucceedReserveCommandResult<TOption>([NotNull] in Command<TOption> Command) : ReserveCommandResult
     {
         public override World Simulate(in World world)
         {

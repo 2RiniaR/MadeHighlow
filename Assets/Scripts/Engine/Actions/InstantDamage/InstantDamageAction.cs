@@ -1,42 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     エンティティにダメージを与えるアクション
     /// </summary>
-    public record InstantDamageAction : Action<InstantDamageResult>
+    public record InstantDamageAction(
+        in ID SourceID,
+        [NotNull] in EntityID TargetEntityID,
+        [NotNull] in Damage Damage
+    ) : Action<InstantDamageResult>
     {
-        /// <summary>
-        ///     ダメージを与えるオブジェクトのID
-        /// </summary>
-        public ID SourceID { get; init; } = ID.None;
-
-        /// <summary>
-        ///     ダメージを受けるエンティティのID
-        /// </summary>
-        public EntityID TargetID { get; init; } = new();
-
-        /// <summary>
-        ///     与えるダメージ量
-        /// </summary>
-        public Damage Damage { get; init; } = new();
-
         public override InstantDamageResult Validate(in IActionContext context)
         {
-            var target = TargetID.GetFrom(context.World) ?? throw new NullReferenceException();
+            var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
 
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (target.Vitality == null)
             {
-                return new FailedInstantDamageResult { Reason = FailedInstantDamageReason.NoVitality };
+                return new FailedInstantDamageResult(FailedInstantDamageReason.NoVitality);
             }
 
             // 相手が生きてなければダメージは与えられないよ。仕方ないね。
             if (target.Vitality.IsDead)
             {
-                return new FailedInstantDamageResult { Reason = FailedInstantDamageReason.AlreadyDead };
+                return new FailedInstantDamageResult(FailedInstantDamageReason.AlreadyDead);
             }
 
             var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(context.World);
@@ -49,7 +39,7 @@ namespace RineaR.MadeHighlow
                 // コンポーネントによって、ダメージが無効化されることがあるよ。無敵エフェクトとかに使えるかも。
                 if (effect.Refused)
                 {
-                    return new RefusedInstantDamageResult { DecidedComponentID = effector.EnsuredID };
+                    return new RefusedInstantDamageResult(effector.ComponentID);
                 }
 
                 // コンポーネントによって、ダメージの量が軽減されることがあるよ。防御エフェクトとかに使えそう。
@@ -59,13 +49,7 @@ namespace RineaR.MadeHighlow
                 }
             }
 
-            return new SucceedInstantDamageResult
-            {
-                SourceID = SourceID,
-                TargetID = TargetID,
-                Damage = Damage,
-                Reductions = reductions.ToValueObjectList(),
-            };
+            return new SucceedInstantDamageResult(SourceID, TargetEntityID, Damage, reductions.ToValueObjectList());
         }
     }
 }

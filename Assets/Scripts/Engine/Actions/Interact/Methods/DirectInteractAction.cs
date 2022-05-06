@@ -3,14 +3,11 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record DirectInteractAction : InteractAction
+    public record DirectInteractAction(
+        [NotNull] [ItemNotNull] in ValueObjectList<DirectInteractTarget> Targets
+    ) : InteractAction
     {
-        [ItemNotNull]
-        [NotNull]
-        public ValueObjectList<DirectInteractTarget> Targets { get; init; } =
-            ValueObjectList<DirectInteractTarget>.Empty;
-
-        public Result Run(in Session session)
+        public override InteractResult Validate(in IActionContext context)
         {
             throw new NotImplementedException();
         }

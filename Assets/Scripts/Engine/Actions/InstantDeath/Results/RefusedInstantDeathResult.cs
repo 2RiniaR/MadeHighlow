@@ -1,18 +1,10 @@
-﻿using JetBrains.Annotations;
-
-namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     ダメージが無効化された結果
     /// </summary>
-    public record RefusedInstantDeathResult : InstantDeathResult
+    public record RefusedInstantDeathResult(ComponentID DecidedComponentID) : InstantDeathResult
     {
-        /// <summary>
-        ///     無効化を決定したコンポーネントのID
-        /// </summary>
-        [NotNull]
-        public ComponentID DecidedComponentID { get; init; } = new();
-
         public override World Simulate(in World world)
         {
             return world;

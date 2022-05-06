@@ -3,19 +3,16 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「フィールド」上の3次元の位置
+    ///     フィールド上の3次元座標
     /// </summary>
-    public sealed record Position3D
+    public sealed record Position3D([NotNull] in Horizontal X, [NotNull] in Vertical Y, [NotNull] in Height Z)
     {
-        [NotNull] public static Position3D Zero => new();
-        [NotNull] public Horizontal X { get; init; } = new();
-        [NotNull] public Vertical Y { get; init; } = new();
-        [NotNull] public Height Z { get; init; } = new();
+        [NotNull] public static Position3D Zero => new(new Horizontal(0), new Vertical(0), new Height(0));
 
         [NotNull]
         public static Position3D operator +([NotNull] in Position3D l, [NotNull] in Vector3D r)
         {
-            return new Position3D { X = l.X + r.X, Y = l.Y + r.Y, Z = l.Z + r.Z };
+            return new Position3D(l.X + r.X, l.Y + r.Y, l.Z + r.Z);
         }
 
         [NotNull]
@@ -34,7 +31,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public Position2D To2D()
         {
-            return new Position2D { X = X, Y = Y };
+            return new Position2D(X, Y);
         }
     }
 }

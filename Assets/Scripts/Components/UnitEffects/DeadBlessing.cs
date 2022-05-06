@@ -1,4 +1,6 @@
-﻿namespace RineaR.MadeHighlow.Components.UnitEffects
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Components.UnitEffects
 {
     /// <summary>
     ///     「死者の加護」
@@ -6,5 +8,10 @@
     /// <remarks>
     ///     自身の周囲 N マス以内にいる味方ユニットが、ダウンしたときに爆発して呪いをばら撒くようになる。
     /// </remarks>
-    public record DeadBlessing : Component;
+    public record DeadBlessing
+        (in ID ID, [NotNull] in IAttachableID AttachedID, [NotNull] in Duration Duration) : Component(
+            in ID,
+            in AttachedID,
+            in Duration
+        );
 }

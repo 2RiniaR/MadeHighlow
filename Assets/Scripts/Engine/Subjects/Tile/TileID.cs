@@ -3,10 +3,8 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record TileID : IAttachableID
+    public record TileID(in ID Content) : IAttachableID
     {
-        public ID Content { get; init; } = ID.None;
-
         IAttachable IAttachableID.GetFrom(in World world)
         {
             return GetFrom(world);
@@ -15,7 +13,7 @@ namespace RineaR.MadeHighlow
         [CanBeNull]
         public Tile GetFrom([NotNull] in World world)
         {
-            return Tile.GetAllFrom(world).Find(tile => tile.EnsuredID == this);
+            return Tile.GetAllFrom(world).Find(tile => tile.TileID == this);
         }
 
         [NotNull]

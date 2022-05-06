@@ -20,17 +20,14 @@ namespace RineaR.MadeHighlow
                 results.Add(result);
             }
 
-            return new StartCommandsResult
-            {
-                Operations = results.ToValueObjectList(),
-            };
+            return new StartCommandsResult(results.ToValueObjectList());
         }
 
         [NotNull]
         [ItemNotNull]
         private ValueObjectList<Command> OrderedCommands([NotNull] in IActionContext context)
         {
-            return new StartCommandsOrderer { Commands = context.World.ReservedCommands }.Resolve(context);
+            return new StartCommandsOrderer(context.World.ReservedCommands).Resolve(context);
         }
     }
 }

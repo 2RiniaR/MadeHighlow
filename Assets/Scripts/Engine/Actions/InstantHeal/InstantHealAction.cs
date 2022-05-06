@@ -1,42 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     エンティティに治癒効果を与えるアクション
     /// </summary>
-    public record InstantHealAction : Action<InstantHealResult>
+    public record InstantHealAction(
+        in ID SourceID,
+        [NotNull] in EntityID TargetEntityID,
+        [NotNull] in Heal Heal
+    ) : Action<InstantHealResult>
     {
-        /// <summary>
-        ///     治癒効果を与えるオブジェクトのID
-        /// </summary>
-        public ID SourceID { get; init; } = ID.None;
-
-        /// <summary>
-        ///     治癒効果を受けるエンティティのID
-        /// </summary>
-        public EntityID TargetID { get; init; } = new();
-
-        /// <summary>
-        ///     与える治癒効果量
-        /// </summary>
-        public Heal Heal { get; init; } = new();
-
         public override InstantHealResult Validate(in IActionContext context)
         {
-            var target = TargetID.GetFrom(context.World) ?? throw new NullReferenceException();
+            var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
 
             // そもそも体力という概念がないものには、治癒効果が与えられない。
             if (target.Vitality == null)
             {
-                return new FailedInstantHealResult { Reason = FailedInstantHealReason.NoVitality };
+                return new FailedInstantHealResult(FailedInstantHealReason.NoVitality);
             }
 
             // 相手が生きてなければ治癒効果は与えられないよ。仕方ないね。
             if (target.Vitality.IsDead)
             {
-                return new FailedInstantHealResult { Reason = FailedInstantHealReason.AlreadyDead };
+                return new FailedInstantHealResult(FailedInstantHealReason.AlreadyDead);
             }
 
             var effectors = Component.GetAllOfTypeFrom<IInstantHealEffector>(context.World);
@@ -49,7 +39,7 @@ namespace RineaR.MadeHighlow
                 // コンポーネントによって、治癒効果が無効化されることがあるよ。回復無効エフェクトとかに使えるかも。
                 if (effect.Refused)
                 {
-                    return new RefusedInstantHealResult { DecidedComponentID = effector.EnsuredID };
+                    return new RefusedInstantHealResult(effector.ComponentID);
                 }
 
                 // コンポーネントによって、治癒効果の量が軽減されることがあるよ。回復量減少エフェクトとかに使えそう。
@@ -59,13 +49,7 @@ namespace RineaR.MadeHighlow
                 }
             }
 
-            return new SucceedInstantHealResult
-            {
-                SourceID = SourceID,
-                TargetID = TargetID,
-                Heal = Heal,
-                Reductions = reductions.ToValueObjectList(),
-            };
+            return new SucceedInstantHealResult(SourceID, TargetEntityID, Heal, reductions.ToValueObjectList());
         }
     }
 }

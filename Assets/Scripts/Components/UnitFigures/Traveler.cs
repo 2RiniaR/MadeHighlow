@@ -7,5 +7,5 @@
     ///     長距離を移動したとき、「メド」が上昇する。
     ///     同じ場所に留まっているとき、「メド」が下降する。
     /// </remarks>
-    public record Traveler : UnitFigure;
+    public record Traveler : Figure;
 }

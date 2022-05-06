@@ -3,57 +3,29 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「エンティティ」
+    ///     エンティティ
     /// </summary>
-    public record Entity : IIdentified, IAttachable
+    public record Entity(
+        in ID ID,
+        [NotNull] in Position3D Position3D,
+        [NotNull] in Direction3D Direction3D,
+        [CanBeNull] in Vitality Vitality,
+        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+    ) : IIdentified, IAttachable
     {
-        /// <summary>
-        ///     位置
-        /// </summary>
-        [NotNull]
-        public Position3D Position3D { get; init; } = Position3D.Zero;
+        public EntityID EntityID => new(ID);
 
-        /// <summary>
-        ///     向き
-        /// </summary>
-        [NotNull]
-        public Direction3D Direction3D { get; init; } = Direction3D.XNegative;
-
-        /// <summary>
-        ///     生命力
-        /// </summary>
-        [CanBeNull]
-        public EntityVitality Vitality { get; init; }
-
-        /// <summary>
-        ///     空のエンティティ
-        /// </summary>
-        [NotNull]
-        public static Entity Empty => new();
-
-        public EntityID EnsuredID => new() { Content = ID };
-
-        IAttachableID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.AttachableID => EntityID;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {
             return this with { Components = components };
         }
 
-        /// <summary>
-        ///     コンポーネント
-        /// </summary>
-        public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
-
         public World UpdateIn(in World world)
         {
-            return world with { Entities = world.Entities.ReplaceItem(tile => tile.EnsuredID == EnsuredID, this) };
+            return world with { Entities = world.Entities.ReplaceItem(tile => tile.EntityID == EntityID, this) };
         }
-
-        /// <summary>
-        ///     セッション内での識別子
-        /// </summary>
-        public ID ID { get; init; } = ID.None;
 
         [NotNull]
         public World CreateIn([NotNull] in World world)

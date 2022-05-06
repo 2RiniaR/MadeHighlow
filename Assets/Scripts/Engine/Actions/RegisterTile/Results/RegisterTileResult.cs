@@ -1,15 +1,15 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     プレイヤーを新規登録した結果
+    ///     タイルを新規登録した結果
     /// </summary>
-    public record RegisterTileResult : Result
+    public record RegisterTileResult([NotNull] in Tile RegisteredTile) : Result
     {
-        public Tile Registered { get; init; } = new();
-
         public override World Simulate(in World world)
         {
-            return Registered.CreateIn(world);
+            return RegisteredTile.CreateIn(world);
         }
     }
 }

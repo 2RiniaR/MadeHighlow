@@ -1,19 +1,10 @@
-﻿using System;
-
-namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow
 {
     public record FailedStepResult : StepResult
     {
-        private FailedStepResult(StepResultCode code) : base(code)
-        {
-        }
-
-        public static FailedStepResult NoEntry => new(StepResultCode.NoEntry);
-        public static FailedStepResult CostOver => new(StepResultCode.CostOver);
-
         public override World Simulate(in World world)
         {
-            throw new InvalidOperationException("The failed event could not simulate.");
+            return world;
         }
     }
 }

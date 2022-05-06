@@ -1,11 +1,8 @@
-﻿using JetBrains.Annotations;
-
-namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow
 {
     public record IncrementTurnAction : Action<IncrementTurnResult>
     {
-        [NotNull]
-        public override IncrementTurnResult Validate([NotNull] in IActionContext context)
+        public override IncrementTurnResult Validate(in IActionContext context)
         {
             return new IncrementTurnResult();
         }

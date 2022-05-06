@@ -5,14 +5,8 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     治癒効果が無効化された結果
     /// </summary>
-    public record RefusedInstantHealResult : InstantHealResult
+    public record RefusedInstantHealResult([NotNull] in ComponentID DecidedComponentID) : InstantHealResult
     {
-        /// <summary>
-        ///     無効化を決定したコンポーネントのID
-        /// </summary>
-        [NotNull]
-        public ComponentID DecidedComponentID { get; init; } = new();
-
         public override World Simulate(in World world)
         {
             return world;

@@ -3,14 +3,12 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record ComponentID
+    public record ComponentID(ID Content)
     {
-        public ID Content { get; init; } = ID.None;
-
         [CanBeNull]
         public Component GetFrom([NotNull] in World world)
         {
-            return Component.GetAllFrom(world).Find(item => item.EnsuredID == this);
+            return Component.GetAllFrom(world).Find(item => item.ComponentID == this);
         }
 
         [NotNull]

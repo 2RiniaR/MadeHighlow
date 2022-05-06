@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Tower_Always_ReturnsCounterpartType()
         {
-            var actual = TileHeight.Tower;
+            var actual = Elevation.Tower;
 
             Assert.That(actual.Type, Is.EqualTo(TileHeightType.Tower));
         }
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Tower_Always_ReturnsNoPlaceable()
         {
-            var actual = TileHeight.Tower;
+            var actual = Elevation.Tower;
 
             Assert.That(actual.Placeable, Is.False);
         }
@@ -29,7 +29,7 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Abyss_Always_ReturnsNoPlaceable()
         {
-            var actual = TileHeight.Abyss;
+            var actual = Elevation.Abyss;
 
             Assert.That(actual.Type, Is.EqualTo(TileHeightType.Abyss));
         }
@@ -37,7 +37,7 @@ namespace RineaR.MadeHighlow
         [Test]
         public void Abyss_Always_ReturnsCounterpartType()
         {
-            var actual = TileHeight.Abyss;
+            var actual = Elevation.Abyss;
 
             Assert.That(actual.Placeable, Is.False);
         }

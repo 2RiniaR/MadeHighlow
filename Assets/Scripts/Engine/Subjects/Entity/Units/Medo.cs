@@ -3,17 +3,12 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     ユニットの「メド」
+    ///     メド（一般名：進化の進捗）
     /// </summary>
-    /// <param name="Value">値</param>
-    public sealed record UnitMedo(in int Value = 0)
+    public sealed record Medo(in int Value)
     {
         public const int MinValue = -4;
         public const int MaxValue = 4;
-
-        /// <summary>
-        ///     値
-        /// </summary>
         public int Value { get; } = Math.Clamp(Value, MinValue, MaxValue);
     }
 }

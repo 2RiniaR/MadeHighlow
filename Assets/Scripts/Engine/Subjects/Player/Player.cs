@@ -3,35 +3,18 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「プレイヤー」を表現する
+    ///     プレイヤー
     /// </summary>
-    public record Player : IIdentified, IAttachable
+    public record Player(
+        in ID ID,
+        [NotNull] [ItemNotNull] in ValueObjectList<Card> Cards,
+        [NotNull] in DeckSize DeckSize,
+        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+    ) : IIdentified, IAttachable
     {
-        /// <summary>
-        ///     セッション内での識別子
-        /// </summary>
-        public ID ID { get; init; } = ID.None;
+        public PlayerID PlayerID => new(ID);
 
-        /// <summary>
-        ///     デッキにあるカード
-        /// </summary>
-        [NotNull]
-        public ValueObjectList<Card> Cards { get; init; } = ValueObjectList<Card>.Empty;
-
-        /// <summary>
-        ///     デッキの大きさ
-        /// </summary>
-        [NotNull]
-        public PlayerDeckSize DeckSize { get; init; } = new();
-
-        /// <summary>
-        ///     コンポーネント
-        /// </summary>
-        public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
-
-        public PlayerID EnsuredID => new() { Content = ID };
-
-        IAttachableID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.AttachableID => PlayerID;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {
@@ -40,7 +23,7 @@ namespace RineaR.MadeHighlow
 
         public World UpdateIn(in World world)
         {
-            return world with { Players = world.Players.ReplaceItem(player => player.EnsuredID == EnsuredID, this) };
+            return world with { Players = world.Players.ReplaceItem(player => player.PlayerID == PlayerID, this) };
         }
 
         [NotNull]

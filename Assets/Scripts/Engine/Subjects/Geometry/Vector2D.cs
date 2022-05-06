@@ -3,22 +3,20 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「フィールド」上でのベクトル
+    ///     フィールド上での2次元ベクトル
     /// </summary>
-    public sealed record Vector2D
+    public sealed record Vector2D(in int X, in int Y)
     {
-        [NotNull] public static Vector2D Zero => new();
-        [NotNull] public static Vector2D XPositive => new() { X = 1 };
-        [NotNull] public static Vector2D XNegative => new() { X = -1 };
-        [NotNull] public static Vector2D YPositive => new() { Y = 1 };
-        [NotNull] public static Vector2D YNegative => new() { Y = -1 };
-        public int X { get; init; }
-        public int Y { get; init; }
+        [NotNull] public static Vector2D Zero => new(0, 0);
+        [NotNull] public static Vector2D XPositive => new(1, 0);
+        [NotNull] public static Vector2D XNegative => new(-1, 0);
+        [NotNull] public static Vector2D YPositive => new(0, 1);
+        [NotNull] public static Vector2D YNegative => new(0, -1);
 
         [NotNull]
         public static Vector2D operator +([NotNull] in Vector2D l, [NotNull] in Vector2D r)
         {
-            return new Vector2D { X = l.X + r.X, Y = l.Y + r.Y };
+            return new Vector2D(l.X + r.X, l.Y + r.Y);
         }
 
         [NotNull]
@@ -30,13 +28,13 @@ namespace RineaR.MadeHighlow
         [NotNull]
         public static Vector2D operator -([NotNull] in Vector2D l)
         {
-            return new Vector2D { X = -l.X, Y = -l.Y };
+            return new Vector2D(-l.X, -l.Y);
         }
 
         [NotNull]
         public static Vector2D operator *([NotNull] in Vector2D l, in int r)
         {
-            return new Vector2D { X = l.X * r, Y = l.Y * r };
+            return new Vector2D(l.X * r, l.Y * r);
         }
 
         [NotNull]

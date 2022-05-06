@@ -4,10 +4,12 @@ using JetBrains.Annotations;
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「フィールド」上での方向
+    ///     フィールド上での方向
     /// </summary>
     public sealed record Direction3D
     {
+        private Type InternalValue { get; init; }
+
         [NotNull] public static Direction3D XPositive => new() { InternalValue = Type.XPositive };
 
         [NotNull] public static Direction3D XNegative => new() { InternalValue = Type.XNegative };
@@ -54,11 +56,6 @@ namespace RineaR.MadeHighlow
         };
 
         [NotNull] public Direction3D LeftSide => Backward.RightSide;
-
-        /// <summary>
-        ///     方向
-        /// </summary>
-        private Type InternalValue { get; init; }
 
         [NotNull]
         public static Direction3D FromVector([NotNull] in Vector3D vector)

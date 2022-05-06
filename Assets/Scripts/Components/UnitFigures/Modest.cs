@@ -7,5 +7,5 @@
     ///     自身よりメドが高いユニットが存在するとき、「メド」が上昇する。
     ///     自身よりメドが低いユニットが多く存在するとき、「メド」が下降する。
     /// </remarks>
-    public record Modest : UnitFigure;
+    public record Modest : Figure;
 }

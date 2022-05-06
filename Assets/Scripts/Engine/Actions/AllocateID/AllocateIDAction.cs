@@ -7,8 +7,8 @@
     {
         public override AllocateIDResult Validate(in IActionContext context)
         {
-            var latestID = context.World.LatestGeneratedID;
-            return new AllocateIDResult { Allocated = ID.From(latestID.InternalValue + 1) };
+            var latestID = context.World.LatestAllocatedID;
+            return new AllocateIDResult(ID.From(latestID.InternalValue + 1));
         }
     }
 }

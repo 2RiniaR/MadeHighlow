@@ -1,8 +1,6 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
-    public record StepOutReaction
-    {
-        public EntityID Reactor { get; init; } = new();
-        public Result Result { get; init; } = Result.Empty;
-    }
+    public record StepOutReaction([NotNull] in EntityID ReactorEntityID, [NotNull] in Result Result);
 }

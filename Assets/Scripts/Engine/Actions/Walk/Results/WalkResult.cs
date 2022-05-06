@@ -1,23 +1,18 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     オブジェクトがフィールド上を歩いて移動するアクションの結果
+    ///     フィールド上を歩いて移動するアクションの結果
     /// </summary>
-    public record WalkResult : Result
+    public record WalkResult(
+        [NotNull] in EntityID ActorEntityID,
+        [NotNull] [ItemNotNull] in ValueObjectList<StepResult> StepResults
+    ) : Result
     {
-        /// <summary>
-        ///     行動したユニット
-        /// </summary>
-        public EntityID Actor { get; init; } = new();
-
-        /// <summary>
-        ///     ステップ
-        /// </summary>
-        public ValueObjectList<StepResult> Steps { get; init; } = ValueObjectList<StepResult>.Empty;
-
         public override World Simulate(in World world)
         {
-            return Steps.Aggregate(world, (currentWorld, step) => step.Simulate(currentWorld));
+            return StepResults.Aggregate(world, (currentWorld, step) => step.Simulate(currentWorld));
         }
     }
 }

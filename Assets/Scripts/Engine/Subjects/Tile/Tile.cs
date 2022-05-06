@@ -3,47 +3,19 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「タイル」を表現する
+    ///     タイル
     /// </summary>
-    public record Tile : IIdentified, IAttachable
+    public record Tile(
+        in ID ID,
+        [NotNull] in Position2D Position2D,
+        [NotNull] in Direction2D Direction2D,
+        [NotNull] in Elevation Elevation,
+        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+    ) : IIdentified, IAttachable
     {
-        /// <summary>
-        ///     セッション内での識別子
-        /// </summary>
-        public ID ID { get; init; } = ID.None;
+        public TileID TileID => new(ID);
 
-        /// <summary>
-        ///     位置
-        /// </summary>
-        [NotNull]
-        public Position2D Position2D { get; init; } = Position2D.Zero;
-
-        /// <summary>
-        ///     方向
-        /// </summary>
-        [NotNull]
-        public Direction2D Direction2D { get; init; } = Direction2D.XPositive;
-
-        /// <summary>
-        ///     高さ
-        /// </summary>
-        [NotNull]
-        public TileHeight Height { get; init; } = new GroundTileHeight();
-
-        /// <summary>
-        ///     コンポーネント
-        /// </summary>
-        public ValueObjectList<Component> Components { get; init; } = ValueObjectList<Component>.Empty;
-
-        /// <summary>
-        ///     空のタイル
-        /// </summary>
-        [NotNull]
-        public static Tile Empty => new();
-
-        public TileID EnsuredID => new() { Content = ID };
-
-        IAttachableID IAttachable.EnsuredID => EnsuredID;
+        IAttachableID IAttachable.AttachableID => TileID;
 
         public IAttachable WithComponents(ValueObjectList<Component> components)
         {
@@ -52,7 +24,7 @@ namespace RineaR.MadeHighlow
 
         public World UpdateIn(in World world)
         {
-            return world with { Tiles = world.Tiles.ReplaceItem(tile => tile.EnsuredID == EnsuredID, this) };
+            return world with { Tiles = world.Tiles.ReplaceItem(tile => tile.TileID == TileID, this) };
         }
 
         [NotNull]

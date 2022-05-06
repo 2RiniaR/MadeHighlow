@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     プレイヤーを新規登録するアクション
+    ///     カードを新規登録するアクション
     /// </summary>
     public record RegisterCardAction : Action<RegisterCardResult>
     {

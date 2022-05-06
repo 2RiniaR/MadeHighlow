@@ -3,7 +3,10 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record Turn(in int Value = 0)
+    /// <summary>
+    ///     ターン
+    /// </summary>
+    public record Turn(in int Value)
     {
         public int Value { get; } = Math.Max(0, Value);
 

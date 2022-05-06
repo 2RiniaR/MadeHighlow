@@ -3,18 +3,16 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     「フィールド」上での位置
+    ///     フィールド上での2次元座標
     /// </summary>
-    public sealed record Position2D
+    public sealed record Position2D([NotNull] in Horizontal X, [NotNull] in Vertical Y)
     {
-        [NotNull] public static Position2D Zero => new();
-        [NotNull] public Horizontal X { get; init; } = new();
-        [NotNull] public Vertical Y { get; init; } = new();
+        [NotNull] public static Position2D Zero => new(new Horizontal(0), new Vertical(0));
 
         [NotNull]
         public static Position2D operator +([NotNull] in Position2D l, [NotNull] in Vector2D r)
         {
-            return new Position2D { X = l.X + r.X, Y = l.Y + r.Y };
+            return new Position2D(l.X + r.X, l.Y + r.Y);
         }
 
         [NotNull]

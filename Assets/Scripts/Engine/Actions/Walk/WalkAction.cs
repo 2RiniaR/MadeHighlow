@@ -6,42 +6,24 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     オブジェクトがフィールド上を歩いて移動するアクション
     /// </summary>
-    public record WalkAction : Action<WalkResult>
+    public record WalkAction(
+        [NotNull] in EntityID ActorEntityID,
+        [NotNull] [ItemNotNull] in ValueObjectList<StepAction> StepActions
+    ) : Action<WalkResult>
     {
-        /// <summary>
-        ///     行動するオブジェクト
-        /// </summary>
-        [NotNull]
-        public EntityID Actor { get; init; } = new();
-
-        /// <summary>
-        ///     ステップ
-        /// </summary>
-        [NotNull]
-        public ValueObjectList<StepAction> Steps { get; init; } = ValueObjectList<StepAction>.Empty;
-
-
-        /// <summary>
-        ///     アクションを実行した結果を返す
-        /// </summary>
-        [NotNull]
-        public override WalkResult Validate([NotNull] in IActionContext context)
+        public override WalkResult Validate(in IActionContext context)
         {
             var stepResults = new List<StepResult>();
 
-            foreach (var step in Steps)
+            foreach (var stepAction in StepActions)
             {
-                var formattedStep = step with { Actor = Actor };
+                var formattedStep = stepAction with { ActorEntityID = ActorEntityID };
                 var stepResult = formattedStep.Validate(context);
                 context.Appended(stepResult);
                 stepResults.Add(stepResult);
             }
 
-            return new WalkResult
-            {
-                Actor = Actor,
-                Steps = stepResults.ToValueObjectList(),
-            };
+            return new WalkResult(ActorEntityID, stepResults.ToValueObjectList());
         }
     }
 }
