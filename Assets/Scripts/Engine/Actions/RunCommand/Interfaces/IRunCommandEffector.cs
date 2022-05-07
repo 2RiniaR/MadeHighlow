@@ -11,8 +11,8 @@ namespace RineaR.MadeHighlow
         ///     命令を実行するアクションに対して与える影響を返す
         /// </summary>
         public RunCommandEffect EffectOnRunCommand(
-            [NotNull] in IActionContext context,
-            [NotNull] in RunCommandAction action
+            [NotNull] IActionContext context,
+            [NotNull] RunCommandAction action
         );
     }
 }

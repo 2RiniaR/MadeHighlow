@@ -8,12 +8,12 @@ namespace RineaR.MadeHighlow
     ///     エンティティに治癒効果を与えるアクション
     /// </summary>
     public record InstantHealAction(
-        in ID SourceID,
-        [NotNull] in EntityID TargetEntityID,
-        [NotNull] in Heal Heal
+        ID SourceID,
+        [NotNull] EntityID TargetEntityID,
+        [NotNull] Heal Heal
     ) : Action<InstantHealResult>
     {
-        public override InstantHealResult Validate(in IActionContext context)
+        public override InstantHealResult Validate(IActionContext context)
         {
             var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
 

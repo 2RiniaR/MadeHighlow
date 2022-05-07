@@ -8,8 +8,8 @@ namespace RineaR.MadeHighlow
     public interface IInstantHealEffector : IComponent
     {
         public InstantHealEffect EffectOnInstantHeal(
-            [NotNull] in IActionContext context,
-            [NotNull] in InstantHealAction action
+            [NotNull] IActionContext context,
+            [NotNull] InstantHealAction action
         );
     }
 }

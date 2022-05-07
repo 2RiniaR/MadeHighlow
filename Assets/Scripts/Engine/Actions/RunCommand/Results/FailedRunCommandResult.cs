@@ -1,8 +1,8 @@
 ﻿namespace RineaR.MadeHighlow
 {
-    public record FailedRunCommandResult(in FailedRunCommandReason Reason) : RunCommandResult
+    public record FailedRunCommandResult(FailedRunCommandReason Reason) : RunCommandResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return world;
         }

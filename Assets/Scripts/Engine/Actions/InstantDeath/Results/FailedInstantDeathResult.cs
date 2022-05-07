@@ -5,7 +5,7 @@
     /// </summary>
     public record FailedInstantDeathResult(FailedInstantDeathReason Reason) : InstantDeathResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return world;
         }

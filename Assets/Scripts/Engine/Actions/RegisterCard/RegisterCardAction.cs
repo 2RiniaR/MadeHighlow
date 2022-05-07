@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public record RegisterCardAction : Action<RegisterCardResult>
     {
-        public override RegisterCardResult Validate(in IActionContext context)
+        public override RegisterCardResult Validate(IActionContext context)
         {
             throw new NotImplementedException();
         }

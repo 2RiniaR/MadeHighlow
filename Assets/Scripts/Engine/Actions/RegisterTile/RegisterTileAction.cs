@@ -6,12 +6,12 @@ namespace RineaR.MadeHighlow
     ///     タイルを新規登録するアクション
     /// </summary>
     public record RegisterTileAction(
-        [NotNull] in Position2D Position2D,
-        [NotNull] in Direction2D Direction2D,
-        [NotNull] in Elevation Elevation
+        [NotNull] Position2D Position2D,
+        [NotNull] Direction2D Direction2D,
+        [NotNull] Elevation Elevation
     ) : Action<RegisterTileResult>
     {
-        public override RegisterTileResult Validate(in IActionContext context)
+        public override RegisterTileResult Validate(IActionContext context)
         {
             return new RegisterTileResult(
                 new Tile(

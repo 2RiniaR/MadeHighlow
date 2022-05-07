@@ -6,10 +6,10 @@ namespace RineaR.MadeHighlow
     ///     プレイヤー
     /// </summary>
     public record Player(
-        in ID ID,
-        [NotNull] [ItemNotNull] in ValueObjectList<Card> Cards,
-        [NotNull] in DeckSize DeckSize,
-        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+        ID ID,
+        [NotNull] [ItemNotNull] ValueObjectList<Card> Cards,
+        [NotNull] DeckSize DeckSize,
+        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
     ) : IIdentified, IAttachable
     {
         public PlayerID PlayerID => new(ID);
@@ -21,19 +21,19 @@ namespace RineaR.MadeHighlow
             return this with { Components = components };
         }
 
-        public World UpdateIn(in World world)
+        public World UpdateIn(World world)
         {
             return world with { Players = world.Players.ReplaceItem(player => player.PlayerID == PlayerID, this) };
         }
 
         [NotNull]
-        public World CreateIn([NotNull] in World world)
+        public World CreateIn([NotNull] World world)
         {
             return world with { Players = world.Players.Add(this) };
         }
 
         [NotNull]
-        public static ValueObjectList<Player> GetAllFrom([NotNull] in World world)
+        public static ValueObjectList<Player> GetAllFrom([NotNull] World world)
         {
             return world.Players;
         }

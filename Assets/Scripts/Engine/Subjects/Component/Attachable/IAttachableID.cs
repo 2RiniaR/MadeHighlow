@@ -7,6 +7,6 @@ namespace RineaR.MadeHighlow
         public ID Content { get; init; }
 
         [CanBeNull]
-        public IAttachable GetFrom([NotNull] in World world);
+        public IAttachable GetFrom([NotNull] World world);
     }
 }

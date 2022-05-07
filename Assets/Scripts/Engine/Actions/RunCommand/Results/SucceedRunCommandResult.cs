@@ -6,11 +6,11 @@ namespace RineaR.MadeHighlow
     ///     命令を実行するアクションの結果
     /// </summary>
     public record SucceedRunCommandResult(
-        [NotNull] in PayCardResult PayCardResult,
-        [NotNull] in Result CommandActionResult
+        [NotNull] PayCardResult PayCardResult,
+        [NotNull] Result CommandActionResult
     ) : RunCommandResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             var currentWorld = world;
             currentWorld = PayCardResult.Simulate(currentWorld);

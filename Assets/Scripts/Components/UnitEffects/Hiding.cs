@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     /// <summary>
     ///     「ドロン」
     /// </summary>
-    public record Hiding(in ID ID, [NotNull] in IAttachableID AttachedID, [NotNull] in Duration Duration) : Component(
-        in ID,
-        in AttachedID,
-        in Duration
+    public record Hiding(ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
+        ID,
+        AttachedID,
+        Duration
     );
 }

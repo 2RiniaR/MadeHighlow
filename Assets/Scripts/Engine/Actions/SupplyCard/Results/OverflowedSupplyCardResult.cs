@@ -3,11 +3,11 @@
 namespace RineaR.MadeHighlow
 {
     public record OverflowedSupplyCardResult(
-        [NotNull] in PlayerID TargetPlayerID,
-        [NotNull] in Card SupplyCard
+        [NotNull] PlayerID TargetPlayerID,
+        [NotNull] Card SupplyCard
     ) : SupplyCardResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return world;
         }

@@ -6,12 +6,12 @@ namespace RineaR.MadeHighlow
     ///     エンティティを新規登録するアクション
     /// </summary>
     public record RegisterEntityAction(
-        [NotNull] in Position3D Position3D,
-        [NotNull] in Direction3D Direction3D,
-        [CanBeNull] in Vitality Vitality
+        [NotNull] Position3D Position3D,
+        [NotNull] Direction3D Direction3D,
+        [CanBeNull] Vitality Vitality
     ) : Action<RegisterEntityResult>
     {
-        public override RegisterEntityResult Validate(in IActionContext context)
+        public override RegisterEntityResult Validate(IActionContext context)
         {
             return new RegisterEntityResult(
                 new Entity(

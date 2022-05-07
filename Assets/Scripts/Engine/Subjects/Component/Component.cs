@@ -7,15 +7,15 @@ namespace RineaR.MadeHighlow
     ///     コンポーネント
     /// </summary>
     public abstract record Component(
-        in ID ID,
-        [NotNull] in IAttachableID AttachedID,
-        [NotNull] in Duration Duration
+        ID ID,
+        [NotNull] IAttachableID AttachedID,
+        [NotNull] Duration Duration
     ) : IIdentified, IComponent
     {
         public ComponentID ComponentID => new(ID);
 
         [NotNull]
-        public World CreateIn([NotNull] in World world)
+        public World CreateIn([NotNull] World world)
         {
             var attached = AttachedID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedAttached = attached.WithComponents(attached.Components.Add(this));
@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public World UpdateIn([NotNull] in World world)
+        public World UpdateIn([NotNull] World world)
         {
             var attached = AttachedID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedAttached = attached.WithComponents(
@@ -34,14 +34,14 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        public static ValueObjectList<Component> GetAllFrom([NotNull] in World world)
+        public static ValueObjectList<Component> GetAllFrom([NotNull] World world)
         {
             return world.GetChildren().WhereType<IAttachable>().SelectMany(item => item.Components);
         }
 
         [NotNull]
         [ItemNotNull]
-        public static ValueObjectList<T> GetAllOfTypeFrom<T>([NotNull] in World world) where T : class
+        public static ValueObjectList<T> GetAllOfTypeFrom<T>([NotNull] World world) where T : class
         {
             return GetAllFrom(world).WhereType<T>();
         }

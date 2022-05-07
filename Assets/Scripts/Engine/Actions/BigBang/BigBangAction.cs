@@ -3,9 +3,9 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record BigBangAction([NotNull] in World World) : Action<BigBangResult>
+    public record BigBangAction([NotNull] World World) : Action<BigBangResult>
     {
-        public override BigBangResult Validate(in IActionContext context)
+        public override BigBangResult Validate(IActionContext context)
         {
             if (!context.Session.Events.IsEmpty)
             {

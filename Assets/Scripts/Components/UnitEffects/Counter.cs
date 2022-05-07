@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     /// <remarks>
     ///     自身がいるマスを背後以外から通過したユニットに対して、攻撃を行う。
     /// </remarks>
-    public record Counter(in ID ID, [NotNull] in IAttachableID AttachedID, [NotNull] in Duration Duration) : Component(
-        in ID,
-        in AttachedID,
-        in Duration
+    public record Counter(ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
+        ID,
+        AttachedID,
+        Duration
     ), IStepInReactor
     {
-        public ValueObjectList<StepInReaction> OnSteppedIn(in IActionContext session, in EntityID actor)
+        public ValueObjectList<StepInReaction> OnSteppedIn(IActionContext session, EntityID actor)
         {
             throw new NotImplementedException();
         }

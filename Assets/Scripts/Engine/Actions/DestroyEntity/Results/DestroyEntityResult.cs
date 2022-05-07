@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyEntityResult([NotNull] in EntityID DestroyedEntityID) : Result
+    public record DestroyEntityResult([NotNull] EntityID DestroyedEntityID) : Result
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return DestroyedEntityID.DeleteFrom(world);
         }

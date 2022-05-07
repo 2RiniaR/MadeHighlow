@@ -40,7 +40,7 @@ namespace RineaR.MadeHighlow
         [NotNull] public Direction2D LeftSide => Backward.RightSide;
 
         [NotNull]
-        public static Direction2D FromVector([NotNull] in Vector2D vector)
+        public static Direction2D FromVector([NotNull] Vector2D vector)
         {
             if (vector == Vector2D.XPositive)
             {

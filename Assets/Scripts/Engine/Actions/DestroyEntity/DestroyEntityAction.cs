@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyEntityAction([NotNull] in EntityID TargetEntityID) : Action<DestroyEntityResult>
+    public record DestroyEntityAction([NotNull] EntityID TargetEntityID) : Action<DestroyEntityResult>
     {
-        public override DestroyEntityResult Validate(in IActionContext context)
+        public override DestroyEntityResult Validate(IActionContext context)
         {
             return new DestroyEntityResult(TargetEntityID);
         }

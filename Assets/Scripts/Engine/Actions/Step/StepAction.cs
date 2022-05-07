@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow
     ///     フィールド上を歩いて1マス移動するアクション
     /// </summary>
     public record StepAction(
-        [NotNull] in EntityID ActorEntityID,
-        [NotNull] in Direction2D Direction2D,
-        [NotNull] [ItemNotNull] in ValueObjectList<Action> AfterActions,
-        [NotNull] in StepCost AvailableStepCost
+        [NotNull] EntityID ActorEntityID,
+        [NotNull] Direction2D Direction2D,
+        [NotNull] [ItemNotNull] ValueObjectList<Action> AfterActions,
+        [NotNull] StepCost AvailableStepCost
     ) : Action<StepResult>
     {
-        public override StepResult Validate(in IActionContext context)
+        public override StepResult Validate(IActionContext context)
         {
             var world = context.World;
             var actor = ActorEntityID.GetFrom(world) ?? throw new NullReferenceException();
@@ -62,7 +62,7 @@ namespace RineaR.MadeHighlow
         ///     ステップ後アクションを実行する
         /// </summary>
         [NotNull]
-        private ValueObjectList<Result> RunAfterActions([NotNull] in IActionContext session)
+        private ValueObjectList<Result> RunAfterActions([NotNull] IActionContext session)
         {
             throw new NotImplementedException();
         }

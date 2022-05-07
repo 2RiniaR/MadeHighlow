@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<Entity> Search([NotNull] in World world)
+        public ValueObjectList<Entity> Search([NotNull] World world)
         {
             return Entity.GetAllFrom(world)
                 .Where(

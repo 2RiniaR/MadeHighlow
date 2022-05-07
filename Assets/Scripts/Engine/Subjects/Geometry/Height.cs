@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     フィールド上での高さ
     /// </summary>
-    public sealed record Height(in int Value)
+    public sealed record Height(int Value)
     {
         public const int MinValue = 0;
         public const int MaxValue = 2;
@@ -14,13 +14,13 @@ namespace RineaR.MadeHighlow
         public int Value { get; } = Math.Clamp(Value, MinValue, MaxValue);
 
         [NotNull]
-        public static Height operator +([NotNull] in Height l, in int r)
+        public static Height operator +([NotNull] Height l, int r)
         {
             return new Height(l.Value + r);
         }
 
         [NotNull]
-        public static Height operator -([NotNull] in Height l, in int r)
+        public static Height operator -([NotNull] Height l, int r)
         {
             return new Height(l.Value - r);
         }

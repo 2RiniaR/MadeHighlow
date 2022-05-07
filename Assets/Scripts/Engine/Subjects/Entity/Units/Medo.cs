@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     メド（一般名：進化の進捗）
     /// </summary>
-    public sealed record Medo(in int Value)
+    public sealed record Medo(int Value)
     {
         public const int MinValue = -4;
         public const int MaxValue = 4;

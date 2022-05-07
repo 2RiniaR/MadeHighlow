@@ -6,12 +6,12 @@ namespace RineaR.MadeHighlow
     ///     ゲーム全体の状態
     /// </summary>
     public record World(
-        in ID LatestAllocatedID,
-        [NotNull] [ItemNotNull] in ValueObjectList<Player> Players,
-        [NotNull] [ItemNotNull] in ValueObjectList<Tile> Tiles,
-        [NotNull] [ItemNotNull] in ValueObjectList<Entity> Entities,
-        [NotNull] in Turn CurrentTurn,
-        [NotNull] [ItemNotNull] in ValueObjectList<Command> ReservedCommands
+        ID LatestAllocatedID,
+        [NotNull] [ItemNotNull] ValueObjectList<Player> Players,
+        [NotNull] [ItemNotNull] ValueObjectList<Tile> Tiles,
+        [NotNull] [ItemNotNull] ValueObjectList<Entity> Entities,
+        [NotNull] Turn CurrentTurn,
+        [NotNull] [ItemNotNull] ValueObjectList<Command> ReservedCommands
     )
     {
         [NotNull]

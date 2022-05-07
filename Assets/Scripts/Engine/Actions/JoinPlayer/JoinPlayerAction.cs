@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record JoinPlayerAction([NotNull] in Player InitialPlayer) : Action<JoinPlayerResult>
+    public record JoinPlayerAction([NotNull] Player InitialPlayer) : Action<JoinPlayerResult>
     {
-        public override JoinPlayerResult Validate(in IActionContext context)
+        public override JoinPlayerResult Validate(IActionContext context)
         {
             var currentContext = context;
 

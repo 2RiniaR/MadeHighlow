@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record SucceedReserveCommandResult([NotNull] in Command Command) : ReserveCommandResult
+    public record SucceedReserveCommandResult([NotNull] Command Command) : ReserveCommandResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return world with
             {

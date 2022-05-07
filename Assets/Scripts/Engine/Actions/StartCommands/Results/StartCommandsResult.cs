@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public record StartCommandsResult([NotNull] [ItemNotNull] ValueObjectList<RunCommandResult> Results) : Result
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return Results.Aggregate(
                 world,

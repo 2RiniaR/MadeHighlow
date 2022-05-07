@@ -6,9 +6,9 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ユニットに命令する
     /// </summary>
-    public record ReserveCommandAction([NotNull] in Command Command) : Action<ReserveCommandResult>
+    public record ReserveCommandAction([NotNull] Command Command) : Action<ReserveCommandResult>
     {
-        public override ReserveCommandResult Validate(in IActionContext context)
+        public override ReserveCommandResult Validate(IActionContext context)
         {
             throw new NotImplementedException();
         }

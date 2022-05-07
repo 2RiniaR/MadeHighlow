@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ダメージ軽減
     /// </summary>
-    public record DamageReduction(in int Value)
+    public record DamageReduction(int Value)
     {
         public int Value { get; } = Math.Max(0, Value);
 
@@ -14,7 +14,7 @@ namespace RineaR.MadeHighlow
         ///     軽減後のダメージを取得する
         /// </summary>
         [NotNull]
-        public Damage Caused([NotNull] in Damage health)
+        public Damage Caused([NotNull] Damage health)
         {
             return new Damage(health.Value - Value);
         }

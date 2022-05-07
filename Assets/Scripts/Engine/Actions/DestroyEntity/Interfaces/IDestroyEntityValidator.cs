@@ -5,6 +5,6 @@ namespace RineaR.MadeHighlow
     public interface IDestroyEntityValidator
     {
         [NotNull]
-        public DestroyEntityValidation ValidateDestroyEntity([NotNull] in IActionContext session);
+        public DestroyEntityValidation ValidateDestroyEntity([NotNull] IActionContext session);
     }
 }

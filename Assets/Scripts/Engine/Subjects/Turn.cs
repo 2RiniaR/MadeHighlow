@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ターン
     /// </summary>
-    public record Turn(in int Value)
+    public record Turn(int Value)
     {
         public int Value { get; } = Math.Max(0, Value);
 

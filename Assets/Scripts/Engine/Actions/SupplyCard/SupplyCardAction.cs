@@ -7,9 +7,9 @@ namespace RineaR.MadeHighlow
     ///     プレイヤーにカードを供給するアクション
     /// </summary>
     public record SupplyCardAction
-        ([NotNull] in PlayerID TargetPlayerID, [NotNull] in Card SupplyCard) : Action<SupplyCardResult>
+        ([NotNull] PlayerID TargetPlayerID, [NotNull] Card SupplyCard) : Action<SupplyCardResult>
     {
-        public override SupplyCardResult Validate(in IActionContext context)
+        public override SupplyCardResult Validate(IActionContext context)
         {
             var player = TargetPlayerID.GetFrom(context.World) ?? throw new NullReferenceException();
             var deckCapacity = player.DeckSize.Value - player.Cards.Count;

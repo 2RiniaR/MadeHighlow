@@ -3,21 +3,21 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record PlayerID(in ID Content) : IAttachableID
+    public record PlayerID(ID Content) : IAttachableID
     {
-        IAttachable IAttachableID.GetFrom(in World world)
+        IAttachable IAttachableID.GetFrom(World world)
         {
             return GetFrom(world);
         }
 
         [CanBeNull]
-        public Player GetFrom([NotNull] in World world)
+        public Player GetFrom([NotNull] World world)
         {
             return Player.GetAllFrom(world).Find(player => player.PlayerID == this);
         }
 
         [NotNull]
-        public World DeleteFrom([NotNull] in World world)
+        public World DeleteFrom([NotNull] World world)
         {
             throw new NotImplementedException();
         }

@@ -4,10 +4,10 @@ using JetBrains.Annotations;
 namespace RineaR.MadeHighlow
 {
     public record DirectInteractAction(
-        [NotNull] [ItemNotNull] in ValueObjectList<DirectInteractTarget> Targets
+        [NotNull] [ItemNotNull] ValueObjectList<DirectInteractTarget> Targets
     ) : InteractAction
     {
-        public override InteractResult Validate(in IActionContext context)
+        public override InteractResult Validate(IActionContext context)
         {
             throw new NotImplementedException();
         }

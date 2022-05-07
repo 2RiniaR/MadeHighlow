@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record SucceedBigBangResult([NotNull] in World GeneratedWorld) : BigBangResult
+    public record SucceedBigBangResult([NotNull] World GeneratedWorld) : BigBangResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return GeneratedWorld;
         }

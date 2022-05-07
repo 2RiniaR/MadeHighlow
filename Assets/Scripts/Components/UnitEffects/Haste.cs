@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     /// <summary>
     ///     「俊敏化」
     /// </summary>
-    public record Haste(in ID ID, [NotNull] in IAttachableID AttachedID, [NotNull] in Duration Duration) : Component(
-        in ID,
-        in AttachedID,
-        in Duration
+    public record Haste(ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
+        ID,
+        AttachedID,
+        Duration
     );
 }

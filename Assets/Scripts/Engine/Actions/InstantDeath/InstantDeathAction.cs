@@ -6,9 +6,9 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     即死効果を与えるアクション
     /// </summary>
-    public record InstantDeathAction(in ID SourceID, [NotNull] in EntityID TargetEntityID) : Action<InstantDeathResult>
+    public record InstantDeathAction(ID SourceID, [NotNull] EntityID TargetEntityID) : Action<InstantDeathResult>
     {
-        public override InstantDeathResult Validate(in IActionContext context)
+        public override InstantDeathResult Validate(IActionContext context)
         {
             var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
 

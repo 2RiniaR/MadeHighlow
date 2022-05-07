@@ -8,8 +8,8 @@ namespace RineaR.MadeHighlow
     public interface IReserveCommandValidator
     {
         public ReserveCommandValidation ValidateReserveCommand(
-            [NotNull] in IActionContext session,
-            [NotNull] in ReserveCommandAction action
+            [NotNull] IActionContext session,
+            [NotNull] ReserveCommandAction action
         );
     }
 }

@@ -8,9 +8,9 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     /// <remarks>
     ///     毎ターン、自身の周囲 N マス以内にいる味方ユニットがダメージを受ける。
     /// </remarks>
-    public record Curse(in ID ID, [NotNull] in IAttachableID AttachedID, [NotNull] in Duration Duration) : Component(
-        in ID,
-        in AttachedID,
-        in Duration
+    public record Curse(ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
+        ID,
+        AttachedID,
+        Duration
     );
 }

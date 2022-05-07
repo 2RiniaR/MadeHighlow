@@ -3,5 +3,5 @@
     /// <summary>
     ///     カードを支払うアクションに対して与える影響
     /// </summary>
-    public record PayCardEffect(in bool Exempted);
+    public record PayCardEffect(bool Exempted);
 }

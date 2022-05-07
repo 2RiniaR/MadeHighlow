@@ -7,11 +7,11 @@ namespace RineaR.MadeHighlow
     ///     カード
     /// </summary>
     public abstract record Card(
-        in ID ID,
-        [NotNull] in PlayerID OwnerPlayerID,
-        in CardGenre Genre,
-        in Quickness Quickness,
-        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+        ID ID,
+        [NotNull] PlayerID OwnerPlayerID,
+        CardGenre Genre,
+        Quickness Quickness,
+        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
     ) : IIdentified, IAttachable
     {
         public CardID CardID => new(ID);
@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow
 
         IAttachableID IAttachable.AttachableID => CardID;
 
-        public World UpdateIn(in World world)
+        public World UpdateIn(World world)
         {
             var player = OwnerPlayerID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedPlayer = player with
@@ -34,7 +34,7 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public World CreateIn([NotNull] in World world)
+        public World CreateIn([NotNull] World world)
         {
             var player = OwnerPlayerID.GetFrom(world) ?? throw new NullReferenceException();
             var modifiedPlayer = player with { Cards = player.Cards.Add(this) };
@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public static ValueObjectList<Card> GetAllFrom([NotNull] in World world)
+        public static ValueObjectList<Card> GetAllFrom([NotNull] World world)
         {
             return Player.GetAllFrom(world).SelectMany(player => player.Cards);
         }
@@ -59,11 +59,11 @@ namespace RineaR.MadeHighlow
     }
 
     public abstract record Card<TOption>(
-        in ID ID,
-        [NotNull] in PlayerID OwnerPlayerID,
-        in CardGenre Genre,
-        in Quickness Quickness,
-        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+        ID ID,
+        [NotNull] PlayerID OwnerPlayerID,
+        CardGenre Genre,
+        Quickness Quickness,
+        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
     ) : Card(ID, OwnerPlayerID, Genre, Quickness, Components)
     {
         /// <summary>

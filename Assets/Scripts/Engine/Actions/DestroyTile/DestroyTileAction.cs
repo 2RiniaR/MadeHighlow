@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record DestroyTileAction([NotNull] in TileID TargetTileID) : Action<DestroyTileResult>
+    public record DestroyTileAction([NotNull] TileID TargetTileID) : Action<DestroyTileResult>
     {
-        public override DestroyTileResult Validate(in IActionContext context)
+        public override DestroyTileResult Validate(IActionContext context)
         {
             return new DestroyTileResult(TargetTileID);
         }

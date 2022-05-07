@@ -7,11 +7,11 @@ namespace RineaR.MadeHighlow
     ///     オブジェクトがフィールド上を歩いて移動するアクション
     /// </summary>
     public record WalkAction(
-        [NotNull] in EntityID ActorEntityID,
-        [NotNull] [ItemNotNull] in ValueObjectList<StepAction> StepActions
+        [NotNull] EntityID ActorEntityID,
+        [NotNull] [ItemNotNull] ValueObjectList<StepAction> StepActions
     ) : Action<WalkResult>
     {
-        public override WalkResult Validate(in IActionContext context)
+        public override WalkResult Validate(IActionContext context)
         {
             var stepResults = new List<StepResult>();
 

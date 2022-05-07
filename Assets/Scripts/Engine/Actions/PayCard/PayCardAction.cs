@@ -5,7 +5,7 @@
     /// </summary>
     public record PayCardAction(CardID PaidCardID) : Action<PayCardResult>
     {
-        public override PayCardResult Validate(in IActionContext context)
+        public override PayCardResult Validate(IActionContext context)
         {
             foreach (var effector in Component.GetAllOfTypeFrom<IPayCardEffector>(context.World))
             {

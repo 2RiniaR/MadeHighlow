@@ -1,8 +1,8 @@
 namespace RineaR.MadeHighlow
 {
-    public record GenerateEntityResult(in Entity GeneratedEntity) : Result
+    public record GenerateEntityResult(Entity GeneratedEntity) : Result
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return GeneratedEntity.CreateIn(world);
         }

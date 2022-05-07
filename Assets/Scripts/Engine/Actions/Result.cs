@@ -18,11 +18,11 @@ namespace RineaR.MadeHighlow
         /// <param name="world">実行前のワールド</param>
         /// <returns>実行後のワールド</returns>
         [NotNull]
-        public abstract World Simulate([NotNull] in World world);
+        public abstract World Simulate([NotNull] World world);
 
         private record EmptyImpl : Result
         {
-            public override World Simulate(in World world)
+            public override World Simulate(World world)
             {
                 return world;
             }

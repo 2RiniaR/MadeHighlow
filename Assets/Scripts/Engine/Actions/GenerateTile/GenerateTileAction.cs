@@ -3,9 +3,9 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record GenerateTileAction([NotNull] in Tile InitialTile) : Action<GenerateTileResult>
+    public record GenerateTileAction([NotNull] Tile InitialTile) : Action<GenerateTileResult>
     {
-        public override GenerateTileResult Validate(in IActionContext context)
+        public override GenerateTileResult Validate(IActionContext context)
         {
             throw new NotImplementedException();
         }

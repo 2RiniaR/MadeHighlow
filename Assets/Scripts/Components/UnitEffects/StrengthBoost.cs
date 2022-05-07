@@ -6,9 +6,9 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     ///     「攻撃力ブースト」
     /// </summary>
     public record StrengthBoost
-        (in ID ID, [NotNull] in IAttachableID AttachedID, [NotNull] in Duration Duration) : Component(
-            in ID,
-            in AttachedID,
-            in Duration
+        (ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
+            ID,
+            AttachedID,
+            Duration
         );
 }

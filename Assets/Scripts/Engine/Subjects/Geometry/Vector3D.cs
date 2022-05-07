@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     フィールド上での3次元ベクトル
     /// </summary>
-    public sealed record Vector3D(in int X, in int Y, in int Z)
+    public sealed record Vector3D(int X, int Y, int Z)
     {
         [NotNull] public static Vector3D Zero => new(0, 0, 0);
         [NotNull] public static Vector3D XPositive => new(1, 0, 0);
@@ -16,31 +16,31 @@ namespace RineaR.MadeHighlow
         [NotNull] public static Vector3D ZNegative => new(0, 0, -1);
 
         [NotNull]
-        public static Vector3D operator +([NotNull] in Vector3D l, [NotNull] in Vector3D r)
+        public static Vector3D operator +([NotNull] Vector3D l, [NotNull] Vector3D r)
         {
             return new Vector3D(l.X + r.X, l.Y + r.Y, l.Z + r.Z);
         }
 
         [NotNull]
-        public static Vector3D operator -([NotNull] in Vector3D l, [NotNull] in Vector3D r)
+        public static Vector3D operator -([NotNull] Vector3D l, [NotNull] Vector3D r)
         {
             return l + -r;
         }
 
         [NotNull]
-        public static Vector3D operator -([NotNull] in Vector3D l)
+        public static Vector3D operator -([NotNull] Vector3D l)
         {
             return new Vector3D(-l.X, -l.Y, -l.Z);
         }
 
         [NotNull]
-        public static Vector3D operator *([NotNull] in Vector3D l, in int r)
+        public static Vector3D operator *([NotNull] Vector3D l, int r)
         {
             return new Vector3D(l.X * r, l.Y * r, l.Z * r);
         }
 
         [NotNull]
-        public Vector3D ExtendTo([NotNull] in Direction3D direction3D, [NotNull] in Distance distance)
+        public Vector3D ExtendTo([NotNull] Direction3D direction3D, [NotNull] Distance distance)
         {
             var vector = direction3D.ToVector() * distance.Value;
             return this + vector;

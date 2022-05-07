@@ -8,12 +8,12 @@ namespace RineaR.MadeHighlow
     ///     エンティティにダメージを与えるアクション
     /// </summary>
     public record InstantDamageAction(
-        in ID SourceID,
-        [NotNull] in EntityID TargetEntityID,
-        [NotNull] in Damage Damage
+        ID SourceID,
+        [NotNull] EntityID TargetEntityID,
+        [NotNull] Damage Damage
     ) : Action<InstantDamageResult>
     {
-        public override InstantDamageResult Validate(in IActionContext context)
+        public override InstantDamageResult Validate(IActionContext context)
         {
             var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
 

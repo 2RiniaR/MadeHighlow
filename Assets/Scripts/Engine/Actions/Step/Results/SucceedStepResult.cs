@@ -4,15 +4,15 @@ using JetBrains.Annotations;
 namespace RineaR.MadeHighlow
 {
     public record SucceedStepResult(
-        [NotNull] in EntityID ActorEntityID,
-        [NotNull] in Direction2D Direction2D,
-        [NotNull] [ItemNotNull] in ValueObjectList<StepOutReaction> StepOutReactions,
-        [NotNull] [ItemNotNull] in ValueObjectList<StepInReaction> StepInReactions,
-        [NotNull] [ItemNotNull] in ValueObjectList<Result> AfterActionResults,
-        [NotNull] in StepCost AvailableStepCost
+        [NotNull] EntityID ActorEntityID,
+        [NotNull] Direction2D Direction2D,
+        [NotNull] [ItemNotNull] ValueObjectList<StepOutReaction> StepOutReactions,
+        [NotNull] [ItemNotNull] ValueObjectList<StepInReaction> StepInReactions,
+        [NotNull] [ItemNotNull] ValueObjectList<Result> AfterActionResults,
+        [NotNull] StepCost AvailableStepCost
     ) : StepResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             throw new NotImplementedException();
         }

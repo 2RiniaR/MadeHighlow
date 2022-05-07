@@ -6,11 +6,11 @@ namespace RineaR.MadeHighlow
     ///     コンポーネントを追加するアクション
     /// </summary>
     public record AddComponentAction(
-        [NotNull] in IAttachableID TargetAttachableID,
-        [NotNull] in Component Component
+        [NotNull] IAttachableID TargetAttachableID,
+        [NotNull] Component Component
     ) : Action<AddComponentResult>
     {
-        public override AddComponentResult Validate(in IActionContext context)
+        public override AddComponentResult Validate(IActionContext context)
         {
             return new SucceedAddComponentResult(Component);
         }

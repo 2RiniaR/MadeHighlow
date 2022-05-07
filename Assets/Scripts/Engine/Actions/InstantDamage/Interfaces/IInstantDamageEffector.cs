@@ -8,8 +8,8 @@ namespace RineaR.MadeHighlow
     public interface IInstantDamageEffector : IComponent
     {
         public InstantDamageEffect EffectOnInstantDamage(
-            [NotNull] in IActionContext context,
-            [NotNull] in InstantDamageAction action
+            [NotNull] IActionContext context,
+            [NotNull] InstantDamageAction action
         );
     }
 }

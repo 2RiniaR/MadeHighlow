@@ -2,7 +2,7 @@
 {
     public record IncrementTurnAction : Action<IncrementTurnResult>
     {
-        public override IncrementTurnResult Validate(in IActionContext context)
+        public override IncrementTurnResult Validate(IActionContext context)
         {
             return new IncrementTurnResult();
         }

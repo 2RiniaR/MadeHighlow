@@ -6,11 +6,11 @@ namespace RineaR.MadeHighlow
     ///     フィールド上を歩いて移動するアクションの結果
     /// </summary>
     public record WalkResult(
-        [NotNull] in EntityID ActorEntityID,
-        [NotNull] [ItemNotNull] in ValueObjectList<StepResult> StepResults
+        [NotNull] EntityID ActorEntityID,
+        [NotNull] [ItemNotNull] ValueObjectList<StepResult> StepResults
     ) : Result
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             return StepResults.Aggregate(world, (currentWorld, step) => step.Simulate(currentWorld));
         }

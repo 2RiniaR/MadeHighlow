@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     治癒効果
     /// </summary>
-    public record Heal(in int Value)
+    public record Heal(int Value)
     {
         public int Value { get; } = Math.Max(0, Value);
 
@@ -14,7 +14,7 @@ namespace RineaR.MadeHighlow
         ///     治癒効果を与えた後の体力を返す
         /// </summary>
         [NotNull]
-        public Health Caused([NotNull] in Health health)
+        public Health Caused([NotNull] Health health)
         {
             return new Health(health.Value - Value);
         }

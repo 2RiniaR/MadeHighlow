@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow
 {
-    public record StepOutReaction([NotNull] in EntityID ReactorEntityID, [NotNull] in Result Result);
+    public record StepOutReaction([NotNull] EntityID ReactorEntityID, [NotNull] Result Result);
 }

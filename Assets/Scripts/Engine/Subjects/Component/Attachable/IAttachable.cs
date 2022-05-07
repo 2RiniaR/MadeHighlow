@@ -12,6 +12,6 @@ namespace RineaR.MadeHighlow
         public IAttachable WithComponents([NotNull] [ItemNotNull] ValueObjectList<Component> components);
 
         [NotNull]
-        public World UpdateIn([NotNull] in World world);
+        public World UpdateIn([NotNull] World world);
     }
 }

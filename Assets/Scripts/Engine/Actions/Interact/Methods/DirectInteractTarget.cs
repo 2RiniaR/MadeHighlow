@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow
 {
     public record DirectInteractTarget(
-        [NotNull] in EntityID TargetEntityID,
-        [NotNull] [ItemNotNull] in ValueObjectList<Action> Effects
+        [NotNull] EntityID TargetEntityID,
+        [NotNull] [ItemNotNull] ValueObjectList<Action> Effects
     );
 }

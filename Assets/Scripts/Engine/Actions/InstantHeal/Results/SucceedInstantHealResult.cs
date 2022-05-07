@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow
     ///     治癒効果を与えた結果
     /// </summary>
     public record SucceedInstantHealResult(
-        in ID SourceID,
-        [NotNull] in EntityID TargetEntityID,
-        [NotNull] in Heal InitialHeal,
-        [NotNull] [ItemNotNull] in ValueObjectList<HealReduction> Reductions
+        ID SourceID,
+        [NotNull] EntityID TargetEntityID,
+        [NotNull] Heal InitialHeal,
+        [NotNull] [ItemNotNull] ValueObjectList<HealReduction> Reductions
     ) : InstantHealResult
     {
-        public override World Simulate(in World world)
+        public override World Simulate(World world)
         {
             var entity = TargetEntityID.GetFrom(world) ?? throw new NullReferenceException();
             var vitality = entity.Vitality ?? throw new NullReferenceException();
@@ -34,7 +34,7 @@ namespace RineaR.MadeHighlow
         ///     体力を変更したエンティティを取得する
         /// </summary>
         [NotNull]
-        private Entity EntityModifiedWith([NotNull] in Entity original, [NotNull] in Health health)
+        private Entity EntityModifiedWith([NotNull] Entity original, [NotNull] Health health)
         {
             var vitality = original.Vitality ?? throw new NullReferenceException();
             return original with

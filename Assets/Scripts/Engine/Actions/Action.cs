@@ -16,11 +16,11 @@ namespace RineaR.MadeHighlow
         ///     アクションを検証し、結果を返す
         /// </summary>
         [NotNull]
-        public abstract Result ValidateAbstract([NotNull] in IActionContext context);
+        public abstract Result ValidateAbstract([NotNull] IActionContext context);
 
         private record EmptyImpl : Action
         {
-            public override Result ValidateAbstract(in IActionContext context)
+            public override Result ValidateAbstract(IActionContext context)
             {
                 return Result.Empty;
             }
@@ -32,7 +32,7 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public abstract record Action<TResult> : Action where TResult : Result
     {
-        public override Result ValidateAbstract(in IActionContext context)
+        public override Result ValidateAbstract(IActionContext context)
         {
             // Unity 2021.2 では「overrideされたメソッドの戻り値の共変性」をサポートしていないため、命名を同じにできない
             return Validate(context);
@@ -42,6 +42,6 @@ namespace RineaR.MadeHighlow
         ///     アクションを検証し、結果を返す
         /// </summary>
         [NotNull]
-        public abstract TResult Validate([NotNull] in IActionContext context);
+        public abstract TResult Validate([NotNull] IActionContext context);
     }
 }

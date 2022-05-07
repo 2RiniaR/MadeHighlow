@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public record StartCommandsAction : Action<StartCommandsResult>
     {
-        public override StartCommandsResult Validate(in IActionContext context)
+        public override StartCommandsResult Validate(IActionContext context)
         {
             var currentContext = context;
 
@@ -25,7 +25,7 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        private ValueObjectList<Command> OrderedCommands([NotNull] in IActionContext context)
+        private ValueObjectList<Command> OrderedCommands([NotNull] IActionContext context)
         {
             return new StartCommandsOrderer(context.World.ReservedCommands).Resolve(context);
         }

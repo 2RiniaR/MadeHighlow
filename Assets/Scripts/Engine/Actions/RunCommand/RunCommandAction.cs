@@ -6,9 +6,9 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     命令を実行するアクション
     /// </summary>
-    public record RunCommandAction([NotNull] in Command Command) : Action<RunCommandResult>
+    public record RunCommandAction([NotNull] Command Command) : Action<RunCommandResult>
     {
-        public override RunCommandResult Validate(in IActionContext context)
+        public override RunCommandResult Validate(IActionContext context)
         {
             var currentContext = context;
             var actor = Command.UnitID.GetFrom(currentContext.World) ?? throw new NullReferenceException();
@@ -41,14 +41,14 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public PayCardResult PayCard([NotNull] in IActionContext context)
+        public PayCardResult PayCard([NotNull] IActionContext context)
         {
             var payCardAction = new PayCardAction(Command.CardID);
             return payCardAction.Validate(context);
         }
 
         [NotNull]
-        public Result ActuateCommand([NotNull] in IActionContext context)
+        public Result ActuateCommand([NotNull] IActionContext context)
         {
             var commandAction = Command.ActionIn(context.World);
             return commandAction.ValidateAbstract(context);

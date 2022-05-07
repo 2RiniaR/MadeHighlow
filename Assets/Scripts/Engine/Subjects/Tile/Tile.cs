@@ -6,11 +6,11 @@ namespace RineaR.MadeHighlow
     ///     タイル
     /// </summary>
     public record Tile(
-        in ID ID,
-        [NotNull] in Position2D Position2D,
-        [NotNull] in Direction2D Direction2D,
-        [NotNull] in Elevation Elevation,
-        [NotNull] [ItemNotNull] in ValueObjectList<Component> Components
+        ID ID,
+        [NotNull] Position2D Position2D,
+        [NotNull] Direction2D Direction2D,
+        [NotNull] Elevation Elevation,
+        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
     ) : IIdentified, IAttachable
     {
         public TileID TileID => new(ID);
@@ -22,19 +22,19 @@ namespace RineaR.MadeHighlow
             return this with { Components = components };
         }
 
-        public World UpdateIn(in World world)
+        public World UpdateIn(World world)
         {
             return world with { Tiles = world.Tiles.ReplaceItem(tile => tile.TileID == TileID, this) };
         }
 
         [NotNull]
-        public World CreateIn([NotNull] in World world)
+        public World CreateIn([NotNull] World world)
         {
             return world with { Tiles = world.Tiles.Add(this) };
         }
 
         [NotNull]
-        public static ValueObjectList<Tile> GetAllFrom([NotNull] in World world)
+        public static ValueObjectList<Tile> GetAllFrom([NotNull] World world)
         {
             return world.Tiles;
         }

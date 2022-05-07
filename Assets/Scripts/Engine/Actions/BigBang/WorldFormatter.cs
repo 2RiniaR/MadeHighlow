@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow
     public class WorldFormatter
     {
         [NotNull]
-        public World Format([NotNull] in World world)
+        public World Format([NotNull] World world)
         {
             throw new NotImplementedException();
         }

@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow
 {
     public record TeleportAction : Action<TeleportResult>
     {
-        public override TeleportResult Validate(in IActionContext context)
+        public override TeleportResult Validate(IActionContext context)
         {
             throw new NotImplementedException();
         }

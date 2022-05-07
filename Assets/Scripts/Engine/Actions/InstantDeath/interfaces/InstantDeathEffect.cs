@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow
 {
-    public record InstantDeathEffect(in bool Refused);
+    public record InstantDeathEffect(bool Refused);
 }
