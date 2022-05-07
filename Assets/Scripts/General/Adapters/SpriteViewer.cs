@@ -46,7 +46,7 @@ namespace General.Adapters
         public enum Mode
         {
             Image,
-            SpriteRenderer
+            SpriteRenderer,
         }
     }
 
@@ -54,7 +54,8 @@ namespace General.Adapters
     [CustomPropertyDrawer(typeof(SpriteViewer), true)]
     public class SpriteViewerDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             return EditorGUIUtility.singleLineHeight * 3;
         }
 
@@ -71,12 +72,26 @@ namespace General.Adapters
             {
                 var componentProp = property.FindPropertyRelative("image");
                 var component = componentProp.objectReferenceValue;
-                component = EditorGUI.ObjectField(this.LineRect(position, 2, 1), "コンポーネント", component, typeof(Image), true);
+                component = EditorGUI.ObjectField(
+                    this.LineRect(position, 2, 1),
+                    "コンポーネント",
+                    component,
+                    typeof(Image),
+                    true
+                );
                 componentProp.objectReferenceValue = component;
-            } else if (mode == SpriteViewer.Mode.SpriteRenderer) {
+            }
+            else if (mode == SpriteViewer.Mode.SpriteRenderer)
+            {
                 var componentProp = property.FindPropertyRelative("spriteRenderer");
                 var component = componentProp.objectReferenceValue;
-                component = EditorGUI.ObjectField(this.LineRect(position, 2, 1), "コンポーネント", component, typeof(SpriteRenderer), true);
+                component = EditorGUI.ObjectField(
+                    this.LineRect(position, 2, 1),
+                    "コンポーネント",
+                    component,
+                    typeof(SpriteRenderer),
+                    true
+                );
                 componentProp.objectReferenceValue = component;
             }
         }

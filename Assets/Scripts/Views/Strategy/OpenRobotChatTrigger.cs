@@ -6,7 +6,7 @@ namespace Views.Strategy
 {
     public class OpenRobotChatTrigger : MonoBehaviour
     {
-        [SerializeField, Header("Components")]
+        [SerializeField] [Header("Components")]
         private PulseTrigger trigger;
 
         public IRobotChatOpener Opener { get; set; }

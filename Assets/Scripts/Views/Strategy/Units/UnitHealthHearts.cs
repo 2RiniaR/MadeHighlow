@@ -7,39 +7,38 @@ namespace Views.Strategy.Units
 {
     public class UnitHealthHearts : MonoBehaviour
     {
-        [Header("Components")]
-        public GridLayoutGroup grid;
+        [Header("Components")] public GridLayoutGroup grid;
         public GameObject overflow;
 
-        [Header("Prefabs"), Space]
-        public Image heartPrefab;
+        [Header("Prefabs")] [Space] public Image heartPrefab;
 
-        [Header("Properties"), Space]
-        [Min(float.Epsilon)] public float healthPerHeart = 10.0f;
+        [Header("Properties")] [Space] [Min(float.Epsilon)]
+        public float healthPerHeart = 10.0f;
+
         [Min(1)] public int row = 2;
         [Min(1)] public int minColumn = 4;
         [Min(1)] public int maxColumn = 6;
 
-        [Header("States"), Space]
-        public int initialHealth;
+        [Header("States")] [Space] public int initialHealth;
         public int currentHealth;
 
         private RectTransform _rectTransform;
         private List<Image> _hearts;
 
         /// <summary>
-        /// 横一列に表示するハートの数を返す。
+        ///     横一列に表示するハートの数を返す。
         /// </summary>
         private int HeartsColumn()
         {
-            var column =  Mathf.CeilToInt(initialHealth / healthPerHeart);
+            var column = Mathf.CeilToInt(initialHealth / healthPerHeart);
             return Mathf.Clamp(column, minColumn, maxColumn);
         }
 
         /// <summary>
-        /// 見える状態にするハートの数を返す。
+        ///     見える状態にするハートの数を返す。
         /// </summary>
-        private int VisibleHeartsCount(int column) {
+        private int VisibleHeartsCount(int column)
+        {
             var maxCount = column * row;
             var count = Mathf.CeilToInt(currentHealth / healthPerHeart);
             return Mathf.Clamp(count, 1, maxCount);
@@ -92,12 +91,13 @@ namespace Views.Strategy.Units
                 {
                     Destroy(_hearts[i].gameObject);
                 }
+
                 _hearts.RemoveRange(require, _hearts.Count - require);
             }
         }
 
         /// <summary>
-        /// ハートの表示列数を更新する。
+        ///     ハートの表示列数を更新する。
         /// </summary>
         private void UpdateColumn(int column)
         {
@@ -112,7 +112,7 @@ namespace Views.Strategy.Units
         }
 
         /// <summary>
-        /// すべてのハートの可視状態を更新する。
+        ///     すべてのハートの可視状態を更新する。
         /// </summary>
         private void UpdateHeartsVisible(int visibleCount)
         {
@@ -123,7 +123,7 @@ namespace Views.Strategy.Units
         }
 
         /// <summary>
-        /// すべてのハートのゲージ量を更新する。
+        ///     すべてのハートのゲージ量を更新する。
         /// </summary>
         private void UpdateHeartsFill()
         {
@@ -137,7 +137,7 @@ namespace Views.Strategy.Units
         }
 
         /// <summary>
-        /// オーバーフローマークの可視状態を更新する。
+        ///     オーバーフローマークの可視状態を更新する。
         /// </summary>
         private void UpdateOverflowVisible(int column)
         {

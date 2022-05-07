@@ -5,12 +5,10 @@ namespace Views.Strategy.Players
 {
     public class PlayerStatusView : MonoBehaviour
     {
-        [Header("Components")]
-        public TextViewer nameText;
+        [Header("Components")] public TextViewer nameText;
         public PlayerUnitCollection units;
 
-        [Header("States"), Space]
-        public int id;
+        [Header("States")] [Space] public int id;
         public string playerName;
 
         private void Update()

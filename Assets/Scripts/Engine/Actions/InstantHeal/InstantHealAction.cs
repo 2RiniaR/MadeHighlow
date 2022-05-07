@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
@@ -15,7 +14,13 @@ namespace RineaR.MadeHighlow
     {
         public override InstantHealResult Validate(IActionContext context)
         {
-            var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
+            var target = TargetEntityID.GetFrom(context.World);
+
+            // 既に対象がいなければ、回復効果は与えられない。
+            if (target == null)
+            {
+                return new FailedInstantHealResult(FailedInstantHealReason.NoTarget);
+            }
 
             // そもそも体力という概念がないものには、治癒効果が与えられない。
             if (target.Vitality == null)

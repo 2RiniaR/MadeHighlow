@@ -8,10 +8,9 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
     /// <remarks>
     ///     自身の周囲 N マス以内にいる味方ユニットが、ダウンしたときに爆発して呪いをばら撒くようになる。
     /// </remarks>
-    public record DeadBlessing
-        (ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
-            ID,
-            AttachedID,
-            Duration
-        );
+    public record DeadBlessing(ID ID, [NotNull] IAttachableID AttachedID, [NotNull] Duration Duration) : Component(
+        ID,
+        AttachedID,
+        Duration
+    );
 }

@@ -5,11 +5,9 @@ namespace Views.Strategy.Units
 {
     public class UnitEffectIcon : MonoBehaviour
     {
-        [Header("Components")]
-        public SpriteViewer iconImage;
+        [Header("Components")] public SpriteViewer iconImage;
 
-        [Header("States"), Space]
-        public int id;
+        [Header("States")] [Space] public int id;
         public string displayName;
         public Sprite icon;
         public int duration;

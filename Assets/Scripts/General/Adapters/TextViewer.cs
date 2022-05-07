@@ -49,7 +49,7 @@ namespace General.Adapters
         public enum Mode
         {
             Text,
-            TextMeshPro
+            TextMeshPro,
         }
     }
 
@@ -57,7 +57,8 @@ namespace General.Adapters
     [CustomPropertyDrawer(typeof(TextViewer), true)]
     public class TextViewerDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             return EditorGUIUtility.singleLineHeight * 3;
         }
 
@@ -74,12 +75,26 @@ namespace General.Adapters
             {
                 var componentProp = property.FindPropertyRelative("text");
                 var component = componentProp.objectReferenceValue;
-                component = EditorGUI.ObjectField(this.LineRect(position, 2, 1), "コンポーネント", component, typeof(Text), true);
+                component = EditorGUI.ObjectField(
+                    this.LineRect(position, 2, 1),
+                    "コンポーネント",
+                    component,
+                    typeof(Text),
+                    true
+                );
                 componentProp.objectReferenceValue = component;
-            } else if (mode == TextViewer.Mode.TextMeshPro) {
+            }
+            else if (mode == TextViewer.Mode.TextMeshPro)
+            {
                 var componentProp = property.FindPropertyRelative("tmpText");
                 var component = componentProp.objectReferenceValue;
-                component = EditorGUI.ObjectField(this.LineRect(position, 2, 1), "コンポーネント", component, typeof(TMP_Text), true);
+                component = EditorGUI.ObjectField(
+                    this.LineRect(position, 2, 1),
+                    "コンポーネント",
+                    component,
+                    typeof(TMP_Text),
+                    true
+                );
                 componentProp.objectReferenceValue = component;
             }
         }

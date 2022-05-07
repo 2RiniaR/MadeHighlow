@@ -39,7 +39,10 @@ namespace Views.Strategy
 
         public void OpenManual()
         {
-            if (child != null) return;
+            if (child != null)
+            {
+                return;
+            }
 
             var window = Instantiate(manualWindow, transform);
             child = window.transform;
@@ -47,7 +50,10 @@ namespace Views.Strategy
 
         public void OpenMenu()
         {
-            if (child != null) return;
+            if (child != null)
+            {
+                return;
+            }
 
             var window = Instantiate(menuWindow, transform);
             child = window.transform;
@@ -55,7 +61,10 @@ namespace Views.Strategy
 
         public void OpenRobotChat()
         {
-            if (child != null) return;
+            if (child != null)
+            {
+                return;
+            }
 
             var window = Instantiate(robotChatWindow, transform);
             child = window.transform;

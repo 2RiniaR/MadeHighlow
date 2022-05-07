@@ -10,11 +10,7 @@ namespace RineaR.MadeHighlow.Samples
     {
         private CancellationTokenSource CancellationTokenSource { get; } = new();
 
-        private Director Director { get; } = new(
-            new Environment(
-                new SampleRandomGenerator()
-            )
-        );
+        private Director Director { get; } = new(new Environment(new SampleRandomGenerator()));
 
         private void Initialize()
         {

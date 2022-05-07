@@ -2,5 +2,7 @@
 
 namespace Views.Strategy.Units
 {
-    public class UnitEffectIconCollection : CollectionMonoBehaviour<UnitEffectIcon> { }
+    public class UnitEffectIconCollection : CollectionMonoBehaviour<UnitEffectIcon>
+    {
+    }
 }

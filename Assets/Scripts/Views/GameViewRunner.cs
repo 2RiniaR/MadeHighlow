@@ -2,5 +2,7 @@
 
 namespace Views
 {
-    public class GameViewRunner : MonoBehaviour { }
+    public class GameViewRunner : MonoBehaviour
+    {
+    }
 }

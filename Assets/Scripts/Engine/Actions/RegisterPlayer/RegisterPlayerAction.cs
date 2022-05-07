@@ -13,8 +13,8 @@ namespace RineaR.MadeHighlow
                 new Player(
                     new AllocateIDAction().Validate(context).AllocatedID,
                     ValueObjectList<Card>.Empty,
-                    Components: ValueObjectList<Component>.Empty,
-                    DeckSize: DeckSize
+                    DeckSize,
+                    ValueObjectList<Component>.Empty
                 )
             );
         }

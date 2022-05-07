@@ -6,7 +6,7 @@ namespace Views.Manual
 {
     public class CloseManualTrigger : MonoBehaviour
     {
-        [SerializeField, Header("Components")]
+        [SerializeField] [Header("Components")]
         private PulseTrigger trigger;
 
         public IManualCloser Closer { get; set; }

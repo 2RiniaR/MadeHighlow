@@ -5,11 +5,9 @@ namespace Views.Strategy
 {
     public class TurnCount : MonoBehaviour
     {
-        [Header("Components")]
-        public TextViewer timerImage;
+        [Header("Components")] public TextViewer timerImage;
 
-        [Header("States"), Space]
-        [Min(0)] public int currentTurn;
+        [Header("States")] [Space] [Min(0)] public int currentTurn;
 
         private void Update()
         {

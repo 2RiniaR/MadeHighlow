@@ -21,10 +21,7 @@ namespace RineaR.MadeHighlow.Components.Expressions
         ///     定数の「体力の量」
         /// </summary>
         /// <param name="Value">値</param>
-        public record FromConstant
-        (
-            int Value
-        )
+        public record FromConstant(int Value)
         {
             private const int MinValue = 0;
 

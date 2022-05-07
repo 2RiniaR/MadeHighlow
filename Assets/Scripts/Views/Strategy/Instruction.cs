@@ -5,10 +5,10 @@ namespace Views.Strategy
 {
     public class Instruction : MonoBehaviour
     {
-        [SerializeField, Header("Components")]
+        [SerializeField] [Header("Components")]
         private TextViewer contentText;
 
-        [Header("States"), Space] [SerializeField]
+        [Header("States")] [Space] [SerializeField]
         private string content;
 
         public string Content

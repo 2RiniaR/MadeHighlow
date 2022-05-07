@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
@@ -9,16 +10,32 @@ namespace RineaR.MadeHighlow
     public record SucceedInstantDamageResult(
         ID SourceID,
         [NotNull] EntityID TargetEntityID,
-        [NotNull] Damage InitialDamage,
-        [NotNull] [ItemNotNull] ValueObjectList<DamageReduction> Reductions
+        [NotNull] Damage Damage,
+        [NotNull] [ItemNotNull] ValueObjectList<InstantDamageInterrupt> EffectEmissions
     ) : InstantDamageResult
     {
         public override World Simulate(World world)
         {
+            if (IsRefused())
+            {
+                return world;
+            }
+
+            // 対象のエンティティが存在しなければ Failed になっているはずなので、例外を投げる
             var entity = TargetEntityID.GetFrom(world) ?? throw new NullReferenceException();
+
+            // 対象のエンティティが声明を持っていなければ Failed になっているはずなので、例外を投げる
             var vitality = entity.Vitality ?? throw new NullReferenceException();
+
             var modifiedHealth = CalculatedDamage().Caused(vitality.Health);
             return EntityModifiedWith(entity, modifiedHealth).UpdateIn(world);
+        }
+
+        private bool IsRefused()
+        {
+            return EffectEmissions.Select(emissions => emissions.Effect.Refused)
+                .RemoveNull()
+                .Any(refused => refused.Value);
         }
 
         /// <summary>
@@ -27,7 +44,10 @@ namespace RineaR.MadeHighlow
         [NotNull]
         private Damage CalculatedDamage()
         {
-            return Reductions.Aggregate(InitialDamage, (damage, reduction) => reduction.Caused(damage));
+            return EffectEmissions.Select(emissions => emissions.Effect.Reduction)
+                .RemoveNull()
+                .Sort()
+                .Aggregate(Damage, (damage, reduction) => reduction.Value.Caused(damage));
         }
 
         /// <summary>

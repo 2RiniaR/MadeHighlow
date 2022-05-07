@@ -17,7 +17,7 @@ namespace General.Adapters
             get => mode switch
             {
                 Mode.ImageFill => image.fillAmount,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(),
             };
             set
             {
@@ -34,7 +34,7 @@ namespace General.Adapters
 
         public enum Mode
         {
-            ImageFill
+            ImageFill,
         }
     }
 
@@ -42,7 +42,8 @@ namespace General.Adapters
     [CustomPropertyDrawer(typeof(PercentViewer), true)]
     public class PercentViewerDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             return EditorGUIUtility.singleLineHeight * 3;
         }
 
@@ -59,7 +60,13 @@ namespace General.Adapters
             {
                 var componentProp = property.FindPropertyRelative("image");
                 var component = componentProp.objectReferenceValue;
-                component = EditorGUI.ObjectField(this.LineRect(position, 2, 1), "コンポーネント", component, typeof(Image), true);
+                component = EditorGUI.ObjectField(
+                    this.LineRect(position, 2, 1),
+                    "コンポーネント",
+                    component,
+                    typeof(Image),
+                    true
+                );
                 componentProp.objectReferenceValue = component;
             }
         }

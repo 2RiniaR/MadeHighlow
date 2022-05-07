@@ -16,7 +16,11 @@ namespace Extensions
                 for (var y = 0; y < bounds.size.y; y++)
                 {
                     var tile = tilemap.GetTile<T>(new Vector3Int(x, y, 0));
-                    if (tile == null) continue;
+                    if (tile == null)
+                    {
+                        continue;
+                    }
+
                     tiles.Add(new Vector2Int(x, y), tile);
                 }
             }

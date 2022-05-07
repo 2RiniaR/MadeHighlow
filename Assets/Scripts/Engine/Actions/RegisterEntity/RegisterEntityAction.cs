@@ -16,10 +16,10 @@ namespace RineaR.MadeHighlow
             return new RegisterEntityResult(
                 new Entity(
                     new AllocateIDAction().Validate(context).AllocatedID,
-                    Components: ValueObjectList<Component>.Empty,
-                    Vitality: Vitality,
-                    Position3D: Position3D,
-                    Direction3D: Direction3D
+                    Position3D,
+                    Direction3D,
+                    Vitality,
+                    ValueObjectList<Component>.Empty
                 )
             );
         }

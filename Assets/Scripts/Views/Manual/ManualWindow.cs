@@ -6,7 +6,6 @@ namespace Views.Manual
     {
         public void CloseManual()
         {
-
         }
     }
 }

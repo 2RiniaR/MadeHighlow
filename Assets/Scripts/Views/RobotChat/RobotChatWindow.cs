@@ -6,7 +6,6 @@ namespace Views.RobotChat
     {
         public void Close()
         {
-
         }
     }
 }

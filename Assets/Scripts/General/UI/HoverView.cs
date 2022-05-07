@@ -5,11 +5,9 @@ namespace General.UI
 {
     public class HoverView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [Header("Components")]
-        public GameObject detail;
+        [Header("Components")] public GameObject detail;
 
-        [Header("States"), Space]
-        public bool isDetailOpening;
+        [Header("States")] [Space] public bool isDetailOpening;
         public bool enableHover;
 
         private void Update()

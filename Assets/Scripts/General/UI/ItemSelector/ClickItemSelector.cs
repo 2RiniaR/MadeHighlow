@@ -21,6 +21,7 @@ namespace General.UI.ItemSelector
             {
                 return;
             }
+
             FindReceiver();
         }
 
@@ -46,6 +47,7 @@ namespace General.UI.ItemSelector
             {
                 return;
             }
+
             _receiver.selecting = this;
         }
     }

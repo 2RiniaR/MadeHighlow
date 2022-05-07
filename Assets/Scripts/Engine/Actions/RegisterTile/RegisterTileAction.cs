@@ -16,10 +16,10 @@ namespace RineaR.MadeHighlow
             return new RegisterTileResult(
                 new Tile(
                     new AllocateIDAction().Validate(context).AllocatedID,
-                    Components: ValueObjectList<Component>.Empty,
-                    Position2D: Position2D,
-                    Direction2D: Direction2D,
-                    Elevation: Elevation
+                    Position2D,
+                    Direction2D,
+                    Elevation,
+                    ValueObjectList<Component>.Empty
                 )
             );
         }

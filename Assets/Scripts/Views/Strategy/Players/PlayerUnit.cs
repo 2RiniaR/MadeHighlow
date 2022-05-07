@@ -5,12 +5,10 @@ namespace Views.Strategy.Players
 {
     public class PlayerUnit : MonoBehaviour
     {
-        [Header("Components")]
-        public SpriteViewer characterIconImage;
+        [Header("Components")] public SpriteViewer characterIconImage;
         public TextViewer healthText;
 
-        [Header("States"), Space]
-        public int id;
+        [Header("States")] [Space] public int id;
         public Sprite icon;
         public int health;
 

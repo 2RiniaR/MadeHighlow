@@ -6,7 +6,7 @@ namespace Views.Strategy
 {
     public class OpenMenuTrigger : MonoBehaviour
     {
-        [SerializeField, Header("Components")]
+        [SerializeField] [Header("Components")]
         private PulseTrigger trigger;
 
         public IMenuOpener Opener { get; set; }

@@ -1,21 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
     /// <summary>
     ///     エンティティにダメージを与えるアクション
     /// </summary>
-    public record InstantDamageAction(
-        ID SourceID,
-        [NotNull] EntityID TargetEntityID,
-        [NotNull] Damage Damage
-    ) : Action<InstantDamageResult>
+    public record InstantDamageAction
+        (ID SourceID, [NotNull] EntityID TargetEntityID, [NotNull] Damage Damage) : Action<InstantDamageResult>
     {
         public override InstantDamageResult Validate(IActionContext context)
         {
-            var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
+            var preValidationResult = PreValidationResult(context);
+            if (preValidationResult != null)
+            {
+                return preValidationResult;
+            }
+
+            return new SucceedInstantDamageResult(SourceID, TargetEntityID, Damage, CollectComponentEffects(context));
+        }
+
+        [CanBeNull]
+        private InstantDamageResult PreValidationResult([NotNull] IActionContext context)
+        {
+            var target = TargetEntityID.GetFrom(context.World);
+
+            // 既に対象がいなければ、ダメージは与えられない。
+            if (target == null)
+            {
+                return new FailedInstantDamageResult(FailedInstantDamageReason.NoTarget);
+            }
 
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (target.Vitality == null)
@@ -29,27 +42,20 @@ namespace RineaR.MadeHighlow
                 return new FailedInstantDamageResult(FailedInstantDamageReason.AlreadyDead);
             }
 
+            return null;
+        }
+
+        [ItemNotNull]
+        [NotNull]
+        private ValueObjectList<InstantDamageInterrupt> CollectComponentEffects([NotNull] IActionContext context)
+        {
             var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(context.World);
-            var reductions = new List<DamageReduction>();
-
-            foreach (var effector in effectors)
-            {
-                var effect = effector.EffectOnInstantDamage(context, this);
-
-                // コンポーネントによって、ダメージが無効化されることがあるよ。無敵エフェクトとかに使えるかも。
-                if (effect.Refused)
-                {
-                    return new RefusedInstantDamageResult(effector.ComponentID);
-                }
-
-                // コンポーネントによって、ダメージの量が軽減されることがあるよ。防御エフェクトとかに使えそう。
-                if (effect.Reduction != null)
-                {
-                    reductions.Add(effect.Reduction);
-                }
-            }
-
-            return new SucceedInstantDamageResult(SourceID, TargetEntityID, Damage, reductions.ToValueObjectList());
+            return effectors.Select(
+                effector => new InstantDamageInterrupt(
+                    effector.ComponentID,
+                    effector.EffectOnInstantDamage(context, this)
+                )
+            );
         }
     }
 }

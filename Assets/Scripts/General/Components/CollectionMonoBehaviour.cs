@@ -5,13 +5,11 @@ namespace General.Components
 {
     public class CollectionMonoBehaviour<T> : MonoBehaviour where T : Component
     {
-        [Header("Prefabs")]
-        public T original;
+        [Header("Prefabs")] public T original;
 
-        [Header("Properties"), Space]
-        public int maxElements = 4;
+        [Header("Properties")] [Space] public int maxElements = 4;
 
-        private readonly Dictionary<int, T> _children = new Dictionary<int, T>();
+        private readonly Dictionary<int, T> _children = new();
 
         public T Create(int id)
         {

@@ -5,11 +5,9 @@ namespace Views.Strategy
 {
     public class TimeLimit : MonoBehaviour
     {
-        [Header("Components")]
-        public Image timerImage;
+        [Header("Components")] public Image timerImage;
 
-        [Header("States"), Space]
-        [Min(0)] public float leftTime;
+        [Header("States")] [Space] [Min(0)] public float leftTime;
         [Min(float.Epsilon)] public float fullTime;
 
         private void Update()

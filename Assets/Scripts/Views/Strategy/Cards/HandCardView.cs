@@ -5,11 +5,9 @@ namespace Views.Strategy.Cards
 {
     public class HandCardView : MonoBehaviour
     {
-        [Header("Components")]
-        public SpriteViewer cardImage;
+        [Header("Components")] public SpriteViewer cardImage;
 
-        [Header("States"), Space]
-        public int id;
+        [Header("States")] [Space] public int id;
         public Sprite image;
 
         private void Update()

@@ -9,10 +9,7 @@ namespace RineaR.MadeHighlow
     {
         public override World Simulate(World world)
         {
-            return Results.Aggregate(
-                world,
-                (currentWorld, operationResult) => operationResult.Simulate(currentWorld)
-            );
+            return Results.Aggregate(world, (currentWorld, operationResult) => operationResult.Simulate(currentWorld));
         }
     }
 }

@@ -26,23 +26,20 @@ namespace RineaR.MadeHighlow
         ///     `operation2`の方が優先度が高ければ、負の値を返す。
         ///     `operation1`と`operation2`の優先度が等しければ、0を返す。
         /// </returns>
-        private int Compare(
-            [NotNull] Command operation1,
-            [NotNull] Command operation2,
-            [NotNull] IActionContext context
-        )
+        private int Compare([NotNull] Command command1, [NotNull] Command command2, [NotNull] IActionContext context)
         {
             var world = context.World;
 
             // (1) 「コマンドの早さ」が早い順に行動する。
-            var quicknessCompare = CompareCommandQuickness(operation1, operation2, world);
+            var quicknessCompare = CompareQuickness(command1, command2, world);
             if (quicknessCompare != 0)
             {
                 return quicknessCompare;
             }
 
-            var unit1 = operation1.UnitID.GetFrom(world);
-            var unit2 = operation2.UnitID.GetFrom(world);
+            // ユニットが削除されるときは、コマンドも同時に削除されるはずなので、例外を投げる
+            var unit1 = command1.UnitID.GetFrom(world) ?? throw new NullReferenceException();
+            var unit2 = command2.UnitID.GetFrom(world) ?? throw new NullReferenceException();
 
             // (2) (1)が同一の場合、「行動するユニットのメド」が高い順に行動する。
             var medoCompare = CompareMedo(unit1, unit2);
@@ -62,14 +59,15 @@ namespace RineaR.MadeHighlow
             return CompareRandom(context);
         }
 
-        private static int CompareCommandQuickness(
-            [NotNull] Command operation1,
-            [NotNull] Command operation2,
+        private static int CompareQuickness(
+            [NotNull] Command command1,
+            [NotNull] Command command2,
             [NotNull] World world
         )
         {
-            var card1 = operation1.CardID.GetFrom(world) ?? throw new NullReferenceException();
-            var card2 = operation2.CardID.GetFrom(world) ?? throw new NullReferenceException();
+            // カードが削除されるときは、コマンドも同時に削除されるはずなので、例外を投げる
+            var card1 = command1.CardID.GetFrom(world) ?? throw new NullReferenceException();
+            var card2 = command2.CardID.GetFrom(world) ?? throw new NullReferenceException();
 
             var quickness1 = card1.Quickness;
             var quickness2 = card2.Quickness;

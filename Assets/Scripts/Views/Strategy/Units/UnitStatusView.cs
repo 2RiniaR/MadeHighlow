@@ -5,8 +5,7 @@ namespace Views.Strategy.Units
 {
     public class UnitStatusView : MonoBehaviour
     {
-        [Header("Components")]
-        public SpriteViewer characterVisualImage;
+        [Header("Components")] public SpriteViewer characterVisualImage;
         public SpriteViewer characterIconImage;
         public TextViewer nameText;
         public TextViewer healthText;
@@ -15,8 +14,7 @@ namespace Views.Strategy.Units
         public UnitHealthHearts healthHearts;
         public UnitEffectIconCollection effectIcons;
 
-        [Header("States"), Space]
-        public int id;
+        [Header("States")] [Space] public int id;
         public string displayName;
         public int strength;
         public Sprite visual;
@@ -79,12 +77,10 @@ namespace Views.Strategy.Units
 
         public void ShowDetail()
         {
-
         }
 
         public void Submit()
         {
-
         }
     }
 }

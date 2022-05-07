@@ -5,10 +5,7 @@ namespace RineaR.MadeHighlow.Components.Expressions
     /// <summary>
     ///     移動コスト
     /// </summary>
-    public record WalkingCost
-    (
-        int Value
-    )
+    public record WalkingCost(int Value)
     {
         private const int MinValue = 0;
 

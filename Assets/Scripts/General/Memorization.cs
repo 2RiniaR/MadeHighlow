@@ -13,6 +13,7 @@ namespace General
         }
 
         private T _memorized;
+
         public T Value
         {
             get

@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -11,7 +10,13 @@ namespace RineaR.MadeHighlow
         public override RunCommandResult Validate(IActionContext context)
         {
             var currentContext = context;
-            var actor = Command.UnitID.GetFrom(currentContext.World) ?? throw new NullReferenceException();
+            var actor = Command.UnitID.GetFrom(currentContext.World);
+
+            // いないものは行動できない。
+            if (actor == null)
+            {
+                return new FailedRunCommandResult(FailedRunCommandReason.NoActor);
+            }
 
             // 死者は行動できないよ。
             if (actor.Vitality != null && actor.Vitality.IsDead)
@@ -31,11 +36,11 @@ namespace RineaR.MadeHighlow
                 }
             }
 
-            // 命令の実行前にカードを削除するよ。前払い。
-            var payCardResult = PayCard(currentContext);
-            currentContext = currentContext.Appended(payCardResult);
-
             var commandActionResult = ActuateCommand(currentContext);
+            currentContext = currentContext.Appended(commandActionResult);
+
+            // 命令の実行後にカードを削除するよ。後払い。
+            var payCardResult = PayCard(currentContext);
 
             return new SucceedRunCommandResult(payCardResult, commandActionResult);
         }

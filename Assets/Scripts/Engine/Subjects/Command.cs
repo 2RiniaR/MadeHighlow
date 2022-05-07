@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -20,8 +19,7 @@ namespace RineaR.MadeHighlow
     {
         public override Action ActionIn(World world)
         {
-            var card = CardID.GetFrom(world) ?? throw new NullReferenceException();
-            return card.GenerateAction(Option, UnitID);
+            return CardID.GetFrom(world).GenerateAction(Option, UnitID);
         }
 
         [NotNull] public new CardID<TOption> CardID { get; init; } = CardID;

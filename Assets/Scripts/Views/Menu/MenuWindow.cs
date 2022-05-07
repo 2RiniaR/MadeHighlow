@@ -6,7 +6,6 @@ namespace Views.Menu
     {
         public void Close()
         {
-
         }
     }
 }

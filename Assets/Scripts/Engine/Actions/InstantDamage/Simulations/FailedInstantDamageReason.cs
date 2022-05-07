@@ -2,6 +2,7 @@
 {
     public enum FailedInstantDamageReason
     {
+        NoTarget,
         NoVitality,
         AlreadyDead,
     }

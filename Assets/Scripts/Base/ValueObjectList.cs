@@ -119,7 +119,6 @@ public sealed class ValueObjectList<T> : IEnumerable<T>
     }
 
     [NotNull]
-    [ItemNotNull]
     public ValueObjectList<TResult> Select<TResult>(Func<T, TResult> selector)
     {
         return Items.Select(selector).ToValueObjectList();
@@ -127,9 +126,23 @@ public sealed class ValueObjectList<T> : IEnumerable<T>
 
     [NotNull]
     [ItemNotNull]
+    public ValueObjectList<T> RemoveNull()
+    {
+        return Items.FindAll(item => item != null).ToValueObjectList();
+    }
+
+    [NotNull]
+    [ItemNotNull]
     public ValueObjectList<T> Sort(Comparison<T> comparison)
     {
         return Items.Sort(comparison).ToValueObjectList();
+    }
+
+    [NotNull]
+    [ItemNotNull]
+    public ValueObjectList<T> Sort()
+    {
+        return Items.Sort().ToValueObjectList();
     }
 
     public TResult Aggregate<TResult>(TResult seed, Func<TResult, T, TResult> func)

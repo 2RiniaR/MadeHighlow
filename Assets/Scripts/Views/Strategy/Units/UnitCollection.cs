@@ -2,5 +2,7 @@
 
 namespace Views.Strategy.Units
 {
-    public class UnitCollection : CollectionMonoBehaviour<UnitStatusView> { }
+    public class UnitCollection : CollectionMonoBehaviour<UnitStatusView>
+    {
+    }
 }

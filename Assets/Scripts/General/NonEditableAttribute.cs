@@ -5,7 +5,9 @@ using UnityEditor;
 
 namespace General
 {
-    public sealed class NonEditableAttribute : PropertyAttribute{}
+    public sealed class NonEditableAttribute : PropertyAttribute
+    {
+    }
 
 #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(NonEditableAttribute))]

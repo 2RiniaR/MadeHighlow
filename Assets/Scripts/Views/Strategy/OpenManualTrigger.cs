@@ -6,7 +6,7 @@ namespace Views.Strategy
 {
     public class OpenManualTrigger : MonoBehaviour
     {
-        [SerializeField, Header("Components")]
+        [SerializeField] [Header("Components")]
         private PulseTrigger trigger;
 
         public IManualOpener Opener { get; set; }

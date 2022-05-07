@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -10,7 +9,13 @@ namespace RineaR.MadeHighlow
     {
         public override InstantDeathResult Validate(IActionContext context)
         {
-            var target = TargetEntityID.GetFrom(context.World) ?? throw new NullReferenceException();
+            var target = TargetEntityID.GetFrom(context.World);
+
+            // 既に対象がいなければ、即死効果は与えられない。
+            if (target == null)
+            {
+                return new FailedInstantDeathResult(FailedInstantDeathReason.NoTarget);
+            }
 
             // そもそも生命という概念がないものには、即死効果は与えられない。
             if (target.Vitality == null)

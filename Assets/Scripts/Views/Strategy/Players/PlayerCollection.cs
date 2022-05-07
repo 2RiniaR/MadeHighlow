@@ -2,5 +2,7 @@
 
 namespace Views.Strategy.Players
 {
-    public class PlayerCollection : CollectionMonoBehaviour<PlayerStatusView> { }
+    public class PlayerCollection : CollectionMonoBehaviour<PlayerStatusView>
+    {
+    }
 }

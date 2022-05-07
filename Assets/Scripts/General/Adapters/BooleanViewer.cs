@@ -17,7 +17,7 @@ namespace General.Adapters
             get => mode switch
             {
                 Mode.AnimationValue => animator.GetBool(animatorKey),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(),
             };
             set
             {
@@ -34,7 +34,7 @@ namespace General.Adapters
 
         public enum Mode
         {
-            AnimationValue
+            AnimationValue,
         }
     }
 
@@ -42,7 +42,8 @@ namespace General.Adapters
     [CustomPropertyDrawer(typeof(BooleanViewer), true)]
     public class BooleanViewerDrawer : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             return EditorGUIUtility.singleLineHeight * 4;
         }
 
@@ -59,7 +60,13 @@ namespace General.Adapters
             {
                 var componentProp = property.FindPropertyRelative("animator");
                 var component = componentProp.objectReferenceValue;
-                component = EditorGUI.ObjectField(this.LineRect(position, 2, 1), "コンポーネント", component, typeof(Animator), true);
+                component = EditorGUI.ObjectField(
+                    this.LineRect(position, 2, 1),
+                    "コンポーネント",
+                    component,
+                    typeof(Animator),
+                    true
+                );
                 componentProp.objectReferenceValue = component;
 
                 var keyProp = property.FindPropertyRelative("animatorKey");
