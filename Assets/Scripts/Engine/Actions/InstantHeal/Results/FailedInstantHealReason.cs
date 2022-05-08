@@ -4,6 +4,6 @@
     {
         NoTarget,
         NoVitality,
-        AlreadyDead,
+        TargetDead,
     }
 }
