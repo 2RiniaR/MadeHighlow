@@ -18,12 +18,12 @@ namespace RineaR.MadeHighlow
             var interrupts = CollectInterrupts(context).Sort();
             foreach (var interrupt in interrupts)
             {
-                if (interrupt.Effect is DisallowCommandEffect)
+                if (interrupt.Effect is DisallowReserveCommandEffect)
                 {
                     return new DisallowedReserveCommandResult(Command, interrupt.ComponentID);
                 }
 
-                if (interrupt.Effect is AllowCommandEffect)
+                if (interrupt.Effect is AllowReserveCommandEffect)
                 {
                     return new AllowedReserveCommandResult(Command, interrupt.ComponentID);
                 }

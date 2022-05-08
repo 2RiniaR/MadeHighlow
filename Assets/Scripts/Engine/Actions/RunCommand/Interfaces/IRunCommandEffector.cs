@@ -10,6 +10,9 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     命令を実行するアクションに対して与える影響を返す
         /// </summary>
-        public RunCommandEffect EffectOnRunCommand([NotNull] IActionContext context, [NotNull] RunCommandAction action);
+        public ValueList<Interrupt<RunCommandEffect>> EffectsOnRunCommand(
+            [NotNull] IActionContext context,
+            [NotNull] RunCommandAction action
+        );
     }
 }

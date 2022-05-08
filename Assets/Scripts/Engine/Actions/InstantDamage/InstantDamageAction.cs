@@ -21,7 +21,7 @@ namespace RineaR.MadeHighlow
             foreach (var interrupt in interrupts)
             {
                 // コンポーネントによって、治癒効果が無効化されることがあるよ。無敵エフェクトとかに使えるかも。
-                if (interrupt.Effect is DamageRejectionEffect)
+                if (interrupt.Effect is RejectInstantDamageEffect)
                 {
                     return new RejectedInstantDamageResult(
                         SourceID,
@@ -33,9 +33,9 @@ namespace RineaR.MadeHighlow
                 }
 
                 // コンポーネントによって、治癒効果の量が軽減されることがあるよ。防御エフェクトとかに使えそう。
-                if (interrupt.Effect is DamageReductionEffect effect)
+                if (interrupt.Effect is ReduceInstantDamageEffect reduce)
                 {
-                    calculatedDamage = effect.DamageReduction.Caused(calculatedDamage);
+                    calculatedDamage = reduce.DamageReduction.Caused(calculatedDamage);
                 }
             }
 

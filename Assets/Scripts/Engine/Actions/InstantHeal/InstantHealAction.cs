@@ -21,7 +21,7 @@ namespace RineaR.MadeHighlow
             foreach (var interrupt in interrupts)
             {
                 // コンポーネントによって、治癒効果が無効化されることがあるよ。治癒無効エフェクトとかに使えるかも。
-                if (interrupt.Effect is HealRejectionEffect)
+                if (interrupt.Effect is RejectInstantHealEffect)
                 {
                     return new RejectedInstantHealResult(
                         SourceID,
@@ -33,9 +33,9 @@ namespace RineaR.MadeHighlow
                 }
 
                 // コンポーネントによって、治癒効果の量が軽減されることがあるよ。治癒効果減少とかに使えそう。
-                if (interrupt.Effect is HealReductionEffect effect)
+                if (interrupt.Effect is ReduceInstantHealEffect reduce)
                 {
-                    calculatedHeal = effect.HealReduction.Caused(calculatedHeal);
+                    calculatedHeal = reduce.HealReduction.Caused(calculatedHeal);
                 }
             }
 

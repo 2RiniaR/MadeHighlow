@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow
             foreach (var interrupt in interrupts)
             {
                 // 「この効果が発動してるときは、カードを使っても消費されない」みたいなのができそうだよね
-                if (interrupt.Effect is ExemptionPayCardEffect)
+                if (interrupt.Effect is ExemptPayCardEffect)
                 {
                     return new ExemptedPayCardResult(CardID, interrupt.ComponentID);
                 }

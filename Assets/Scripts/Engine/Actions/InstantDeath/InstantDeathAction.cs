@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow
             foreach (var interrupt in interrupts)
             {
                 // コンポーネントによって、治癒効果が無効化されることがあるよ。無敵エフェクトとかに使えるかも。
-                if (interrupt.Effect is DeathRejectionEffect)
+                if (interrupt.Effect is RejectInstantDeathEffect)
                 {
                     return new RejectedInstantDeathResult(SourceID, TargetEntityID, interrupts, interrupt.ComponentID);
                 }

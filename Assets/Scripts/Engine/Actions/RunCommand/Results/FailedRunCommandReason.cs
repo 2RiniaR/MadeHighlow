@@ -2,7 +2,7 @@
 {
     public enum FailedRunCommandReason
     {
-        NoActor,
-        Dead,
+        ActorNotFound,
+        ActorIsDead,
     }
 }

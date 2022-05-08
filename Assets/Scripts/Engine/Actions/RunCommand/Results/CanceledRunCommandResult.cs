@@ -1,6 +1,11 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
-    public record CanceledRunCommandResult(Command TriedCommand) : RunCommandResult
+    public record CanceledRunCommandResult(
+        [NotNull] Command Command,
+        [NotNull] ComponentID CanceledComponentID
+    ) : RunCommandResult
     {
         public override World Simulate(World world)
         {

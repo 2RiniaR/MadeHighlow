@@ -9,40 +9,56 @@ namespace RineaR.MadeHighlow
     {
         public override RunCommandResult Validate(IActionContext context)
         {
+            var preValidationResult = PreValidationResult(context);
+            if (preValidationResult != null)
+            {
+                return preValidationResult;
+            }
+
             var currentContext = context;
-            var actor = Command.UnitID.GetFrom(currentContext.World);
 
-            // いないものは行動できない。
-            if (actor == null)
+            var interrupts = CollectInterrupts(context).Sort();
+            foreach (var interrupt in interrupts)
             {
-                return new FailedRunCommandResult(FailedRunCommandReason.NoActor);
-            }
-
-            // 死者は行動できないよ。
-            if (actor.Vitality != null && actor.Vitality.IsDead)
-            {
-                return new FailedRunCommandResult(FailedRunCommandReason.Dead);
-            }
-
-            var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(currentContext.World);
-            foreach (var effector in effectors)
-            {
-                var effect = effector.EffectOnRunCommand(currentContext, this);
-
-                // 「気絶状態のユニットが命令を実行できない」とかを再現できるよ、やったね！
-                if (effect.Canceled)
+                if (interrupt.Effect is CancelRunCommandEffect)
                 {
-                    return new CanceledRunCommandResult(Command);
+                    return new CanceledRunCommandResult(Command, interrupt.ComponentID);
                 }
             }
 
             var commandActionResult = ActuateCommand(currentContext);
             currentContext = currentContext.Appended(commandActionResult);
-
-            // 命令の実行後にカードを削除するよ。後払い。
             var payCardResult = PayCard(currentContext);
 
             return new SucceedRunCommandResult(payCardResult, commandActionResult);
+        }
+
+        [CanBeNull]
+        private RunCommandResult PreValidationResult([NotNull] IActionContext context)
+        {
+            var actor = Command.UnitID.GetFrom(context.World);
+
+            // いないものは行動できない。
+            if (actor == null)
+            {
+                return new FailedRunCommandResult(Command, FailedRunCommandReason.ActorNotFound);
+            }
+
+            // 死者は行動できないよ。
+            if (actor.Vitality != null && actor.Vitality.IsDead)
+            {
+                return new FailedRunCommandResult(Command, FailedRunCommandReason.ActorIsDead);
+            }
+
+            return null;
+        }
+
+        [ItemNotNull]
+        [NotNull]
+        private ValueList<Interrupt<RunCommandEffect>> CollectInterrupts([NotNull] IActionContext context)
+        {
+            var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(context.World);
+            return effectors.SelectMany(effector => effector.EffectsOnRunCommand(context, this));
         }
 
         [NotNull]

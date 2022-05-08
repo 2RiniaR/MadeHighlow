@@ -1,6 +1,8 @@
-﻿namespace RineaR.MadeHighlow
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow
 {
-    public record FailedRunCommandResult(FailedRunCommandReason Reason) : RunCommandResult
+    public record FailedRunCommandResult([NotNull] Command Command, FailedRunCommandReason Reason) : RunCommandResult
     {
         public override World Simulate(World world)
         {
