@@ -1,8 +1,10 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record FailedReserveCommandResult(ReserveCommandFailedReason Code) : ReserveCommandResult
+    public record FailedReserveCommandResult
+        ([NotNull] Command Command, FailedReserveCommandReason Code) : ReserveCommandResult
     {
         public override World Simulate(World world)
         {

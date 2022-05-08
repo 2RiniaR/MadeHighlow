@@ -5,11 +5,17 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     タイルを新規登録した結果
     /// </summary>
-    public record RegisterTileResult([NotNull] Tile RegisteredTile) : Result
+    public record RegisterTileResult(
+        [NotNull] AllocateIDResult AllocateIDResult,
+        [NotNull] Tile RegisteredTile
+    ) : Result
     {
         public override World Simulate(World world)
         {
-            return RegisteredTile.CreateIn(world);
+            var currentWorld = world;
+            currentWorld = AllocateIDResult.Simulate(currentWorld);
+            currentWorld = RegisteredTile.CreateIn(currentWorld);
+            return currentWorld;
         }
     }
 }

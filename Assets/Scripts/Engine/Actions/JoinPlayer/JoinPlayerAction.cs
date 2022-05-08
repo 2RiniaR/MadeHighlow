@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow
         [NotNull]
         private RegisterPlayerResult RegisterNewPlayer([NotNull] ref IActionContext currentContext)
         {
-            var registerPlayerResult = new RegisterPlayerAction(InitialPlayer.DeckSize).Validate(currentContext);
+            var registerPlayerResult = new RegisterPlayerAction(InitialPlayer).Validate(currentContext);
             currentContext = currentContext.Appended(registerPlayerResult);
             return registerPlayerResult;
         }

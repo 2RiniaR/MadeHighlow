@@ -5,23 +5,17 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     エンティティを新規登録するアクション
     /// </summary>
-    public record RegisterEntityAction(
-        [NotNull] Position3D Position3D,
-        [NotNull] Direction3D Direction3D,
-        [CanBeNull] Vitality Vitality
-    ) : Action<RegisterEntityResult>
+    public record RegisterEntityAction([NotNull] Entity InitialEntity) : Action<RegisterEntityResult>
     {
         public override RegisterEntityResult Validate(IActionContext context)
         {
-            return new RegisterEntityResult(
-                new Entity(
-                    new AllocateIDAction().Validate(context).AllocatedID,
-                    Position3D,
-                    Direction3D,
-                    Vitality,
-                    ValueList<Component>.Empty
-                )
-            );
+            var allocateIDResult = new AllocateIDAction().Validate(context);
+            var formattedEntity = InitialEntity with
+            {
+                ID = allocateIDResult.AllocatedID,
+                Components = ValueList<Component>.Empty,
+            };
+            return new RegisterEntityResult(allocateIDResult, formattedEntity);
         }
     }
 }
