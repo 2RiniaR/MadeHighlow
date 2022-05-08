@@ -9,9 +9,6 @@ namespace RineaR.MadeHighlow
         {
             var currentContext = context;
 
-            // 今のところ、プレイヤーの参加に待ったをかける要素は存在しないけど、そのうち出てくるかもしれない...
-            // 「ボスがいるときはプレイヤーが新たに参加できません！」みたいな
-
             var registerPlayerResult = RegisterNewPlayer(ref currentContext);
             var playerID = registerPlayerResult.RegisteredPlayer.PlayerID;
             var addComponentResults = InitializeComponents(ref currentContext, playerID);

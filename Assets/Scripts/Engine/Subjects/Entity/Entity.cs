@@ -10,6 +10,7 @@ namespace RineaR.MadeHighlow
         [NotNull] Position3D Position3D,
         [NotNull] Direction3D Direction3D,
         [CanBeNull] Vitality Vitality,
+        bool Levitation,
         [NotNull] [ItemNotNull] ValueList<Component> Components
     ) : IIdentified, IAttachable
     {

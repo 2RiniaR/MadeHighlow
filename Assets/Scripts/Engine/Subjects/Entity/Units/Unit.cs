@@ -10,13 +10,14 @@ namespace RineaR.MadeHighlow
         [NotNull] Position3D Position3D,
         [NotNull] Direction3D Direction3D,
         [CanBeNull] Vitality Vitality,
+        bool FollowGravity,
         [NotNull] [ItemNotNull] ValueList<Component> Components,
         [NotNull] Strength Strength,
         [NotNull] Medo Medo,
         Shadow Shadow,
         [NotNull] Figure Figure,
         [NotNull] PlayerID FollowingPlayerID
-    ) : Entity(ID, Position3D, Direction3D, Vitality, Components)
+    ) : Entity(ID, Position3D, Direction3D, Vitality, FollowGravity, Components)
     {
         public UnitID UnitID => new(ID);
 
