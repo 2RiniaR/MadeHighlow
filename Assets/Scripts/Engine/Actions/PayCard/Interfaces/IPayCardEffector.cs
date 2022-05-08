@@ -10,6 +10,9 @@ namespace RineaR.MadeHighlow
         /// <summary>
         ///     カードを支払うアクションに対して与える影響を返す
         /// </summary>
-        public PayCardEffect EffectOnPayCard([NotNull] IActionContext context, [NotNull] PayCardAction action);
+        public ValueList<Interrupt<PayCardEffect>> EffectsOnPayCard(
+            [NotNull] IActionContext context,
+            [NotNull] PayCardAction action
+        );
     }
 }

@@ -3,12 +3,9 @@
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     カードの支払いが免除された結果
+    ///     カードの支払いに失敗した結果
     /// </summary>
-    public record ExemptedPayCardResult(
-        [NotNull] CardID CardID,
-        [NotNull] ComponentID ExemptedComponentID
-    ) : PayCardResult
+    public record FailedPayCardResult([NotNull] CardID CardID, FailedPayCardReason Reason) : PayCardResult
     {
         public override World Simulate(World world)
         {
