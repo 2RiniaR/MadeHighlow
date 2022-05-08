@@ -15,10 +15,10 @@
                                         Duration = component.Duration.Decrement(),
                                     }
                                 )
-                                .ToValueObjectList(),
+                                .ToValueList(),
                         }
                     )
-                    .ToValueObjectList(),
+                    .ToValueList(),
                 CurrentTurn = world.CurrentTurn.Increment(),
             };
         }

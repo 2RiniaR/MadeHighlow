@@ -6,14 +6,14 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     ユニットが現在受けている命令を実行する際の、行動順を決定するクエリ
     /// </summary>
-    public record StartCommandsOrderer([NotNull] [ItemNotNull] ValueObjectList<Command> Commands)
+    public record StartCommandsOrderer([NotNull] [ItemNotNull] ValueList<Command> Commands)
     {
         /// <summary>
         ///     命令の実行順を決定する
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<Command> Resolve([NotNull] IActionContext context)
+        public ValueList<Command> Resolve([NotNull] IActionContext context)
         {
             return Commands.Sort((unit1, unit2) => Compare(unit1, unit2, context));
         }

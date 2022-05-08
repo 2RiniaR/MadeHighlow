@@ -34,23 +34,23 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        public static ValueObjectList<Component> GetAllFrom([NotNull] World world)
+        public static ValueList<Component> GetAllFrom([NotNull] World world)
         {
             return world.GetChildren().WhereType<IAttachable>().SelectMany(item => item.Components);
         }
 
         [NotNull]
         [ItemNotNull]
-        public static ValueObjectList<T> GetAllOfTypeFrom<T>([NotNull] World world) where T : class
+        public static ValueList<T> GetAllOfTypeFrom<T>([NotNull] World world) where T : class
         {
             return GetAllFrom(world).WhereType<T>();
         }
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<IObject> GetChildren()
+        public ValueList<IObject> GetChildren()
         {
-            return ValueObjectList<IObject>.Empty;
+            return ValueList<IObject>.Empty;
         }
     }
 }

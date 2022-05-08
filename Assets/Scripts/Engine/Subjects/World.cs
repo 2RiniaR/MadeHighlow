@@ -7,18 +7,18 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public record World(
         ID LatestAllocatedID,
-        [NotNull] [ItemNotNull] ValueObjectList<Player> Players,
-        [NotNull] [ItemNotNull] ValueObjectList<Tile> Tiles,
-        [NotNull] [ItemNotNull] ValueObjectList<Entity> Entities,
+        [NotNull] [ItemNotNull] ValueList<Player> Players,
+        [NotNull] [ItemNotNull] ValueList<Tile> Tiles,
+        [NotNull] [ItemNotNull] ValueList<Entity> Entities,
         [NotNull] Turn CurrentTurn,
-        [NotNull] [ItemNotNull] ValueObjectList<Command> ReservedCommands
+        [NotNull] [ItemNotNull] ValueList<Command> ReservedCommands
     )
     {
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<IObject> GetChildren()
+        public ValueList<IObject> GetChildren()
         {
-            return ValueObjectList.Concat(
+            return ValueList.Concat(
                 Players.Select(item => item as IObject),
                 Players.SelectMany(player => player.GetChildren()),
                 Tiles.Select(item => item as IObject),

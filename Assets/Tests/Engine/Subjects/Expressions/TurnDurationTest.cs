@@ -7,14 +7,6 @@ namespace RineaR.MadeHighlow
         #region Construtor
 
         [Test]
-        public void Constructor_Always_ReturnsCounterpartType()
-        {
-            var actual = new TurnDuration();
-
-            Assert.That(actual.Type, Is.EqualTo(DurationType.FromTurn));
-        }
-
-        [Test]
         [TestCase(0)]
         [TestCase(1)]
         public void Constructor_NonNegative_ReturnsSame(int value)

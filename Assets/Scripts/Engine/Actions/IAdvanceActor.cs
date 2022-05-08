@@ -6,6 +6,6 @@ namespace RineaR.MadeHighlow
     {
         [ItemNotNull]
         [NotNull]
-        public ValueObjectList<Action> AdvanceActionsOn([NotNull] Action action);
+        public ValueList<Action> AdvanceActionsOn([NotNull] Action action);
     }
 }

@@ -11,12 +11,12 @@ namespace RineaR.MadeHighlow
         [NotNull] PlayerID OwnerPlayerID,
         CardGenre Genre,
         Quickness Quickness,
-        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
+        [NotNull] [ItemNotNull] ValueList<Component> Components
     ) : IIdentified, IAttachable
     {
         public CardID CardID => new(ID);
 
-        public IAttachable WithComponents(ValueObjectList<Component> components)
+        public IAttachable WithComponents(ValueList<Component> components)
         {
             return this with { Components = components };
         }
@@ -42,16 +42,16 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public static ValueObjectList<Card> GetAllFrom([NotNull] World world)
+        public static ValueList<Card> GetAllFrom([NotNull] World world)
         {
             return Player.GetAllFrom(world).SelectMany(player => player.Cards);
         }
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<IObject> GetChildren()
+        public ValueList<IObject> GetChildren()
         {
-            return ValueObjectList.Concat(
+            return ValueList.Concat(
                 Components.Select(item => item as IObject),
                 Components.SelectMany(item => item.GetChildren())
             );
@@ -63,7 +63,7 @@ namespace RineaR.MadeHighlow
         [NotNull] PlayerID OwnerPlayerID,
         CardGenre Genre,
         Quickness Quickness,
-        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
+        [NotNull] [ItemNotNull] ValueList<Component> Components
     ) : Card(ID, OwnerPlayerID, Genre, Quickness, Components)
     {
         /// <summary>

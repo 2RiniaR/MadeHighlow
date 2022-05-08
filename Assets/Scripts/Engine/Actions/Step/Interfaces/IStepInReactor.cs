@@ -5,6 +5,6 @@ namespace RineaR.MadeHighlow
     public interface IStepInReactor
     {
         [NotNull]
-        public ValueObjectList<StepInReaction> OnSteppedIn([NotNull] IActionContext session, [NotNull] EntityID actor);
+        public ValueList<StepInReaction> OnSteppedIn([NotNull] IActionContext session, [NotNull] EntityID actor);
     }
 }

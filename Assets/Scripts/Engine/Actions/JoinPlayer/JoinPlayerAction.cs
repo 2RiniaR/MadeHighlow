@@ -30,7 +30,7 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        private ValueObjectList<AddComponentResult> InitializeComponents(
+        private ValueList<AddComponentResult> InitializeComponents(
             [NotNull] ref IActionContext currentContext,
             [NotNull] PlayerID playerID
         )
@@ -43,12 +43,12 @@ namespace RineaR.MadeHighlow
                 addComponentResults.Add(result);
             }
 
-            return addComponentResults.ToValueObjectList();
+            return addComponentResults.ToValueList();
         }
 
         [NotNull]
         [ItemNotNull]
-        private ValueObjectList<SupplyCardResult> InitializeCards(
+        private ValueList<SupplyCardResult> InitializeCards(
             [NotNull] ref IActionContext currentContext,
             [NotNull] PlayerID playerID
         )
@@ -61,7 +61,7 @@ namespace RineaR.MadeHighlow
                 supplyCardResults.Add(result);
             }
 
-            return supplyCardResults.ToValueObjectList();
+            return supplyCardResults.ToValueList();
         }
     }
 }

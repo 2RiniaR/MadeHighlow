@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     命令を実行するアクションの結果
     /// </summary>
-    public record StartCommandsResult([NotNull] [ItemNotNull] ValueObjectList<RunCommandResult> Results) : Result
+    public record StartCommandsResult([NotNull] [ItemNotNull] ValueList<RunCommandResult> Results) : Result
     {
         public override World Simulate(World world)
         {

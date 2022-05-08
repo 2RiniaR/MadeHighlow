@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow
     public record StepAction(
         [NotNull] EntityID ActorEntityID,
         [NotNull] Direction2D Direction2D,
-        [NotNull] [ItemNotNull] ValueObjectList<Action> AfterActions,
+        [NotNull] [ItemNotNull] ValueList<Action> AfterActions,
         [NotNull] StepCost AvailableStepCost
     ) : Action<StepResult>
     {
@@ -62,7 +62,7 @@ namespace RineaR.MadeHighlow
         ///     ステップ後アクションを実行する
         /// </summary>
         [NotNull]
-        private ValueObjectList<Result> RunAfterActions([NotNull] IActionContext session)
+        private ValueList<Result> RunAfterActions([NotNull] IActionContext session)
         {
             throw new NotImplementedException();
         }

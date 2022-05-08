@@ -10,14 +10,14 @@ namespace RineaR.MadeHighlow
         [NotNull] Position2D Position2D,
         [NotNull] Direction2D Direction2D,
         [NotNull] Elevation Elevation,
-        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
+        [NotNull] [ItemNotNull] ValueList<Component> Components
     ) : IIdentified, IAttachable
     {
         public TileID TileID => new(ID);
 
         IAttachableID IAttachable.AttachableID => TileID;
 
-        public IAttachable WithComponents(ValueObjectList<Component> components)
+        public IAttachable WithComponents(ValueList<Component> components)
         {
             return this with { Components = components };
         }
@@ -34,16 +34,16 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public static ValueObjectList<Tile> GetAllFrom([NotNull] World world)
+        public static ValueList<Tile> GetAllFrom([NotNull] World world)
         {
             return world.Tiles;
         }
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<IObject> GetChildren()
+        public ValueList<IObject> GetChildren()
         {
-            return ValueObjectList.Concat(
+            return ValueList.Concat(
                 Components.Select(item => item as IObject),
                 Components.SelectMany(item => item.GetChildren())
             );

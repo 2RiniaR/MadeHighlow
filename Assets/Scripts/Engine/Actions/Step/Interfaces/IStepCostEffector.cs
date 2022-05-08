@@ -4,9 +4,6 @@ namespace RineaR.MadeHighlow
 {
     public interface IStepCostEffector
     {
-        public ValueObjectList<StepCostEffect> EffectStepCost(
-            [NotNull] IActionContext session,
-            [NotNull] EntityID actor
-        );
+        public ValueList<StepCostEffect> EffectStepCost([NotNull] IActionContext session, [NotNull] EntityID actor);
     }
 }

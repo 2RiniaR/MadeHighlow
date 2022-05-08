@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public record WalkAction(
         [NotNull] EntityID ActorEntityID,
-        [NotNull] [ItemNotNull] ValueObjectList<StepAction> StepActions
+        [NotNull] [ItemNotNull] ValueList<StepAction> StepActions
     ) : Action<WalkResult>
     {
         public override WalkResult Validate(IActionContext context)
@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow
                 stepResults.Add(stepResult);
             }
 
-            return new WalkResult(ActorEntityID, stepResults.ToValueObjectList());
+            return new WalkResult(ActorEntityID, stepResults.ToValueList());
         }
     }
 }

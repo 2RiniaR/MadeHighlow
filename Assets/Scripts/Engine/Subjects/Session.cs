@@ -9,6 +9,6 @@ namespace RineaR.MadeHighlow
     public record Session(
         Guid ID,
         [NotNull] Version EngineVersion,
-        [NotNull] [ItemNotNull] ValueObjectList<SessionEvent> Events
+        [NotNull] [ItemNotNull] ValueList<SessionEvent> Events
     );
 }

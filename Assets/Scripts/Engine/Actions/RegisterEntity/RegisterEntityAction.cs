@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow
                     Position3D,
                     Direction3D,
                     Vitality,
-                    ValueObjectList<Component>.Empty
+                    ValueList<Component>.Empty
                 )
             );
         }

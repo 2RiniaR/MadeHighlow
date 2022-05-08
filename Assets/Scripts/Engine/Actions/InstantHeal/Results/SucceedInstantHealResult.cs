@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow
         ID SourceID,
         [NotNull] EntityID TargetEntityID,
         [NotNull] Heal InitialHeal,
-        [NotNull] [ItemNotNull] ValueObjectList<HealReduction> Reductions
+        [NotNull] [ItemNotNull] ValueList<HealReduction> Reductions
     ) : InstantHealResult
     {
         public override World Simulate(World world)

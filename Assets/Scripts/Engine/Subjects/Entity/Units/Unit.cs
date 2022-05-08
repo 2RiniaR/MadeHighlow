@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow
         [NotNull] Position3D Position3D,
         [NotNull] Direction3D Direction3D,
         [CanBeNull] Vitality Vitality,
-        [NotNull] [ItemNotNull] ValueObjectList<Component> Components,
+        [NotNull] [ItemNotNull] ValueList<Component> Components,
         [NotNull] Strength Strength,
         [NotNull] Medo Medo,
         Shadow Shadow,
@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        public static ValueObjectList<Unit> All([NotNull] World world)
+        public static ValueList<Unit> All([NotNull] World world)
         {
             return world.Entities.WhereType<Unit>();
         }

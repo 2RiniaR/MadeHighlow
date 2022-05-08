@@ -20,12 +20,12 @@ namespace RineaR.MadeHighlow
                 results.Add(result);
             }
 
-            return new StartCommandsResult(results.ToValueObjectList());
+            return new StartCommandsResult(results.ToValueList());
         }
 
         [NotNull]
         [ItemNotNull]
-        private ValueObjectList<Command> OrderedCommands([NotNull] IActionContext context)
+        private ValueList<Command> OrderedCommands([NotNull] IActionContext context)
         {
             return new StartCommandsOrderer(context.World.ReservedCommands).Resolve(context);
         }

@@ -4,8 +4,8 @@ namespace RineaR.MadeHighlow
 {
     public record JoinPlayerResult(
         [NotNull] RegisterPlayerResult RegisterPlayerResult,
-        [NotNull] [ItemNotNull] ValueObjectList<AddComponentResult> AddComponentResults,
-        [NotNull] [ItemNotNull] ValueObjectList<SupplyCardResult> SupplyCardResults
+        [NotNull] [ItemNotNull] ValueList<AddComponentResult> AddComponentResults,
+        [NotNull] [ItemNotNull] ValueList<SupplyCardResult> SupplyCardResults
     ) : Result
     {
         public override World Simulate(World world)

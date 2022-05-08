@@ -7,16 +7,16 @@ namespace RineaR.MadeHighlow
     /// </summary>
     public record Player(
         ID ID,
-        [NotNull] [ItemNotNull] ValueObjectList<Card> Cards,
+        [NotNull] [ItemNotNull] ValueList<Card> Cards,
         [NotNull] DeckSize DeckSize,
-        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
+        [NotNull] [ItemNotNull] ValueList<Component> Components
     ) : IIdentified, IAttachable
     {
         public PlayerID PlayerID => new(ID);
 
         IAttachableID IAttachable.AttachableID => PlayerID;
 
-        public IAttachable WithComponents(ValueObjectList<Component> components)
+        public IAttachable WithComponents(ValueList<Component> components)
         {
             return this with { Components = components };
         }
@@ -33,16 +33,16 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        public static ValueObjectList<Player> GetAllFrom([NotNull] World world)
+        public static ValueList<Player> GetAllFrom([NotNull] World world)
         {
             return world.Players;
         }
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<IObject> GetChildren()
+        public ValueList<IObject> GetChildren()
         {
-            return ValueObjectList.Concat(
+            return ValueList.Concat(
                 Components.Select(item => item as IObject),
                 Components.SelectMany(item => item.GetChildren()),
                 Cards.Select(item => item as IObject),

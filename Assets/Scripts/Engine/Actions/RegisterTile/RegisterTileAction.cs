@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow
                     Position2D,
                     Direction2D,
                     Elevation,
-                    ValueObjectList<Component>.Empty
+                    ValueList<Component>.Empty
                 )
             );
         }

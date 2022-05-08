@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow
         {
             var actual = Vector2D.Zero;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 0, Y = 0 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(0, 0)));
         }
 
         #endregion
@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow
         {
             var actual = Vector2D.XPositive;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 1, Y = 0 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(1, 0)));
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace RineaR.MadeHighlow
         {
             var actual = Vector2D.XNegative;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = -1, Y = 0 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(-1, 0)));
         }
 
         #endregion
@@ -47,7 +47,7 @@ namespace RineaR.MadeHighlow
         {
             var actual = Vector2D.YPositive;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 0, Y = 1 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(0, 1)));
         }
 
         #endregion
@@ -59,7 +59,7 @@ namespace RineaR.MadeHighlow
         {
             var actual = Vector2D.YNegative;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 0, Y = -1 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(0, -1)));
         }
 
         #endregion
@@ -69,12 +69,12 @@ namespace RineaR.MadeHighlow
         [Test]
         public void AddOperator_Always_ReturnsAllAdded()
         {
-            var vector1 = new Vector2D { X = 1, Y = 2 };
-            var vector2 = new Vector2D { X = 3, Y = 4 };
+            var vector1 = new Vector2D(1, 2);
+            var vector2 = new Vector2D(3, 4);
 
             var actual = vector1 + vector2;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 4, Y = 6 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(4, 6)));
         }
 
         #endregion
@@ -84,12 +84,12 @@ namespace RineaR.MadeHighlow
         [Test]
         public void SubtractOperator_Always_ReturnsAllSubtracted()
         {
-            var vector1 = new Vector2D { X = 1, Y = 2 };
-            var vector2 = new Vector2D { X = 3, Y = 4 };
+            var vector1 = new Vector2D(1, 2);
+            var vector2 = new Vector2D(3, 4);
 
             var actual = vector1 - vector2;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = -2, Y = -2 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(-2, -2)));
         }
 
         #endregion
@@ -99,11 +99,11 @@ namespace RineaR.MadeHighlow
         [Test]
         public void InverseOperator_Always_ReturnsAllInversed()
         {
-            var vector = new Vector2D { X = 1, Y = 2 };
+            var vector = new Vector2D(1, 2);
 
             var actual = -vector;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = -1, Y = -2 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(-1, -2)));
         }
 
         #endregion
@@ -113,12 +113,12 @@ namespace RineaR.MadeHighlow
         [Test]
         public void MultipleOperator_Always_ReturnsAllMultiple()
         {
-            var vector = new Vector2D { X = 1, Y = 2 };
+            var vector = new Vector2D(1, 2);
             var multiplier = 2;
 
             var actual = vector * multiplier;
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 2, Y = 4 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(2, 4)));
         }
 
         #endregion
@@ -128,13 +128,13 @@ namespace RineaR.MadeHighlow
         [Test]
         public void ExtendTo_Always_ReturnsExtended()
         {
-            var vector = new Vector2D { X = 1, Y = 2 };
+            var vector = new Vector2D(1, 2);
             var direction = Direction2D.XPositive;
             var distance = new Distance(3);
 
             var actual = vector.ExtendTo(direction, distance);
 
-            Assert.That(actual, Is.EqualTo(new Vector2D { X = 4, Y = 2 }));
+            Assert.That(actual, Is.EqualTo(new Vector2D(4, 2)));
         }
 
         #endregion

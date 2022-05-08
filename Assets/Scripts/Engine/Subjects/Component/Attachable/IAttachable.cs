@@ -6,10 +6,10 @@ namespace RineaR.MadeHighlow
     {
         [NotNull] public IAttachableID AttachableID { get; }
 
-        [NotNull] [ItemNotNull] public ValueObjectList<Component> Components { get; init; }
+        [NotNull] [ItemNotNull] public ValueList<Component> Components { get; init; }
 
         [NotNull]
-        public IAttachable WithComponents([NotNull] [ItemNotNull] ValueObjectList<Component> components);
+        public IAttachable WithComponents([NotNull] [ItemNotNull] ValueList<Component> components);
 
         [NotNull]
         public World UpdateIn([NotNull] World world);

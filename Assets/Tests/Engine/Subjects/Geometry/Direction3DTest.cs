@@ -70,10 +70,7 @@ namespace RineaR.MadeHighlow
         [Test]
         public void FromVector_InvalidVector_ThrowsArgumentException()
         {
-            Assert.That(
-                () => Direction3D.FromVector(new Vector3D { X = 1, Y = 1 }),
-                Throws.TypeOf<ArgumentException>()
-            );
+            Assert.That(() => Direction3D.FromVector(new Vector3D(1, 1, 1)), Throws.TypeOf<ArgumentException>());
         }
 
         #endregion

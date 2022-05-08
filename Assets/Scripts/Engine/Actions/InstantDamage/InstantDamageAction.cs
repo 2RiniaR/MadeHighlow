@@ -16,7 +16,30 @@ namespace RineaR.MadeHighlow
                 return preValidationResult;
             }
 
-            return new SucceedInstantDamageResult(SourceID, TargetEntityID, Damage, CollectComponentEffects(context));
+            var interrupts = CollectInterrupts(context).Sort();
+            var calculatedDamage = Damage;
+            foreach (var interrupt in interrupts)
+            {
+                // コンポーネントによって、治癒効果が無効化されることがあるよ。無敵エフェクトとかに使えるかも。
+                if (interrupt.Effect is DamageRejectionEffect)
+                {
+                    return new RejectedInstantDamageResult(
+                        SourceID,
+                        TargetEntityID,
+                        Damage,
+                        interrupts,
+                        interrupt.ComponentID
+                    );
+                }
+
+                // コンポーネントによって、治癒効果の量が軽減されることがあるよ。防御エフェクトとかに使えそう。
+                if (interrupt.Effect is DamageReductionEffect effect)
+                {
+                    calculatedDamage = effect.DamageReduction.Caused(calculatedDamage);
+                }
+            }
+
+            return new CausedInstantDamageResult(SourceID, TargetEntityID, Damage, interrupts, calculatedDamage);
         }
 
         [CanBeNull]
@@ -39,7 +62,7 @@ namespace RineaR.MadeHighlow
             // 相手が生きてなければダメージは与えられないよ。仕方ないね。
             if (target.Vitality.IsDead)
             {
-                return new FailedInstantDamageResult(FailedInstantDamageReason.AlreadyDead);
+                return new FailedInstantDamageResult(FailedInstantDamageReason.TargetDead);
             }
 
             return null;
@@ -47,15 +70,10 @@ namespace RineaR.MadeHighlow
 
         [ItemNotNull]
         [NotNull]
-        private ValueObjectList<InstantDamageInterrupt> CollectComponentEffects([NotNull] IActionContext context)
+        private ValueList<Interrupt<InstantDamageEffect>> CollectInterrupts([NotNull] IActionContext context)
         {
             var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(context.World);
-            return effectors.Select(
-                effector => new InstantDamageInterrupt(
-                    effector.ComponentID,
-                    effector.EffectOnInstantDamage(context, this)
-                )
-            );
+            return effectors.SelectMany(effector => effector.EffectsOnInstantDamage(context, this));
         }
     }
 }

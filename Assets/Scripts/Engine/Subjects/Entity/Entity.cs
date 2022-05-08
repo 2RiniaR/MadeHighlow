@@ -10,14 +10,14 @@ namespace RineaR.MadeHighlow
         [NotNull] Position3D Position3D,
         [NotNull] Direction3D Direction3D,
         [CanBeNull] Vitality Vitality,
-        [NotNull] [ItemNotNull] ValueObjectList<Component> Components
+        [NotNull] [ItemNotNull] ValueList<Component> Components
     ) : IIdentified, IAttachable
     {
         public EntityID EntityID => new(ID);
 
         IAttachableID IAttachable.AttachableID => EntityID;
 
-        public IAttachable WithComponents(ValueObjectList<Component> components)
+        public IAttachable WithComponents(ValueList<Component> components)
         {
             return this with { Components = components };
         }
@@ -35,16 +35,16 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         [ItemNotNull]
-        public static ValueObjectList<Entity> GetAllFrom([NotNull] World world)
+        public static ValueList<Entity> GetAllFrom([NotNull] World world)
         {
             return world.Entities;
         }
 
         [NotNull]
         [ItemNotNull]
-        public ValueObjectList<IObject> GetChildren()
+        public ValueList<IObject> GetChildren()
         {
-            return ValueObjectList.Concat(
+            return ValueList.Concat(
                 Components.Select(item => item as IObject),
                 Components.SelectMany(item => item.GetChildren())
             );

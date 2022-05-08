@@ -12,9 +12,9 @@ namespace RineaR.MadeHighlow
             return new RegisterPlayerResult(
                 new Player(
                     new AllocateIDAction().Validate(context).AllocatedID,
-                    ValueObjectList<Card>.Empty,
+                    ValueList<Card>.Empty,
                     DeckSize,
-                    ValueObjectList<Component>.Empty
+                    ValueList<Component>.Empty
                 )
             );
         }

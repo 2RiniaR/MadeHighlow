@@ -54,7 +54,7 @@ namespace RineaR.MadeHighlow
                 }
             }
 
-            return new SucceedInstantHealResult(SourceID, TargetEntityID, Heal, reductions.ToValueObjectList());
+            return new SucceedInstantHealResult(SourceID, TargetEntityID, Heal, reductions.ToValueList());
         }
     }
 }
