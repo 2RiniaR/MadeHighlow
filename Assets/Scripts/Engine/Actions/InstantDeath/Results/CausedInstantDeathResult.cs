@@ -4,15 +4,13 @@ using JetBrains.Annotations;
 namespace RineaR.MadeHighlow
 {
     /// <summary>
-    ///     ダメージを与えた結果
+    ///     即死効果を与えた結果
     /// </summary>
-    public sealed record CausedInstantDamageResult(
+    public sealed record CausedInstantDeathResult(
         ID SourceID,
         [NotNull] EntityID TargetEntityID,
-        [NotNull] Damage ExpectedDamage,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageEffect>> Interrupts,
-        [NotNull] Damage ActualDamage
-    ) : InstantDamageResult
+        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathEffect>> Interrupts
+    ) : InstantDeathResult
     {
         public override World Simulate(World world)
         {
@@ -21,19 +19,13 @@ namespace RineaR.MadeHighlow
             return Modified(entity).UpdateIn(world);
         }
 
-        /// <summary>
-        ///     体力を変更したエンティティを取得する
-        /// </summary>
         [NotNull]
         private Entity Modified([NotNull] Entity original)
         {
             var vitality = original.Vitality ?? throw new NullReferenceException(
                 "対象の `Entity` の `Vitality` がnullの場合、アクションの結果は `Failed` になっていなければいけない"
             );
-            return original with
-            {
-                Vitality = vitality with { Health = ActualDamage.Caused(vitality.Health) },
-            };
+            return original with { Vitality = vitality.Dead };
         }
     }
 }
