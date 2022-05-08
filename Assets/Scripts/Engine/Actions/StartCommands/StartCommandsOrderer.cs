@@ -22,9 +22,9 @@ namespace RineaR.MadeHighlow
         ///     2つのユニットの行動優先度を比較する。
         /// </summary>
         /// <returns>
-        ///     `operation1`の方が優先度が高ければ、正の値を返す。
-        ///     `operation2`の方が優先度が高ければ、負の値を返す。
-        ///     `operation1`と`operation2`の優先度が等しければ、0を返す。
+        ///     `command1`の方が優先度が高ければ、正の値を返す。
+        ///     `command2`の方が優先度が高ければ、負の値を返す。
+        ///     `command1`と`command2`の優先度が等しければ、0を返す。
         /// </returns>
         private int Compare([NotNull] Command command1, [NotNull] Command command2, [NotNull] IActionContext context)
         {
