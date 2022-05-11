@@ -10,15 +10,11 @@ namespace RineaR.MadeHighlow
         {
             var currentContext = context;
 
-            var registerEntityResult = RegisterNewEntity(ref currentContext);
+            var registerEntityResult = RegisterEntity(ref currentContext);
             var succeedRegisterEntityResult = registerEntityResult as SucceedRegisterEntityResult;
             if (succeedRegisterEntityResult == null)
             {
-                return new FailedGenerateEntityResult(
-                    InitialEntity,
-                    registerEntityResult,
-                    ValueList<AddComponentResult>.Empty
-                );
+                return new FailedGenerateEntityResult(InitialEntity, registerEntityResult);
             }
 
             var entityID = succeedRegisterEntityResult.RegisteredEntity.EntityID;
@@ -28,9 +24,32 @@ namespace RineaR.MadeHighlow
                 return new FailedGenerateEntityResult(InitialEntity, registerEntityResult, addComponentResults);
             }
 
-            var generatedEntity = entityID.GetFrom(currentContext.World);
+            var positionEntityResult = PositionEntity(ref currentContext, entityID);
+            var succeedPositionEntityResult = positionEntityResult as SucceedPositionEntityResult;
+            if (succeedPositionEntityResult == null)
+            {
+                return new FailedGenerateEntityResult(
+                    InitialEntity,
+                    registerEntityResult,
+                    addComponentResults,
+                    positionEntityResult
+                );
+            }
+
+            var interrupts = CollectInterrupts(context).Sort();
+            foreach (var interrupt in interrupts)
+            {
+                if (interrupt.Effect is RejectGenerateEntityEffect)
+                {
+                    return new RejectedGenerateEntityResult(
+                        succeedPositionEntityResult.PositionedEntity,
+                        interrupt.ComponentID
+                    );
+                }
+            }
 
             // `RegisterEntity` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
+            var generatedEntity = entityID.GetFrom(currentContext.World);
             if (generatedEntity == null)
             {
                 return new FailedGenerateEntityResult(InitialEntity, registerEntityResult, addComponentResults);
@@ -45,7 +64,7 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
-        private RegisterEntityResult RegisterNewEntity([NotNull] ref IActionContext currentContext)
+        private RegisterEntityResult RegisterEntity([NotNull] ref IActionContext currentContext)
         {
             var registerEntityResult = new RegisterEntityAction(InitialEntity).Validate(currentContext);
             currentContext = currentContext.Appended(registerEntityResult);
@@ -68,6 +87,25 @@ namespace RineaR.MadeHighlow
             }
 
             return addComponentResults.ToValueList();
+        }
+
+        [NotNull]
+        private PositionEntityResult PositionEntity(
+            [NotNull] ref IActionContext currentContext,
+            [NotNull] EntityID entityID
+        )
+        {
+            var result = new PositionEntityAction(InitialEntity).Validate(currentContext);
+            currentContext = currentContext.Appended(result);
+            return result;
+        }
+
+        [ItemNotNull]
+        [NotNull]
+        private ValueList<Interrupt<GenerateEntityEffect>> CollectInterrupts([NotNull] IActionContext context)
+        {
+            var effectors = Component.GetAllOfTypeFrom<IGenerateEntityEffector>(context.World);
+            return effectors.SelectMany(effector => effector.EffectsOnGenerateEntity(context, this));
         }
     }
 }

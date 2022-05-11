@@ -53,7 +53,7 @@ namespace RineaR.MadeHighlow
             var supplyCardResults = new List<SupplyCardResult>();
             foreach (var card in InitialPlayer.Cards)
             {
-                var result = new SupplyCardAction(playerID, card).Validate(currentContext);
+                var result = new SupplyCardAction(card with { OwnerPlayerID = playerID }).Validate(currentContext);
                 currentContext = currentContext.Appended(result);
                 supplyCardResults.Add(result);
             }

@@ -3,13 +3,17 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
-    public record SucceedSupplyCardResult
-        ([NotNull] PlayerID TargetPlayerID, [NotNull] Card SupplyCard) : SupplyCardResult
+    public record SucceedSupplyCardResult(
+        [NotNull] Card InitialCard,
+        [NotNull] RegisterCardResult RegisterCardResult,
+        [NotNull] [ItemNotNull] ValueList<AddComponentResult> AddComponentResults,
+        [NotNull] Card SuppliedCard
+    ) : SupplyCardResult
     {
         public override World Simulate(World world)
         {
-            var player = TargetPlayerID.GetFrom(world) ?? throw new NullReferenceException();
-            var modifiedPlayer = player with { Cards = player.Cards.Add(SupplyCard) };
+            var player = SuppliedCard.OwnerPlayerID.GetFrom(world) ?? throw new NullReferenceException();
+            var modifiedPlayer = player with { Cards = player.Cards.Add(SuppliedCard) };
             return modifiedPlayer.UpdateIn(world);
         }
     }
