@@ -1,24 +1,36 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.GenerateEntity.PositionEntity
 {
-    public record PositionEntityAction([NotNull] Entity InitialEntity) : Action<PositionEntityResult>
+    public record PositionEntityAction
+        ([NotNull] EntityID EntityID, [NotNull] Position3D Position3D) : Action<PositionEntityResult>
     {
         public override PositionEntityResult Validate(IActionContext context)
         {
-            if (IsPositionable(context))
+            var entity = EntityID.GetFrom(context.World);
+
+            if (entity == null)
             {
-                return new SucceedPositionEntityResult(InitialEntity, InitialEntity);
+                return new FailedResult(EntityID, FailedReason.EntityNotExist);
             }
 
-            return new FailedPositionEntityResult(InitialEntity, FailedPositionEntityReason.Invalid);
+            if (!IsPositionable(context, entity, Position3D))
+            {
+                return new FailedResult(EntityID, FailedReason.ResolveFailed);
+            }
+
+            return new SucceedResult(entity);
         }
 
-        private bool IsPositionable([NotNull] IActionContext context)
+        private static bool IsPositionable(
+            [NotNull] IActionContext context,
+            [NotNull] Entity entity,
+            [NotNull] Position3D dest
+        )
         {
             /*
-             * 【エンティティが生成可能な条件】
+             * 【エンティティが設置可能な条件】
              * 
              * (T) エンティティが浮遊している場合
              * (F) エンティティが浮遊していない場合
@@ -41,23 +53,23 @@ namespace RineaR.MadeHighlow
              *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
              */
 
-            var landingTile = InitialEntity.Position3D.To2D().GetTile(context.World);
-            var entityHeight = InitialEntity.Position3D.Z;
+            var landingTile = dest.To2D().GetTile(context.World);
+            var destHeight = dest.Z;
 
             if (landingTile == null || // (1)
                 landingTile.Elevation is AbyssElevation) // (2)
             {
-                return InitialEntity.Levitation;
+                return entity.Levitation;
             }
 
             if (landingTile.Elevation is GroundElevation ground) // (3) ~ (7)
             {
-                if (ground.Height < entityHeight) // (3), (4)
+                if (ground.Height < destHeight) // (3), (4)
                 {
-                    return ground.Placeable || InitialEntity.Levitation;
+                    return ground.Placeable || entity.Levitation;
                 }
 
-                if (ground.Height == entityHeight) // (5), (6)
+                if (ground.Height == destHeight) // (5), (6)
                 {
                     return ground.Placeable;
                 }

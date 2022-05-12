@@ -1,103 +1,38 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
-    public record GenerateEntityAction([NotNull] Entity InitialEntity) : Action<GenerateEntityResult>
+    public record GenerateEntityAction([NotNull] Entity Status) : Action<GenerateEntityResult>
     {
         public override GenerateEntityResult Validate(IActionContext context)
         {
-            var currentContext = context;
-
-            var registerEntityResult = RegisterEntity(ref currentContext);
-            var succeedRegisterEntityResult = registerEntityResult as SucceedRegisterEntityResult;
-            if (succeedRegisterEntityResult == null)
+            var processRunner = new ProcessRunner(this, ref context);
+            if (!processRunner.TryProcess())
             {
-                return new FailedGenerateEntityResult(InitialEntity, registerEntityResult);
+                return new ProcessFailedResult(Status, processRunner.Failed ?? throw new NullReferenceException());
             }
 
-            var entityID = succeedRegisterEntityResult.RegisteredEntity.EntityID;
-            var addComponentResults = InitializeComponents(ref currentContext, entityID);
-            if (addComponentResults.Any(result => result is SucceedAddComponentResult == false))
-            {
-                return new FailedGenerateEntityResult(InitialEntity, registerEntityResult, addComponentResults);
-            }
-
-            var positionEntityResult = PositionEntity(ref currentContext, entityID);
-            var succeedPositionEntityResult = positionEntityResult as SucceedPositionEntityResult;
-            if (succeedPositionEntityResult == null)
-            {
-                return new FailedGenerateEntityResult(
-                    InitialEntity,
-                    registerEntityResult,
-                    addComponentResults,
-                    positionEntityResult
-                );
-            }
+            var process = processRunner.Succeed ?? throw new NullReferenceException();
 
             var interrupts = CollectInterrupts(context).Sort();
             foreach (var interrupt in interrupts)
             {
-                if (interrupt.Effect is RejectGenerateEntityEffect)
+                if (interrupt.Effect is RejectEffect)
                 {
-                    return new RejectedGenerateEntityResult(
-                        succeedPositionEntityResult.PositionedEntity,
-                        interrupt.ComponentID
-                    );
+                    return new RejectedResult(Status, interrupt.ComponentID, process, interrupts);
                 }
             }
 
             // `RegisterEntity` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            var generatedEntity = entityID.GetFrom(currentContext.World);
-            if (generatedEntity == null)
+            var entityID = process.RegisterEntity.RegisteredEntity.EntityID;
+            var entity = entityID.GetFrom(context.World);
+            if (entity == null)
             {
-                return new FailedGenerateEntityResult(InitialEntity, registerEntityResult, addComponentResults);
+                return new ProcessFailedResult(Status, Process.AsFailed);
             }
 
-            return new SucceedGenerateEntityResult(
-                InitialEntity,
-                registerEntityResult,
-                addComponentResults,
-                generatedEntity
-            );
-        }
-
-        [NotNull]
-        private RegisterEntityResult RegisterEntity([NotNull] ref IActionContext currentContext)
-        {
-            var registerEntityResult = new RegisterEntityAction(InitialEntity).Validate(currentContext);
-            currentContext = currentContext.Appended(registerEntityResult);
-            return registerEntityResult;
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        private ValueList<AddComponentResult> InitializeComponents(
-            [NotNull] ref IActionContext currentContext,
-            [NotNull] EntityID entityID
-        )
-        {
-            var addComponentResults = new List<AddComponentResult>();
-            foreach (var component in InitialEntity.Components)
-            {
-                var result = new AddComponentAction(entityID, component).Validate(currentContext);
-                currentContext = currentContext.Appended(result);
-                addComponentResults.Add(result);
-            }
-
-            return addComponentResults.ToValueList();
-        }
-
-        [NotNull]
-        private PositionEntityResult PositionEntity(
-            [NotNull] ref IActionContext currentContext,
-            [NotNull] EntityID entityID
-        )
-        {
-            var result = new PositionEntityAction(InitialEntity).Validate(currentContext);
-            currentContext = currentContext.Appended(result);
-            return result;
+            return new SucceedResult(Status, entity, process, interrupts);
         }
 
         [ItemNotNull]

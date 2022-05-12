@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.PayCard;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     /// <summary>
     ///     命令を実行するアクション
@@ -20,9 +21,9 @@ namespace RineaR.MadeHighlow
             var interrupts = CollectInterrupts(context).Sort();
             foreach (var interrupt in interrupts)
             {
-                if (interrupt.Effect is CancelRunCommandEffect)
+                if (interrupt.Effect is CancelEffect)
                 {
-                    return new CanceledRunCommandResult(Command, interrupt.ComponentID);
+                    return new CanceledResult(Command, interrupt.ComponentID);
                 }
             }
 
@@ -30,7 +31,7 @@ namespace RineaR.MadeHighlow
             currentContext = currentContext.Appended(commandActionResult);
             var payCardResult = PayCard(currentContext);
 
-            return new SucceedRunCommandResult(payCardResult, commandActionResult);
+            return new SucceedResult(payCardResult, commandActionResult);
         }
 
         [CanBeNull]
@@ -41,13 +42,13 @@ namespace RineaR.MadeHighlow
             // いないものは行動できない。
             if (actor == null)
             {
-                return new FailedRunCommandResult(Command, FailedRunCommandReason.ActorNotFound);
+                return new FailedResult(Command, FailedReason.ActorNotFound);
             }
 
             // 死者は行動できないよ。
             if (actor.Vitality != null && actor.Vitality.IsDead)
             {
-                return new FailedRunCommandResult(Command, FailedRunCommandReason.ActorIsDead);
+                return new FailedResult(Command, FailedReason.ActorIsDead);
             }
 
             return null;

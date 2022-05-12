@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard
 {
     /// <summary>
     ///     カードを新規登録するアクション
@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow
             var player = InitialCard.OwnerPlayerID.GetFrom(context.World);
             if (player == null)
             {
-                return new FailedRegisterCardResult(InitialCard, FailedRegisterCardReason.OwnerNotExist);
+                return new FailedResult(InitialCard, FailedReason.OwnerNotExist);
             }
 
             var allocateIDResult = new AllocateIDAction().Validate(context);
@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow
                 Components = ValueList<Component>.Empty,
             };
 
-            return new SucceedRegisterCardResult(allocateIDResult, formattedCard);
+            return new SucceedResult(allocateIDResult, formattedCard);
         }
     }
 }

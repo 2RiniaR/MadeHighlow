@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     /// <summary>
     ///     エンティティに即死効果を与えるアクション
@@ -19,13 +19,13 @@ namespace RineaR.MadeHighlow
             foreach (var interrupt in interrupts)
             {
                 // コンポーネントによって、治癒効果が無効化されることがあるよ。無敵エフェクトとかに使えるかも。
-                if (interrupt.Effect is RejectInstantDeathEffect)
+                if (interrupt.Effect is RejectEffect)
                 {
-                    return new RejectedInstantDeathResult(SourceID, TargetEntityID, interrupts, interrupt.ComponentID);
+                    return new RejectedResult(SourceID, TargetEntityID, interrupts, interrupt.ComponentID);
                 }
             }
 
-            return new CausedInstantDeathResult(SourceID, TargetEntityID, interrupts);
+            return new CausedResult(SourceID, TargetEntityID, interrupts);
         }
 
         [CanBeNull]
@@ -36,19 +36,19 @@ namespace RineaR.MadeHighlow
             // 既に対象がいなければ、ダメージは与えられない。
             if (target == null)
             {
-                return new FailedInstantDeathResult(FailedInstantDeathReason.NoTarget);
+                return new FailedResult(FailedReason.NoTarget);
             }
 
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (target.Vitality == null)
             {
-                return new FailedInstantDeathResult(FailedInstantDeathReason.NoVitality);
+                return new FailedResult(FailedReason.NoVitality);
             }
 
             // 相手が生きてなければダメージは与えられないよ。仕方ないね。
             if (target.Vitality.IsDead)
             {
-                return new FailedInstantDeathResult(FailedInstantDeathReason.TargetDead);
+                return new FailedResult(FailedReason.TargetDead);
             }
 
             return null;

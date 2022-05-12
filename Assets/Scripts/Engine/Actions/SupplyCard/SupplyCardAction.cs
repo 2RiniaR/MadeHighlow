@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.AddComponent;
+using RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     /// <summary>
     ///     プレイヤーにカードを供給するアクション
@@ -14,17 +16,17 @@ namespace RineaR.MadeHighlow
             var currentContext = context;
 
             var registerCardResult = RegisterCard(ref currentContext);
-            var succeedRegisterCardResult = registerCardResult as SucceedRegisterCardResult;
+            var succeedRegisterCardResult = registerCardResult as RegisterCard.SucceedResult;
             if (succeedRegisterCardResult == null)
             {
-                return new FailedSupplyCardResult(InitialCard, registerCardResult, ValueList<AddComponentResult>.Empty);
+                return new FailedResult(InitialCard, registerCardResult, ValueList<AddComponentResult>.Empty);
             }
 
             var cardID = succeedRegisterCardResult.RegisteredCard.CardID;
             var addComponentResults = InitializeComponents(ref currentContext, cardID);
-            if (addComponentResults.Any(result => result is SucceedAddComponentResult == false))
+            if (addComponentResults.Any(result => result is AddComponent.SucceedResult == false))
             {
-                return new FailedSupplyCardResult(InitialCard, registerCardResult, addComponentResults);
+                return new FailedResult(InitialCard, registerCardResult, addComponentResults);
             }
 
             var interrupts = CollectInterrupts(context).Sort();
@@ -32,7 +34,7 @@ namespace RineaR.MadeHighlow
             {
                 if (interrupt.Effect is RejectSupplyCardEffect)
                 {
-                    return new RejectedSupplyCardResult(InitialCard, interrupt.ComponentID);
+                    return new RejectedResult(InitialCard, interrupt.ComponentID);
                 }
             }
 
@@ -40,10 +42,10 @@ namespace RineaR.MadeHighlow
             var generatedCard = cardID.GetFrom(currentContext.World);
             if (generatedCard == null)
             {
-                return new FailedSupplyCardResult(InitialCard, registerCardResult, addComponentResults);
+                return new FailedResult(InitialCard, registerCardResult, addComponentResults);
             }
 
-            return new SucceedSupplyCardResult(InitialCard, registerCardResult, addComponentResults, generatedCard);
+            return new SucceedResult(InitialCard, registerCardResult, addComponentResults, generatedCard);
         }
 
         [NotNull]

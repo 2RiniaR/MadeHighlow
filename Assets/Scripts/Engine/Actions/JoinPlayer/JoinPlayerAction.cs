@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.AddComponent;
+using RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer;
+using RineaR.MadeHighlow.Actions.SupplyCard;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public record JoinPlayerAction([NotNull] Player InitialPlayer) : Action<JoinPlayerResult>
     {
@@ -14,11 +17,11 @@ namespace RineaR.MadeHighlow
             var addComponentResults = InitializeComponents(ref currentContext, playerID);
             var supplyCardResults = InitializeCards(ref currentContext, playerID);
 
-            return new JoinPlayerResult(registerPlayerResult, addComponentResults, supplyCardResults);
+            return new SucceedResult(registerPlayerResult, addComponentResults, supplyCardResults);
         }
 
         [NotNull]
-        private RegisterPlayerResult RegisterNewPlayer([NotNull] ref IActionContext currentContext)
+        private RegisterPlayer.Results.SucceedResult RegisterNewPlayer([NotNull] ref IActionContext currentContext)
         {
             var registerPlayerResult = new RegisterPlayerAction(InitialPlayer).Validate(currentContext);
             currentContext = currentContext.Appended(registerPlayerResult);

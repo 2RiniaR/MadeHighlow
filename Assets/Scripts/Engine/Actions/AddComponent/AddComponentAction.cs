@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.AddComponent
 {
     /// <summary>
     ///     コンポーネントを追加するアクション
@@ -21,13 +21,13 @@ namespace RineaR.MadeHighlow
             var interrupts = CollectInterrupts(context).Sort();
             foreach (var interrupt in interrupts)
             {
-                if (interrupt.Effect is RejectAddComponentEffect)
+                if (interrupt.Effect is RejectEffect)
                 {
-                    return new RejectedAddComponentResult(Component, interrupt.ComponentID);
+                    return new RejectedResult(Component, interrupt.ComponentID);
                 }
             }
 
-            return new SucceedAddComponentResult(Component);
+            return new SucceedResult(Component);
         }
 
         [CanBeNull]
@@ -37,7 +37,7 @@ namespace RineaR.MadeHighlow
 
             if (target == null)
             {
-                return new FailedAddComponentResult(Component, FailedAddComponentReason.TargetNotFound);
+                return new FailedResult(Component, FailedReason.TargetNotFound);
             }
 
             return null;

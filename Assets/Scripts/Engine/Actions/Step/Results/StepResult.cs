@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     フィールド上を歩いて1マス移動するアクションの結果

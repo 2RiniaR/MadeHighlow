@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.PayCard
 {
     /// <summary>
     ///     カードを対価として支払うアクション
@@ -19,13 +19,13 @@ namespace RineaR.MadeHighlow
             foreach (var interrupt in interrupts)
             {
                 // 「この効果が発動してるときは、カードを使っても消費されない」みたいなのができそうだよね
-                if (interrupt.Effect is ExemptPayCardEffect)
+                if (interrupt.Effect is ExemptEffect)
                 {
-                    return new ExemptedPayCardResult(CardID, interrupt.ComponentID);
+                    return new ExemptedResult(CardID, interrupt.ComponentID);
                 }
             }
 
-            return new SucceedPayCardResult(CardID);
+            return new SucceedResult(CardID);
         }
 
         [CanBeNull]
@@ -36,7 +36,7 @@ namespace RineaR.MadeHighlow
             // 既に支払うカードがなければ、カードは支払えない。
             if (target == null)
             {
-                return new FailedPayCardResult(CardID, FailedPayCardReason.NoCard);
+                return new FailedResult(CardID, FailedReason.NoCard);
             }
 
             return null;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     オブジェクトがフィールド上を歩いて移動するアクション

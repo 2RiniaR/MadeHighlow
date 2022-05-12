@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     IDを確保するアクション

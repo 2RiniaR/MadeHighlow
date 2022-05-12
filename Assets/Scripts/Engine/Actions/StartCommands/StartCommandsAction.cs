@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.RunCommand;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.StartCommands
 {
     /// <summary>
     ///     複数のユニットが一斉に現在受けている命令を実行するアクション

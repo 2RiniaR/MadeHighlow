@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions
 {
     public record InteractResult : Result
     {

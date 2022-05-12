@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     コンポーネントによる、アクションへ影響を与えるの生成

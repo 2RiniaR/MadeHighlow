@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     /// <summary>
     ///     ユニットに命令する
@@ -18,18 +18,18 @@ namespace RineaR.MadeHighlow
             var interrupts = CollectInterrupts(context).Sort();
             foreach (var interrupt in interrupts)
             {
-                if (interrupt.Effect is DisallowReserveCommandEffect)
+                if (interrupt.Effect is DisallowEffect)
                 {
-                    return new DisallowedReserveCommandResult(Command, interrupt.ComponentID);
+                    return new DisallowedResult(Command, interrupt.ComponentID);
                 }
 
-                if (interrupt.Effect is AllowReserveCommandEffect)
+                if (interrupt.Effect is AllowEffect)
                 {
-                    return new AllowedReserveCommandResult(Command, interrupt.ComponentID);
+                    return new AllowedResult(Command, interrupt.ComponentID);
                 }
             }
 
-            return new DisallowedReserveCommandResult(Command, null);
+            return new DisallowedResult(Command, null);
         }
 
         [CanBeNull]
@@ -40,24 +40,24 @@ namespace RineaR.MadeHighlow
 
             if (card == null)
             {
-                return new FailedReserveCommandResult(Command, FailedReserveCommandReason.CardNotFound);
+                return new FailedResult(Command, FailedReason.CardNotFound);
             }
 
             if (unit == null)
             {
-                return new FailedReserveCommandResult(Command, FailedReserveCommandReason.UnitNotFound);
+                return new FailedResult(Command, FailedReason.UnitNotFound);
             }
 
             var player = card.OwnerPlayerID.GetFrom(context.World);
 
             if (player == null)
             {
-                return new FailedReserveCommandResult(Command, FailedReserveCommandReason.OwnerNotFound);
+                return new FailedResult(Command, FailedReason.OwnerNotFound);
             }
 
             if (unit.FollowingPlayerID != player.PlayerID)
             {
-                return new FailedReserveCommandResult(Command, FailedReserveCommandReason.NotOwner);
+                return new FailedResult(Command, FailedReason.NotOwner);
             }
 
             return null;

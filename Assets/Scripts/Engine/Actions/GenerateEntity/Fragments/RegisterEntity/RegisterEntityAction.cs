@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow
+namespace RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity
 {
     /// <summary>
     ///     エンティティを新規登録するアクション
@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow
                 Components = ValueList<Component>.Empty,
             };
 
-            return new SucceedRegisterEntityResult(allocateIDResult, formattedEntity);
+            return new SucceedResult(allocateIDResult, formattedEntity);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Action = RineaR.MadeHighlow.Actions.Action;
 
 namespace RineaR.MadeHighlow
 {
