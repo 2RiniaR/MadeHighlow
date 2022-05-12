@@ -33,6 +33,12 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
+        public World DeleteFrom([NotNull] World world)
+        {
+            throw new NotImplementedException();
+        }
+
+        [NotNull]
         [ItemNotNull]
         public static ValueList<Component> GetAllFrom([NotNull] World world)
         {

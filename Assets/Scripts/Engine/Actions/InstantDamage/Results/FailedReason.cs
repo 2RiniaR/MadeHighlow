@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public enum FailedReason
     {

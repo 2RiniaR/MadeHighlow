@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     /// <summary>
     ///     ダメージを与えた結果

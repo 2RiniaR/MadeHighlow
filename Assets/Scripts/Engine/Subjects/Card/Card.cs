@@ -43,6 +43,12 @@ namespace RineaR.MadeHighlow
         }
 
         [NotNull]
+        public World DeleteFrom([NotNull] World world)
+        {
+            throw new NotImplementedException();
+        }
+
+        [NotNull]
         public static ValueList<Card> GetAllFrom([NotNull] World world)
         {
             return Player.GetAllFrom(world).SelectMany(player => player.Cards);

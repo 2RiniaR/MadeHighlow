@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] StepCost AvailableStepCost
     ) : Action<StepResult>
     {
-        public override StepResult Validate(IActionContext context)
+        public override StepResult Evaluate(IActionContext context)
         {
             var world = context.World;
             var actor = ActorEntityID.GetFrom(world) ?? throw new NullReferenceException();

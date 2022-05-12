@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     /// <summary>
     ///     ダメージを与えるアクションに対して、影響を与えるもの

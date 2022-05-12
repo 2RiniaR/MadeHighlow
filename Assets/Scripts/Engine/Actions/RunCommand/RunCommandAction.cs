@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
     /// </summary>
     public record RunCommandAction([NotNull] Command Command) : Action<RunCommandResult>
     {
-        public override RunCommandResult Validate(IActionContext context)
+        public override RunCommandResult Evaluate(IActionContext context)
         {
             var preValidationResult = PreValidationResult(context);
             if (preValidationResult != null)
@@ -66,14 +66,14 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         public PayCardResult PayCard([NotNull] IActionContext context)
         {
             var payCardAction = new PayCardAction(Command.CardID);
-            return payCardAction.Validate(context);
+            return payCardAction.Evaluate(context);
         }
 
         [NotNull]
         public Result ActuateCommand([NotNull] IActionContext context)
         {
             var commandAction = Command.ActionIn(context.World);
-            return commandAction.ValidateAbstract(context);
+            return commandAction.EvaluateAbstract(context);
         }
     }
 }

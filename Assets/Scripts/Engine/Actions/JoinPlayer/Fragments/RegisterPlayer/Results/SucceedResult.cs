@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer.Results
+namespace RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer
 {
     /// <summary>
     ///     プレイヤーを新規登録した結果

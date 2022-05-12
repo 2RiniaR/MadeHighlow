@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     /// <summary>
     ///     ダメージを与えるアクションに対して与える影響

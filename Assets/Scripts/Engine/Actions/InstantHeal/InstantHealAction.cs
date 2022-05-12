@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public record InstantHealAction
         (ID SourceID, [NotNull] EntityID TargetEntityID, [NotNull] Heal Heal) : Action<InstantHealResult>
     {
-        public override InstantHealResult Validate(IActionContext context)
+        public override InstantHealResult Evaluate(IActionContext context)
         {
             var preValidationResult = PreValidationResult(context);
             if (preValidationResult != null)

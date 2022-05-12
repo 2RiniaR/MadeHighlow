@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull] Component Component
     ) : Action<AddComponentResult>
     {
-        public override AddComponentResult Validate(IActionContext context)
+        public override AddComponentResult Evaluate(IActionContext context)
         {
             var preValidationResult = PreValidationResult(context);
             if (preValidationResult != null)

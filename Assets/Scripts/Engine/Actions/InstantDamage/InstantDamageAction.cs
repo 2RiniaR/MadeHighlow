@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     /// <summary>
     ///     エンティティにダメージを与えるアクション
@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions
     public record InstantDamageAction
         (ID SourceID, [NotNull] EntityID TargetEntityID, [NotNull] Damage Damage) : Action<InstantDamageResult>
     {
-        public override InstantDamageResult Validate(IActionContext context)
+        public override InstantDamageResult Evaluate(IActionContext context)
         {
             var preValidationResult = PreValidationResult(context);
             if (preValidationResult != null)

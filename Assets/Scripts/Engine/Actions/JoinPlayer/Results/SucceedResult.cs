@@ -5,7 +5,7 @@ using RineaR.MadeHighlow.Actions.SupplyCard;
 namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public record SucceedResult(
-        [NotNull] RegisterPlayer.Results.SucceedResult RegisterPlayerResult,
+        [NotNull] RegisterPlayer.SucceedResult RegisterPlayerResult,
         [NotNull] [ItemNotNull] ValueList<AddComponentResult> AddComponentResults,
         [NotNull] [ItemNotNull] ValueList<SupplyCardResult> SupplyCardResults
     ) : JoinPlayerResult

@@ -9,14 +9,14 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     /// </summary>
     public record StartCommandsAction : Action<StartCommandsResult>
     {
-        public override StartCommandsResult Validate(IActionContext context)
+        public override StartCommandsResult Evaluate(IActionContext context)
         {
             var currentContext = context;
 
             var results = new List<RunCommandResult>();
             foreach (var command in OrderedCommands(context))
             {
-                var result = new RunCommandAction(command).Validate(context);
+                var result = new RunCommandAction(command).Evaluate(context);
                 currentContext = currentContext.Appended(result);
                 results.Add(result);
             }

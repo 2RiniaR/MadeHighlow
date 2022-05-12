@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record GenerateTileAction([NotNull] Tile Status) : Action<GenerateTileResult>
     {
-        public override GenerateTileResult Validate(IActionContext context)
+        public override GenerateTileResult Evaluate(IActionContext context)
         {
             var processRunner = new ProcessRunner(this, ref context);
             if (!processRunner.TryProcess())

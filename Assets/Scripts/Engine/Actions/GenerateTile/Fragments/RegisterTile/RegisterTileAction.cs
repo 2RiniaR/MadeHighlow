@@ -7,9 +7,9 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile
     /// </summary>
     public record RegisterTileAction([NotNull] Tile InitialTile) : Action<RegisterTileResult>
     {
-        public override RegisterTileResult Validate(IActionContext context)
+        public override RegisterTileResult Evaluate(IActionContext context)
         {
-            var allocateIDResult = new AllocateIDAction().Validate(context);
+            var allocateIDResult = new AllocateIDAction().Evaluate(context);
             var formattedTile = InitialTile with
             {
                 ID = allocateIDResult.AllocatedID,

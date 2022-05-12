@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     /// <summary>
     ///     ダメージを防いだ結果

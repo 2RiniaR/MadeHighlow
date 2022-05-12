@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -31,6 +32,12 @@ namespace RineaR.MadeHighlow
         public World CreateIn([NotNull] World world)
         {
             return world with { Tiles = world.Tiles.Add(this) };
+        }
+
+        [NotNull]
+        public World DeleteFrom([NotNull] World world)
+        {
+            throw new NotImplementedException();
         }
 
         [NotNull]

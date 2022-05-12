@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard
                 return new FailedResult(InitialCard, FailedReason.OwnerNotExist);
             }
 
-            var allocateIDResult = new AllocateIDAction().Validate(context);
+            var allocateIDResult = new AllocateIDAction().Evaluate(context);
             var formattedCard = InitialCard with
             {
                 ID = allocateIDResult.AllocatedID,

@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
     /// </summary>
     public record InstantDeathAction(ID SourceID, [NotNull] EntityID TargetEntityID) : Action<InstantDeathResult>
     {
-        public override InstantDeathResult Validate(IActionContext context)
+        public override InstantDeathResult Evaluate(IActionContext context)
         {
             var preValidationResult = PreValidationResult(context);
             if (preValidationResult != null)

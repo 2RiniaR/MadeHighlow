@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         /// </summary>
         public ValueList<Interrupt<PayCardEffect>> EffectsOnPayCard(
             [NotNull] IActionContext context,
-            [NotNull] PayCardAction action
+            [NotNull] Card target
         );
     }
 }

@@ -49,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
         private bool TryRegisterTile([NotNull] out RegisterTileResult result)
         {
-            result = new RegisterTileAction(Action.Status).Validate(Context);
+            result = new RegisterTileAction(Action.Status).Evaluate(Context);
             Context = Context.Appended(result);
 
             if (result is not RegisterTile.SucceedResult succeedResult)
@@ -84,7 +84,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             [NotNull] out AddComponentResult result
         )
         {
-            result = new AddComponentAction(tileID, component).Validate(Context);
+            result = new AddComponentAction(tileID, component).Evaluate(Context);
             Context = Context.Appended(result);
 
             if (result is not AddComponent.SucceedResult succeedResult)
@@ -102,7 +102,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
         private bool TryPositionTile([NotNull] TileID tileID, [NotNull] out PositionTileResult result)
         {
-            result = new PositionTileAction(tileID, Action.Status.Position2D).Validate(Context);
+            result = new PositionTileAction(tileID, Action.Status.Position2D).Evaluate(Context);
             Context = Context.Appended(result);
 
             if (result is not PositionTile.SucceedResult succeedResult)

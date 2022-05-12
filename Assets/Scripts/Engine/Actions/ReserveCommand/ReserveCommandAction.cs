@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
     /// </summary>
     public record ReserveCommandAction([NotNull] Command Command) : Action<ReserveCommandResult>
     {
-        public override ReserveCommandResult Validate(IActionContext context)
+        public override ReserveCommandResult Evaluate(IActionContext context)
         {
             var preValidationResult = PreValidationResult(context);
             if (preValidationResult != null)

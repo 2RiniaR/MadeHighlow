@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public record JoinPlayerAction([NotNull] Player InitialPlayer) : Action<JoinPlayerResult>
     {
-        public override JoinPlayerResult Validate(IActionContext context)
+        public override JoinPlayerResult Evaluate(IActionContext context)
         {
             var currentContext = context;
 
@@ -21,9 +21,9 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         }
 
         [NotNull]
-        private RegisterPlayer.Results.SucceedResult RegisterNewPlayer([NotNull] ref IActionContext currentContext)
+        private RegisterPlayer.SucceedResult RegisterNewPlayer([NotNull] ref IActionContext currentContext)
         {
-            var registerPlayerResult = new RegisterPlayerAction(InitialPlayer).Validate(currentContext);
+            var registerPlayerResult = new RegisterPlayerAction(InitialPlayer).Evaluate(currentContext);
             currentContext = currentContext.Appended(registerPlayerResult);
             return registerPlayerResult;
         }
@@ -38,7 +38,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             var addComponentResults = new List<AddComponentResult>();
             foreach (var component in InitialPlayer.Components)
             {
-                var result = new AddComponentAction(playerID, component).Validate(currentContext);
+                var result = new AddComponentAction(playerID, component).Evaluate(currentContext);
                 currentContext = currentContext.Appended(result);
                 addComponentResults.Add(result);
             }
@@ -56,7 +56,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             var supplyCardResults = new List<SupplyCardResult>();
             foreach (var card in InitialPlayer.Cards)
             {
-                var result = new SupplyCardAction(card with { OwnerPlayerID = playerID }).Validate(currentContext);
+                var result = new SupplyCardAction(card with { OwnerPlayerID = playerID }).Evaluate(currentContext);
                 currentContext = currentContext.Appended(result);
                 supplyCardResults.Add(result);
             }

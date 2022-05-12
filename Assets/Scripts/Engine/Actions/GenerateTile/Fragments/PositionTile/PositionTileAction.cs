@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile.PositionTile
     public record PositionTileAction
         ([NotNull] TileID TileID, [NotNull] Position2D Position2D) : Action<PositionTileResult>
     {
-        public override PositionTileResult Validate(IActionContext context)
+        public override PositionTileResult Evaluate(IActionContext context)
         {
             var tile = TileID.GetFrom(context.World);
 

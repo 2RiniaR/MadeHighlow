@@ -49,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 
         private bool TryRegisterEntity([NotNull] out RegisterEntityResult result)
         {
-            result = new RegisterEntityAction(Action.Status).Validate(Context);
+            result = new RegisterEntityAction(Action.Status).Evaluate(Context);
             Context = Context.Appended(result);
 
             if (result is not RegisterEntity.SucceedResult succeedResult)
@@ -84,7 +84,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             [NotNull] out AddComponentResult result
         )
         {
-            result = new AddComponentAction(entityID, component).Validate(Context);
+            result = new AddComponentAction(entityID, component).Evaluate(Context);
             Context = Context.Appended(result);
 
             if (result is not AddComponent.SucceedResult succeedResult)
@@ -102,7 +102,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 
         private bool TryPositionEntity([NotNull] EntityID entityID, [NotNull] out PositionEntityResult result)
         {
-            result = new PositionEntityAction(entityID, Action.Status.Position3D).Validate(Context);
+            result = new PositionEntityAction(entityID, Action.Status.Position3D).Evaluate(Context);
             Context = Context.Appended(result);
 
             if (result is not PositionEntity.SucceedResult succeedResult)

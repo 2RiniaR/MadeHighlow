@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -14,12 +13,6 @@ namespace RineaR.MadeHighlow
         public Player GetFrom([NotNull] World world)
         {
             return Player.GetAllFrom(world).Find(player => player.PlayerID == this);
-        }
-
-        [NotNull]
-        public World DeleteFrom([NotNull] World world)
-        {
-            throw new NotImplementedException();
         }
     }
 }

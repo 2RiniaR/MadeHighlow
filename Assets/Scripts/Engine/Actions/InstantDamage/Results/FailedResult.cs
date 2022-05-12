@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     /// <summary>
     ///     ダメージを与えることに失敗した結果

@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public record GenerateEntityAction([NotNull] Entity Status) : Action<GenerateEntityResult>
     {
-        public override GenerateEntityResult Validate(IActionContext context)
+        public override GenerateEntityResult Evaluate(IActionContext context)
         {
             var processRunner = new ProcessRunner(this, ref context);
             if (!processRunner.TryProcess())

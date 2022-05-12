@@ -5,17 +5,17 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer
     /// <summary>
     ///     プレイヤーを新規登録するアクション
     /// </summary>
-    public record RegisterPlayerAction([NotNull] Player InitialPlayer) : Action<Results.SucceedResult>
+    public record RegisterPlayerAction([NotNull] Player InitialPlayer) : Action<SucceedResult>
     {
-        public override Results.SucceedResult Validate(IActionContext context)
+        public override SucceedResult Evaluate(IActionContext context)
         {
-            var allocateIDResult = new AllocateIDAction().Validate(context);
+            var allocateIDResult = new AllocateIDAction().Evaluate(context);
             var formattedPlayer = InitialPlayer with
             {
                 ID = allocateIDResult.AllocatedID,
                 Components = ValueList<Component>.Empty,
             };
-            return new Results.SucceedResult(allocateIDResult, formattedPlayer);
+            return new SucceedResult(allocateIDResult, formattedPlayer);
         }
     }
 }

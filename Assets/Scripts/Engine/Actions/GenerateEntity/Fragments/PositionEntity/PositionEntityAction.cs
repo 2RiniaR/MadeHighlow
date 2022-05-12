@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity.PositionEntity
     public record PositionEntityAction
         ([NotNull] EntityID EntityID, [NotNull] Position3D Position3D) : Action<PositionEntityResult>
     {
-        public override PositionEntityResult Validate(IActionContext context)
+        public override PositionEntityResult Evaluate(IActionContext context)
         {
             var entity = EntityID.GetFrom(context.World);
 

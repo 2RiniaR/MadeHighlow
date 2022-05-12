@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     /// </summary>
     public record SupplyCardAction([NotNull] Card InitialCard) : Action<SupplyCardResult>
     {
-        public override SupplyCardResult Validate(IActionContext context)
+        public override SupplyCardResult Evaluate(IActionContext context)
         {
             var currentContext = context;
 
@@ -66,7 +66,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             var addComponentResults = new List<AddComponentResult>();
             foreach (var component in InitialCard.Components)
             {
-                var result = new AddComponentAction(entityID, component).Validate(currentContext);
+                var result = new AddComponentAction(entityID, component).Evaluate(currentContext);
                 currentContext = currentContext.Appended(result);
                 addComponentResults.Add(result);
             }

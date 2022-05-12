@@ -7,9 +7,9 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity
     /// </summary>
     public record RegisterEntityAction([NotNull] Entity InitialEntity) : Action<RegisterEntityResult>
     {
-        public override RegisterEntityResult Validate(IActionContext context)
+        public override RegisterEntityResult Evaluate(IActionContext context)
         {
-            var allocateIDResult = new AllocateIDAction().Validate(context);
+            var allocateIDResult = new AllocateIDAction().Evaluate(context);
             var formattedEntity = InitialEntity with
             {
                 ID = allocateIDResult.AllocatedID,

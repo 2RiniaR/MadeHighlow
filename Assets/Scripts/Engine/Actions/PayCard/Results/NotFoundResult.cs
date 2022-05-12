@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
     /// <summary>
     ///     カードの支払いに失敗した結果
     /// </summary>
-    public record FailedResult([NotNull] CardID CardID, FailedReason Reason) : PayCardResult
+    public record NotFoundResult([NotNull] CardID TargetID) : PayCardResult
     {
         public override World Simulate(World world)
         {
