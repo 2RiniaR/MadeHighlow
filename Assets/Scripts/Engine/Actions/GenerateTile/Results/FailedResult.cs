@@ -1,8 +1,13 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
-    public record FailedResult([NotNull] Tile Tile, [NotNull] FailedProcess Process) : GenerateTileResult
+    public record FailedResult(
+        [NotNull] Tile InitialTile,
+        [NotNull] SucceedProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts,
+        FailedReason Reason
+    ) : GenerateTileResult
     {
         public override World Simulate(World world)
         {

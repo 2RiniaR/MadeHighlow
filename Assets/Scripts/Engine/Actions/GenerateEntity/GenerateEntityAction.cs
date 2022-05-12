@@ -29,7 +29,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             var entity = entityID.GetFrom(context.World);
             if (entity == null)
             {
-                return new ProcessFailedResult(Status, Process.AsFailed);
+                return new FailedResult(Status, process, interrupts, FailedReason.TargetDestroyed);
             }
 
             return new SucceedResult(Status, entity, process, interrupts);

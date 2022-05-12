@@ -8,7 +8,6 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
     public record FailedProcess(
         [CanBeNull] RegisterTileResult RegisterTile,
         [CanBeNull] [ItemNotNull] ValueList<AddComponentResult> AddComponents,
-        [CanBeNull] PositionTileResult PositionTile,
-        [CanBeNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts
+        [CanBeNull] PositionTileResult PositionTile
     );
 }

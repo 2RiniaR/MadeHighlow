@@ -5,7 +5,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
     public record SucceedResult(
         [NotNull] Tile InitialTile,
         [NotNull] Tile GeneratedTile,
-        [NotNull] SucceedProcess Process
+        [NotNull] SucceedProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts
     ) : GenerateTileResult
     {
         public override World Simulate(World world)
