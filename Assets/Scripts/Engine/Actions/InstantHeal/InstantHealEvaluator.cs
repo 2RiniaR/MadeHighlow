@@ -31,8 +31,6 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [NotNull]
         public InstantHealResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<InstantHealResult>() != null);
-
             InstantHealResult result;
 
             result = GetTarget();
@@ -49,6 +47,8 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
 
         private InstantHealResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<InstantHealResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -81,6 +81,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         {
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Requires<InvalidOperationException>(Calculated != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IInstantHealEffector>(Context.World);
             Interrupts = effectors

@@ -28,8 +28,6 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull]
         public GenerateTileResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<GenerateTileResult>() != null);
-
             GenerateTileResult result;
 
             result = RegisterTile();
@@ -53,6 +51,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [CanBeNull]
         private GenerateTileResult RegisterTile()
         {
+            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (RegisterTileResult != null));
+
             var result = new RegisterTileAction(InitialStatus).Evaluate(Context);
             if (result is not RegisterTile.SucceedResult succeedResult)
             {
@@ -69,6 +69,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         private GenerateTileResult AddComponents()
         {
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
+            Contract.Ensures(AddComponentResults != null);
 
             var generatingID = RegisterTileResult.Registered.TileID;
 
@@ -93,6 +94,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         {
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
+            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (PositionTileResult != null));
 
             var generatingID = RegisterTileResult.Registered.TileID;
 
@@ -114,6 +116,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionTileResult != null);
+            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (Generating != null));
 
             var generatingID = RegisterTileResult.Registered.TileID;
 
@@ -134,6 +137,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionTileResult != null);
             Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IGenerateTileEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnGenerateTile(Context, Generating)).Sort();

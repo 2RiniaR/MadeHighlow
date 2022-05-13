@@ -30,8 +30,6 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [NotNull]
         public ElevateTileResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<ElevateTileResult>() != null);
-
             ElevateTileResult result;
 
             result = GetTarget();
@@ -46,6 +44,8 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [CanBeNull]
         private ElevateTileResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<ElevateTileResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -59,6 +59,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         private ElevateTileResult CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IElevateTileEffector>(Context.World);
             Interrupts = effectors.SelectMany(

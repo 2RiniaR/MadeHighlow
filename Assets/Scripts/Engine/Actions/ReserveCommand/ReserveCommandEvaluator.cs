@@ -23,8 +23,6 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [NotNull]
         public ReserveCommandResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<ReserveCommandResult>() != null);
-
             ReserveCommandResult result;
 
             result = PreValidation();
@@ -39,6 +37,10 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [CanBeNull]
         private ReserveCommandResult PreValidation()
         {
+            Contract.Ensures(
+                (Contract.Result<ReserveCommandResult>() != null) ^ (Card != null && Unit != null && Player != null)
+            );
+
             Card = Command.CardID.GetFrom(Context.World);
             if (Card == null)
             {
@@ -71,6 +73,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             Contract.Requires<ArgumentNullException>(Player != null);
             Contract.Requires<ArgumentNullException>(Unit != null);
             Contract.Requires<ArgumentNullException>(Card != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(Context.World);
             Interrupts = effectors.SelectMany(

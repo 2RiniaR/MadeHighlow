@@ -26,8 +26,6 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [NotNull]
         public RunCommandResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<RunCommandResult>() != null);
-
             RunCommandResult result;
 
             result = PreValidation();
@@ -36,7 +34,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             result = CollectInterrupts();
             if (result != null) return result;
 
-            RunCommandAction();
+            ActuateCommand();
             PayUsedCard();
 
             return Succeed();
@@ -45,6 +43,10 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [CanBeNull]
         private RunCommandResult PreValidation()
         {
+            Contract.Ensures(
+                (Contract.Result<RunCommandResult>() != null) ^ (Card != null && Unit != null && Player != null)
+            );
+
             Unit = Command.UnitID.GetFrom(Context.World);
 
             // いないものは行動できない。
@@ -80,6 +82,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             Contract.Requires<ArgumentNullException>(Player != null);
             Contract.Requires<ArgumentNullException>(Unit != null);
             Contract.Requires<ArgumentNullException>(Card != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(Context.World);
             Interrupts = effectors.SelectMany(
@@ -97,8 +100,10 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             return null;
         }
 
-        private void RunCommandAction()
+        private void ActuateCommand()
         {
+            Contract.Ensures(CommandActionResults != null);
+
             CommandActionResults = ValueList<Result>.Empty;
             foreach (var action in Command.ActionsIn(Context))
             {
@@ -110,6 +115,8 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 
         private void PayUsedCard()
         {
+            Contract.Ensures(PayCardResult != null);
+
             PayCardResult = new PayCardAction(Command.CardID).Evaluate(Context);
             Context = Context.Appended(PayCardResult);
         }

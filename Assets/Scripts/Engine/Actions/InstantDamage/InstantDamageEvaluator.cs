@@ -31,8 +31,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [NotNull]
         public InstantDamageResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<InstantDamageResult>() != null);
-
             InstantDamageResult result;
 
             result = GetTarget();
@@ -50,6 +48,8 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [CanBeNull]
         private InstantDamageResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<InstantDamageResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -84,6 +84,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         {
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Requires<InvalidOperationException>(Calculated != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(Context.World);
             Interrupts = effectors

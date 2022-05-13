@@ -28,8 +28,6 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull]
         public GenerateEntityResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<GenerateEntityResult>() != null);
-
             GenerateEntityResult result;
 
             result = RegisterEntity();
@@ -53,6 +51,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [CanBeNull]
         private GenerateEntityResult RegisterEntity()
         {
+            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (RegisterEntityResult != null));
+
             var result = new RegisterEntityAction(InitialStatus).Evaluate(Context);
             if (result is not RegisterEntity.SucceedResult succeedResult)
             {
@@ -69,6 +69,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         private GenerateEntityResult AddComponents()
         {
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
+            Contract.Ensures(AddComponentResults != null);
 
             var generatingID = RegisterEntityResult.Registered.EntityID;
 
@@ -98,6 +99,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         {
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
+            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (PositionEntityResult != null));
 
             var generatingID = RegisterEntityResult.Registered.EntityID;
 
@@ -119,6 +121,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
+            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (Generating != null));
 
             var generatingID = RegisterEntityResult.Registered.EntityID;
 
@@ -144,6 +147,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
             Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IGenerateEntityEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnGenerateEntity(Context, Generating)).Sort();

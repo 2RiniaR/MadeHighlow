@@ -23,17 +23,12 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         [NotNull]
         public PayCardResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<PayCardResult>() != null);
-
             PayCardResult result;
 
             result = GetTarget();
             if (result != null) return result;
 
             result = CollectInterrupts();
-            if (result != null) return result;
-
-            result = CheckRemovable();
             if (result != null) return result;
 
             result = RemoveComponents();
@@ -45,6 +40,8 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         [CanBeNull]
         private PayCardResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<PayCardResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -58,6 +55,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         private PayCardResult CollectInterrupts()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IPayCardEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnPayCard(Context, Target)).Sort();
@@ -73,19 +71,11 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         }
 
         [CanBeNull]
-        private PayCardResult CheckRemovable()
-        {
-            Contract.Requires<ArgumentNullException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-
-            return null;
-        }
-
-        [CanBeNull]
         private PayCardResult RemoveComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(RemoveComponentResults != null);
 
             RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
             foreach (var component in Target.Components)

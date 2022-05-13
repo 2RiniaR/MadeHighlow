@@ -23,17 +23,12 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [NotNull]
         public DestroyEntityResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<DestroyEntityResult>() != null);
-
             DestroyEntityResult result;
 
             result = GetTarget();
             if (result != null) return result;
 
             result = CollectInterrupts();
-            if (result != null) return result;
-
-            result = CheckRemovable();
             if (result != null) return result;
 
             result = RemoveComponents();
@@ -45,6 +40,8 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [CanBeNull]
         private DestroyEntityResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<DestroyEntityResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -58,6 +55,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         private DestroyEntityResult CollectInterrupts()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IDestroyEntityEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyEntity(Context, Target)).Sort();
@@ -73,19 +71,11 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         }
 
         [CanBeNull]
-        private DestroyEntityResult CheckRemovable()
-        {
-            Contract.Requires<ArgumentNullException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-
-            return null;
-        }
-
-        [CanBeNull]
         private DestroyEntityResult RemoveComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(RemoveComponentResults != null);
 
             RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
             foreach (var component in Target.Components)

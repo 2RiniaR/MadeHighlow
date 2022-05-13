@@ -30,8 +30,6 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull]
         public AddComponentResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<AddComponentResult>() != null);
-
             AddComponentResult result;
 
             result = RegisterComponent();
@@ -52,6 +50,8 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [CanBeNull]
         private AddComponentResult RegisterComponent()
         {
+            Contract.Ensures((Contract.Result<AddComponentResult>() != null) ^ (RegisterComponentResult != null));
+
             var result = new RegisterComponentAction(TargetID, InitialStatus).Evaluate(Context);
             if (result is not RegisterComponent.SucceedResult succeedResult)
             {
@@ -63,9 +63,11 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             return null;
         }
 
+        [CanBeNull]
         private AddComponentResult InitializeComponents()
         {
             Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
+            Contract.Ensures((Contract.Result<AddComponentResult>() != null) ^ (InitializeComponentResults != null));
 
             var component = RegisterComponentResult.Registered;
             var actions = component.InitializeActions(Context);
@@ -84,10 +86,12 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             return null;
         }
 
+        [CanBeNull]
         private AddComponentResult GetComponent()
         {
             Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
             Contract.Requires<InvalidOperationException>(InitializeComponentResults != null);
+            Contract.Ensures((Contract.Result<AddComponentResult>() != null) ^ (Target != null));
 
             var componentID = RegisterComponentResult.Registered.ComponentID;
 
@@ -105,11 +109,13 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             return null;
         }
 
+        [CanBeNull]
         private AddComponentResult CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
             Contract.Requires<InvalidOperationException>(InitializeComponentResults != null);
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IAddComponentEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnAddComponent(Context, Target)).Sort();
@@ -131,6 +137,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             return null;
         }
 
+        [NotNull]
         private AddComponentResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);

@@ -23,8 +23,6 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [NotNull]
         public DestroyTileResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<DestroyTileResult>() != null);
-
             DestroyTileResult result;
 
             result = GetTarget();
@@ -45,6 +43,8 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [CanBeNull]
         private DestroyTileResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<DestroyTileResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -58,6 +58,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         private DestroyTileResult CollectInterrupts()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyTile(Context, Target)).Sort();
@@ -92,6 +93,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(RemoveComponentResults != null);
 
             RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
             foreach (var component in Target.Components)

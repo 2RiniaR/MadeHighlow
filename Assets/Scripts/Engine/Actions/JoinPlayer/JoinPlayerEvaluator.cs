@@ -27,8 +27,6 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [NotNull]
         public JoinPlayerResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<JoinPlayerResult>() != null);
-
             JoinPlayerResult result;
 
             result = RegisterPlayer();
@@ -49,6 +47,8 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [CanBeNull]
         private JoinPlayerResult RegisterPlayer()
         {
+            Contract.Ensures((Contract.Result<JoinPlayerResult>() != null) ^ (RegisterPlayerResult != null));
+
             var result = new RegisterPlayerAction(InitialStatus).Evaluate(Context);
             if (result is not RegisterPlayer.SucceedResult succeedResult)
             {
@@ -65,6 +65,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         private JoinPlayerResult AddComponents()
         {
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
+            Contract.Ensures(AddComponentResults != null);
 
             var generatingID = RegisterPlayerResult.Registered.PlayerID;
 
@@ -94,6 +95,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         {
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
+            Contract.Ensures(SupplyCardResults != null);
 
             var generatingID = RegisterPlayerResult.Registered.PlayerID;
 
@@ -125,6 +127,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(SupplyCardResults != null);
+            Contract.Ensures((Contract.Result<JoinPlayerResult>() != null) ^ (Generating != null));
 
             var generatingID = RegisterPlayerResult.Registered.PlayerID;
 

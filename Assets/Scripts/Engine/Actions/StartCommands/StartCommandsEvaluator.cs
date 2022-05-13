@@ -27,6 +27,8 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
 
         private void RunByOrder()
         {
+            Contract.Ensures(RunCommandResults != null);
+
             RunCommandResults = ValueList<RunCommandResult>.Empty;
             var commands = Context.World.ReservedCommands;
             var orderedCommands = new StartCommandsOrderer(commands).Resolve(Context);

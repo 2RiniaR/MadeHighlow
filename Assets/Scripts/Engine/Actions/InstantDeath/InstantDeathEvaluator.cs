@@ -22,8 +22,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [NotNull]
         public InstantDeathResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<InstantDeathResult>() != null);
-
             InstantDeathResult result;
 
             result = GetTarget();
@@ -41,6 +39,8 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [CanBeNull]
         private InstantDeathResult GetTarget()
         {
+            Contract.Ensures((Contract.Result<InstantDeathResult>() != null) ^ (Target != null));
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -74,6 +74,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         private InstantDeathResult CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IInstantDeathEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnInstantDeath(Context, SourceID, Target))

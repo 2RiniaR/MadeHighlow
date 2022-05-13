@@ -22,8 +22,6 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         [NotNull]
         public RemoveComponentResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<RemoveComponentResult>() != null);
-
             RemoveComponentResult result;
 
             result = GetComponent();
@@ -40,6 +38,8 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 
         private RemoveComponentResult GetComponent()
         {
+            Contract.Ensures((Contract.Result<RemoveComponentResult>() != null) ^ (Target != null));
+            
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -52,6 +52,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         private RemoveComponentResult FinalizeComponents()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Ensures(FinalizeComponentResults != null);
 
             var actions = Target.FinalizeActions(Context);
             FinalizeComponentResults = actions.Select(action => action.EvaluateAbstract(Context));
@@ -68,6 +69,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         {
             Contract.Requires<InvalidOperationException>(FinalizeComponentResults != null);
             Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IRemoveComponentEffector>(Context.World);
             Interrupts = effectors.SelectMany(effector => effector.EffectsOnRemoveComponent(Context, Target)).Sort();
