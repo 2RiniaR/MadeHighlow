@@ -9,10 +9,9 @@ namespace RineaR.MadeHighlow.Actions.AddComponent.RegisterComponent
     {
         public override World Simulate(World world)
         {
-            var currentWorld = world;
-            currentWorld = AllocateIDResult.Simulate(currentWorld);
-            currentWorld = Registered.CreateIn(currentWorld);
-            return currentWorld;
+            world = AllocateIDResult.Simulate(world);
+            world = Registered.CreateIn(world);
+            return world;
         }
     }
 }

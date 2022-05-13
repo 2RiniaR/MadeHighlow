@@ -13,9 +13,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     {
         public override World Simulate(World world)
         {
-            world = RegisterComponentResult.Simulate(world);
-            world = InitializeResults.Aggregate(world, (current, result) => result.Simulate(current));
-            return world;
+            return new Timeline().Then(RegisterComponentResult).Then(InitializeResults).Simulate(world);
         }
     }
 }

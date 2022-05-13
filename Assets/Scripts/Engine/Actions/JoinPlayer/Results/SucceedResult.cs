@@ -12,11 +12,10 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
     {
         public override World Simulate(World world)
         {
-            var currentWorld = world;
-            currentWorld = RegisterPlayerResult.Simulate(currentWorld);
-            currentWorld = AddComponentResults.Aggregate(currentWorld, (curr, result) => result.Simulate(curr));
-            currentWorld = SupplyCardResults.Aggregate(currentWorld, (curr, result) => result.Simulate(curr));
-            return currentWorld;
+            return new Timeline().Then(RegisterPlayerResult)
+                .Then(AddComponentResults)
+                .Then(SupplyCardResults)
+                .Simulate(world);
         }
     }
 }

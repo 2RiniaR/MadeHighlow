@@ -13,7 +13,8 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         public override World Simulate(World world)
         {
             var modifiedTarget = Target with { Elevation = Calculated.Caused(Target.Elevation) };
-            return modifiedTarget.UpdateIn(world);
+            world = modifiedTarget.UpdateIn(world);
+            return world;
         }
     }
 }

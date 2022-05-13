@@ -13,11 +13,10 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     {
         public override World Simulate(World world)
         {
-            var currentWorld = world;
-            currentWorld = RegisterEntityResult.Simulate(currentWorld);
-            currentWorld = AddComponentResults.Aggregate(currentWorld, (curr, result) => result.Simulate(curr));
-            currentWorld = PositionEntityResult.Simulate(currentWorld);
-            return currentWorld;
+            return new Timeline().Then(RegisterEntityResult)
+                .Then(AddComponentResults)
+                .Then(PositionEntityResult)
+                .Simulate(world);
         }
     }
 }

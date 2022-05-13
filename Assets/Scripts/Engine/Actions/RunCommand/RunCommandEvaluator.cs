@@ -128,7 +128,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             Contract.Requires<InvalidOperationException>(CommandActionResults != null);
             Contract.Requires<InvalidOperationException>(PayCardResult != null);
 
-            return new SucceedResult(Command, Interrupts, PayCardResult, CommandActionResults);
+            return new SucceedResult(Command, Interrupts, CommandActionResults, PayCardResult);
         }
     }
 }

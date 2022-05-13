@@ -11,7 +11,8 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         public override World Simulate(World world)
         {
             world = RemoveComponentResults.Aggregate(world, (curr, result) => result.Simulate(curr));
-            return Destroyed.DeleteFrom(world);
+            world = Destroyed.DeleteFrom(world);
+            return world;
         }
     }
 }
