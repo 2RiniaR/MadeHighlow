@@ -2,64 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
-    /// <summary>
-    ///     エンティティに即死効果を与えるアクション
-    /// </summary>
-    public record InstantDeathAction(ID SourceID, [NotNull] EntityID TargetEntityID) : Action<InstantDeathResult>
+    public record InstantDeathAction(ID SourceID, [NotNull] EntityID TargetID) : Action<InstantDeathResult>
     {
         public override InstantDeathResult Evaluate(IActionContext context)
         {
-            var preValidationResult = PreValidationResult(context);
-            if (preValidationResult != null)
-            {
-                return preValidationResult;
-            }
-
-            var interrupts = CollectInterrupts(context).Sort();
-            foreach (var interrupt in interrupts)
-            {
-                // コンポーネントによって、治癒効果が無効化されることがあるよ。無敵エフェクトとかに使えるかも。
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(SourceID, TargetEntityID, interrupts, interrupt.ComponentID);
-                }
-            }
-
-            return new CausedResult(SourceID, TargetEntityID, interrupts);
-        }
-
-        [CanBeNull]
-        private InstantDeathResult PreValidationResult([NotNull] IActionContext context)
-        {
-            var target = TargetEntityID.GetFrom(context.World);
-
-            // 既に対象がいなければ、ダメージは与えられない。
-            if (target == null)
-            {
-                return new FailedResult(FailedReason.NoTarget);
-            }
-
-            // そもそも体力という概念がないものには、ダメージが与えられない。
-            if (target.Vitality == null)
-            {
-                return new FailedResult(FailedReason.NoVitality);
-            }
-
-            // 相手が生きてなければダメージは与えられないよ。仕方ないね。
-            if (target.Vitality.IsDead)
-            {
-                return new FailedResult(FailedReason.TargetDead);
-            }
-
-            return null;
-        }
-
-        [ItemNotNull]
-        [NotNull]
-        private ValueList<Interrupt<InstantDeathEffect>> CollectInterrupts([NotNull] IActionContext context)
-        {
-            var effectors = Component.GetAllOfTypeFrom<IInstantDeathEffector>(context.World);
-            return effectors.SelectMany(effector => effector.EffectsOnInstantDeath(context, this));
+            return new ActionEvaluator(context, SourceID, TargetID).Evaluate();
         }
     }
 }

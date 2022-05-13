@@ -3,18 +3,20 @@ using JetBrains.Annotations;
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record SucceedResult(
-        [NotNull] Tile InitialTile,
-        [NotNull] Tile GeneratedTile,
-        [NotNull] SucceedProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts
+        [NotNull] Tile InitialStatus,
+        [NotNull] RegisterTile.SucceedResult RegisterTileResult,
+        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] PositionTile.SucceedResult PositionTileResult,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts,
+        [NotNull] Tile Generated
     ) : GenerateTileResult
     {
         public override World Simulate(World world)
         {
             var currentWorld = world;
-            currentWorld = Process.RegisterTile.Simulate(currentWorld);
-            currentWorld = Process.AddComponents.Aggregate(currentWorld, (curr, result) => result.Simulate(curr));
-            currentWorld = Process.PositionTile.Simulate(currentWorld);
+            currentWorld = RegisterTileResult.Simulate(currentWorld);
+            currentWorld = AddComponentResults.Aggregate(currentWorld, (curr, result) => result.Simulate(curr));
+            currentWorld = PositionTileResult.Simulate(currentWorld);
             return currentWorld;
         }
     }

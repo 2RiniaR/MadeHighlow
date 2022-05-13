@@ -32,6 +32,12 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull]
         public IActionContext Appended([NotNull] Result result);
 
+        /// <summary>
+        ///     セッションに追記する
+        /// </summary>
+        [NotNull]
+        public IActionContext Appended([NotNull] ValueList<Result> results);
+
         public float GetRandom();
     }
 }

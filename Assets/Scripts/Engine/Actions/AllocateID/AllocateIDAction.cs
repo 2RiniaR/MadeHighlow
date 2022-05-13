@@ -1,8 +1,5 @@
 ﻿namespace RineaR.MadeHighlow.Actions
 {
-    /// <summary>
-    ///     IDを確保するアクション
-    /// </summary>
     public record AllocateIDAction : Action<AllocateIDResult>
     {
         public override AllocateIDResult Evaluate(IActionContext context)

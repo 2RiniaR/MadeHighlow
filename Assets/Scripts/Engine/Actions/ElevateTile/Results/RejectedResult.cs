@@ -5,6 +5,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public record RejectedResult(
         ID SourceID,
         [NotNull] Tile Target,
+        [NotNull] Elevate Expected,
         [NotNull] [ItemNotNull] ValueList<Interrupt<ElevateTileEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : ElevateTileResult

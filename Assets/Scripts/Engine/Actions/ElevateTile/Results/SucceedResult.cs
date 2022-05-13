@@ -4,15 +4,16 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
     public sealed record SucceedResult(
         ID SourceID,
-        [NotNull] Tile Before,
-        [NotNull] Elevate Elevate,
+        [NotNull] Tile Target,
+        [NotNull] Elevate Expected,
         [NotNull] [ItemNotNull] ValueList<Interrupt<ElevateTileEffect>> Interrupts,
-        [NotNull] Tile After
+        [NotNull] Elevate Calculated
     ) : ElevateTileResult
     {
         public override World Simulate(World world)
         {
-            return After.UpdateIn(world);
+            var modifiedTarget = Target with { Elevation = Calculated.Caused(Target.Elevation) };
+            return modifiedTarget.UpdateIn(world);
         }
     }
 }

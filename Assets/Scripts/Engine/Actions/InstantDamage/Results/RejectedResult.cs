@@ -2,15 +2,12 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    /// <summary>
-    ///     ダメージを防いだ結果
-    /// </summary>
     public record RejectedResult(
         ID SourceID,
-        [NotNull] EntityID TargetEntityID,
-        [NotNull] Damage ExpectedDamage,
+        [NotNull] Entity Target,
+        [NotNull] Damage Expected,
         [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageEffect>> Interrupts,
-        [NotNull] ComponentID RejectedComponentID
+        [NotNull] ComponentID RejectedID
     ) : InstantDamageResult
     {
         public override World Simulate(World world)

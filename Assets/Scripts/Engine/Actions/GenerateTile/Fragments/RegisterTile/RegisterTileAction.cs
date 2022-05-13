@@ -2,15 +2,12 @@
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile
 {
-    /// <summary>
-    ///     エンティティを新規登録するアクション
-    /// </summary>
-    public record RegisterTileAction([NotNull] Tile InitialTile) : Action<RegisterTileResult>
+    public record RegisterTileAction([NotNull] Tile InitialProps) : Action<RegisterTileResult>
     {
         public override RegisterTileResult Evaluate(IActionContext context)
         {
             var allocateIDResult = new AllocateIDAction().Evaluate(context);
-            var formattedTile = InitialTile with
+            var formattedTile = InitialProps with
             {
                 ID = allocateIDResult.AllocatedID,
                 Components = ValueList<Component>.Empty,

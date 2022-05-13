@@ -2,14 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
-    /// <summary>
-    ///     即死効果を防いだ結果
-    /// </summary>
     public record RejectedResult(
         ID SourceID,
-        [NotNull] EntityID TargetEntityID,
+        [NotNull] Entity Target,
         [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathEffect>> Interrupts,
-        [NotNull] ComponentID RejectedComponentID
+        [NotNull] ComponentID RejectedID
     ) : InstantDeathResult
     {
         public override World Simulate(World world)

@@ -4,9 +4,8 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public record RejectedResult(
         [NotNull] Entity Target,
-        [NotNull] ComponentID RejectedID,
-        [NotNull] ValueList<RemoveComponent.SucceedResult> RemoveComponents,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityEffect>> Interrupts
+        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityEffect>> Interrupts,
+        [NotNull] ComponentID RejectedID
     ) : DestroyEntityResult
     {
         public override World Simulate(World world)

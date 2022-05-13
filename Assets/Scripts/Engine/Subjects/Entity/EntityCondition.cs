@@ -5,11 +5,11 @@ namespace RineaR.MadeHighlow
     /// <summary>
     ///     エンティティの条件
     /// </summary>
-    public sealed record EntityCondition
+    public sealed record EntityCondition(
+        [CanBeNull] Position2D Position2D = null,
+        [CanBeNull] Position3D Position3D = null
+    )
     {
-        [CanBeNull] public Position2D Position2D { get; init; }
-        [CanBeNull] public Position3D Position3D { get; init; }
-
         [NotNull]
         [ItemNotNull]
         public ValueList<Entity> Search([NotNull] World world)

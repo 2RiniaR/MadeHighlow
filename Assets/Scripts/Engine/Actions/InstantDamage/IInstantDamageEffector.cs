@@ -2,14 +2,15 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    /// <summary>
-    ///     ダメージを与えるアクションに対して、影響を与えるもの
-    /// </summary>
     public interface IInstantDamageEffector
     {
+        [NotNull]
+        [ItemNotNull]
         public ValueList<Interrupt<InstantDamageEffect>> EffectsOnInstantDamage(
             [NotNull] IActionContext context,
-            [NotNull] InstantDamageAction action
+            ID sourceID,
+            [NotNull] Entity target,
+            [NotNull] Damage damage
         );
     }
 }

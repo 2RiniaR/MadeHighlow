@@ -2,11 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity.PositionEntity
 {
-    public record SucceedResult([NotNull] Entity PositionedEntity) : PositionEntityResult
+    public record SucceedResult([NotNull] Entity Positioned) : PositionEntityResult
     {
         public override World Simulate(World world)
         {
-            return PositionedEntity.UpdateIn(world);
+            return Positioned.UpdateIn(world);
         }
     }
 }

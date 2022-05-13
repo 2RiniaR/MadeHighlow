@@ -3,10 +3,12 @@
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record RejectedResult(
-        [NotNull] Tile InitialTile,
-        [NotNull] ComponentID RejectedComponentID,
-        [NotNull] SucceedProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts
+        [NotNull] Tile InitialStatus,
+        [NotNull] RegisterTile.SucceedResult RegisterTileResult,
+        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] PositionTile.SucceedResult PositionTileResult,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts,
+        [NotNull] ComponentID RejectedComponentID
     ) : GenerateTileResult
     {
         public override World Simulate(World world)
