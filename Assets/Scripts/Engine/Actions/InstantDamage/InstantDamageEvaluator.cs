@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    public class ActionEvaluator
+    public class InstantDamageEvaluator
     {
-        public ActionEvaluator(
+        public InstantDamageEvaluator(
             [NotNull] IActionContext context,
             ID sourceID,
             [NotNull] EntityID targetID,

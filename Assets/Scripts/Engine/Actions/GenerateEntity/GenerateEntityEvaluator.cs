@@ -7,9 +7,9 @@ using RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
-    public class ActionEvaluator
+    public class GenerateEntityEvaluator
     {
-        public ActionEvaluator([NotNull] IActionContext context, [NotNull] Entity initialStatus)
+        public GenerateEntityEvaluator([NotNull] IActionContext context, [NotNull] Entity initialStatus)
         {
             Context = context;
             InitialStatus = initialStatus;

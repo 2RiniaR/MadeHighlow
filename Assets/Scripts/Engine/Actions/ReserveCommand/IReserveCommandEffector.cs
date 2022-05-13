@@ -2,14 +2,14 @@
 
 namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
-    /// <summary>
-    ///     プレイヤーによるユニットの命令が、許可されるかどうかをチェックする
-    /// </summary>
     public interface IReserveCommandEffector
     {
         public ValueList<Interrupt<ReserveCommandEffect>> EffectsOnReserveCommand(
             [NotNull] IActionContext session,
-            [NotNull] ReserveCommandAction action
+            [NotNull] Player player,
+            [NotNull] Unit unit,
+            [NotNull] Card card,
+            [NotNull] Command command
         );
     }
 }

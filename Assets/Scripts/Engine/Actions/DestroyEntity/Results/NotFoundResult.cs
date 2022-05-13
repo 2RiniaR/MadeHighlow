@@ -1,6 +1,8 @@
-﻿namespace RineaR.MadeHighlow.Actions.DestroyEntity
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
-    public record NotFoundResult(EntityID TargetID) : DestroyEntityResult
+    public record NotFoundResult([NotNull] EntityID TargetID) : DestroyEntityResult
     {
         public override World Simulate(World world)
         {

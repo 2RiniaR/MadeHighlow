@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Action = RineaR.MadeHighlow.Actions.Action;
 
 namespace RineaR.MadeHighlow
 {
@@ -63,20 +62,5 @@ namespace RineaR.MadeHighlow
                 Components.SelectMany(item => item.GetChildren())
             );
         }
-    }
-
-    public abstract record Card<TOption>(
-        ID ID,
-        [NotNull] PlayerID OwnerPlayerID,
-        CardGenre Genre,
-        Quickness Quickness,
-        [NotNull] [ItemNotNull] ValueList<Component> Components
-    ) : Card(ID, OwnerPlayerID, Genre, Quickness, Components)
-    {
-        /// <summary>
-        ///     指定された追加データから、アクションを生成する
-        /// </summary>
-        [NotNull]
-        public abstract Action GenerateAction([NotNull] TOption option, [NotNull] UnitID unitID);
     }
 }

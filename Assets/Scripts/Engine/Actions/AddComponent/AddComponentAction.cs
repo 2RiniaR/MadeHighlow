@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     {
         public override AddComponentResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, TargetID, InitialStatus).Evaluate();
+            return new AddComponentEvaluator(context, TargetID, InitialStatus).Evaluate();
         }
     }
 }

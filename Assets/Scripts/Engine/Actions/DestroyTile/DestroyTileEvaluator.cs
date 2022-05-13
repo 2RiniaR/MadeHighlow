@@ -3,29 +3,29 @@ using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.RemoveComponent;
 
-namespace RineaR.MadeHighlow.Actions.DestroyEntity
+namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
-    public class ActionEvaluator
+    public class DestroyTileEvaluator
     {
-        public ActionEvaluator([NotNull] IActionContext context, [NotNull] EntityID targetID)
+        public DestroyTileEvaluator([NotNull] IActionContext context, [NotNull] TileID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
         [NotNull] private IActionContext Context { get; set; }
-        [NotNull] private EntityID TargetID { get; }
+        [NotNull] private TileID TargetID { get; }
 
         [CanBeNull] private ValueList<RemoveComponent.SucceedResult> RemoveComponentResults { get; set; }
-        [CanBeNull] private ValueList<Interrupt<DestroyEntityEffect>> Interrupts { get; set; }
-        [CanBeNull] private Entity Target { get; set; }
+        [CanBeNull] private ValueList<Interrupt<DestroyTileEffect>> Interrupts { get; set; }
+        [CanBeNull] private Tile Target { get; set; }
 
         [NotNull]
-        public DestroyEntityResult Evaluate()
+        public DestroyTileResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<DestroyEntityResult>() != null);
+            Contract.Ensures(Contract.Result<DestroyTileResult>() != null);
 
-            DestroyEntityResult error;
+            DestroyTileResult error;
 
             error = GetTarget();
             if (error != null) return error;
@@ -33,7 +33,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
             error = CollectInterrupts();
             if (error != null) return error;
 
-            error = CheckRemovable();
+            error = CheckRemainingEntity();
             if (error != null) return error;
 
             error = RemoveComponents();
@@ -43,7 +43,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         }
 
         [CanBeNull]
-        private DestroyEntityResult GetTarget()
+        private DestroyTileResult GetTarget()
         {
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
@@ -55,12 +55,12 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         }
 
         [CanBeNull]
-        private DestroyEntityResult CollectInterrupts()
+        private DestroyTileResult CollectInterrupts()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDestroyEntityEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyEntity(Context, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(Context.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyTile(Context, Target)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)
@@ -73,16 +73,22 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         }
 
         [CanBeNull]
-        private DestroyEntityResult CheckRemovable()
+        private DestroyTileResult CheckRemainingEntity()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
+
+            var removable = new EntityCondition(Target.Position2D).Search(Context.World).IsEmpty;
+            if (!removable)
+            {
+                return new EntityRemainingResult(Target, Interrupts);
+            }
 
             return null;
         }
 
         [CanBeNull]
-        private DestroyEntityResult RemoveComponents()
+        private DestroyTileResult RemoveComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
             Contract.Requires<ArgumentNullException>(Target != null);
@@ -104,7 +110,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         }
 
         [NotNull]
-        private DestroyEntityResult Succeed()
+        private DestroyTileResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);

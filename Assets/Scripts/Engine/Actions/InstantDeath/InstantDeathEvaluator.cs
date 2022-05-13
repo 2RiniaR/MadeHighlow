@@ -2,38 +2,29 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.InstantHeal
+namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
-    public class ActionEvaluator
+    public class InstantDeathEvaluator
     {
-        public ActionEvaluator(
-            [NotNull] IActionContext context,
-            ID sourceID,
-            [NotNull] EntityID targetID,
-            [NotNull] Heal expected
-        )
+        public InstantDeathEvaluator([NotNull] IActionContext context, ID sourceID, [NotNull] EntityID targetID)
         {
             Context = context;
             SourceID = sourceID;
             TargetID = targetID;
-            Expected = expected;
-            Calculated = Expected;
         }
 
         [NotNull] private IActionContext Context { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
-        [NotNull] private Heal Expected { get; }
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<InstantHealEffect>> Interrupts { get; set; }
-        [CanBeNull] private Heal Calculated { get; set; }
+        [CanBeNull] private ValueList<Interrupt<InstantDeathEffect>> Interrupts { get; set; }
 
         [NotNull]
-        public InstantHealResult Evaluate()
+        public InstantDeathResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<InstantHealResult>() != null);
+            Contract.Ensures(Contract.Result<InstantDeathResult>() != null);
 
-            InstantHealResult error;
+            InstantDeathResult error;
 
             error = GetTarget();
             if (error != null) return error;
@@ -47,7 +38,8 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             return Succeed();
         }
 
-        private InstantHealResult GetTarget()
+        [CanBeNull]
+        private InstantDeathResult GetTarget()
         {
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
@@ -58,7 +50,8 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             return null;
         }
 
-        private InstantHealResult Validation()
+        [CanBeNull]
+        private InstantDeathResult Validation()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
 
@@ -77,38 +70,32 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             return null;
         }
 
-        private InstantHealResult CollectInterrupts()
+        [CanBeNull]
+        private InstantDeathResult CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantHealEffector>(Context.World);
-            Interrupts = effectors
-                .SelectMany(effector => effector.EffectsOnInstantHeal(Context, SourceID, Target, Expected))
+            var effectors = Component.GetAllOfTypeFrom<IInstantDeathEffector>(Context.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnInstantDeath(Context, SourceID, Target))
                 .Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)
                 {
-                    return new RejectedResult(SourceID, Target, Expected, Interrupts, interrupt.ComponentID);
-                }
-
-                if (interrupt.Effect is ReduceEffect reduce)
-                {
-                    Calculated = reduce.HealReduction.Caused(Calculated);
+                    return new RejectedResult(SourceID, Target, Interrupts, interrupt.ComponentID);
                 }
             }
 
             return null;
         }
 
-        private InstantHealResult Succeed()
+        [NotNull]
+        private InstantDeathResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
 
-            return new SucceedResult(SourceID, Target, Expected, Interrupts, Calculated);
+            return new SucceedResult(SourceID, Target, Interrupts);
         }
     }
 }

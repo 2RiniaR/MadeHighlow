@@ -1,13 +1,13 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.SupplyCard;
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public record SucceedResult(
+        [NotNull] Player InitialStatus,
         [NotNull] RegisterPlayer.SucceedResult RegisterPlayerResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponentResult> AddComponentResults,
-        [NotNull] [ItemNotNull] ValueList<SupplyCardResult> SupplyCardResults
+        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] [ItemNotNull] ValueList<SupplyCard.SucceedResult> SupplyCardResults,
+        [NotNull] Player Generated
     ) : JoinPlayerResult
     {
         public override World Simulate(World world)

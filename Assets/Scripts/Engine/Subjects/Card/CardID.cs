@@ -15,13 +15,4 @@ namespace RineaR.MadeHighlow
             return Card.GetAllFrom(world).Find(card => card.CardID == this);
         }
     }
-
-    public record CardID<TOption>(ID Content) : CardID(Content)
-    {
-        [CanBeNull]
-        public new Card<TOption> GetFrom([NotNull] World world)
-        {
-            return Card.GetAllFrom(world).Find(card => card.CardID == this) as Card<TOption>;
-        }
-    }
 }

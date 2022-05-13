@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     {
         public override GenerateEntityResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, InitialStatus).Evaluate();
+            return new GenerateEntityEvaluator(context, InitialStatus).Evaluate();
         }
     }
 }

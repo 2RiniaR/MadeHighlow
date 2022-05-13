@@ -7,9 +7,9 @@ using RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
-    public class ActionEvaluator
+    public class GenerateTileEvaluator
     {
-        public ActionEvaluator([NotNull] IActionContext context, [NotNull] Tile initialStatus)
+        public GenerateTileEvaluator([NotNull] IActionContext context, [NotNull] Tile initialStatus)
         {
             Context = context;
             InitialStatus = initialStatus;

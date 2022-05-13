@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
     {
         public override GenerateTileResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, InitialStatus).Evaluate();
+            return new GenerateTileEvaluator(context, InitialStatus).Evaluate();
         }
     }
 }

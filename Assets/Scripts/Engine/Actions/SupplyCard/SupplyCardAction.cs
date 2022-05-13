@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     /// <summary>
     ///     プレイヤーにカードを供給するアクション
     /// </summary>
-    public record SupplyCardAction([NotNull] Card InitialCard) : Action<SupplyCardResult>
+    public record SupplyCardAction([NotNull] PlayerID TargetID, [NotNull] Card InitialCard) : Action<SupplyCardResult>
     {
         public override SupplyCardResult Evaluate(IActionContext context)
         {

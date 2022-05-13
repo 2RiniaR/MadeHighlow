@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
     {
         public override DestroyEntityResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, TargetID).Evaluate();
+            return new DestroyEntityEvaluator(context, TargetID).Evaluate();
         }
     }
 }

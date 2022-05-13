@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
     {
         public override InstantDeathResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, SourceID, TargetID).Evaluate();
+            return new InstantDeathEvaluator(context, SourceID, TargetID).Evaluate();
         }
     }
 }

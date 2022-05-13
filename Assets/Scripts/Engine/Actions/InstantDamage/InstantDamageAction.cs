@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     {
         public override InstantDamageResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, SourceID, TargetID, Damage).Evaluate();
+            return new InstantDamageEvaluator(context, SourceID, TargetID, Damage).Evaluate();
         }
     }
 }

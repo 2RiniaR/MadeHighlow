@@ -2,8 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
-    public record AllowedResult
-        ([NotNull] Command Command, [NotNull] ComponentID AllowedComponentID) : ReserveCommandResult
+    public record SucceedResult(
+        [NotNull] Command Command,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<ReserveCommandEffect>> Interrupts,
+        [NotNull] ComponentID AllowedID
+    ) : ReserveCommandResult
     {
         public override World Simulate(World world)
         {

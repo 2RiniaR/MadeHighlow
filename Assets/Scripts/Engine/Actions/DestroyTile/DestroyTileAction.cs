@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
     {
         public override DestroyTileResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, TargetID).Evaluate();
+            return new DestroyTileEvaluator(context, TargetID).Evaluate();
         }
     }
 }

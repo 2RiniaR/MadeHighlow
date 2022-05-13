@@ -2,10 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.PayCard
 {
-    /// <summary>
-    ///     カードを支払った結果
-    /// </summary>
-    public record SucceedResult([NotNull] Card Paid) : PayCardResult
+    public record SucceedResult(
+        [NotNull] Card Paid,
+        [NotNull] ValueList<RemoveComponent.SucceedResult> RemoveComponentResults,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardEffect>> Interrupts
+    ) : PayCardResult
     {
         public override World Simulate(World world)
         {

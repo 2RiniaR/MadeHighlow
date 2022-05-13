@@ -1,11 +1,13 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.RemoveComponent;
 
 namespace RineaR.MadeHighlow.Actions.PayCard
 {
-    public record ExemptedResult(
+    public record RemoveComponentFailedResult(
         [NotNull] Card Target,
         [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardEffect>> Interrupts,
-        [NotNull] ComponentID RejectedID
+        [NotNull] ValueList<RemoveComponent.SucceedResult> SucceedResults,
+        RemoveComponentResult FailedResult
     ) : PayCardResult
     {
         public override World Simulate(World world)

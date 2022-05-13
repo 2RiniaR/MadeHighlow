@@ -5,9 +5,9 @@ using RineaR.MadeHighlow.Actions.AddComponent.RegisterComponent;
 
 namespace RineaR.MadeHighlow.Actions.AddComponent
 {
-    public class ActionEvaluator
+    public class AddComponentEvaluator
     {
-        public ActionEvaluator(
+        public AddComponentEvaluator(
             [NotNull] IActionContext context,
             [NotNull] IAttachableID targetID,
             [NotNull] Component initialStatus

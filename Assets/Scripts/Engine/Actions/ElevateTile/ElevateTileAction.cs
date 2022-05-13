@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     {
         public override ElevateTileResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, SourceID, TargetID, Elevate).Evaluate();
+            return new ElevateTileEvaluator(context, SourceID, TargetID, Elevate).Evaluate();
         }
     }
 }

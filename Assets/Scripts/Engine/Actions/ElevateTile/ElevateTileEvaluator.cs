@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
-    public class ActionEvaluator
+    public class ElevateTileEvaluator
     {
-        public ActionEvaluator(
+        public ElevateTileEvaluator(
             [NotNull] IActionContext context,
             ID sourceID,
             [NotNull] TileID targetID,

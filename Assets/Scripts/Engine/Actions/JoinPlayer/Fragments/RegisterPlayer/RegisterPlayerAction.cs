@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer
     /// <summary>
     ///     プレイヤーを新規登録するアクション
     /// </summary>
-    public record RegisterPlayerAction([NotNull] Player InitialPlayer) : Action<SucceedResult>
+    public record RegisterPlayerAction([NotNull] Player InitialPlayer) : Action<RegisterPlayerResult>
     {
-        public override SucceedResult Evaluate(IActionContext context)
+        public override RegisterPlayerResult Evaluate(IActionContext context)
         {
             var allocateIDResult = new AllocateIDAction().Evaluate(context);
             var formattedPlayer = InitialPlayer with

@@ -3,29 +3,29 @@ using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.RemoveComponent;
 
-namespace RineaR.MadeHighlow.Actions.DestroyTile
+namespace RineaR.MadeHighlow.Actions.PayCard
 {
-    public class ActionEvaluator
+    public class PayCardEvaluator
     {
-        public ActionEvaluator([NotNull] IActionContext context, [NotNull] TileID targetID)
+        public PayCardEvaluator([NotNull] IActionContext context, [NotNull] CardID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
         [NotNull] private IActionContext Context { get; set; }
-        [NotNull] private TileID TargetID { get; }
+        [NotNull] private CardID TargetID { get; }
 
         [CanBeNull] private ValueList<RemoveComponent.SucceedResult> RemoveComponentResults { get; set; }
-        [CanBeNull] private ValueList<Interrupt<DestroyTileEffect>> Interrupts { get; set; }
-        [CanBeNull] private Tile Target { get; set; }
+        [CanBeNull] private ValueList<Interrupt<PayCardEffect>> Interrupts { get; set; }
+        [CanBeNull] private Card Target { get; set; }
 
         [NotNull]
-        public DestroyTileResult Evaluate()
+        public PayCardResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<DestroyTileResult>() != null);
+            Contract.Ensures(Contract.Result<PayCardResult>() != null);
 
-            DestroyTileResult error;
+            PayCardResult error;
 
             error = GetTarget();
             if (error != null) return error;
@@ -33,7 +33,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
             error = CollectInterrupts();
             if (error != null) return error;
 
-            error = CheckRemainingEntity();
+            error = CheckRemovable();
             if (error != null) return error;
 
             error = RemoveComponents();
@@ -43,7 +43,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         }
 
         [CanBeNull]
-        private DestroyTileResult GetTarget()
+        private PayCardResult GetTarget()
         {
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
@@ -55,17 +55,17 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         }
 
         [CanBeNull]
-        private DestroyTileResult CollectInterrupts()
+        private PayCardResult CollectInterrupts()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyTile(Context, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IPayCardEffector>(Context.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnPayCard(Context, Target)).Sort();
             foreach (var interrupt in Interrupts)
             {
-                if (interrupt.Effect is RejectEffect)
+                if (interrupt.Effect is ExemptEffect)
                 {
-                    return new RejectedResult(Target, Interrupts, interrupt.ComponentID);
+                    return new ExemptedResult(Target, Interrupts, interrupt.ComponentID);
                 }
             }
 
@@ -73,22 +73,16 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         }
 
         [CanBeNull]
-        private DestroyTileResult CheckRemainingEntity()
+        private PayCardResult CheckRemovable()
         {
             Contract.Requires<ArgumentNullException>(Target != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-
-            var removable = new EntityCondition(Target.Position2D).Search(Context.World).IsEmpty;
-            if (!removable)
-            {
-                return new EntityRemainingResult(Target, Interrupts);
-            }
 
             return null;
         }
 
         [CanBeNull]
-        private DestroyTileResult RemoveComponents()
+        private PayCardResult RemoveComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
             Contract.Requires<ArgumentNullException>(Target != null);
@@ -110,7 +104,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         }
 
         [NotNull]
-        private DestroyTileResult Succeed()
+        private PayCardResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);

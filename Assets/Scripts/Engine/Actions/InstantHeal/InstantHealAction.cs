@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     {
         public override InstantHealResult Evaluate(IActionContext context)
         {
-            return new ActionEvaluator(context, SourceID, TargetID, Heal).Evaluate();
+            return new InstantHealEvaluator(context, SourceID, TargetID, Heal).Evaluate();
         }
     }
 }
