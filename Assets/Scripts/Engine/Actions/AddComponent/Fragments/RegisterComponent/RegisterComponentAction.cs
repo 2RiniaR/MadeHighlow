@@ -6,20 +6,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent.RegisterComponent
     {
         public RegisterComponentResult Evaluate(IActionContext context)
         {
-            var parent = ParentID.GetFrom(context.World);
-            if (parent == null)
-            {
-                return new ParentNotFoundResult(ParentID);
-            }
-
-            var allocateIDResult = new AllocateIDAction().Evaluate(context);
-            var formatted = InitialProps with
-            {
-                ID = allocateIDResult.AllocatedID,
-                AttachedID = ParentID,
-            };
-
-            return new SucceedResult(allocateIDResult, formatted);
+            return new RegisterComponentEvaluator(context, ParentID, InitialProps).Evaluate();
         }
     }
 }

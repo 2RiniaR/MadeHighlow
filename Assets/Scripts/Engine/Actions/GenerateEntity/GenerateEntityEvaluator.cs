@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull] private IActionContext Context { get; set; }
         [NotNull] private Entity InitialStatus { get; }
 
-        [CanBeNull] private RegisterEntity.SucceedResult RegisterEntityResult { get; set; }
+        [CanBeNull] private RegisterEntityResult RegisterEntityResult { get; set; }
         [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
         [CanBeNull] private PositionEntity.SucceedResult PositionEntityResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateEntityEffect>> Interrupts { get; set; }
@@ -30,8 +30,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         {
             GenerateEntityResult result;
 
-            result = RegisterEntity();
-            if (result != null) return result;
+            RegisterEntity();
 
             result = AddInitialComponents();
             if (result != null) return result;
@@ -48,22 +47,16 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             return Succeed();
         }
 
-        [CanBeNull]
-        private GenerateEntityResult RegisterEntity()
+        private void RegisterEntity()
         {
-            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (RegisterEntityResult != null && Generating != null));
+            Contract.Ensures(
+                (Contract.Result<GenerateEntityResult>() != null) ^ (RegisterEntityResult != null && Generating != null)
+            );
 
             var result = new RegisterEntityAction(InitialStatus).Evaluate(Context);
-            if (result is not RegisterEntity.SucceedResult succeedResult)
-            {
-                return new RegisterFailedResult(InitialStatus, result);
-            }
-
-            Context = Context.Appended(succeedResult);
-            RegisterEntityResult = succeedResult;
-            Generating = succeedResult.Registered;
-
-            return null;
+            Context = Context.Appended(result);
+            RegisterEntityResult = result;
+            Generating = result.Registered;
         }
 
         [CanBeNull]

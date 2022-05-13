@@ -1,11 +1,12 @@
 ﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.GenerateEntity.PositionEntity;
+using RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public record PositionFailedResult(
         [NotNull] Entity InitialStatus,
-        [NotNull] RegisterEntity.SucceedResult RegisterEntityResult,
+        [NotNull] RegisterEntityResult RegisterEntityResult,
         [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
         [NotNull] PositionEntityResult FailedResult
     ) : GenerateEntityResult

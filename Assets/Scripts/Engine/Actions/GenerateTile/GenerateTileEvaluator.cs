@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull] private IActionContext Context { get; set; }
         [NotNull] private Tile InitialStatus { get; }
 
-        [CanBeNull] private RegisterTile.SucceedResult RegisterTileResult { get; set; }
+        [CanBeNull] private RegisterTileResult RegisterTileResult { get; set; }
         [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
         [CanBeNull] private PositionTile.SucceedResult PositionTileResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateTileEffect>> Interrupts { get; set; }
@@ -30,8 +30,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         {
             GenerateTileResult result;
 
-            result = RegisterTile();
-            if (result != null) return result;
+            RegisterTile();
 
             result = AddInitialComponents();
             if (result != null) return result;
@@ -48,22 +47,16 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             return Succeed();
         }
 
-        [CanBeNull]
-        private GenerateTileResult RegisterTile()
+        private void RegisterTile()
         {
-            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (RegisterTileResult != null && Generating != null));
+            Contract.Ensures(
+                (Contract.Result<GenerateTileResult>() != null) ^ (RegisterTileResult != null && Generating != null)
+            );
 
             var result = new RegisterTileAction(InitialStatus).Evaluate(Context);
-            if (result is not RegisterTile.SucceedResult succeedResult)
-            {
-                return new RegisterFailedResult(InitialStatus, result);
-            }
-
-            Context = Context.Appended(succeedResult);
-            RegisterTileResult = succeedResult;
-            Generating = succeedResult.Registered;
-
-            return null;
+            Context = Context.Appended(result);
+            RegisterTileResult = result;
+            Generating = result.Registered;
         }
 
         [CanBeNull]

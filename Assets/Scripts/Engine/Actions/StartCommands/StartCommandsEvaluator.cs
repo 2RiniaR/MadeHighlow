@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         {
             Contract.Requires<InvalidOperationException>(RunCommandResults != null);
 
-            return new SucceedResult(RunCommandResults);
+            return new StartCommandsResult(RunCommandResults);
         }
     }
 }

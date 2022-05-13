@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [NotNull] private IActionContext Context { get; set; }
         [NotNull] private Player InitialStatus { get; }
 
-        [CanBeNull] private RegisterPlayer.SucceedResult RegisterPlayerResult { get; set; }
+        [CanBeNull] private RegisterPlayerResult RegisterPlayerResult { get; set; }
         [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
         [CanBeNull] private ValueList<SupplyCard.SucceedResult> SupplyCardResults { get; set; }
 
@@ -29,8 +29,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         {
             JoinPlayerResult result;
 
-            result = RegisterPlayer();
-            if (result != null) return result;
+            RegisterPlayer();
 
             result = AddComponents();
             if (result != null) return result;
@@ -44,24 +43,16 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             return Succeed();
         }
 
-        [CanBeNull]
-        private JoinPlayerResult RegisterPlayer()
+        private void RegisterPlayer()
         {
             Contract.Ensures(
                 (Contract.Result<JoinPlayerResult>() != null) ^ (RegisterPlayerResult != null && Generating != null)
             );
 
             var result = new RegisterPlayerAction(InitialStatus).Evaluate(Context);
-            if (result is not RegisterPlayer.SucceedResult succeedResult)
-            {
-                return new RegisterFailedResult(InitialStatus, result);
-            }
-
-            Context = Context.Appended(succeedResult);
-            RegisterPlayerResult = succeedResult;
-            Generating = succeedResult.Registered;
-
-            return null;
+            Context = Context.Appended(result);
+            RegisterPlayerResult = result;
+            Generating = result.Registered;
         }
 
         [CanBeNull]

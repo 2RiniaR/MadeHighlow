@@ -1,11 +1,12 @@
 ﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.AddComponent;
+using RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record AddComponentFailedResult(
         [NotNull] Tile InitialStatus,
-        [NotNull] RegisterTile.SucceedResult RegisterTileResult,
+        [NotNull] RegisterTileResult RegisterTileResult,
         [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> SucceedResults,
         [NotNull] AddComponentResult FailedResult
     ) : GenerateTileResult
