@@ -24,16 +24,16 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         {
             Contract.Ensures(Contract.Result<RemoveComponentResult>() != null);
 
-            RemoveComponentResult error;
+            RemoveComponentResult result;
 
-            error = GetComponent();
-            if (error != null) return error;
+            result = GetComponent();
+            if (result != null) return result;
 
-            error = FinalizeComponents();
-            if (error != null) return error;
+            result = FinalizeComponents();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }

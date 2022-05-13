@@ -29,19 +29,19 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         {
             Contract.Ensures(Contract.Result<JoinPlayerResult>() != null);
 
-            JoinPlayerResult error;
+            JoinPlayerResult result;
 
-            error = RegisterPlayer();
-            if (error != null) return error;
+            result = RegisterPlayer();
+            if (result != null) return result;
 
-            error = AddComponents();
-            if (error != null) return error;
+            result = AddComponents();
+            if (result != null) return result;
 
-            error = SupplyCards();
-            if (error != null) return error;
+            result = SupplyCards();
+            if (result != null) return result;
 
-            error = GetPlayer();
-            if (error != null) return error;
+            result = GetPlayer();
+            if (result != null) return result;
 
             return Succeed();
         }

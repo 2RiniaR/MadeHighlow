@@ -30,22 +30,22 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         {
             Contract.Ensures(Contract.Result<GenerateTileResult>() != null);
 
-            GenerateTileResult error;
+            GenerateTileResult result;
 
-            error = RegisterTile();
-            if (error != null) return error;
+            result = RegisterTile();
+            if (result != null) return result;
 
-            error = AddComponents();
-            if (error != null) return error;
+            result = AddComponents();
+            if (result != null) return result;
 
-            error = PositionTile();
-            if (error != null) return error;
+            result = PositionTile();
+            if (result != null) return result;
 
-            error = GetTile();
-            if (error != null) return error;
+            result = GetTile();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }
@@ -155,7 +155,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             return null;
         }
 
-        [CanBeNull]
+        [NotNull]
         private GenerateTileResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);

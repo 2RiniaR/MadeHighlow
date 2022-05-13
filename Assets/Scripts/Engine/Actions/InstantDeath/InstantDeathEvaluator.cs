@@ -24,16 +24,16 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         {
             Contract.Ensures(Contract.Result<InstantDeathResult>() != null);
 
-            InstantDeathResult error;
+            InstantDeathResult result;
 
-            error = GetTarget();
-            if (error != null) return error;
+            result = GetTarget();
+            if (result != null) return result;
 
-            error = Validation();
-            if (error != null) return error;
+            result = Validation();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }

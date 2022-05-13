@@ -32,19 +32,19 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         {
             Contract.Ensures(Contract.Result<AddComponentResult>() != null);
 
-            AddComponentResult error;
+            AddComponentResult result;
 
-            error = RegisterComponent();
-            if (error != null) return error;
+            result = RegisterComponent();
+            if (result != null) return result;
 
-            error = InitializeComponents();
-            if (error != null) return error;
+            result = InitializeComponents();
+            if (result != null) return result;
 
-            error = GetComponent();
-            if (error != null) return error;
+            result = GetComponent();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }

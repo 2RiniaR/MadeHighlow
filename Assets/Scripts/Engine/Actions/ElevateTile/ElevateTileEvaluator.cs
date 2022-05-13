@@ -32,13 +32,13 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         {
             Contract.Ensures(Contract.Result<ElevateTileResult>() != null);
 
-            ElevateTileResult error;
+            ElevateTileResult result;
 
-            error = GetTarget();
-            if (error != null) return error;
+            result = GetTarget();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }

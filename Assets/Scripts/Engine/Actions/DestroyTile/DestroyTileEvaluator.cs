@@ -25,19 +25,19 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         {
             Contract.Ensures(Contract.Result<DestroyTileResult>() != null);
 
-            DestroyTileResult error;
+            DestroyTileResult result;
 
-            error = GetTarget();
-            if (error != null) return error;
+            result = GetTarget();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
-            error = CheckRemainingEntity();
-            if (error != null) return error;
+            result = CheckRemainingEntity();
+            if (result != null) return result;
 
-            error = RemoveComponents();
-            if (error != null) return error;
+            result = RemoveComponents();
+            if (result != null) return result;
 
             return Succeed();
         }

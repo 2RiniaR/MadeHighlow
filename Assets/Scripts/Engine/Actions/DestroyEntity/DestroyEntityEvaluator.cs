@@ -25,19 +25,19 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         {
             Contract.Ensures(Contract.Result<DestroyEntityResult>() != null);
 
-            DestroyEntityResult error;
+            DestroyEntityResult result;
 
-            error = GetTarget();
-            if (error != null) return error;
+            result = GetTarget();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
-            error = CheckRemovable();
-            if (error != null) return error;
+            result = CheckRemovable();
+            if (result != null) return result;
 
-            error = RemoveComponents();
-            if (error != null) return error;
+            result = RemoveComponents();
+            if (result != null) return result;
 
             return Succeed();
         }

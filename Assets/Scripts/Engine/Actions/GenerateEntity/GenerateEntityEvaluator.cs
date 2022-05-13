@@ -30,22 +30,22 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         {
             Contract.Ensures(Contract.Result<GenerateEntityResult>() != null);
 
-            GenerateEntityResult error;
+            GenerateEntityResult result;
 
-            error = RegisterEntity();
-            if (error != null) return error;
+            result = RegisterEntity();
+            if (result != null) return result;
 
-            error = AddComponents();
-            if (error != null) return error;
+            result = AddComponents();
+            if (result != null) return result;
 
-            error = PositionEntity();
-            if (error != null) return error;
+            result = PositionEntity();
+            if (result != null) return result;
 
-            error = GetEntity();
-            if (error != null) return error;
+            result = GetEntity();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }

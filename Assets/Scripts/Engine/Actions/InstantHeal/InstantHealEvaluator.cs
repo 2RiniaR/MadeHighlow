@@ -33,16 +33,16 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         {
             Contract.Ensures(Contract.Result<InstantHealResult>() != null);
 
-            InstantHealResult error;
+            InstantHealResult result;
 
-            error = GetTarget();
-            if (error != null) return error;
+            result = GetTarget();
+            if (result != null) return result;
 
-            error = Validation();
-            if (error != null) return error;
+            result = Validation();
+            if (result != null) return result;
 
-            error = CollectInterrupts();
-            if (error != null) return error;
+            result = CollectInterrupts();
+            if (result != null) return result;
 
             return Succeed();
         }
