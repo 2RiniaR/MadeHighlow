@@ -1,0 +1,50 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.RunCommand;
+
+namespace RineaR.MadeHighlow.Actions.StartCommands
+{
+    public class StartCommandsEvaluator
+    {
+        public StartCommandsEvaluator([NotNull] IActionContext context)
+        {
+            Context = context;
+        }
+
+        [NotNull] private IActionContext Context { get; set; }
+
+        [CanBeNull] [ItemNotNull] private ValueList<RunCommandResult> RunCommandResults { get; set; }
+
+        [NotNull]
+        public StartCommandsResult Evaluate()
+        {
+            Contract.Ensures(Contract.Result<StartCommandsResult>() != null);
+
+            RunByOrder();
+            return Succeed();
+        }
+
+        private void RunByOrder()
+        {
+            RunCommandResults = ValueList<RunCommandResult>.Empty;
+            var commands = Context.World.ReservedCommands;
+            var orderedCommands = new StartCommandsOrderer(commands).Resolve(Context);
+
+            foreach (var command in orderedCommands)
+            {
+                var result = new RunCommandAction(command).Evaluate(Context);
+                Context = Context.Appended(result);
+                RunCommandResults = RunCommandResults.Add(result);
+            }
+        }
+
+        [NotNull]
+        private StartCommandsResult Succeed()
+        {
+            Contract.Requires<ArgumentNullException>(RunCommandResults != null);
+
+            return new SucceedResult(RunCommandResults);
+        }
+    }
+}

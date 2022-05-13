@@ -2,7 +2,9 @@
 {
     public enum FailedReason
     {
-        ActorNotFound,
-        ActorIsDead,
+        UnitNotFound,
+        UnitIsDead,
+        CardNotFound,
+        PlayerNotFound,
     }
 }

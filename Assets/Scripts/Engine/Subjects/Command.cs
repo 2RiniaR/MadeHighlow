@@ -6,6 +6,6 @@ namespace RineaR.MadeHighlow
     public abstract record Command([NotNull] CardID CardID, [NotNull] UnitID UnitID)
     {
         [NotNull]
-        public abstract Action ActionIn([NotNull] World world);
+        public abstract ValueList<Action> ActionsIn([NotNull] IActionContext context);
     }
 }
