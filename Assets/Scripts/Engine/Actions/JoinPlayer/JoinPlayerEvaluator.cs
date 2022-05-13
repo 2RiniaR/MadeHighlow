@@ -47,7 +47,9 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [CanBeNull]
         private JoinPlayerResult RegisterPlayer()
         {
-            Contract.Ensures((Contract.Result<JoinPlayerResult>() != null) ^ (RegisterPlayerResult != null));
+            Contract.Ensures(
+                (Contract.Result<JoinPlayerResult>() != null) ^ (RegisterPlayerResult != null && Generating != null)
+            );
 
             var result = new RegisterPlayerAction(InitialStatus).Evaluate(Context);
             if (result is not RegisterPlayer.SucceedResult succeedResult)
@@ -57,6 +59,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
 
             Context = Context.Appended(succeedResult);
             RegisterPlayerResult = succeedResult;
+            Generating = succeedResult.Registered;
 
             return null;
         }
@@ -64,15 +67,14 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [CanBeNull]
         private JoinPlayerResult AddComponents()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Ensures(AddComponentResults != null);
-
-            var generatingID = RegisterPlayerResult.Registered.PlayerID;
 
             AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
             foreach (var component in InitialStatus.Components)
             {
-                var result = new AddComponentAction(generatingID, component).Evaluate(Context);
+                var result = new AddComponentAction(Generating.PlayerID, component).Evaluate(Context);
                 if (result is not AddComponent.SucceedResult succeedResult)
                 {
                     return new AddComponentFailedResult(
@@ -93,16 +95,15 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [CanBeNull]
         private JoinPlayerResult SupplyCards()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Ensures(SupplyCardResults != null);
 
-            var generatingID = RegisterPlayerResult.Registered.PlayerID;
-
             SupplyCardResults = ValueList<SupplyCard.SucceedResult>.Empty;
             foreach (var card in InitialStatus.Cards)
             {
-                var result = new SupplyCardAction(generatingID, card).Evaluate(Context);
+                var result = new SupplyCardAction(Generating.PlayerID, card).Evaluate(Context);
                 if (result is not SupplyCard.SucceedResult succeedResult)
                 {
                     return new SupplyCardFailedResult(
@@ -124,15 +125,14 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [CanBeNull]
         private JoinPlayerResult GetPlayer()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(SupplyCardResults != null);
             Contract.Ensures((Contract.Result<JoinPlayerResult>() != null) ^ (Generating != null));
 
-            var generatingID = RegisterPlayerResult.Registered.PlayerID;
-
             // `RegisterPlayer` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            Generating = generatingID.GetFrom(Context.World);
+            Generating = Generating.PlayerID.GetFrom(Context.World);
             if (Generating == null)
             {
                 return new DestroyedResult(InitialStatus, RegisterPlayerResult, AddComponentResults, SupplyCardResults);
@@ -147,7 +147,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(SupplyCardResults != null);
-            Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Generating != null);
 
             return new SucceedResult(
                 InitialStatus,

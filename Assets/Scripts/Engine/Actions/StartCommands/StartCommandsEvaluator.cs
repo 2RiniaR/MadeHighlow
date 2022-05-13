@@ -19,8 +19,6 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         [NotNull]
         public StartCommandsResult Evaluate()
         {
-            Contract.Ensures(Contract.Result<StartCommandsResult>() != null);
-
             RunByOrder();
             return Succeed();
         }
@@ -44,7 +42,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         [NotNull]
         private StartCommandsResult Succeed()
         {
-            Contract.Requires<ArgumentNullException>(RunCommandResults != null);
+            Contract.Requires<InvalidOperationException>(RunCommandResults != null);
 
             return new SucceedResult(RunCommandResults);
         }

@@ -33,13 +33,13 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             result = RegisterTile();
             if (result != null) return result;
 
-            result = AddComponents();
+            result = AddInitialComponents();
             if (result != null) return result;
 
             result = PositionTile();
             if (result != null) return result;
 
-            result = GetTile();
+            result = GetGenerating();
             if (result != null) return result;
 
             result = CollectInterrupts();
@@ -51,7 +51,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [CanBeNull]
         private GenerateTileResult RegisterTile()
         {
-            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (RegisterTileResult != null));
+            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (RegisterTileResult != null && Generating != null));
 
             var result = new RegisterTileAction(InitialStatus).Evaluate(Context);
             if (result is not RegisterTile.SucceedResult succeedResult)
@@ -61,22 +61,22 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
             Context = Context.Appended(succeedResult);
             RegisterTileResult = succeedResult;
+            Generating = succeedResult.Registered;
 
             return null;
         }
 
         [CanBeNull]
-        private GenerateTileResult AddComponents()
+        private GenerateTileResult AddInitialComponents()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Ensures(AddComponentResults != null);
-
-            var generatingID = RegisterTileResult.Registered.TileID;
 
             AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
             foreach (var component in InitialStatus.Components)
             {
-                var result = new AddComponentAction(generatingID, component).Evaluate(Context);
+                var result = new AddComponentAction(Generating.TileID, component).Evaluate(Context);
                 if (result is not AddComponent.SucceedResult succeedResult)
                 {
                     return new AddComponentFailedResult(InitialStatus, RegisterTileResult, AddComponentResults, result);
@@ -92,13 +92,12 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [CanBeNull]
         private GenerateTileResult PositionTile()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (PositionTileResult != null));
 
-            var generatingID = RegisterTileResult.Registered.TileID;
-
-            var result = new PositionTileAction(generatingID, InitialStatus.Position2D).Evaluate(Context);
+            var result = new PositionTileAction(Generating.TileID, InitialStatus.Position2D).Evaluate(Context);
             if (result is not PositionTile.SucceedResult succeedResult)
             {
                 return new PositionFailedResult(InitialStatus, RegisterTileResult, AddComponentResults, result);
@@ -111,17 +110,16 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         }
 
         [CanBeNull]
-        private GenerateTileResult GetTile()
+        private GenerateTileResult GetGenerating()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionTileResult != null);
             Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (Generating != null));
 
-            var generatingID = RegisterTileResult.Registered.TileID;
-
             // `RegisterTile` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            Generating = generatingID.GetFrom(Context.World);
+            Generating = Generating.TileID.GetFrom(Context.World);
             if (Generating == null)
             {
                 return new DestroyedResult(InitialStatus, RegisterTileResult, AddComponentResults, PositionTileResult);
@@ -136,7 +134,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionTileResult != null);
-            Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IGenerateTileEffector>(Context.World);
@@ -166,7 +164,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionTileResult != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Generating != null);
 
             return new SucceedResult(
                 InitialStatus,

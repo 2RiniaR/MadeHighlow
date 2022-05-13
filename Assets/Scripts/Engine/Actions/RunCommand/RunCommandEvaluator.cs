@@ -79,9 +79,9 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [CanBeNull]
         private RunCommandResult CollectInterrupts()
         {
-            Contract.Requires<ArgumentNullException>(Player != null);
-            Contract.Requires<ArgumentNullException>(Unit != null);
-            Contract.Requires<ArgumentNullException>(Card != null);
+            Contract.Requires<InvalidOperationException>(Player != null);
+            Contract.Requires<InvalidOperationException>(Unit != null);
+            Contract.Requires<InvalidOperationException>(Card != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(Context.World);
@@ -124,9 +124,9 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [NotNull]
         private RunCommandResult Succeed()
         {
-            Contract.Requires<ArgumentNullException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(CommandActionResults != null);
-            Contract.Requires<ArgumentNullException>(PayCardResult != null);
+            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(CommandActionResults != null);
+            Contract.Requires<InvalidOperationException>(PayCardResult != null);
 
             return new SucceedResult(Command, Interrupts, PayCardResult, CommandActionResults);
         }

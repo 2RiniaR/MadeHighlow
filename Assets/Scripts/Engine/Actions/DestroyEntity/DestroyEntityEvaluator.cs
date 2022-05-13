@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
             result = CollectInterrupts();
             if (result != null) return result;
 
-            result = RemoveComponents();
+            result = RemoveAttachedComponents();
             if (result != null) return result;
 
             return Succeed();
@@ -54,7 +54,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [CanBeNull]
         private DestroyEntityResult CollectInterrupts()
         {
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IDestroyEntityEffector>(Context.World);
@@ -71,10 +71,10 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         }
 
         [CanBeNull]
-        private DestroyEntityResult RemoveComponents()
+        private DestroyEntityResult RemoveAttachedComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(RemoveComponentResults != null);
 
             RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
@@ -98,7 +98,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         {
             Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
 
             return new SucceedResult(Target, RemoveComponentResults, Interrupts);
         }

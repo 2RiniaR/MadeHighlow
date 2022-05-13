@@ -24,10 +24,10 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         {
             RemoveComponentResult result;
 
-            result = GetComponent();
+            result = GetTarget();
             if (result != null) return result;
 
-            result = FinalizeComponents();
+            result = FinalizeComponent();
             if (result != null) return result;
 
             result = CollectInterrupts();
@@ -36,10 +36,10 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
             return Succeed();
         }
 
-        private RemoveComponentResult GetComponent()
+        private RemoveComponentResult GetTarget()
         {
             Contract.Ensures((Contract.Result<RemoveComponentResult>() != null) ^ (Target != null));
-            
+
             Target = TargetID.GetFrom(Context.World);
             if (Target == null)
             {
@@ -49,26 +49,33 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
             return null;
         }
 
-        private RemoveComponentResult FinalizeComponents()
+        private RemoveComponentResult FinalizeComponent()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(FinalizeComponentResults != null);
 
-            var actions = Target.FinalizeActions(Context);
-            FinalizeComponentResults = actions.Select(action => action.EvaluateAbstract(Context));
-            if (!Target.IsFinalizeSucceed(Context, FinalizeComponentResults))
+            var actionConfirmations = Target.InitializeActions(Context);
+
+            FinalizeComponentResults = ValueList<Result>.Empty;
+            foreach (var actionConfirmation in actionConfirmations)
             {
-                return new FinalizeFailedResult(Target, FinalizeComponentResults);
+                var result = actionConfirmation.Action.EvaluateAbstract(Context);
+                if (!actionConfirmation.Confirmation(result))
+                {
+                    return new FinalizeFailedResult(Target, FinalizeComponentResults, result);
+                }
+
+                FinalizeComponentResults = FinalizeComponentResults.Add(result);
+                Context = Context.Appended(result);
             }
 
-            Context = Context.Appended(FinalizeComponentResults);
             return null;
         }
 
         private RemoveComponentResult CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(FinalizeComponentResults != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IRemoveComponentEffector>(Context.World);
@@ -88,7 +95,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         {
             Contract.Requires<InvalidOperationException>(FinalizeComponentResults != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
 
             return new SucceedResult(Target, FinalizeComponentResults, Interrupts);
         }

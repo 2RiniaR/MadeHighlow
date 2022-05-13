@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
             result = CollectInterrupts();
             if (result != null) return result;
 
-            result = RemoveComponents();
+            result = RemoveAttachedComponents();
             if (result != null) return result;
 
             return Succeed();
@@ -54,7 +54,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         [CanBeNull]
         private PayCardResult CollectInterrupts()
         {
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IPayCardEffector>(Context.World);
@@ -71,10 +71,10 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         }
 
         [CanBeNull]
-        private PayCardResult RemoveComponents()
+        private PayCardResult RemoveAttachedComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(RemoveComponentResults != null);
 
             RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
@@ -98,7 +98,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         {
             Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
 
             return new SucceedResult(Target, RemoveComponentResults, Interrupts);
         }

@@ -6,7 +6,8 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull] IAttachableID TargetID,
         [NotNull] Component InitialStatus,
         [NotNull] RegisterComponent.SucceedResult RegisterComponentResult,
-        [NotNull] ValueList<Result> FailedResults
+        [NotNull] ValueList<Result> SucceedResults,
+        [NotNull] Result FailedResult
     ) : AddComponentResult
     {
         public override World Simulate(World world)

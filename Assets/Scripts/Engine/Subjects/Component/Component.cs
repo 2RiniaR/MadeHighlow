@@ -1,7 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions;
-using Action = RineaR.MadeHighlow.Actions.Action;
 
 namespace RineaR.MadeHighlow
 {
@@ -61,30 +60,14 @@ namespace RineaR.MadeHighlow
             return ValueList<IObject>.Empty;
         }
 
-        public virtual ValueList<Action> InitializeActions([NotNull] IActionContext context)
+        public virtual ValueList<ActionConfirmation> InitializeActions([NotNull] IActionContext context)
         {
-            return ValueList<Action>.Empty;
+            return ValueList<ActionConfirmation>.Empty;
         }
 
-        public virtual bool IsInitializeSucceed(
-            [NotNull] IActionContext context,
-            [NotNull] [ItemNotNull] ValueList<Result> results
-        )
+        public virtual ValueList<ActionConfirmation> FinalizeActions([NotNull] IActionContext context)
         {
-            return true;
-        }
-
-        public virtual ValueList<Action> FinalizeActions([NotNull] IActionContext context)
-        {
-            return ValueList<Action>.Empty;
-        }
-
-        public virtual bool IsFinalizeSucceed(
-            [NotNull] IActionContext context,
-            [NotNull] [ItemNotNull] ValueList<Result> results
-        )
-        {
-            return true;
+            return ValueList<ActionConfirmation>.Empty;
         }
     }
 }

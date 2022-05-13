@@ -33,13 +33,13 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             result = RegisterEntity();
             if (result != null) return result;
 
-            result = AddComponents();
+            result = AddInitialComponents();
             if (result != null) return result;
 
             result = PositionEntity();
             if (result != null) return result;
 
-            result = GetEntity();
+            result = GetGenerating();
             if (result != null) return result;
 
             result = CollectInterrupts();
@@ -51,7 +51,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [CanBeNull]
         private GenerateEntityResult RegisterEntity()
         {
-            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (RegisterEntityResult != null));
+            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (RegisterEntityResult != null && Generating != null));
 
             var result = new RegisterEntityAction(InitialStatus).Evaluate(Context);
             if (result is not RegisterEntity.SucceedResult succeedResult)
@@ -61,22 +61,22 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 
             Context = Context.Appended(succeedResult);
             RegisterEntityResult = succeedResult;
+            Generating = succeedResult.Registered;
 
             return null;
         }
 
         [CanBeNull]
-        private GenerateEntityResult AddComponents()
+        private GenerateEntityResult AddInitialComponents()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Ensures(AddComponentResults != null);
-
-            var generatingID = RegisterEntityResult.Registered.EntityID;
 
             AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
             foreach (var component in InitialStatus.Components)
             {
-                var result = new AddComponentAction(generatingID, component).Evaluate(Context);
+                var result = new AddComponentAction(Generating.EntityID, component).Evaluate(Context);
                 if (result is not AddComponent.SucceedResult succeedResult)
                 {
                     return new AddComponentFailedResult(
@@ -97,13 +97,12 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [CanBeNull]
         private GenerateEntityResult PositionEntity()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (PositionEntityResult != null));
 
-            var generatingID = RegisterEntityResult.Registered.EntityID;
-
-            var result = new PositionEntityAction(generatingID, InitialStatus.Position3D).Evaluate(Context);
+            var result = new PositionEntityAction(Generating.EntityID, InitialStatus.Position3D).Evaluate(Context);
             if (result is not PositionEntity.SucceedResult succeedResult)
             {
                 return new PositionFailedResult(InitialStatus, RegisterEntityResult, AddComponentResults, result);
@@ -116,17 +115,16 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         }
 
         [CanBeNull]
-        private GenerateEntityResult GetEntity()
+        private GenerateEntityResult GetGenerating()
         {
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
             Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (Generating != null));
 
-            var generatingID = RegisterEntityResult.Registered.EntityID;
-
             // `RegisterEntity` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            Generating = generatingID.GetFrom(Context.World);
+            Generating = Generating.EntityID.GetFrom(Context.World);
             if (Generating == null)
             {
                 return new DestroyedResult(
@@ -146,7 +144,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
-            Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IGenerateEntityEffector>(Context.World);
@@ -176,7 +174,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Generating != null);
 
             return new SucceedResult(
                 InitialStatus,

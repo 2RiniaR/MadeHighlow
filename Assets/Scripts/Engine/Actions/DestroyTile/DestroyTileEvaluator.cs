@@ -34,7 +34,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
             result = CheckRemainingEntity();
             if (result != null) return result;
 
-            result = RemoveComponents();
+            result = RemoveAttachedComponents();
             if (result != null) return result;
 
             return Succeed();
@@ -57,7 +57,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [CanBeNull]
         private DestroyTileResult CollectInterrupts()
         {
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(Context.World);
@@ -76,7 +76,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [CanBeNull]
         private DestroyTileResult CheckRemainingEntity()
         {
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
 
             var removable = new EntityCondition(Target.Position2D).Search(Context.World).IsEmpty;
@@ -89,10 +89,10 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         }
 
         [CanBeNull]
-        private DestroyTileResult RemoveComponents()
+        private DestroyTileResult RemoveAttachedComponents()
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(RemoveComponentResults != null);
 
             RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
@@ -116,7 +116,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         {
             Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<ArgumentNullException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Target != null);
 
             return new SucceedResult(Target, RemoveComponentResults, Interrupts);
         }

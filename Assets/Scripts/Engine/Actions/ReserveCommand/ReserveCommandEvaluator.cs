@@ -70,9 +70,9 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [CanBeNull]
         private ReserveCommandResult CollectInterrupts()
         {
-            Contract.Requires<ArgumentNullException>(Player != null);
-            Contract.Requires<ArgumentNullException>(Unit != null);
-            Contract.Requires<ArgumentNullException>(Card != null);
+            Contract.Requires<InvalidOperationException>(Player != null);
+            Contract.Requires<InvalidOperationException>(Unit != null);
+            Contract.Requires<InvalidOperationException>(Card != null);
             Contract.Ensures(Interrupts != null);
 
             var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(Context.World);
@@ -99,7 +99,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [NotNull]
         private ReserveCommandResult Disallowed()
         {
-            Contract.Requires<ArgumentNullException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(Interrupts != null);
 
             return new DisallowedResult(Command, Interrupts, null);
         }
