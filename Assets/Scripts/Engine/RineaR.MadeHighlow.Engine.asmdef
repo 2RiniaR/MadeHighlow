@@ -1,0 +1,16 @@
+{
+  "name": "RineaR.MadeHighlow.Engine",
+  "rootNamespace": "RineaR.MadeHighlow",
+  "references": [
+    "GUID:ad757c450fe45a8468f6fb17a9fed6dd"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

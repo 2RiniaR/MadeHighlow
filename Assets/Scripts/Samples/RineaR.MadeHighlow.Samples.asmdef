@@ -1,0 +1,20 @@
+{
+  "name": "RineaR.MadeHighlow.Samples",
+  "rootNamespace": "RineaR.MadeHighlow",
+  "references": [
+    "GUID:844fd97f7a28b4842bad9ea76d9423d7",
+    "GUID:38256ff909696a8489d0ed36371b51ba",
+    "GUID:e4e91e0376aee0a44af0f1115452c2f2",
+    "GUID:ad757c450fe45a8468f6fb17a9fed6dd",
+    "GUID:f51ebe6a0ceec4240a699833d6309b23"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
