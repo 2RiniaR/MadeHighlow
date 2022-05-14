@@ -1,0 +1,16 @@
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Valid.PayCard
+{
+    public record SucceedResult(
+        [NotNull] Card Paid,
+        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardEffect>> Interrupts
+    ) : PayCardResult
+    {
+        public override World Simulate(World world)
+        {
+            return Paid.DeleteFrom(world);
+        }
+    }
+}

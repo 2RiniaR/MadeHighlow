@@ -6,6 +6,6 @@ namespace RineaR.MadeHighlow.Actions
     {
         [ItemNotNull]
         [NotNull]
-        public ValueList<Action> PredictionsOn([NotNull] Action action);
+        public ValueList<ValidAction> PredictionsOn([NotNull] ValidAction action);
     }
 }

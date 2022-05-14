@@ -1,6 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions;
+using RineaR.MadeHighlow.Actions.Valid;
 
 namespace RineaR.MadeHighlow.Components.UnitEffects
 {
