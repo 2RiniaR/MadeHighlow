@@ -4,8 +4,8 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public record FinalizeFailedResult(
         [NotNull] Component Target,
-        [NotNull] ValueList<Result> SucceedResults,
-        [NotNull] Result FailedResult
+        [NotNull] ValueList<ReactedResult> SucceedResults,
+        [NotNull] ReactedResult FailedResult
     ) : RemoveComponentResult
     {
         public override World Simulate(World world)

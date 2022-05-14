@@ -6,8 +6,8 @@ namespace RineaR.MadeHighlow.Actions.PayCard
     public record RemoveComponentFailedResult(
         [NotNull] Card Target,
         [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardEffect>> Interrupts,
-        [NotNull] ValueList<RemoveComponent.SucceedResult> SucceedResults,
-        RemoveComponentResult FailedResult
+        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> SucceedResults,
+        [NotNull] ReactedResult<RemoveComponentResult> FailedResult
     ) : PayCardResult
     {
         public override World Simulate(World world)

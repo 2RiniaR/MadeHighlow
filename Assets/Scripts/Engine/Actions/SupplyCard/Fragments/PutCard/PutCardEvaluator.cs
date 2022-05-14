@@ -104,7 +104,8 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard.PutCard
             }
 
             var result = new DropCardAction(dropID).Evaluate(Context);
-            if (result is DropCard.SucceedResult succeedResult)
+            var succeedResult = result.BodyAs<DropCard.SucceedResult>();
+            if (succeedResult != null)
             {
                 return new ReplacedResult(Target, succeedResult);
             }

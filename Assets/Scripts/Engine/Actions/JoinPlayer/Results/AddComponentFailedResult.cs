@@ -7,8 +7,8 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
     public record AddComponentFailedResult(
         [NotNull] Player InitialStatus,
         [NotNull] RegisterPlayerResult RegisterPlayerResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> SucceedResults,
-        [NotNull] AddComponentResult FailedResult
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> SucceedResults,
+        [NotNull] ReactedResult<AddComponentResult> FailedResult
     ) : JoinPlayerResult
     {
         public override World Simulate(World world)

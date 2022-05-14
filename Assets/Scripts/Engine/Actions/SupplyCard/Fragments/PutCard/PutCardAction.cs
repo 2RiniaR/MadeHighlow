@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard.PutCard
 {
-    public record PutCardAction([NotNull] CardID TargetID) : Action<PutCardResult>
+    public record PutCardAction([NotNull] CardID TargetID)
     {
-        public override PutCardResult Evaluate(IActionContext context)
+        public PutCardResult Evaluate(IActionContext context)
         {
             return new PutCardEvaluator(context, TargetID).Evaluate();
         }

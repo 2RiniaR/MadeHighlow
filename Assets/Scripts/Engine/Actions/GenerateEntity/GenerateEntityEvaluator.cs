@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull] private Entity InitialStatus { get; }
 
         [CanBeNull] private RegisterEntityResult RegisterEntityResult { get; set; }
-        [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
         [CanBeNull] private PositionEntity.SucceedResult PositionEntityResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateEntityEffect>> Interrupts { get; set; }
 
@@ -66,11 +66,12 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(RegisterEntityResult != null);
             Contract.Ensures(AddComponentResults != null);
 
-            AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
+            AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
                 var result = new AddComponentAction(Generating.EntityID, component).Evaluate(Context);
-                if (result is not AddComponent.SucceedResult succeedResult)
+                var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
+                if (succeedResult == null)
                 {
                     return new AddComponentFailedResult(
                         InitialStatus,

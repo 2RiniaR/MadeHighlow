@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public record DestroyedResult(
         [NotNull] Entity InitialStatus,
         [NotNull] RegisterEntityResult RegisterEntityResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
         [NotNull] PositionEntity.SucceedResult PositionEntityResult
     ) : GenerateEntityResult
     {

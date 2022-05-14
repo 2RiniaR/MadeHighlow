@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
     public record SucceedResult(
         [NotNull] Tile Destroyed,
-        [NotNull] ValueList<RemoveComponent.SucceedResult> RemoveComponentResults,
+        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyTileEffect>> Interrupts
     ) : DestroyTileResult
     {

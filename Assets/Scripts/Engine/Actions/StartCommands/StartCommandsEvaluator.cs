@@ -14,7 +14,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
 
         [NotNull] private IActionContext Context { get; set; }
 
-        [CanBeNull] [ItemNotNull] private ValueList<RunCommandResult> RunCommandResults { get; set; }
+        [CanBeNull] [ItemNotNull] private ValueList<ReactedResult<RunCommandResult>> RunCommandResults { get; set; }
 
         [NotNull]
         public StartCommandsResult Evaluate()
@@ -27,7 +27,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         {
             Contract.Ensures(RunCommandResults != null);
 
-            RunCommandResults = ValueList<RunCommandResult>.Empty;
+            RunCommandResults = ValueList<ReactedResult<RunCommandResult>>.Empty;
             var commands = Context.World.ReservedCommands;
             var orderedCommands = new StartCommandsOrderer(commands).Resolve(Context);
 

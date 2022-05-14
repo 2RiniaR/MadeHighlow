@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.FragmentActions;
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer
 {

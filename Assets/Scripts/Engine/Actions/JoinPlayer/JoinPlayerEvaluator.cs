@@ -19,8 +19,8 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [NotNull] private Player InitialStatus { get; }
 
         [CanBeNull] private RegisterPlayerResult RegisterPlayerResult { get; set; }
-        [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
-        [CanBeNull] private ValueList<SupplyCard.SucceedResult> SupplyCardResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult<SupplyCard.SucceedResult>> SupplyCardResults { get; set; }
 
         [CanBeNull] private Player Generating { get; set; }
 
@@ -62,11 +62,12 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Contract.Requires<InvalidOperationException>(RegisterPlayerResult != null);
             Contract.Ensures(AddComponentResults != null);
 
-            AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
+            AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
                 var result = new AddComponentAction(Generating.PlayerID, component).Evaluate(Context);
-                if (result is not AddComponent.SucceedResult succeedResult)
+                var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
+                if (succeedResult == null)
                 {
                     return new AddComponentFailedResult(
                         InitialStatus,
@@ -91,11 +92,12 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Ensures(SupplyCardResults != null);
 
-            SupplyCardResults = ValueList<SupplyCard.SucceedResult>.Empty;
+            SupplyCardResults = ValueList<ReactedResult<SupplyCard.SucceedResult>>.Empty;
             foreach (var card in InitialStatus.Cards)
             {
                 var result = new SupplyCardAction(Generating.PlayerID, card).Evaluate(Context);
-                if (result is not SupplyCard.SucceedResult succeedResult)
+                var succeedResult = result.BodyAs<SupplyCard.SucceedResult>();
+                if (succeedResult == null)
                 {
                     return new SupplyCardFailedResult(
                         InitialStatus,

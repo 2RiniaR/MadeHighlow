@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public record SucceedResult(
         [NotNull] Card Paid,
-        [NotNull] ValueList<RemoveComponent.SucceedResult> RemoveComponentResults,
+        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults,
         [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardEffect>> Interrupts
     ) : PayCardResult
     {

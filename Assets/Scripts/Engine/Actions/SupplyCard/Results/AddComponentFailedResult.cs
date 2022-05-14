@@ -7,8 +7,8 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [NotNull] PlayerID TargetID,
         [NotNull] Card InitialStatus,
         [NotNull] RegisterCard.SucceedResult RegisterCardResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> SucceedResults,
-        [NotNull] AddComponentResult FailedResult
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> SucceedResults,
+        [NotNull] ReactedResult<AddComponentResult> FailedResult
     ) : SupplyCardResult
     {
         public override World Simulate(World world)

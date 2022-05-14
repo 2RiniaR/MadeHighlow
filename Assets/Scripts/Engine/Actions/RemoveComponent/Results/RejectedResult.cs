@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public record RejectedResult(
         [NotNull] Component Target,
-        [NotNull] ValueList<Result> FinalizeComponentResults,
+        [NotNull] ValueList<ReactedResult> FinalizeComponentResults,
         [NotNull] [ItemNotNull] ValueList<Interrupt<RemoveComponentEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : RemoveComponentResult

@@ -1,12 +1,10 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity.PositionEntity
 {
-    public record PositionEntityAction
-        ([NotNull] EntityID TargetID, [NotNull] Position3D Destination) : Action<PositionEntityResult>
+    public record PositionEntityAction([NotNull] EntityID TargetID, [NotNull] Position3D Destination)
     {
-        public override PositionEntityResult Evaluate(IActionContext context)
+        public PositionEntityResult Evaluate(IActionContext context)
         {
             return new PositionEntityEvaluator(context, TargetID, Destination).Evaluate();
         }

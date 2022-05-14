@@ -2,10 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions
 {
-    public interface IAdvanceActor
+    public interface IPredictor
     {
         [ItemNotNull]
         [NotNull]
-        public ValueList<Action> AdvanceActionsOn([NotNull] Action action);
+        public ValueList<Action> PredictionsOn([NotNull] Action action);
     }
 }

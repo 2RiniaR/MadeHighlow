@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public record SucceedResult(
         [NotNull] Entity InitialStatus,
         [NotNull] RegisterEntityResult RegisterEntityResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
         [NotNull] PositionEntity.SucceedResult PositionEntityResult,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityEffect>> Interrupts,
         [NotNull] Entity Generated

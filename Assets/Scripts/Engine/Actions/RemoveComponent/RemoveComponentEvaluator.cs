@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         [NotNull] private IActionContext Context { get; set; }
         [NotNull] private ComponentID TargetID { get; }
 
-        [CanBeNull] private ValueList<Result> FinalizeComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult> FinalizeComponentResults { get; set; }
         [CanBeNull] private ValueList<Interrupt<RemoveComponentEffect>> Interrupts { get; set; }
         [CanBeNull] private Component Target { get; set; }
 
@@ -56,10 +56,10 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 
             var actionConfirmations = Target.InitializeActions(Context);
 
-            FinalizeComponentResults = ValueList<Result>.Empty;
+            FinalizeComponentResults = ValueList<ReactedResult>.Empty;
             foreach (var actionConfirmation in actionConfirmations)
             {
-                var result = actionConfirmation.Action.EvaluateAbstract(Context);
+                var result = actionConfirmation.Action.EvaluateBase(Context);
                 if (!actionConfirmation.Confirmation(result))
                 {
                     return new FinalizeFailedResult(Target, FinalizeComponentResults, result);

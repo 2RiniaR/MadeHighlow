@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile
 {
-    public record RegisterTileAction([NotNull] Tile InitialProps) : Action<RegisterTileResult>
+    public record RegisterTileAction([NotNull] Tile InitialProps)
     {
-        public override RegisterTileResult Evaluate(IActionContext context)
+        public RegisterTileResult Evaluate(IActionContext context)
         {
             return new RegisterTileEvaluator(context, InitialProps).Evaluate();
         }

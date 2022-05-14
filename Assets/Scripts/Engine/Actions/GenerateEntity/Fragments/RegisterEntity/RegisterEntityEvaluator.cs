@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.FragmentActions;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity
 {

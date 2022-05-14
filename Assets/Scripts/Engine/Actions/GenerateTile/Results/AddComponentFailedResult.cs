@@ -7,8 +7,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
     public record AddComponentFailedResult(
         [NotNull] Tile InitialStatus,
         [NotNull] RegisterTileResult RegisterTileResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> SucceedResults,
-        [NotNull] AddComponentResult FailedResult
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> SucceedResults,
+        [NotNull] ReactedResult<AddComponentResult> FailedResult
     ) : GenerateTileResult
     {
         public override World Simulate(World world)

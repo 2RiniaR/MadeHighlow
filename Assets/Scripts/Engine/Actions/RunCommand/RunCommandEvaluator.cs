@@ -20,8 +20,8 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [CanBeNull] private Unit Unit { get; set; }
         [CanBeNull] private Player Player { get; set; }
         [CanBeNull] private Card Card { get; set; }
-        [CanBeNull] [ItemNotNull] private ValueList<Result> CommandActionResults { get; set; }
-        [CanBeNull] private PayCardResult PayCardResult { get; set; }
+        [CanBeNull] [ItemNotNull] private ValueList<ReactedResult> CommandActionResults { get; set; }
+        [CanBeNull] private ReactedResult<PayCardResult> PayCardResult { get; set; }
 
         [NotNull]
         public RunCommandResult Evaluate()
@@ -104,10 +104,10 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         {
             Contract.Ensures(CommandActionResults != null);
 
-            CommandActionResults = ValueList<Result>.Empty;
+            CommandActionResults = ValueList<ReactedResult>.Empty;
             foreach (var action in Command.ActionsIn(Context))
             {
-                var result = action.EvaluateAbstract(Context);
+                var result = action.EvaluateBase(Context);
                 Context = Context.Appended(result);
                 CommandActionResults = CommandActionResults.Add(result);
             }

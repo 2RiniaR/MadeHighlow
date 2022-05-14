@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer
 {
-    public record RegisterPlayerAction([NotNull] Player InitialProps) : Action<RegisterPlayerResult>
+    public record RegisterPlayerAction([NotNull] Player InitialProps)
     {
-        public override RegisterPlayerResult Evaluate(IActionContext context)
+        public RegisterPlayerResult Evaluate(IActionContext context)
         {
             return new RegisterPlayerEvaluator(context, InitialProps).Evaluate();
         }

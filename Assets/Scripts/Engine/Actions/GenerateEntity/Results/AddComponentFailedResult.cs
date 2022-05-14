@@ -7,8 +7,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public record AddComponentFailedResult(
         [NotNull] Entity InitialStatus,
         [NotNull] RegisterEntityResult RegisterEntityResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> SucceedResults,
-        [NotNull] AddComponentResult FailedResult
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> SucceedResults,
+        [NotNull] ReactedResult<AddComponentResult> FailedResult
     ) : GenerateEntityResult
     {
         public override World Simulate(World world)

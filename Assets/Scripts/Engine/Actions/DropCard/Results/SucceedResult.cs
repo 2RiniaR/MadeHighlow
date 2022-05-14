@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public record SucceedResult(
         [NotNull] Card Dropped,
-        [NotNull] ValueList<RemoveComponent.SucceedResult> RemoveComponentResults,
+        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DropCardEffect>> Interrupts
     ) : DropCardResult
     {

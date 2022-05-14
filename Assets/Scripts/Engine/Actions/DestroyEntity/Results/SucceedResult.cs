@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public record SucceedResult(
         [NotNull] Entity Destroyed,
-        [NotNull] ValueList<RemoveComponent.SucceedResult> RemoveComponentResults,
+        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityEffect>> Interrupts
     ) : DestroyEntityResult
     {

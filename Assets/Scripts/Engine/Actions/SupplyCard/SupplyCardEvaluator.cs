@@ -25,11 +25,9 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [NotNull] private Card InitialStatus { get; }
 
         [CanBeNull] private RegisterCard.SucceedResult RegisterCardResult { get; set; }
-        [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
         [CanBeNull] private PutCard.SucceedResult PutCardResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<SupplyCardEffect>> Interrupts { get; set; }
-
-        [CanBeNull] private Player Target { get; set; }
         [CanBeNull] private Card Generating { get; set; }
 
         [NotNull]
@@ -82,11 +80,12 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Contract.Requires<InvalidOperationException>(RegisterCardResult != null);
             Contract.Ensures(AddComponentResults != null);
 
-            AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
+            AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
                 var result = new AddComponentAction(Generating.CardID, component).Evaluate(Context);
-                if (result is not AddComponent.SucceedResult succeedResult)
+                var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
+                if (succeedResult == null)
                 {
                     return new AddComponentFailedResult(
                         TargetID,

@@ -206,6 +206,7 @@
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cactions_005Cwalk_005Cstep_005Ceffects/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cactions_005Cwalk_005Cstep_005Cevents/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cactions_005Cwalk_005Cstep_005Cinterfaces/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cfragmentactions_005Callocateid/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cmodels/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cqueries_005Ccomponent/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=assets_005Cscripts_005Cengine_005Cqueries_005Ccomponents/@EntryIndexedValue">True</s:Boolean>

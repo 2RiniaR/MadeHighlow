@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull] private Component InitialStatus { get; }
 
         [CanBeNull] private RegisterComponent.SucceedResult RegisterComponentResult { get; set; }
-        [CanBeNull] private ValueList<Result> InitializeComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult> InitializeComponentResults { get; set; }
         [CanBeNull] private ValueList<Interrupt<AddComponentEffect>> Interrupts { get; set; }
         [CanBeNull] private Component Generating { get; set; }
 
@@ -51,7 +51,8 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         private AddComponentResult RegisterComponent()
         {
             Contract.Ensures(
-                (Contract.Result<AddComponentResult>() != null) ^ (RegisterComponentResult != null && Generating != null)
+                (Contract.Result<AddComponentResult>() != null) ^
+                (RegisterComponentResult != null && Generating != null)
             );
 
             var result = new RegisterComponentAction(TargetID, InitialStatus).Evaluate(Context);
@@ -75,10 +76,10 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
 
             var actionConfirmations = Generating.InitializeActions(Context);
 
-            InitializeComponentResults = ValueList<Result>.Empty;
+            InitializeComponentResults = ValueList<ReactedResult>.Empty;
             foreach (var actionConfirmation in actionConfirmations)
             {
-                var result = actionConfirmation.Action.EvaluateAbstract(Context);
+                var result = actionConfirmation.Action.EvaluateBase(Context);
                 if (!actionConfirmation.Confirmation(result))
                 {
                     return new InitializeFailedResult(

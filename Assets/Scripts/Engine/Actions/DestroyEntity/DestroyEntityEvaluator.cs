@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [NotNull] private IActionContext Context { get; set; }
         [NotNull] private EntityID TargetID { get; }
 
-        [CanBeNull] private ValueList<RemoveComponent.SucceedResult> RemoveComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }
         [CanBeNull] private ValueList<Interrupt<DestroyEntityEffect>> Interrupts { get; set; }
         [CanBeNull] private Entity Target { get; set; }
 
@@ -77,11 +77,12 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(RemoveComponentResults != null);
 
-            RemoveComponentResults = ValueList<RemoveComponent.SucceedResult>.Empty;
+            RemoveComponentResults = ValueList<ReactedResult<RemoveComponent.SucceedResult>>.Empty;
             foreach (var component in Target.Components)
             {
                 var result = new RemoveComponentAction(component.ComponentID).Evaluate(Context);
-                if (result is not RemoveComponent.SucceedResult succeedResult)
+                var succeedResult = result.BodyAs<RemoveComponent.SucceedResult>();
+                if (succeedResult == null)
                 {
                     return new RemoveComponentFailedResult(Target, Interrupts, RemoveComponentResults, result);
                 }

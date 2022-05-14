@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
     public record RejectedResult(
         [NotNull] Tile InitialStatus,
         [NotNull] RegisterTileResult RegisterTileResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
         [NotNull] PositionTile.SucceedResult PositionTileResult,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts,
         [NotNull] ComponentID RejectedComponentID

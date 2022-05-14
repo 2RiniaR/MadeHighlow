@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull] IAttachableID TargetID,
         [NotNull] Component InitialStatus,
         [NotNull] RegisterComponent.SucceedResult RegisterComponentResult,
-        [NotNull] ValueList<Result> InitializeResults,
+        [NotNull] ValueList<ReactedResult> InitializeResults,
         [NotNull] [ItemNotNull] ValueList<Interrupt<AddComponentEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : AddComponentResult

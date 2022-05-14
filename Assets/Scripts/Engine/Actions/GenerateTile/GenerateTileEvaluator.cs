@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull] private Tile InitialStatus { get; }
 
         [CanBeNull] private RegisterTileResult RegisterTileResult { get; set; }
-        [CanBeNull] private ValueList<AddComponent.SucceedResult> AddComponentResults { get; set; }
+        [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
         [CanBeNull] private PositionTile.SucceedResult PositionTileResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateTileEffect>> Interrupts { get; set; }
 
@@ -66,11 +66,12 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
             Contract.Ensures(AddComponentResults != null);
 
-            AddComponentResults = ValueList<AddComponent.SucceedResult>.Empty;
+            AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
                 var result = new AddComponentAction(Generating.TileID, component).Evaluate(Context);
-                if (result is not AddComponent.SucceedResult succeedResult)
+                var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
+                if (succeedResult == null)
                 {
                     return new AddComponentFailedResult(InitialStatus, RegisterTileResult, AddComponentResults, result);
                 }

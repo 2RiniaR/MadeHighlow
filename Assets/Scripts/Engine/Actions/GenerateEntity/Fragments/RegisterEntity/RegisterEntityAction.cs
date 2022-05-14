@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity
 {
-    public record RegisterEntityAction([NotNull] Entity InitialProps) : Action<RegisterEntityResult>
+    public record RegisterEntityAction([NotNull] Entity InitialProps)
     {
-        public override RegisterEntityResult Evaluate(IActionContext context)
+        public RegisterEntityResult Evaluate(IActionContext context)
         {
             return new RegisterEntityEvaluator(context, InitialProps).Evaluate();
         }

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [NotNull] PlayerID TargetID,
         [NotNull] Card InitialStatus,
         [NotNull] RegisterCard.SucceedResult RegisterCardResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
         [NotNull] PutCard.SucceedResult PutCardResult
     ) : SupplyCardResult
     {

@@ -3,7 +3,9 @@ using RineaR.MadeHighlow.Actions.RunCommand;
 
 namespace RineaR.MadeHighlow.Actions.StartCommands
 {
-    public record StartCommandsResult([NotNull] [ItemNotNull] ValueList<RunCommandResult> RunCommandResults) : Result
+    public record StartCommandsResult(
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<RunCommandResult>> RunCommandResults
+    ) : Result
     {
         public override World Simulate(World world)
         {

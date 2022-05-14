@@ -2,7 +2,7 @@
 {
     public record StartCommandsAction : Action<StartCommandsResult>
     {
-        public override StartCommandsResult Evaluate(IActionContext context)
+        protected override StartCommandsResult EvaluateBody(IActionContext context)
         {
             return new StartCommandsEvaluator(context).Evaluate();
         }
