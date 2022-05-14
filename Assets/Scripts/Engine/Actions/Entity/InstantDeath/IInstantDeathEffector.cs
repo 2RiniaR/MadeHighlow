@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
     public interface IInstantDeathEffector
     {
         public ValueList<Interrupt<InstantDeathEffect>> EffectsOnInstantDeath(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             ID sourceID,
             [NotNull] Entity target
         );

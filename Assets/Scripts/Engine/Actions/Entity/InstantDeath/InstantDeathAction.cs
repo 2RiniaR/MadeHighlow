@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public record InstantDeathAction(ID SourceID, [NotNull] EntityID TargetID) : Action<InstantDeathResult>
     {
-        protected override InstantDeathResult EvaluateBody(IHistory context)
+        protected override InstantDeathResult EvaluateBody(IHistory history)
         {
-            return new InstantDeathEvaluator(context, SourceID, TargetID).Evaluate();
+            return new InstantDeathEvaluator(history, SourceID, TargetID).Evaluate();
         }
     }
 }

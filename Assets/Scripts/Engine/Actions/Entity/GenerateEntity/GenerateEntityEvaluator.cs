@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public class GenerateEntityEvaluator
     {
-        public GenerateEntityEvaluator([NotNull] IHistory context, [NotNull] Entity initialStatus)
+        public GenerateEntityEvaluator([NotNull] IHistory history, [NotNull] Entity initialStatus)
         {
-            Context = context;
+            History = history;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private Entity InitialStatus { get; }
 
         [CanBeNull] private RegisterEntityResult RegisterEntityResult { get; set; }
@@ -53,8 +53,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
                 (Contract.Result<GenerateEntityResult>() != null) ^ (RegisterEntityResult != null && Generating != null)
             );
 
-            var result = new RegisterEntityAction(InitialStatus).Evaluate(Context);
-            Context = Context.Appended(result);
+            var result = new RegisterEntityAction(InitialStatus).Evaluate(History);
+            History = History.Appended(result);
             RegisterEntityResult = result;
             Generating = result.Registered;
         }
@@ -69,7 +69,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
-                var result = new AddComponentAction(Generating.EntityID, component).Evaluate(Context);
+                var result = new AddComponentAction(Generating.EntityID, component).Evaluate(History);
                 var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
                 if (succeedResult == null)
                 {
@@ -81,7 +81,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
                     );
                 }
 
-                Context = Context.Appended(succeedResult);
+                History = History.Appended(succeedResult);
                 AddComponentResults = AddComponentResults.Add(succeedResult);
             }
 
@@ -96,13 +96,13 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (PositionEntityResult != null));
 
-            var result = new PositionEntityAction(Generating.EntityID, InitialStatus.Position3D).Evaluate(Context);
+            var result = new PositionEntityAction(Generating.EntityID, InitialStatus.Position3D).Evaluate(History);
             if (result is not ActionFragments.PositionEntity.SucceedResult succeedResult)
             {
                 return new PositionFailedResult(InitialStatus, RegisterEntityResult, AddComponentResults, result);
             }
 
-            Context = Context.Appended(succeedResult);
+            History = History.Appended(succeedResult);
             PositionEntityResult = succeedResult;
 
             return null;
@@ -118,7 +118,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (Generating != null));
 
             // `RegisterEntity` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            Generating = Generating.EntityID.GetFrom(Context.World);
+            Generating = Generating.EntityID.GetFrom(History.World);
             if (Generating == null)
             {
                 return new DestroyedResult(
@@ -141,8 +141,8 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IGenerateEntityEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnGenerateEntity(Context, Generating)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IGenerateEntityEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnGenerateEntity(History, Generating)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)

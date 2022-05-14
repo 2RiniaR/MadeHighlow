@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public record SupplyCardAction([NotNull] PlayerID TargetID, [NotNull] Card InitialStatus) : Action<SupplyCardResult>
     {
-        protected override SupplyCardResult EvaluateBody(IHistory context)
+        protected override SupplyCardResult EvaluateBody(IHistory history)
         {
-            return new SupplyCardEvaluator(context, TargetID, InitialStatus).Evaluate();
+            return new SupplyCardEvaluator(history, TargetID, InitialStatus).Evaluate();
         }
     }
 }

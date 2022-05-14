@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterPlayer
 {
     public record RegisterPlayerAction([NotNull] Player InitialProps)
     {
-        public RegisterPlayerResult Evaluate(IHistory context)
+        public RegisterPlayerResult Evaluate(IHistory history)
         {
-            return new RegisterPlayerEvaluator(context, InitialProps).Evaluate();
+            return new RegisterPlayerEvaluator(history, InitialProps).Evaluate();
         }
     }
 }

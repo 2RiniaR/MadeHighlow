@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public record ElevateTileAction
         (ID SourceID, [NotNull] TileID TargetID, [NotNull] Elevate Elevate) : Action<ElevateTileResult>
     {
-        protected override ElevateTileResult EvaluateBody(IHistory context)
+        protected override ElevateTileResult EvaluateBody(IHistory history)
         {
-            return new ElevateTileEvaluator(context, SourceID, TargetID, Elevate).Evaluate();
+            return new ElevateTileEvaluator(history, SourceID, TargetID, Elevate).Evaluate();
         }
     }
 }

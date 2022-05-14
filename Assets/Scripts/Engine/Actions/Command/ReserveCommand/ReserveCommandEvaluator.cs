@@ -6,13 +6,13 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     public class ReserveCommandEvaluator
     {
-        public ReserveCommandEvaluator([NotNull] IHistory context, [NotNull] Command command)
+        public ReserveCommandEvaluator([NotNull] IHistory history, [NotNull] Command command)
         {
-            Context = context;
+            History = history;
             Command = command;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private Command Command { get; }
         [CanBeNull] private ValueList<Interrupt<ReserveCommandEffect>> Interrupts { get; set; }
 
@@ -41,19 +41,19 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
                 (Contract.Result<ReserveCommandResult>() != null) ^ (Card != null && Unit != null && Player != null)
             );
 
-            Card = Command.CardID.GetFrom(Context.World);
+            Card = Command.CardID.GetFrom(History.World);
             if (Card == null)
             {
                 return new FailedResult(Command, FailedReason.CardNotFound);
             }
 
-            Unit = Command.UnitID.GetFrom(Context.World);
+            Unit = Command.UnitID.GetFrom(History.World);
             if (Unit == null)
             {
                 return new FailedResult(Command, FailedReason.UnitNotFound);
             }
 
-            Player = Card.OwnerPlayerID.GetFrom(Context.World);
+            Player = Card.OwnerPlayerID.GetFrom(History.World);
             if (Player == null)
             {
                 return new FailedResult(Command, FailedReason.OwnerNotFound);
@@ -75,9 +75,9 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             Contract.Requires<InvalidOperationException>(Card != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(Context.World);
+            var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(History.World);
             Interrupts = effectors.SelectMany(
-                    effector => effector.EffectsOnReserveCommand(Context, Player, Unit, Card, Command)
+                    effector => effector.EffectsOnReserveCommand(History, Player, Unit, Card, Command)
                 )
                 .Sort();
             foreach (var interrupt in Interrupts)

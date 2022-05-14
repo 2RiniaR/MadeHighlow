@@ -7,20 +7,20 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     public class InstantDamageEvaluator
     {
         public InstantDamageEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             ID sourceID,
             [NotNull] EntityID targetID,
             [NotNull] Damage expected
         )
         {
-            Context = context;
+            History = history;
             SourceID = sourceID;
             TargetID = targetID;
             Expected = expected;
             Calculated = Expected;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
         [NotNull] private Damage Expected { get; }
@@ -50,7 +50,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         {
             Contract.Ensures((Contract.Result<InstantDamageResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new FailedResult(FailedReason.NoTarget);
@@ -86,9 +86,9 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             Contract.Requires<InvalidOperationException>(Calculated != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(Context.World);
+            var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(History.World);
             Interrupts = effectors
-                .SelectMany(effector => effector.EffectsOnInstantDamage(Context, SourceID, Target, Expected))
+                .SelectMany(effector => effector.EffectsOnInstantDamage(History, SourceID, Target, Expected))
                 .Sort();
             foreach (var interrupt in Interrupts)
             {

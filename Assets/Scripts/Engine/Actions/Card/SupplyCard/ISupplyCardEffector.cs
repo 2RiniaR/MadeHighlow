@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public interface ISupplyCardEffector
     {
         public ValueList<Interrupt<SupplyCardEffect>> EffectsOnSupplyCard(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Card card
         );
     }

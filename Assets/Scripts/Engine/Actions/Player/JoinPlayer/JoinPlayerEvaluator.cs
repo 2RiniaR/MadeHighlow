@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public class JoinPlayerEvaluator
     {
-        public JoinPlayerEvaluator([NotNull] IHistory context, [NotNull] Player initialStatus)
+        public JoinPlayerEvaluator([NotNull] IHistory history, [NotNull] Player initialStatus)
         {
-            Context = context;
+            History = history;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private Player InitialStatus { get; }
 
         [CanBeNull] private RegisterPlayerResult RegisterPlayerResult { get; set; }
@@ -49,8 +49,8 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
                 (Contract.Result<JoinPlayerResult>() != null) ^ (RegisterPlayerResult != null && Generating != null)
             );
 
-            var result = new RegisterPlayerAction(InitialStatus).Evaluate(Context);
-            Context = Context.Appended(result);
+            var result = new RegisterPlayerAction(InitialStatus).Evaluate(History);
+            History = History.Appended(result);
             RegisterPlayerResult = result;
             Generating = result.Registered;
         }
@@ -65,7 +65,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
-                var result = new AddComponentAction(Generating.PlayerID, component).Evaluate(Context);
+                var result = new AddComponentAction(Generating.PlayerID, component).Evaluate(History);
                 var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
                 if (succeedResult == null)
                 {
@@ -77,7 +77,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
                     );
                 }
 
-                Context = Context.Appended(succeedResult);
+                History = History.Appended(succeedResult);
                 AddComponentResults = AddComponentResults.Add(succeedResult);
             }
 
@@ -95,7 +95,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             SupplyCardResults = ValueList<ReactedResult<SupplyCard.SucceedResult>>.Empty;
             foreach (var card in InitialStatus.Cards)
             {
-                var result = new SupplyCardAction(Generating.PlayerID, card).Evaluate(Context);
+                var result = new SupplyCardAction(Generating.PlayerID, card).Evaluate(History);
                 var succeedResult = result.BodyAs<SupplyCard.SucceedResult>();
                 if (succeedResult == null)
                 {
@@ -108,7 +108,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
                     );
                 }
 
-                Context = Context.Appended(succeedResult);
+                History = History.Appended(succeedResult);
                 SupplyCardResults = SupplyCardResults.Add(succeedResult);
             }
 
@@ -125,7 +125,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Contract.Ensures((Contract.Result<JoinPlayerResult>() != null) ^ (Generating != null));
 
             // `RegisterPlayer` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            Generating = Generating.PlayerID.GetFrom(Context.World);
+            Generating = Generating.PlayerID.GetFrom(History.World);
             if (Generating == null)
             {
                 return new DestroyedResult(InitialStatus, RegisterPlayerResult, AddComponentResults, SupplyCardResults);

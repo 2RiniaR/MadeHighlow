@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
 {
     public record PutCardAction([NotNull] CardID TargetID)
     {
-        public PutCardResult Evaluate(IHistory context)
+        public PutCardResult Evaluate(IHistory history)
         {
-            return new PutCardEvaluator(context, TargetID).Evaluate();
+            return new PutCardEvaluator(history, TargetID).Evaluate();
         }
     }
 }

@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
     public class DestroyTileEvaluator
     {
-        public DestroyTileEvaluator([NotNull] IHistory context, [NotNull] TileID targetID)
+        public DestroyTileEvaluator([NotNull] IHistory history, [NotNull] TileID targetID)
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private TileID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }
@@ -45,7 +45,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         {
             Contract.Ensures((Contract.Result<DestroyTileResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new NotFoundResult(TargetID);
@@ -60,8 +60,8 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyTile(Context, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyTile(History, Target)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)
@@ -79,7 +79,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
 
-            var removable = new EntityCondition(Target.Position2D).Search(Context.World).IsEmpty;
+            var removable = new EntityCondition(Target.Position2D).Search(History.World).IsEmpty;
             if (!removable)
             {
                 return new EntityRemainingResult(Target, Interrupts);
@@ -98,14 +98,14 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
             RemoveComponentResults = ValueList<ReactedResult<RemoveComponent.SucceedResult>>.Empty;
             foreach (var component in Target.Components)
             {
-                var result = new RemoveComponentAction(component.ComponentID).Evaluate(Context);
+                var result = new RemoveComponentAction(component.ComponentID).Evaluate(History);
                 var succeedResult = result.BodyAs<RemoveComponent.SucceedResult>();
                 if (succeedResult == null)
                 {
                     return new RemoveComponentFailedResult(Target, Interrupts, RemoveComponentResults, result);
                 }
 
-                Context = Context.Appended(succeedResult);
+                History = History.Appended(succeedResult);
                 RemoveComponentResults = RemoveComponentResults.Add(succeedResult);
             }
 

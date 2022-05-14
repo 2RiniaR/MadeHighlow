@@ -6,13 +6,13 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public class RemoveComponentEvaluator
     {
-        public RemoveComponentEvaluator([NotNull] IHistory context, [NotNull] ComponentID targetID)
+        public RemoveComponentEvaluator([NotNull] IHistory history, [NotNull] ComponentID targetID)
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private ComponentID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult> FinalizeComponentResults { get; set; }
@@ -40,7 +40,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         {
             Contract.Ensures((Contract.Result<RemoveComponentResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new NotFoundResult(TargetID);
@@ -54,19 +54,19 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(FinalizeComponentResults != null);
 
-            var actionConfirmations = Target.InitializeActions(Context);
+            var actionConfirmations = Target.InitializeActions(History);
 
             FinalizeComponentResults = ValueList<ReactedResult>.Empty;
             foreach (var actionConfirmation in actionConfirmations)
             {
-                var result = actionConfirmation.Action.EvaluateBase(Context);
+                var result = actionConfirmation.Action.EvaluateBase(History);
                 if (!actionConfirmation.Confirmation(result))
                 {
                     return new FinalizeFailedResult(Target, FinalizeComponentResults, result);
                 }
 
                 FinalizeComponentResults = FinalizeComponentResults.Add(result);
-                Context = Context.Appended(result);
+                History = History.Appended(result);
             }
 
             return null;
@@ -78,8 +78,8 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IRemoveComponentEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnRemoveComponent(Context, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IRemoveComponentEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnRemoveComponent(History, Target)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)

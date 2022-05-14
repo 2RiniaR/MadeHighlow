@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterTile
 {
     public record RegisterTileAction([NotNull] Tile InitialProps)
     {
-        public RegisterTileResult Evaluate(IHistory context)
+        public RegisterTileResult Evaluate(IHistory history)
         {
-            return new RegisterTileEvaluator(context, InitialProps).Evaluate();
+            return new RegisterTileEvaluator(history, InitialProps).Evaluate();
         }
     }
 }

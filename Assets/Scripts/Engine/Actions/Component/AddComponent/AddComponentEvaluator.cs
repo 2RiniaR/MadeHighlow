@@ -8,17 +8,17 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     public class AddComponentEvaluator
     {
         public AddComponentEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] IAttachableID targetID,
             [NotNull] Component initialStatus
         )
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private IAttachableID TargetID { get; }
         [NotNull] private Component InitialStatus { get; }
 
@@ -55,13 +55,13 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
                 (RegisterComponentResult != null && Generating != null)
             );
 
-            var result = new RegisterComponentAction(TargetID, InitialStatus).Evaluate(Context);
+            var result = new RegisterComponentAction(TargetID, InitialStatus).Evaluate(History);
             if (result is not ActionFragments.RegisterComponent.SucceedResult succeedResult)
             {
                 return new RegisterFailedResult(TargetID, InitialStatus, result);
             }
 
-            Context = Context.Appended(succeedResult);
+            History = History.Appended(succeedResult);
             RegisterComponentResult = succeedResult;
             Generating = succeedResult.Registered;
             return null;
@@ -74,12 +74,12 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
             Contract.Ensures((Contract.Result<AddComponentResult>() != null) ^ (InitializeComponentResults != null));
 
-            var actionConfirmations = Generating.InitializeActions(Context);
+            var actionConfirmations = Generating.InitializeActions(History);
 
             InitializeComponentResults = ValueList<ReactedResult>.Empty;
             foreach (var actionConfirmation in actionConfirmations)
             {
-                var result = actionConfirmation.Action.EvaluateBase(Context);
+                var result = actionConfirmation.Action.EvaluateBase(History);
                 if (!actionConfirmation.Confirmation(result))
                 {
                     return new InitializeFailedResult(
@@ -92,7 +92,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
                 }
 
                 InitializeComponentResults = InitializeComponentResults.Add(result);
-                Context = Context.Appended(result);
+                History = History.Appended(result);
             }
 
             return null;
@@ -107,7 +107,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
 
             var componentID = RegisterComponentResult.Registered.ComponentID;
 
-            Generating = componentID.GetFrom(Context.World);
+            Generating = componentID.GetFrom(History.World);
             if (Generating == null)
             {
                 return new DestroyedResult(
@@ -129,8 +129,8 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IAddComponentEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnAddComponent(Context, Generating)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IAddComponentEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnAddComponent(History, Generating)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)

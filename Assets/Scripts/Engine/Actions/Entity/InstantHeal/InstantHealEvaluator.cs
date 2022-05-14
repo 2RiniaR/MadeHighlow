@@ -7,20 +7,20 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public class InstantHealEvaluator
     {
         public InstantHealEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             ID sourceID,
             [NotNull] EntityID targetID,
             [NotNull] Heal expected
         )
         {
-            Context = context;
+            History = history;
             SourceID = sourceID;
             TargetID = targetID;
             Expected = expected;
             Calculated = Expected;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
         [NotNull] private Heal Expected { get; }
@@ -49,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         {
             Contract.Ensures((Contract.Result<InstantHealResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new FailedResult(FailedReason.NoTarget);
@@ -83,9 +83,9 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Contract.Requires<InvalidOperationException>(Calculated != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantHealEffector>(Context.World);
+            var effectors = Component.GetAllOfTypeFrom<IInstantHealEffector>(History.World);
             Interrupts = effectors
-                .SelectMany(effector => effector.EffectsOnInstantHeal(Context, SourceID, Target, Expected))
+                .SelectMany(effector => effector.EffectsOnInstantHeal(History, SourceID, Target, Expected))
                 .Sort();
             foreach (var interrupt in Interrupts)
             {

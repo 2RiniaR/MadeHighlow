@@ -7,19 +7,19 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public class ElevateTileEvaluator
     {
         public ElevateTileEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             ID sourceID,
             [NotNull] TileID targetID,
             [NotNull] Elevate expected
         )
         {
-            Context = context;
+            History = history;
             SourceID = sourceID;
             TargetID = targetID;
             Expected = expected;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         private ID SourceID { get; }
         [NotNull] private TileID TargetID { get; }
         [NotNull] private Elevate Expected { get; }
@@ -46,7 +46,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         {
             Contract.Ensures((Contract.Result<ElevateTileResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new NotFoundResult(TargetID);
@@ -61,9 +61,9 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IElevateTileEffector>(Context.World);
+            var effectors = Component.GetAllOfTypeFrom<IElevateTileEffector>(History.World);
             Interrupts = effectors.SelectMany(
-                    effector => effector.EffectsOnElevateTile(Context, SourceID, Target, Expected)
+                    effector => effector.EffectsOnElevateTile(History, SourceID, Target, Expected)
                 )
                 .Sort();
             foreach (var interrupt in Interrupts)

@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterEntity
 {
     public record RegisterEntityAction([NotNull] Entity InitialProps)
     {
-        public RegisterEntityResult Evaluate(IHistory context)
+        public RegisterEntityResult Evaluate(IHistory history)
         {
-            return new RegisterEntityEvaluator(context, InitialProps).Evaluate();
+            return new RegisterEntityEvaluator(history, InitialProps).Evaluate();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         ///     カードを支払うアクションに対して与える影響を返す
         /// </summary>
         public ValueList<Interrupt<PayCardEffect>> EffectsOnPayCard(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Card target
         );
     }

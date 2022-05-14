@@ -13,9 +13,9 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public ValueList<Command> Resolve([NotNull] IHistory context)
+        public ValueList<Command> Resolve([NotNull] IHistory history)
         {
-            return Commands.Sort((unit1, unit2) => Compare(unit1, unit2, context));
+            return Commands.Sort((unit1, unit2) => Compare(unit1, unit2, history));
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         ///     `command2`の方が優先度が高ければ、負の値を返す。
         ///     `command1`と`command2`の優先度が等しければ、0を返す。
         /// </returns>
-        private int Compare([NotNull] Command command1, [NotNull] Command command2, [NotNull] IHistory context)
+        private int Compare([NotNull] Command command1, [NotNull] Command command2, [NotNull] IHistory history)
         {
-            var world = context.World;
+            var world = history.World;
 
             // (1) 「コマンドの早さ」が早い順に行動する。
             var quicknessCompare = CompareQuickness(command1, command2, world);
@@ -56,7 +56,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             }
 
             // (4) (3)が同一の場合、ユニットの行動順はランダムとなる。
-            return CompareRandom(context);
+            return CompareRandom(history);
         }
 
         private static int CompareQuickness(
@@ -101,9 +101,9 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return health2.Value.CompareTo(health1.Value);
         }
 
-        private static int CompareRandom([NotNull] IHistory context)
+        private static int CompareRandom([NotNull] IHistory history)
         {
-            return context.GetRandom() > 1 / 2f ? 1 : 0;
+            return history.GetRandom() > 1 / 2f ? 1 : 0;
         }
     }
 }

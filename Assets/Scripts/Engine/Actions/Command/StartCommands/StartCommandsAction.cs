@@ -2,9 +2,9 @@
 {
     public record StartCommandsAction : Action<StartCommandsResult>
     {
-        protected override StartCommandsResult EvaluateBody(IHistory context)
+        protected override StartCommandsResult EvaluateBody(IHistory history)
         {
-            return new StartCommandsEvaluator(context).Evaluate();
+            return new StartCommandsEvaluator(history).Evaluate();
         }
     }
 }

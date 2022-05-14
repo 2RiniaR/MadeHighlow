@@ -10,17 +10,17 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public class SupplyCardEvaluator
     {
         public SupplyCardEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] PlayerID targetID,
             [NotNull] Card initialStatus
         )
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private PlayerID TargetID { get; }
         [NotNull] private Card InitialStatus { get; }
 
@@ -61,13 +61,13 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
                 (Contract.Result<SupplyCardResult>() != null) ^ (RegisterCardResult != null && Generating != null)
             );
 
-            var result = new RegisterCardAction(TargetID, InitialStatus).Evaluate(Context);
+            var result = new RegisterCardAction(TargetID, InitialStatus).Evaluate(History);
             if (result is not ActionFragments.RegisterCard.SucceedResult succeedResult)
             {
                 return new RegisterFailedResult(TargetID, InitialStatus, result);
             }
 
-            Context = Context.Appended(succeedResult);
+            History = History.Appended(succeedResult);
             RegisterCardResult = succeedResult;
             Generating = succeedResult.Registered;
             return null;
@@ -83,7 +83,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
             foreach (var component in InitialStatus.Components)
             {
-                var result = new AddComponentAction(Generating.CardID, component).Evaluate(Context);
+                var result = new AddComponentAction(Generating.CardID, component).Evaluate(History);
                 var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
                 if (succeedResult == null)
                 {
@@ -96,7 +96,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
                     );
                 }
 
-                Context = Context.Appended(succeedResult);
+                History = History.Appended(succeedResult);
                 AddComponentResults = AddComponentResults.Add(succeedResult);
             }
 
@@ -111,7 +111,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Contract.Requires<InvalidOperationException>(AddComponentResults != null);
             Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (PutCardResult != null));
 
-            var result = new PutCardAction(Generating.CardID).Evaluate(Context);
+            var result = new PutCardAction(Generating.CardID).Evaluate(History);
             if (result is not ActionFragments.PutCard.SucceedResult succeedResult)
             {
                 return new PutCardFailedResult(
@@ -123,7 +123,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
                 );
             }
 
-            Context = Context.Appended(succeedResult);
+            History = History.Appended(succeedResult);
             PutCardResult = succeedResult;
 
             return null;
@@ -138,7 +138,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Contract.Requires<InvalidOperationException>(PutCardResult != null);
             Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (Generating != null));
 
-            Generating = Generating.CardID.GetFrom(Context.World);
+            Generating = Generating.CardID.GetFrom(History.World);
             if (Generating == null)
             {
                 return new DestroyedResult(
@@ -163,8 +163,8 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Contract.Requires<InvalidOperationException>(Generating != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<ISupplyCardEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnSupplyCard(Context, Generating)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<ISupplyCardEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnSupplyCard(History, Generating)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)

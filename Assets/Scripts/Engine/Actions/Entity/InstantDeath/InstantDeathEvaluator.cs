@@ -6,14 +6,14 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public class InstantDeathEvaluator
     {
-        public InstantDeathEvaluator([NotNull] IHistory context, ID sourceID, [NotNull] EntityID targetID)
+        public InstantDeathEvaluator([NotNull] IHistory history, ID sourceID, [NotNull] EntityID targetID)
         {
-            Context = context;
+            History = history;
             SourceID = sourceID;
             TargetID = targetID;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
         [CanBeNull] private Entity Target { get; set; }
@@ -41,7 +41,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         {
             Contract.Ensures((Contract.Result<InstantDeathResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new FailedResult(FailedReason.NoTarget);
@@ -76,8 +76,8 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantDeathEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnInstantDeath(Context, SourceID, Target))
+            var effectors = Component.GetAllOfTypeFrom<IInstantDeathEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnInstantDeath(History, SourceID, Target))
                 .Sort();
             foreach (var interrupt in Interrupts)
             {

@@ -8,13 +8,13 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
 {
     public class PutCardEvaluator
     {
-        public PutCardEvaluator([NotNull] IHistory context, [NotNull] CardID targetID)
+        public PutCardEvaluator([NotNull] IHistory history, [NotNull] CardID targetID)
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private CardID TargetID { get; }
 
         [CanBeNull] private ValueList<Interrupt<PutCardEffect>> Interrupts { get; set; }
@@ -43,7 +43,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
         {
             Contract.Ensures((Contract.Result<PutCardResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new TargetNotFoundResult(TargetID);
@@ -58,7 +58,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Parent != null);
 
-            Parent = Target.OwnerPlayerID.GetFrom(Context.World) ?? throw new NullReferenceException();
+            Parent = Target.OwnerPlayerID.GetFrom(History.World) ?? throw new NullReferenceException();
             if (!CanBePut(Parent))
             {
                 return new SucceedResult(Target);
@@ -79,8 +79,8 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
             Contract.Requires<InvalidOperationException>(Parent != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IPutCardEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnPutCard(Context, Parent, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IPutCardEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnPutCard(History, Parent, Target)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is ReplaceEffect replace)
@@ -104,7 +104,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
                 return null;
             }
 
-            var result = new DropCardAction(dropID).Evaluate(Context);
+            var result = new DropCardAction(dropID).Evaluate(History);
             var succeedResult = result.BodyAs<Actions.DropCard.SucceedResult>();
             if (succeedResult != null)
             {

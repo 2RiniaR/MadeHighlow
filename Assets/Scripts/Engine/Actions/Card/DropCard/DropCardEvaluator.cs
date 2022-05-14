@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public class DropCardEvaluator
     {
-        public DropCardEvaluator([NotNull] IHistory context, [NotNull] CardID targetID)
+        public DropCardEvaluator([NotNull] IHistory history, [NotNull] CardID targetID)
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private CardID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }
@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
         {
             Contract.Ensures((Contract.Result<DropCardResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new NotFoundResult(TargetID);
@@ -57,8 +57,8 @@ namespace RineaR.MadeHighlow.Actions.DropCard
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDropCardEffector>(Context.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDropCard(Context, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDropCardEffector>(History.World);
+            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDropCard(History, Target)).Sort();
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectedEffect)
@@ -80,14 +80,14 @@ namespace RineaR.MadeHighlow.Actions.DropCard
             RemoveComponentResults = ValueList<ReactedResult<RemoveComponent.SucceedResult>>.Empty;
             foreach (var component in Target.Components)
             {
-                var result = new RemoveComponentAction(component.ComponentID).Evaluate(Context);
+                var result = new RemoveComponentAction(component.ComponentID).Evaluate(History);
                 var succeedResult = result.BodyAs<RemoveComponent.SucceedResult>();
                 if (succeedResult == null)
                 {
                     return new RemoveComponentFailedResult(Target, Interrupts, RemoveComponentResults, result);
                 }
 
-                Context = Context.Appended(succeedResult);
+                History = History.Appended(succeedResult);
                 RemoveComponentResults = RemoveComponentResults.Add(succeedResult);
             }
 

@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.ActionFragments
 {
     public record AllocateIDAction
     {
-        public AllocateIDResult Evaluate(IHistory context)
+        public AllocateIDResult Evaluate(IHistory history)
         {
-            var latestID = context.World.LatestAllocatedID;
+            var latestID = history.World.LatestAllocatedID;
             return new AllocateIDResult(ID.From(latestID.InternalValue + 1));
         }
     }

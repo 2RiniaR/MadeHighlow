@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     public record InstantDamageAction
         (ID SourceID, [NotNull] EntityID TargetID, [NotNull] Damage Damage) : Action<InstantDamageResult>
     {
-        protected override InstantDamageResult EvaluateBody(IHistory context)
+        protected override InstantDamageResult EvaluateBody(IHistory history)
         {
-            return new InstantDamageEvaluator(context, SourceID, TargetID, Damage).Evaluate();
+            return new InstantDamageEvaluator(history, SourceID, TargetID, Damage).Evaluate();
         }
     }
 }

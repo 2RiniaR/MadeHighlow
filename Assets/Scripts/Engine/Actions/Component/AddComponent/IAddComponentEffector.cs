@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     public interface IAddComponentEffector
     {
         public ValueList<Interrupt<AddComponentEffect>> EffectsOnAddComponent(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Component generation
         );
     }

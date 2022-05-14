@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public record PayCardAction([NotNull] CardID TargetID) : Action<PayCardResult>
     {
-        protected override PayCardResult EvaluateBody(IHistory context)
+        protected override PayCardResult EvaluateBody(IHistory history)
         {
-            return new PayCardEvaluator(context, TargetID).Evaluate();
+            return new PayCardEvaluator(history, TargetID).Evaluate();
         }
     }
 }

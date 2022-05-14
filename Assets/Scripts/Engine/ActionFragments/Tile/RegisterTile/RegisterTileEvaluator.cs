@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterTile
 {
     public class RegisterTileEvaluator
     {
-        public RegisterTileEvaluator([NotNull] IHistory context, [NotNull] Tile initialProps)
+        public RegisterTileEvaluator([NotNull] IHistory history, [NotNull] Tile initialProps)
         {
-            Context = context;
+            History = history;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private Tile InitialProps { get; }
 
         [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterTile
             Contract.Ensures(Registered != null);
             Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(Context);
+            AllocateIDResult = new AllocateIDAction().Evaluate(History);
             Registered = InitialProps with
             {
                 ID = AllocateIDResult.AllocatedID,

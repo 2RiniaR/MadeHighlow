@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
     public interface IDestroyTileEffector
     {
         public ValueList<Interrupt<DestroyTileEffect>> EffectsOnDestroyTile(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Tile target
         );
     }

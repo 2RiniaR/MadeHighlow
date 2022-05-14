@@ -8,17 +8,17 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
     public class PositionEntityEvaluator
     {
         public PositionEntityEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] EntityID targetID,
             [NotNull] Position3D destination
         )
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
             Destination = destination;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private EntityID TargetID { get; }
         [NotNull] public Position3D Destination { get; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
         {
             Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new FailedResult(TargetID, FailedReason.EntityNotExist);
@@ -59,7 +59,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Positioned != null));
 
-            if (!IsPositionable(Context, Target, Destination))
+            if (!IsPositionable(History, Target, Destination))
             {
                 return new FailedResult(TargetID, FailedReason.ResolveFailed);
             }
@@ -69,7 +69,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
         }
 
         private static bool IsPositionable(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Entity entity,
             [NotNull] Position3D dest
         )
@@ -98,7 +98,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
              *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
              */
 
-            var landingTile = dest.To2D().GetTile(context.World);
+            var landingTile = dest.To2D().GetTile(history.World);
             var destHeight = dest.Z;
 
             if (landingTile == null || // (1)

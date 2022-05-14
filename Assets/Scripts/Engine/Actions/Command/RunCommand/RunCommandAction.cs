@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public record RunCommandAction([NotNull] Command Command) : Action<RunCommandResult>
     {
-        protected override RunCommandResult EvaluateBody(IHistory context)
+        protected override RunCommandResult EvaluateBody(IHistory history)
         {
-            return new RunCommandEvaluator(context, Command).Evaluate();
+            return new RunCommandEvaluator(history, Command).Evaluate();
         }
     }
 }

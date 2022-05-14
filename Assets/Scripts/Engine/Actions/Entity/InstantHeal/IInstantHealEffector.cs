@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public interface IInstantHealEffector
     {
         public ValueList<Interrupt<InstantHealEffect>> EffectsOnInstantHeal(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             ID sourceID,
             [NotNull] Entity target,
             [NotNull] Heal heal

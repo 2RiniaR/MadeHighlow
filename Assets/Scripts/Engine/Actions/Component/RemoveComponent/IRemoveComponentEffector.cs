@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         ///     命令を実行するアクションに対して与える影響を返す
         /// </summary>
         public ValueList<Interrupt<RemoveComponentEffect>> EffectsOnRemoveComponent(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Component target
         );
     }

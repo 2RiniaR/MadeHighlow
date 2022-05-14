@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterPlayer
 {
     public class RegisterPlayerEvaluator
     {
-        public RegisterPlayerEvaluator([NotNull] IHistory context, [NotNull] Player initialProps)
+        public RegisterPlayerEvaluator([NotNull] IHistory history, [NotNull] Player initialProps)
         {
-            Context = context;
+            History = history;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private Player InitialProps { get; }
 
         [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterPlayer
             Contract.Ensures(Registered != null);
             Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(Context);
+            AllocateIDResult = new AllocateIDAction().Evaluate(History);
             Registered = InitialProps with
             {
                 ID = AllocateIDResult.AllocatedID,

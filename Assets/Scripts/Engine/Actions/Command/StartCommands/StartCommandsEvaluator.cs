@@ -7,12 +7,12 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
 {
     public class StartCommandsEvaluator
     {
-        public StartCommandsEvaluator([NotNull] IHistory context)
+        public StartCommandsEvaluator([NotNull] IHistory history)
         {
-            Context = context;
+            History = history;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
 
         [CanBeNull] [ItemNotNull] private ValueList<ReactedResult<RunCommandResult>> RunCommandResults { get; set; }
 
@@ -28,13 +28,13 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             Contract.Ensures(RunCommandResults != null);
 
             RunCommandResults = ValueList<ReactedResult<RunCommandResult>>.Empty;
-            var commands = Context.World.ReservedCommands;
-            var orderedCommands = new StartCommandsOrderer(commands).Resolve(Context);
+            var commands = History.World.ReservedCommands;
+            var orderedCommands = new StartCommandsOrderer(commands).Resolve(History);
 
             foreach (var command in orderedCommands)
             {
-                var result = new RunCommandAction(command).Evaluate(Context);
-                Context = Context.Appended(result);
+                var result = new RunCommandAction(command).Evaluate(History);
+                History = History.Appended(result);
                 RunCommandResults = RunCommandResults.Add(result);
             }
         }

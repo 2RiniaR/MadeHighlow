@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterEntity
 {
     public class RegisterEntityEvaluator
     {
-        public RegisterEntityEvaluator([NotNull] IHistory context, [NotNull] Entity initialProps)
+        public RegisterEntityEvaluator([NotNull] IHistory history, [NotNull] Entity initialProps)
         {
-            Context = context;
+            History = history;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private Entity InitialProps { get; }
 
         [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
@@ -31,7 +31,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterEntity
             Contract.Ensures(Registered != null);
             Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(Context);
+            AllocateIDResult = new AllocateIDAction().Evaluate(History);
             Registered = InitialProps with
             {
                 ID = AllocateIDResult.AllocatedID,

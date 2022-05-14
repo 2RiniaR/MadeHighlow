@@ -8,17 +8,17 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
     public class PositionTileEvaluator
     {
         public PositionTileEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] TileID targetID,
             [NotNull] Position2D destination
         )
         {
-            Context = context;
+            History = history;
             TargetID = targetID;
             Destination = destination;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private TileID TargetID { get; }
         [NotNull] public Position2D Destination { get; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
         {
             Contract.Ensures((Contract.Result<PositionTileResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(Context.World);
+            Target = TargetID.GetFrom(History.World);
             if (Target == null)
             {
                 return new FailedResult(TargetID, FailedReason.TileNotExist);
@@ -59,7 +59,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures((Contract.Result<PositionTileResult>() != null) ^ (Positioned != null));
 
-            if (!IsPositionable(Context, Target, Destination))
+            if (!IsPositionable(History, Target, Destination))
             {
                 return new FailedResult(TargetID, FailedReason.ResolveFailed);
             }
@@ -69,12 +69,12 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
         }
 
         private static bool IsPositionable(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] Tile tile,
             [NotNull] Position2D dest
         )
         {
-            return dest.GetTile(context.World) == null;
+            return dest.GetTile(history.World) == null;
         }
 
         [NotNull]

@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public class RunCommandEvaluator
     {
-        public RunCommandEvaluator([NotNull] IHistory context, [NotNull] Command command)
+        public RunCommandEvaluator([NotNull] IHistory history, [NotNull] Command command)
         {
-            Context = context;
+            History = history;
             Command = command;
         }
 
-        [NotNull] private IHistory Context { get; set; }
+        [NotNull] private IHistory History { get; set; }
         [NotNull] private Command Command { get; }
         [CanBeNull] private ValueList<Interrupt<RunCommandEffect>> Interrupts { get; set; }
 
@@ -47,7 +47,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
                 (Contract.Result<RunCommandResult>() != null) ^ (Card != null && Unit != null && Player != null)
             );
 
-            Unit = Command.UnitID.GetFrom(Context.World);
+            Unit = Command.UnitID.GetFrom(History.World);
 
             // いないものは行動できない。
             if (Unit == null)
@@ -61,13 +61,13 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
                 return new FailedResult(Command, FailedReason.UnitIsDead);
             }
 
-            Card = Command.CardID.GetFrom(Context.World);
+            Card = Command.CardID.GetFrom(History.World);
             if (Card == null)
             {
                 return new FailedResult(Command, FailedReason.CardNotFound);
             }
 
-            Player = Card.OwnerPlayerID.GetFrom(Context.World);
+            Player = Card.OwnerPlayerID.GetFrom(History.World);
             if (Player == null)
             {
                 return new FailedResult(Command, FailedReason.PlayerNotFound);
@@ -84,9 +84,9 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             Contract.Requires<InvalidOperationException>(Card != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(Context.World);
+            var effectors = Component.GetAllOfTypeFrom<IRunCommandEffector>(History.World);
             Interrupts = effectors.SelectMany(
-                    effector => effector.EffectsOnRunCommand(Context, Player, Unit, Card, Command)
+                    effector => effector.EffectsOnRunCommand(History, Player, Unit, Card, Command)
                 )
                 .Sort();
             foreach (var interrupt in Interrupts)
@@ -105,10 +105,10 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             Contract.Ensures(CommandActionResults != null);
 
             CommandActionResults = ValueList<ReactedResult>.Empty;
-            foreach (var action in Command.ActionsIn(Context))
+            foreach (var action in Command.ActionsIn(History))
             {
-                var result = action.EvaluateBase(Context);
-                Context = Context.Appended(result);
+                var result = action.EvaluateBase(History);
+                History = History.Appended(result);
                 CommandActionResults = CommandActionResults.Add(result);
             }
         }
@@ -117,8 +117,8 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         {
             Contract.Ensures(PayCardResult != null);
 
-            PayCardResult = new PayCardAction(Command.CardID).Evaluate(Context);
-            Context = Context.Appended(PayCardResult);
+            PayCardResult = new PayCardAction(Command.CardID).Evaluate(History);
+            History = History.Appended(PayCardResult);
         }
 
         [NotNull]

@@ -13,9 +13,9 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] StepCost AvailableStepCost
     ) : Action<StepResult>
     {
-        protected override StepResult EvaluateBody(IHistory context)
+        protected override StepResult EvaluateBody(IHistory history)
         {
-            var world = context.World;
+            var world = history.World;
             var actor = ActorEntityID.GetFrom(world) ?? throw new NullReferenceException();
 
             var originPosition = actor.Position3D.To2D();
@@ -36,10 +36,10 @@ namespace RineaR.MadeHighlow.Actions
 
                 foreach (var reactor in reactors)
                 {
-                    var reactions = reactor.OnSteppedOut(context, ActorEntityID);
+                    var reactions = reactor.OnSteppedOut(history, ActorEntityID);
                     foreach (var reaction in reactions)
                     {
-                        context.Appended(reaction.Result);
+                        history.Appended(reaction.Result);
                     }
                 }
             }
@@ -53,7 +53,7 @@ namespace RineaR.MadeHighlow.Actions
                 return new FailedStepResult();
             }
 
-            var afterActionResults = RunAfterActions(context);
+            var afterActionResults = RunAfterActions(history);
 
             throw new NotImplementedException();
         }

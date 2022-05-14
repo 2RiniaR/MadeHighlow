@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterCard
 {
     public record RegisterCardAction([NotNull] PlayerID ParentID, [NotNull] Card InitialProps)
     {
-        public RegisterCardResult Evaluate(IHistory context)
+        public RegisterCardResult Evaluate(IHistory history)
         {
-            return new RegisterCardEvaluator(context, ParentID, InitialProps).Evaluate();
+            return new RegisterCardEvaluator(history, ParentID, InitialProps).Evaluate();
         }
     }
 }

@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public record DestroyEntityAction([NotNull] EntityID TargetID) : Action<DestroyEntityResult>
     {
-        protected override DestroyEntityResult EvaluateBody(IHistory context)
+        protected override DestroyEntityResult EvaluateBody(IHistory history)
         {
-            return new DestroyEntityEvaluator(context, TargetID).Evaluate();
+            return new DestroyEntityEvaluator(history, TargetID).Evaluate();
         }
     }
 }

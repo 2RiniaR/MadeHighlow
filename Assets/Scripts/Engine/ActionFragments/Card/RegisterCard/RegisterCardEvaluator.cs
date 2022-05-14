@@ -8,17 +8,17 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterCard
     public class RegisterCardEvaluator
     {
         public RegisterCardEvaluator(
-            [NotNull] IHistory context,
+            [NotNull] IHistory history,
             [NotNull] PlayerID parentID,
             [NotNull] Card initialProps
         )
         {
-            Context = context;
+            History = history;
             ParentID = parentID;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IHistory Context { get; }
+        [NotNull] private IHistory History { get; }
         [NotNull] private PlayerID ParentID { get; }
         [NotNull] private Card InitialProps { get; }
 
@@ -43,7 +43,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterCard
         {
             Contract.Ensures((Contract.Result<RegisterCardResult>() != null) ^ (Parent != null));
 
-            Parent = ParentID.GetFrom(Context.World);
+            Parent = ParentID.GetFrom(History.World);
             if (Parent == null)
             {
                 return new ParentNotFoundResult(ParentID);
@@ -57,7 +57,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterCard
             Contract.Ensures(Registered != null);
             Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(Context);
+            AllocateIDResult = new AllocateIDAction().Evaluate(History);
             Registered = InitialProps with
             {
                 ID = AllocateIDResult.AllocatedID,
