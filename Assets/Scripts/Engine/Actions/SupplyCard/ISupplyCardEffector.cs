@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     {
         public ValueList<Interrupt<SupplyCardEffect>> EffectsOnSupplyCard(
             [NotNull] IActionContext context,
-            [NotNull] SupplyCardAction action
+            [NotNull] Card card
         );
     }
 }

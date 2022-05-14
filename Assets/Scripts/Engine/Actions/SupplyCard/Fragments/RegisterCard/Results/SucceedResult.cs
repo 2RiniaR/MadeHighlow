@@ -2,20 +2,16 @@
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard
 {
-    /// <summary>
-    ///     カードを新規登録した結果
-    /// </summary>
     public record SucceedResult(
         [NotNull] AllocateIDResult AllocateIDResult,
-        [NotNull] Card RegisteredCard
+        [NotNull] Card Registered
     ) : RegisterCardResult
     {
         public override World Simulate(World world)
         {
-            var currentWorld = world;
-            currentWorld = AllocateIDResult.Simulate(currentWorld);
-            currentWorld = RegisteredCard.CreateIn(currentWorld);
-            return currentWorld;
+            world = AllocateIDResult.Simulate(world);
+            world = Registered.CreateIn(world);
+            return world;
         }
     }
 }

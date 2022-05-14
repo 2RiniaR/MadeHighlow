@@ -1,21 +1,22 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard;
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public record SucceedResult(
-        [NotNull] Card InitialCard,
-        [NotNull] RegisterCardResult RegisterCardResult,
-        [NotNull] [ItemNotNull] ValueList<AddComponentResult> AddComponentResults,
-        [NotNull] Card SuppliedCard
+        [NotNull] PlayerID TargetID,
+        [NotNull] Card InitialStatus,
+        [NotNull] RegisterCard.SucceedResult RegisterCardResult,
+        [NotNull] [ItemNotNull] ValueList<AddComponent.SucceedResult> AddComponentResults,
+        [NotNull] PutCard.SucceedResult PutCardResult,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<SupplyCardEffect>> Interrupts,
+        [NotNull] Card Supplied
     ) : SupplyCardResult
     {
         public override World Simulate(World world)
         {
-            var player = SuppliedCard.OwnerPlayerID.GetFrom(world) ?? throw new NullReferenceException();
-            var modifiedPlayer = player with { Cards = player.Cards.Add(SuppliedCard) };
+            var player = Supplied.OwnerPlayerID.GetFrom(world) ?? throw new NullReferenceException();
+            var modifiedPlayer = player with { Cards = player.Cards.Add(Supplied) };
             return modifiedPlayer.UpdateIn(world);
         }
     }

@@ -2,27 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard
 {
-    /// <summary>
-    ///     カードを新規登録するアクション
-    /// </summary>
-    public record RegisterCardAction([NotNull] Card InitialCard)
+    public record RegisterCardAction([NotNull] PlayerID ParentID, [NotNull] Card InitialProps)
     {
-        public RegisterCardResult Validate(IActionContext context)
+        public RegisterCardResult Evaluate(IActionContext context)
         {
-            var player = InitialCard.OwnerPlayerID.GetFrom(context.World);
-            if (player == null)
-            {
-                return new FailedResult(InitialCard, FailedReason.OwnerNotExist);
-            }
-
-            var allocateIDResult = new AllocateIDAction().Evaluate(context);
-            var formattedCard = InitialCard with
-            {
-                ID = allocateIDResult.AllocatedID,
-                Components = ValueList<Component>.Empty,
-            };
-
-            return new SucceedResult(allocateIDResult, formattedCard);
+            return new RegisterCardEvaluator(context, ParentID, InitialProps).Evaluate();
         }
     }
 }
