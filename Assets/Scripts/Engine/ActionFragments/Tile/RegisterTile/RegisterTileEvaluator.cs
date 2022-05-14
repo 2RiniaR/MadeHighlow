@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterTile
 {
     public class RegisterTileEvaluator
     {
-        public RegisterTileEvaluator([NotNull] IActionContext context, [NotNull] Tile initialProps)
+        public RegisterTileEvaluator([NotNull] IHistory context, [NotNull] Tile initialProps)
         {
             Context = context;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private Tile InitialProps { get; }
 
         [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }

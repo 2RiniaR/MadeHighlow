@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public ValueList<Command> Resolve([NotNull] IActionContext context)
+        public ValueList<Command> Resolve([NotNull] IHistory context)
         {
             return Commands.Sort((unit1, unit2) => Compare(unit1, unit2, context));
         }
@@ -26,7 +26,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         ///     `command2`の方が優先度が高ければ、負の値を返す。
         ///     `command1`と`command2`の優先度が等しければ、0を返す。
         /// </returns>
-        private int Compare([NotNull] Command command1, [NotNull] Command command2, [NotNull] IActionContext context)
+        private int Compare([NotNull] Command command1, [NotNull] Command command2, [NotNull] IHistory context)
         {
             var world = context.World;
 
@@ -101,7 +101,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return health2.Value.CompareTo(health1.Value);
         }
 
-        private static int CompareRandom([NotNull] IActionContext context)
+        private static int CompareRandom([NotNull] IHistory context)
         {
             return context.GetRandom() > 1 / 2f ? 1 : 0;
         }

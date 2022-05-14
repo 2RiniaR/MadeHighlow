@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
 {
     public record PositionTileAction([NotNull] TileID TargetID, [NotNull] Position2D Destination)
     {
-        public PositionTileResult Evaluate(IActionContext context)
+        public PositionTileResult Evaluate(IHistory context)
         {
             return new PositionTileEvaluator(context, TargetID, Destination).Evaluate();
         }

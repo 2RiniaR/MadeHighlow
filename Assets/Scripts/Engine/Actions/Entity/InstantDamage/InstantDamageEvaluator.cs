@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     public class InstantDamageEvaluator
     {
         public InstantDamageEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             ID sourceID,
             [NotNull] EntityID targetID,
             [NotNull] Damage expected
@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             Calculated = Expected;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
         [NotNull] private Damage Expected { get; }

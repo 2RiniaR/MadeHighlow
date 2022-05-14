@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public class GenerateTileEvaluator
     {
-        public GenerateTileEvaluator([NotNull] IActionContext context, [NotNull] Tile initialStatus)
+        public GenerateTileEvaluator([NotNull] IHistory context, [NotNull] Tile initialStatus)
         {
             Context = context;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private Tile InitialStatus { get; }
 
         [CanBeNull] private RegisterTileResult RegisterTileResult { get; set; }

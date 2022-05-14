@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
     public interface IPutCardEffector
     {
         public ValueList<Interrupt<PutCardEffect>> EffectsOnPutCard(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] Player player,
             [NotNull] Card card
         );

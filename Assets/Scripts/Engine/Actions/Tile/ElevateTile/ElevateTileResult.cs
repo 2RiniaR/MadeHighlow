@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
-    public abstract record ElevateTileResult : Result;
+    public abstract record ElevateTileResult : ValidResult;
 }

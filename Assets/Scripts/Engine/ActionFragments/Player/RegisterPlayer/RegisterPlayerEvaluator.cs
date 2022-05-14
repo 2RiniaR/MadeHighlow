@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterPlayer
 {
     public class RegisterPlayerEvaluator
     {
-        public RegisterPlayerEvaluator([NotNull] IActionContext context, [NotNull] Player initialProps)
+        public RegisterPlayerEvaluator([NotNull] IHistory context, [NotNull] Player initialProps)
         {
             Context = context;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private Player InitialProps { get; }
 
         [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }

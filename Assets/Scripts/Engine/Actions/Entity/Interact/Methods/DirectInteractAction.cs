@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions
 {
     public record DirectInteractAction([NotNull] [ItemNotNull] ValueList<DirectInteractTarget> Targets) : InteractAction
     {
-        protected override InteractResult EvaluateBody(IActionContext context)
+        protected override InteractResult EvaluateBody(IHistory context)
         {
             throw new NotImplementedException();
         }

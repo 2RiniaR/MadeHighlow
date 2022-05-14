@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterComponent
     public class RegisterComponentEvaluator
     {
         public RegisterComponentEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] IAttachableID parentID,
             [NotNull] Component initialProps
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterComponent
             InitialProps = initialProps;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private IAttachableID ParentID { get; }
         [NotNull] private Component InitialProps { get; }
 

@@ -6,13 +6,13 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public class RemoveComponentEvaluator
     {
-        public RemoveComponentEvaluator([NotNull] IActionContext context, [NotNull] ComponentID targetID)
+        public RemoveComponentEvaluator([NotNull] IHistory context, [NotNull] ComponentID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private ComponentID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult> FinalizeComponentResults { get; set; }

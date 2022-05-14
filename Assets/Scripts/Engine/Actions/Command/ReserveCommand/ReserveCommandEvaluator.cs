@@ -6,13 +6,13 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     public class ReserveCommandEvaluator
     {
-        public ReserveCommandEvaluator([NotNull] IActionContext context, [NotNull] Command command)
+        public ReserveCommandEvaluator([NotNull] IHistory context, [NotNull] Command command)
         {
             Context = context;
             Command = command;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private Command Command { get; }
         [CanBeNull] private ValueList<Interrupt<ReserveCommandEffect>> Interrupts { get; set; }
 

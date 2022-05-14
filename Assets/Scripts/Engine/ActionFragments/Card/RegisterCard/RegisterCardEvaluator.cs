@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterCard
     public class RegisterCardEvaluator
     {
         public RegisterCardEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] PlayerID parentID,
             [NotNull] Card initialProps
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterCard
             InitialProps = initialProps;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private PlayerID ParentID { get; }
         [NotNull] private Card InitialProps { get; }
 

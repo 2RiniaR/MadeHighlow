@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] [ItemNotNull] ValueList<StepAction> StepActions
     ) : Action<WalkResult>
     {
-        protected override WalkResult EvaluateBody(IActionContext context)
+        protected override WalkResult EvaluateBody(IHistory context)
         {
             throw new NotImplementedException();
         }

@@ -6,14 +6,14 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public class InstantDeathEvaluator
     {
-        public InstantDeathEvaluator([NotNull] IActionContext context, ID sourceID, [NotNull] EntityID targetID)
+        public InstantDeathEvaluator([NotNull] IHistory context, ID sourceID, [NotNull] EntityID targetID)
         {
             Context = context;
             SourceID = sourceID;
             TargetID = targetID;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
         [CanBeNull] private Entity Target { get; set; }

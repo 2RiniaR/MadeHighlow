@@ -8,13 +8,13 @@ namespace RineaR.MadeHighlow.ActionFragments.PutCard
 {
     public class PutCardEvaluator
     {
-        public PutCardEvaluator([NotNull] IActionContext context, [NotNull] CardID targetID)
+        public PutCardEvaluator([NotNull] IHistory context, [NotNull] CardID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private CardID TargetID { get; }
 
         [CanBeNull] private ValueList<Interrupt<PutCardEffect>> Interrupts { get; set; }

@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public class SupplyCardEvaluator
     {
         public SupplyCardEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] PlayerID targetID,
             [NotNull] Card initialStatus
         )
@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private PlayerID TargetID { get; }
         [NotNull] private Card InitialStatus { get; }
 

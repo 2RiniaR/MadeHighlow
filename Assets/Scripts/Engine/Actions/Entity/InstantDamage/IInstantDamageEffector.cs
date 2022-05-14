@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [NotNull]
         [ItemNotNull]
         public ValueList<Interrupt<InstantDamageEffect>> EffectsOnInstantDamage(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             ID sourceID,
             [NotNull] Entity target,
             [NotNull] Damage damage

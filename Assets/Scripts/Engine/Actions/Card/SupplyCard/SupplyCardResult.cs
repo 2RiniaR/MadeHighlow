@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
-    public abstract record SupplyCardResult : Result;
+    public abstract record SupplyCardResult : ValidResult;
 }

@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.DropCard
 {
-    public abstract record DropCardResult : Result;
+    public abstract record DropCardResult : ValidResult;
 }

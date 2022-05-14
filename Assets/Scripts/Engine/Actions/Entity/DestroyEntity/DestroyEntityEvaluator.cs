@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public class DestroyEntityEvaluator
     {
-        public DestroyEntityEvaluator([NotNull] IActionContext context, [NotNull] EntityID targetID)
+        public DestroyEntityEvaluator([NotNull] IHistory context, [NotNull] EntityID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private EntityID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }

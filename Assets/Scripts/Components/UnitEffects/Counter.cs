@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
         Duration
     ), IStepInReactor
     {
-        public ValueList<StepInReaction> OnSteppedIn(IActionContext session, EntityID actor)
+        public ValueList<StepInReaction> OnSteppedIn(IHistory session, EntityID actor)
         {
             throw new NotImplementedException();
         }

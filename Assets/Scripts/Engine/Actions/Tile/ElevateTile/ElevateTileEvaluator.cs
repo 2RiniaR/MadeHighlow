@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public class ElevateTileEvaluator
     {
         public ElevateTileEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             ID sourceID,
             [NotNull] TileID targetID,
             [NotNull] Elevate expected
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
             Expected = expected;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         private ID SourceID { get; }
         [NotNull] private TileID TargetID { get; }
         [NotNull] private Elevate Expected { get; }

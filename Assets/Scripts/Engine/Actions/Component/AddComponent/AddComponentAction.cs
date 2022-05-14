@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull] Component InitialStatus
     ) : Action<AddComponentResult>
     {
-        protected override AddComponentResult EvaluateBody(IActionContext context)
+        protected override AddComponentResult EvaluateBody(IHistory context)
         {
             return new AddComponentEvaluator(context, TargetID, InitialStatus).Evaluate();
         }

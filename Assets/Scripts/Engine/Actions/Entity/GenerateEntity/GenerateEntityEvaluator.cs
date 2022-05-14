@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public class GenerateEntityEvaluator
     {
-        public GenerateEntityEvaluator([NotNull] IActionContext context, [NotNull] Entity initialStatus)
+        public GenerateEntityEvaluator([NotNull] IHistory context, [NotNull] Entity initialStatus)
         {
             Context = context;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private Entity InitialStatus { get; }
 
         [CanBeNull] private RegisterEntityResult RegisterEntityResult { get; set; }

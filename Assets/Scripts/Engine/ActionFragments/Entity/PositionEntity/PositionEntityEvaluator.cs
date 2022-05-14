@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
     public class PositionEntityEvaluator
     {
         public PositionEntityEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] EntityID targetID,
             [NotNull] Position3D destination
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
             Destination = destination;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private EntityID TargetID { get; }
         [NotNull] public Position3D Destination { get; }
 
@@ -69,7 +69,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
         }
 
         private static bool IsPositionable(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] Entity entity,
             [NotNull] Position3D dest
         )

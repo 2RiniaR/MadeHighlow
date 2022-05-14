@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     public class AddComponentEvaluator
     {
         public AddComponentEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] IAttachableID targetID,
             [NotNull] Component initialStatus
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private IAttachableID TargetID { get; }
         [NotNull] private Component InitialStatus { get; }
 

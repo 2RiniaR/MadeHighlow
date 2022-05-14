@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions
     ///     `Session` のラッパーオブジェクト
     /// </summary>
     /// <remarks>ステートフルだが依存先がキャッシュのため、実質イミュータブルのように扱ってよい。</remarks>
-    public interface IActionContext
+    public interface IHistory
     {
         /// <summary>
         ///     現在のセッション
@@ -30,7 +30,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     セッションに追記する
         /// </summary>
         [NotNull]
-        public IActionContext Appended([NotNull] Result result);
+        public IHistory Appended([NotNull] Result result);
 
         public float GetRandom();
     }

@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
     public class PositionTileEvaluator
     {
         public PositionTileEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] TileID targetID,
             [NotNull] Position2D destination
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
             Destination = destination;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private TileID TargetID { get; }
         [NotNull] public Position2D Destination { get; }
 
@@ -69,7 +69,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionTile
         }
 
         private static bool IsPositionable(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] Tile tile,
             [NotNull] Position2D dest
         )

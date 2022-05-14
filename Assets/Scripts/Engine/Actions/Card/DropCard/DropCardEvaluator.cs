@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public class DropCardEvaluator
     {
-        public DropCardEvaluator([NotNull] IActionContext context, [NotNull] CardID targetID)
+        public DropCardEvaluator([NotNull] IHistory context, [NotNull] CardID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private CardID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }

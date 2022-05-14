@@ -7,12 +7,12 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
 {
     public class StartCommandsEvaluator
     {
-        public StartCommandsEvaluator([NotNull] IActionContext context)
+        public StartCommandsEvaluator([NotNull] IHistory context)
         {
             Context = context;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
 
         [CanBeNull] [ItemNotNull] private ValueList<ReactedResult<RunCommandResult>> RunCommandResults { get; set; }
 

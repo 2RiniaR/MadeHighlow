@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public record JoinPlayerAction([NotNull] Player InitialPlayer) : Action<JoinPlayerResult>
     {
-        protected override JoinPlayerResult EvaluateBody(IActionContext context)
+        protected override JoinPlayerResult EvaluateBody(IHistory context)
         {
             return new JoinPlayerEvaluator(context, InitialPlayer).Evaluate();
         }

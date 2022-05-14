@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions
 {
-    public record InteractResult : Result
+    public record InteractResult : ValidResult
     {
         public override World Simulate(World world)
         {

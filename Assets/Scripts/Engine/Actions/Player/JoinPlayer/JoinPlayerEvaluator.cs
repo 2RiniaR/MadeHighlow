@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public class JoinPlayerEvaluator
     {
-        public JoinPlayerEvaluator([NotNull] IActionContext context, [NotNull] Player initialStatus)
+        public JoinPlayerEvaluator([NotNull] IHistory context, [NotNull] Player initialStatus)
         {
             Context = context;
             InitialStatus = initialStatus;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private Player InitialStatus { get; }
 
         [CanBeNull] private RegisterPlayerResult RegisterPlayerResult { get; set; }

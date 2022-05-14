@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public interface IGenerateEntityEffector
     {
         public ValueList<Interrupt<GenerateEntityEffect>> EffectsOnGenerateEntity(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             [NotNull] Entity generation
         );
     }

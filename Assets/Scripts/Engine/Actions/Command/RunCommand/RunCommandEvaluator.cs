@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public class RunCommandEvaluator
     {
-        public RunCommandEvaluator([NotNull] IActionContext context, [NotNull] Command command)
+        public RunCommandEvaluator([NotNull] IHistory context, [NotNull] Command command)
         {
             Context = context;
             Command = command;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private Command Command { get; }
         [CanBeNull] private ValueList<Interrupt<RunCommandEffect>> Interrupts { get; set; }
 

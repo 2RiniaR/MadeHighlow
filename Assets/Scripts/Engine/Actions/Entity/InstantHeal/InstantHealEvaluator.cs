@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public class InstantHealEvaluator
     {
         public InstantHealEvaluator(
-            [NotNull] IActionContext context,
+            [NotNull] IHistory context,
             ID sourceID,
             [NotNull] EntityID targetID,
             [NotNull] Heal expected
@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Calculated = Expected;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         private ID SourceID { get; }
         [NotNull] private EntityID TargetID { get; }
         [NotNull] private Heal Expected { get; }

@@ -60,12 +60,12 @@ namespace RineaR.MadeHighlow
             return ValueList<IObject>.Empty;
         }
 
-        public virtual ValueList<ActionConfirmation> InitializeActions([NotNull] IActionContext context)
+        public virtual ValueList<ActionConfirmation> InitializeActions([NotNull] IHistory context)
         {
             return ValueList<ActionConfirmation>.Empty;
         }
 
-        public virtual ValueList<ActionConfirmation> FinalizeActions([NotNull] IActionContext context)
+        public virtual ValueList<ActionConfirmation> FinalizeActions([NotNull] IHistory context)
         {
             return ValueList<ActionConfirmation>.Empty;
         }

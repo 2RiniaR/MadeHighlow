@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
     public class DestroyTileEvaluator
     {
-        public DestroyTileEvaluator([NotNull] IActionContext context, [NotNull] TileID targetID)
+        public DestroyTileEvaluator([NotNull] IHistory context, [NotNull] TileID targetID)
         {
             Context = context;
             TargetID = targetID;
         }
 
-        [NotNull] private IActionContext Context { get; set; }
+        [NotNull] private IHistory Context { get; set; }
         [NotNull] private TileID TargetID { get; }
 
         [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }

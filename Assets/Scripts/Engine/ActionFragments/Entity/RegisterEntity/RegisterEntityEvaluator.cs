@@ -7,13 +7,13 @@ namespace RineaR.MadeHighlow.ActionFragments.RegisterEntity
 {
     public class RegisterEntityEvaluator
     {
-        public RegisterEntityEvaluator([NotNull] IActionContext context, [NotNull] Entity initialProps)
+        public RegisterEntityEvaluator([NotNull] IHistory context, [NotNull] Entity initialProps)
         {
             Context = context;
             InitialProps = initialProps;
         }
 
-        [NotNull] private IActionContext Context { get; }
+        [NotNull] private IHistory Context { get; }
         [NotNull] private Entity InitialProps { get; }
 
         [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }

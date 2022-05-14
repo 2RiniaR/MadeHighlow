@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions
     public record WalkResult(
         [NotNull] EntityID ActorEntityID,
         [NotNull] [ItemNotNull] ValueList<ReactedResult<StepResult>> StepResults
-    ) : Result
+    ) : ValidResult
     {
         public override World Simulate(World world)
         {

@@ -8,24 +8,24 @@ namespace RineaR.MadeHighlow.Actions
     public abstract record Action
     {
         [NotNull]
-        public abstract ReactedResult EvaluateBase([NotNull] IActionContext context);
+        public abstract ReactedResult EvaluateBase([NotNull] IHistory context);
 
         /// <summary>
         ///     アクションを検証し、結果を返す
         /// </summary>
         [NotNull]
-        protected abstract Result EvaluateBodyBase([NotNull] IActionContext context);
+        protected abstract ValidResult EvaluateBodyBase([NotNull] IHistory context);
     }
 
-    public abstract record Action<TResult> : Action where TResult : Result
+    public abstract record Action<TResult> : Action where TResult : ValidResult
     {
-        public override ReactedResult EvaluateBase(IActionContext context)
+        public override ReactedResult EvaluateBase(IHistory context)
         {
             return Evaluate(context);
         }
 
         [NotNull]
-        public ReactedResult<TResult> Evaluate([NotNull] IActionContext context)
+        public ReactedResult<TResult> Evaluate([NotNull] IHistory context)
         {
             // TODO: PredictAction, ReactAction の実行優先順位をどうやって決めるか...
             var predictionActions = Component.GetAllOfTypeFrom<IPredictor>(context.World)
@@ -53,7 +53,7 @@ namespace RineaR.MadeHighlow.Actions
             return new ReactedResult<TResult>(predictionResults, bodyResult, predictionResults);
         }
 
-        protected override Result EvaluateBodyBase(IActionContext context)
+        protected override ValidResult EvaluateBodyBase(IHistory context)
         {
             // Unity 2021.3 では `Covariant return types` をサポートしていないため、命名を同じにできない
             return EvaluateBody(context);
@@ -63,6 +63,6 @@ namespace RineaR.MadeHighlow.Actions
         ///     アクションを検証し、結果を返す
         /// </summary>
         [NotNull]
-        protected abstract TResult EvaluateBody([NotNull] IActionContext context);
+        protected abstract TResult EvaluateBody([NotNull] IHistory context);
     }
 }

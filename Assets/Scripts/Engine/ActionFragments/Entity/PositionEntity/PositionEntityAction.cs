@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
 {
     public record PositionEntityAction([NotNull] EntityID TargetID, [NotNull] Position3D Destination)
     {
-        public PositionEntityResult Evaluate(IActionContext context)
+        public PositionEntityResult Evaluate(IHistory context)
         {
             return new PositionEntityEvaluator(context, TargetID, Destination).Evaluate();
         }

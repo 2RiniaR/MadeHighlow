@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] StepCost AvailableStepCost
     ) : Action<StepResult>
     {
-        protected override StepResult EvaluateBody(IActionContext context)
+        protected override StepResult EvaluateBody(IHistory context)
         {
             var world = context.World;
             var actor = ActorEntityID.GetFrom(world) ?? throw new NullReferenceException();
@@ -62,7 +62,7 @@ namespace RineaR.MadeHighlow.Actions
         ///     ステップ後アクションを実行する
         /// </summary>
         [NotNull]
-        private ValueList<Result> RunAfterActions([NotNull] IActionContext session)
+        private ValueList<Result> RunAfterActions([NotNull] IHistory session)
         {
             throw new NotImplementedException();
         }

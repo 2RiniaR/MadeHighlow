@@ -5,6 +5,6 @@ namespace RineaR.MadeHighlow.Actions
     public interface IStepOutReactor
     {
         [NotNull]
-        public ValueList<StepOutReaction> OnSteppedOut([NotNull] IActionContext session, [NotNull] EntityID actor);
+        public ValueList<StepOutReaction> OnSteppedOut([NotNull] IHistory session, [NotNull] EntityID actor);
     }
 }

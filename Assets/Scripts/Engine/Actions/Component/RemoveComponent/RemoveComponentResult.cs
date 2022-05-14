@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
-    public abstract record RemoveComponentResult : Result;
+    public abstract record RemoveComponentResult : ValidResult;
 }

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] [ItemNotNull] ValueList<ReactedResult> Predictions,
         [NotNull] Result Body,
         [NotNull] [ItemNotNull] ValueList<ReactedResult> Reactions
-    ) : Result
+    ) : ValidResult
     {
         public override World Simulate(World world)
         {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] [ItemNotNull] ValueList<ReactedResult> Predictions,
         [NotNull] TResult Body,
         [NotNull] [ItemNotNull] ValueList<ReactedResult> Reactions
-    ) : ReactedResult(Predictions, Body, Reactions) where TResult : Result
+    ) : ReactedResult(Predictions, Body, Reactions) where TResult : ValidResult
     {
         public new TResult Body { get; init; } = Body;
 
