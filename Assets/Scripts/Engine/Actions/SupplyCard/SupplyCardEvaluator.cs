@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.PutCard;
+using RineaR.MadeHighlow.ActionFragments.RegisterCard;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.SupplyCard.PutCard;
-using RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard;
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
@@ -24,9 +24,9 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [NotNull] private PlayerID TargetID { get; }
         [NotNull] private Card InitialStatus { get; }
 
-        [CanBeNull] private RegisterCard.SucceedResult RegisterCardResult { get; set; }
+        [CanBeNull] private ActionFragments.RegisterCard.SucceedResult RegisterCardResult { get; set; }
         [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
-        [CanBeNull] private PutCard.SucceedResult PutCardResult { get; set; }
+        [CanBeNull] private ActionFragments.PutCard.SucceedResult PutCardResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<SupplyCardEffect>> Interrupts { get; set; }
         [CanBeNull] private Card Generating { get; set; }
 
@@ -62,7 +62,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             );
 
             var result = new RegisterCardAction(TargetID, InitialStatus).Evaluate(Context);
-            if (result is not RegisterCard.SucceedResult succeedResult)
+            if (result is not ActionFragments.RegisterCard.SucceedResult succeedResult)
             {
                 return new RegisterFailedResult(TargetID, InitialStatus, result);
             }
@@ -112,7 +112,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (PutCardResult != null));
 
             var result = new PutCardAction(Generating.CardID).Evaluate(Context);
-            if (result is not PutCard.SucceedResult succeedResult)
+            if (result is not ActionFragments.PutCard.SucceedResult succeedResult)
             {
                 return new PutCardFailedResult(
                     TargetID,

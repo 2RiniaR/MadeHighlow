@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.PositionEntity;
+using RineaR.MadeHighlow.ActionFragments.RegisterEntity;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.GenerateEntity.PositionEntity;
-using RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 
         [CanBeNull] private RegisterEntityResult RegisterEntityResult { get; set; }
         [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
-        [CanBeNull] private PositionEntity.SucceedResult PositionEntityResult { get; set; }
+        [CanBeNull] private ActionFragments.PositionEntity.SucceedResult PositionEntityResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateEntityEffect>> Interrupts { get; set; }
 
         [CanBeNull] private Entity Generating { get; set; }
@@ -97,7 +97,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (PositionEntityResult != null));
 
             var result = new PositionEntityAction(Generating.EntityID, InitialStatus.Position3D).Evaluate(Context);
-            if (result is not PositionEntity.SucceedResult succeedResult)
+            if (result is not ActionFragments.PositionEntity.SucceedResult succeedResult)
             {
                 return new PositionFailedResult(InitialStatus, RegisterEntityResult, AddComponentResults, result);
             }

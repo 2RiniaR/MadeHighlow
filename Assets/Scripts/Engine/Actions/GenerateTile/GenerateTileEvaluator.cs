@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.PositionTile;
+using RineaR.MadeHighlow.ActionFragments.RegisterTile;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.GenerateTile.PositionTile;
-using RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
         [CanBeNull] private RegisterTileResult RegisterTileResult { get; set; }
         [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
-        [CanBeNull] private PositionTile.SucceedResult PositionTileResult { get; set; }
+        [CanBeNull] private ActionFragments.PositionTile.SucceedResult PositionTileResult { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateTileEffect>> Interrupts { get; set; }
 
         [CanBeNull] private Tile Generating { get; set; }
@@ -92,7 +92,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (PositionTileResult != null));
 
             var result = new PositionTileAction(Generating.TileID, InitialStatus.Position2D).Evaluate(Context);
-            if (result is not PositionTile.SucceedResult succeedResult)
+            if (result is not ActionFragments.PositionTile.SucceedResult succeedResult)
             {
                 return new PositionFailedResult(InitialStatus, RegisterTileResult, AddComponentResults, result);
             }

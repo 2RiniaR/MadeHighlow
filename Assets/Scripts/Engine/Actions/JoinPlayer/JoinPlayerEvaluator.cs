@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.RegisterPlayer;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer;
 using RineaR.MadeHighlow.Actions.SupplyCard;
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer

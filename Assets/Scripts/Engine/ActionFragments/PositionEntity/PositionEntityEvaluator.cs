@@ -1,0 +1,141 @@
+﻿using System;
+using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions;
+
+namespace RineaR.MadeHighlow.ActionFragments.PositionEntity
+{
+    public class PositionEntityEvaluator
+    {
+        public PositionEntityEvaluator(
+            [NotNull] IActionContext context,
+            [NotNull] EntityID targetID,
+            [NotNull] Position3D destination
+        )
+        {
+            Context = context;
+            TargetID = targetID;
+            Destination = destination;
+        }
+
+        [NotNull] private IActionContext Context { get; }
+        [NotNull] private EntityID TargetID { get; }
+        [NotNull] public Position3D Destination { get; }
+
+        [CanBeNull] private Entity Target { get; set; }
+        [CanBeNull] private Entity Positioned { get; set; }
+
+        [NotNull]
+        public PositionEntityResult Evaluate()
+        {
+            PositionEntityResult result;
+
+            result = GetTarget();
+            if (result != null) return result;
+
+            result = Position();
+            if (result != null) return result;
+
+            return Succeed();
+        }
+
+        [CanBeNull]
+        private PositionEntityResult GetTarget()
+        {
+            Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Target != null));
+
+            Target = TargetID.GetFrom(Context.World);
+            if (Target == null)
+            {
+                return new FailedResult(TargetID, FailedReason.EntityNotExist);
+            }
+
+            return null;
+        }
+
+        [CanBeNull]
+        private PositionEntityResult Position()
+        {
+            Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Positioned != null));
+
+            if (!IsPositionable(Context, Target, Destination))
+            {
+                return new FailedResult(TargetID, FailedReason.ResolveFailed);
+            }
+
+            Positioned = Target;
+            return null;
+        }
+
+        private static bool IsPositionable(
+            [NotNull] IActionContext context,
+            [NotNull] Entity entity,
+            [NotNull] Position3D dest
+        )
+        {
+            /*
+             * 【エンティティが設置可能な条件】
+             * 
+             * (T) エンティティが浮遊している場合
+             * (F) エンティティが浮遊していない場合
+             * 
+             * (1) 同一座標にタイルが存在しない
+             * (2) 同一座標のタイルが `Abyss`
+             * (3) 同一座標のタイルが `Ground` でかつ、高さが Tile < Entity かつ、エンティティ設置可能
+             * (4) 同一座標のタイルが `Ground` でかつ、高さが Tile < Entity かつ、エンティティ設置不可
+             * (5) 同一座標のタイルが `Ground` でかつ、高さが Tile = Entity かつ、エンティティ設置可能
+             * (6) 同一座標のタイルが `Ground` でかつ、高さが Tile = Entity かつ、エンティティ設置不可
+             * (7) 同一座標のタイルが `Ground` でかつ、高さが Tile > Entity
+             * (8) 同一座標のタイルが `Tower`
+             *
+             *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
+             *     | O / X |  (1)  |  (2)  |  (3)  |  (4)  |  (5)  |  (6)  |  (7)  |  (8)  |
+             *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
+             *     |  (T)  |   O   |   O   |   O   |   O   |   O   |   X   |   X   |   X   |
+             *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
+             *     |  (F)  |   X   |   X   |   O   |   X   |   O   |   X   |   X   |   X   |
+             *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
+             */
+
+            var landingTile = dest.To2D().GetTile(context.World);
+            var destHeight = dest.Z;
+
+            if (landingTile == null || // (1)
+                landingTile.Elevation is AbyssElevation) // (2)
+            {
+                return entity.Levitation;
+            }
+
+            if (landingTile.Elevation is GroundElevation ground) // (3) ~ (7)
+            {
+                if (ground.Height < destHeight) // (3), (4)
+                {
+                    return ground.Placeable || entity.Levitation;
+                }
+
+                if (ground.Height == destHeight) // (5), (6)
+                {
+                    return ground.Placeable;
+                }
+
+                return false; //(7)
+            }
+
+            if (landingTile.Elevation is TowerElevation) // (8)
+            {
+                return false;
+            }
+
+            throw new InvalidOperationException();
+        }
+
+        [NotNull]
+        private PositionEntityResult Succeed()
+        {
+            Contract.Requires<InvalidOperationException>(Positioned != null);
+
+            return new SucceedResult(Positioned);
+        }
+    }
+}

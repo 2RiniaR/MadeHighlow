@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     public record InitializeFailedResult(
         [NotNull] IAttachableID TargetID,
         [NotNull] Component InitialStatus,
-        [NotNull] RegisterComponent.SucceedResult RegisterComponentResult,
+        [NotNull] ActionFragments.RegisterComponent.SucceedResult RegisterComponentResult,
         [NotNull] ValueList<ReactedResult> SucceedResults,
         [NotNull] ReactedResult FailedResult
     ) : AddComponentResult

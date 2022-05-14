@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.RegisterPlayer;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.JoinPlayer.RegisterPlayer;
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {

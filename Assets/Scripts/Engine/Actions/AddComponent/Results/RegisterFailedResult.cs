@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent.RegisterComponent;
+using RineaR.MadeHighlow.ActionFragments.RegisterComponent;
 
 namespace RineaR.MadeHighlow.Actions.AddComponent
 {

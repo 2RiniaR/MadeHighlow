@@ -6,9 +6,9 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public record SucceedResult(
         [NotNull] PlayerID TargetID,
         [NotNull] Card InitialStatus,
-        [NotNull] RegisterCard.SucceedResult RegisterCardResult,
+        [NotNull] ActionFragments.RegisterCard.SucceedResult RegisterCardResult,
         [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
-        [NotNull] PutCard.SucceedResult PutCardResult,
+        [NotNull] ActionFragments.PutCard.SucceedResult PutCardResult,
         [NotNull] [ItemNotNull] ValueList<Interrupt<SupplyCardEffect>> Interrupts,
         [NotNull] Card Supplied
     ) : SupplyCardResult

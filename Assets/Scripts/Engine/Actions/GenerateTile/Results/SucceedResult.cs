@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile;
+using RineaR.MadeHighlow.ActionFragments.RegisterTile;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull] Tile InitialStatus,
         [NotNull] RegisterTileResult RegisterTileResult,
         [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
-        [NotNull] PositionTile.SucceedResult PositionTileResult,
+        [NotNull] ActionFragments.PositionTile.SucceedResult PositionTileResult,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileEffect>> Interrupts,
         [NotNull] Tile Generated
     ) : GenerateTileResult

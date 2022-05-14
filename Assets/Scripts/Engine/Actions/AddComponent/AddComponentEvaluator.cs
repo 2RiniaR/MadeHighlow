@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent.RegisterComponent;
+using RineaR.MadeHighlow.ActionFragments.RegisterComponent;
 
 namespace RineaR.MadeHighlow.Actions.AddComponent
 {
@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull] private IAttachableID TargetID { get; }
         [NotNull] private Component InitialStatus { get; }
 
-        [CanBeNull] private RegisterComponent.SucceedResult RegisterComponentResult { get; set; }
+        [CanBeNull] private ActionFragments.RegisterComponent.SucceedResult RegisterComponentResult { get; set; }
         [CanBeNull] private ValueList<ReactedResult> InitializeComponentResults { get; set; }
         [CanBeNull] private ValueList<Interrupt<AddComponentEffect>> Interrupts { get; set; }
         [CanBeNull] private Component Generating { get; set; }
@@ -56,7 +56,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             );
 
             var result = new RegisterComponentAction(TargetID, InitialStatus).Evaluate(Context);
-            if (result is not RegisterComponent.SucceedResult succeedResult)
+            if (result is not ActionFragments.RegisterComponent.SucceedResult succeedResult)
             {
                 return new RegisterFailedResult(TargetID, InitialStatus, result);
             }

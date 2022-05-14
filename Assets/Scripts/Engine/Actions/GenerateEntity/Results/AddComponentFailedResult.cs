@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.RegisterEntity;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {

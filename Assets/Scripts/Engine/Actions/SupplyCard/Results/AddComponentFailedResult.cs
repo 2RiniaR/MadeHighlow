@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public record AddComponentFailedResult(
         [NotNull] PlayerID TargetID,
         [NotNull] Card InitialStatus,
-        [NotNull] RegisterCard.SucceedResult RegisterCardResult,
+        [NotNull] ActionFragments.RegisterCard.SucceedResult RegisterCardResult,
         [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> SucceedResults,
         [NotNull] ReactedResult<AddComponentResult> FailedResult
     ) : SupplyCardResult

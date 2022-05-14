@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.ActionFragments.RegisterTile;
 using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.GenerateTile.RegisterTile;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {

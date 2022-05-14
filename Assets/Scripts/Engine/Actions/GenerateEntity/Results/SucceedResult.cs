@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.GenerateEntity.RegisterEntity;
+using RineaR.MadeHighlow.ActionFragments.RegisterEntity;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull] Entity InitialStatus,
         [NotNull] RegisterEntityResult RegisterEntityResult,
         [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
-        [NotNull] PositionEntity.SucceedResult PositionEntityResult,
+        [NotNull] ActionFragments.PositionEntity.SucceedResult PositionEntityResult,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityEffect>> Interrupts,
         [NotNull] Entity Generated
     ) : GenerateEntityResult

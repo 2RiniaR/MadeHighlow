@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.SupplyCard.RegisterCard;
+using RineaR.MadeHighlow.ActionFragments.RegisterCard;
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
