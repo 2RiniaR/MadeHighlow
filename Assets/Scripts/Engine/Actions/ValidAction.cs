@@ -28,6 +28,7 @@ namespace RineaR.MadeHighlow.Actions
         public ReactedResult<TResult> Evaluate([NotNull] IHistory history)
         {
             // TODO: PredictAction, ReactAction の実行優先順位をどうやって決めるか...
+            // TODO: Reactionの無限ループ対策をしないといけない。カウンター持ち2体が互いにカウンターし合ったら簡単に無限ループが完成してしまう。
             var predictionActions = Component.GetAllOfTypeFrom<IPredictor>(history.World)
                 .SelectMany(predictor => predictor.PredictionsOn(this));
             var predictionResults = ValueList<ReactedResult>.Empty;
