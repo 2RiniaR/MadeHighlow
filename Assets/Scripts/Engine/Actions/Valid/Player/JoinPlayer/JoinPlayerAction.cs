@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.JoinPlayer
 {
-    public record JoinPlayerAction([NotNull] Player InitialPlayer) : Action<JoinPlayerResult>
+    public record JoinPlayerAction([NotNull] Player InitialPlayer) : ValidAction<JoinPlayerResult>
     {
         protected override JoinPlayerResult EvaluateBody(IHistory history)
         {

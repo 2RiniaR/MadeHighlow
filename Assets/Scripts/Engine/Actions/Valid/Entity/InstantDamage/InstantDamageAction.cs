@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
     public record InstantDamageAction
-        (ID SourceID, [NotNull] EntityID TargetID, [NotNull] Damage Damage) : Action<InstantDamageResult>
+        (ID SourceID, [NotNull] EntityID TargetID, [NotNull] Damage Damage) : ValidAction<InstantDamageResult>
     {
         protected override InstantDamageResult EvaluateBody(IHistory history)
         {

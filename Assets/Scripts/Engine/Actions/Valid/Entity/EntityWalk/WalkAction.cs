@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid
     public record WalkAction(
         [NotNull] EntityID ActorEntityID,
         [NotNull] [ItemNotNull] ValueList<StepAction> StepActions
-    ) : Action<WalkResult>
+    ) : ValidAction<WalkResult>
     {
         protected override WalkResult EvaluateBody(IHistory history)
         {

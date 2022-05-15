@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
 {
-    public record DestroyEntityAction([NotNull] EntityID TargetID) : Action<DestroyEntityResult>
+    public record DestroyEntityAction([NotNull] EntityID TargetID) : ValidAction<DestroyEntityResult>
     {
         protected override DestroyEntityResult EvaluateBody(IHistory history)
         {

@@ -2,7 +2,8 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
-    public record SupplyCardAction([NotNull] PlayerID TargetID, [NotNull] Card InitialStatus) : Action<SupplyCardResult>
+    public record SupplyCardAction
+        ([NotNull] PlayerID TargetID, [NotNull] Card InitialStatus) : ValidAction<SupplyCardResult>
     {
         protected override SupplyCardResult EvaluateBody(IHistory history)
         {

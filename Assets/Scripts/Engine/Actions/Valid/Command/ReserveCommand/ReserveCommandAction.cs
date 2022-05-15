@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
-    public record ReserveCommandAction([NotNull] Command Command) : Action<ReserveCommandResult>
+    public record ReserveCommandAction([NotNull] Command Command) : ValidAction<ReserveCommandResult>
     {
         protected override ReserveCommandResult EvaluateBody(IHistory history)
         {

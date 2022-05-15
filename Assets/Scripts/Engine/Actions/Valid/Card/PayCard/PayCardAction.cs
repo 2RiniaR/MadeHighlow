@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.PayCard
 {
-    public record PayCardAction([NotNull] CardID TargetID) : Action<PayCardResult>
+    public record PayCardAction([NotNull] CardID TargetID) : ValidAction<PayCardResult>
     {
         protected override PayCardResult EvaluateBody(IHistory history)
         {

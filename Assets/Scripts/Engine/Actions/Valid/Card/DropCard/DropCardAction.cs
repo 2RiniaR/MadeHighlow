@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.DropCard
 {
-    public record DropCardAction([NotNull] CardID TargetID) : Action<DropCardResult>
+    public record DropCardAction([NotNull] CardID TargetID) : ValidAction<DropCardResult>
     {
         protected override DropCardResult EvaluateBody(IHistory history)
         {

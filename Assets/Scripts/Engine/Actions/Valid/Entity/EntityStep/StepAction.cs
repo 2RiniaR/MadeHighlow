@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Actions.Valid
         [NotNull] Direction2D Direction2D,
         [NotNull] [ItemNotNull] ValueList<ValidAction> AfterActions,
         [NotNull] StepCost AvailableStepCost
-    ) : Action<StepResult>
+    ) : ValidAction<StepResult>
     {
         protected override StepResult EvaluateBody(IHistory history)
         {

@@ -1,6 +1,6 @@
 ﻿namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
 {
-    public record StartCommandsAction : Action<StartCommandsResult>
+    public record StartCommandsAction : ValidAction<StartCommandsResult>
     {
         protected override StartCommandsResult EvaluateBody(IHistory history)
         {

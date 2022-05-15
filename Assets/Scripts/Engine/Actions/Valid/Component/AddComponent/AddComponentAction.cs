@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
     public record AddComponentAction(
         [NotNull] IAttachableID TargetID,
         [NotNull] Component InitialStatus
-    ) : Action<AddComponentResult>
+    ) : ValidAction<AddComponentResult>
     {
         protected override AddComponentResult EvaluateBody(IHistory history)
         {

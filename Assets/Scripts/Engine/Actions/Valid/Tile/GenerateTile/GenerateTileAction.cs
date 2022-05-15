@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
 {
-    public record GenerateTileAction([NotNull] Tile InitialStatus) : Action<GenerateTileResult>
+    public record GenerateTileAction([NotNull] Tile InitialStatus) : ValidAction<GenerateTileResult>
     {
         protected override GenerateTileResult EvaluateBody(IHistory history)
         {

@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
 {
-    public record DestroyTileAction([NotNull] TileID TargetID) : Action<DestroyTileResult>
+    public record DestroyTileAction([NotNull] TileID TargetID) : ValidAction<DestroyTileResult>
     {
         protected override DestroyTileResult EvaluateBody(IHistory history)
         {

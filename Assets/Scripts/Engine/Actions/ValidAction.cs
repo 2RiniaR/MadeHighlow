@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions
         protected abstract ValidResult EvaluateBodyBase([NotNull] IHistory history);
     }
 
-    public abstract record Action<TResult> : ValidAction where TResult : ValidResult
+    public abstract record ValidAction<TResult> : ValidAction where TResult : ValidResult
     {
         public override ReactedResult EvaluateBase(IHistory history)
         {

@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 {
-    public record RunCommandAction([NotNull] Command Command) : Action<RunCommandResult>
+    public record RunCommandAction([NotNull] Command Command) : ValidAction<RunCommandResult>
     {
         protected override RunCommandResult EvaluateBody(IHistory history)
         {
