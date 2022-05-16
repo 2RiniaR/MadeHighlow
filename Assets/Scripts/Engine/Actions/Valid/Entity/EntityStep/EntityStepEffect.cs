@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.Valid
 {
-    public record StepCostEffect;
+    public abstract record EntityStepEffect;
 }

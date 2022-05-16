@@ -7,12 +7,12 @@ namespace RineaR.MadeHighlow.Actions
     /// </summary>
     public abstract record ValidAction
     {
-        [NotNull]
-        public abstract ReactedResult EvaluateBase([NotNull] IHistory history);
-
         /// <summary>
         ///     アクションを検証し、結果を返す
         /// </summary>
+        [NotNull]
+        public abstract ReactedResult EvaluateBase([NotNull] IHistory history);
+
         [NotNull]
         protected abstract ValidResult EvaluateBodyBase([NotNull] IHistory history);
     }

@@ -3,12 +3,13 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.Valid
 {
-    public record WalkAction(
+    public record SucceedResult(
         [NotNull] EntityID ActorEntityID,
-        [NotNull] [ItemNotNull] ValueList<EntityStepAction> StepActions
-    ) : ValidAction<WalkResult>
+        [NotNull] Direction2D Direction2D,
+        [NotNull] EntityStepCost AvailableStepCost
+    ) : EntityStepResult
     {
-        protected override WalkResult EvaluateBody(IHistory history)
+        public override World Simulate(World world)
         {
             throw new NotImplementedException();
         }

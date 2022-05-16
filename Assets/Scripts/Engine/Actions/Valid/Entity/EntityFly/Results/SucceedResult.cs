@@ -3,8 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 {
     public record SucceedResult(
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyEffect>> Interrupts,
-        [NotNull] Fragment.MoveEntity.SucceedResult MoveEntityResult
+        [NotNull] Fragment.MoveEntity.SucceedResult MoveEntityResult,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyEffect>> Interrupts
     ) : EntityFlyResult
     {
         public override World Simulate(World world)

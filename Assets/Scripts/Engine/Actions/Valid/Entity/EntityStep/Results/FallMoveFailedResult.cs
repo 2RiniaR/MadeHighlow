@@ -1,6 +1,6 @@
 ﻿namespace RineaR.MadeHighlow.Actions.Valid
 {
-    public record FailedStepResult : StepResult
+    public record FallMoveFailedResult : EntityStepResult
     {
         public override World Simulate(World world)
         {

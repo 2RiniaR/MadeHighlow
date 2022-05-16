@@ -99,7 +99,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         {
             Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
 
-            return new SucceedResult(PositionEntityResult);
+            return new SucceedResult(PositionEntityResult, Direction);
         }
     }
 }

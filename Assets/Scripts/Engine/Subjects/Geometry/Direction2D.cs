@@ -85,5 +85,15 @@ namespace RineaR.MadeHighlow
             YPositive,
             YNegative,
         }
+
+        [NotNull]
+        public Direction3D To3D
+        {
+            get
+            {
+                var vector = ToVector();
+                return Direction3D.FromVector(new Vector3D(vector.X, vector.Y, 0));
+            }
+        }
     }
 }

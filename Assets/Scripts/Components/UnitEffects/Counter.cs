@@ -1,7 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions;
-using RineaR.MadeHighlow.Actions.Valid;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Components.UnitEffects
 {
@@ -15,11 +12,7 @@ namespace RineaR.MadeHighlow.Components.UnitEffects
         ID,
         AttachedID,
         Duration
-    ), IStepInReactor
+    )
     {
-        public ValueList<StepInReaction> OnSteppedIn(IHistory session, EntityID actor)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
