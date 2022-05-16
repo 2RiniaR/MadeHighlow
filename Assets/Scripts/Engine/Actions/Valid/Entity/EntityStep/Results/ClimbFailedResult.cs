@@ -1,12 +1,12 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.MoveEntity;
 
 namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
-    public record CostOverResult(
+    public record ClimbFailedResult(
         [NotNull] EntityStepAction Action,
-        [NotNull] EntityStepProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostInterrupts,
-        [NotNull] EntityStepCost Required
+        [NotNull] [ItemNotNull] ValueList<Fragment.MoveEntity.SucceedResult> SucceedResults,
+        [NotNull] MoveEntityResult FailedResult
     ) : EntityStepResult
     {
         public override World Simulate(World world)

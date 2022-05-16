@@ -1,17 +1,17 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid
+namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
-    public interface IEntityStepEffector
+    public interface IEntityStepEffector : IPriority<IEntityStepEffector>
     {
         [NotNull]
         [ItemNotNull]
         public ValueList<Interrupt<EntityStepEffect>> EffectsOnEntityStep(
             [NotNull] IHistory session,
-            [NotNull] Entity entity,
-            [NotNull] [ItemNotNull] ValueList<Fragment.MoveEntity.SucceedResult> climbs,
-            [NotNull] Fragment.MoveEntity.SucceedResult horizontal,
-            [NotNull] [ItemNotNull] ValueList<Fragment.MoveEntity.SucceedResult> falls
+            [NotNull] EntityStepAction action,
+            [NotNull] EntityStepProcess process,
+            [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> costInterrupts,
+            [NotNull] EntityStepCost expendedCost
         );
     }
 }

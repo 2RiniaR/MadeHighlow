@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid
+namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public record EntityStepAction(
         [NotNull] EntityID TargetID,
@@ -10,7 +10,7 @@ namespace RineaR.MadeHighlow.Actions.Valid
     {
         protected override EntityStepResult EvaluateBody(IHistory history)
         {
-            return new EntityStepEvaluator(history, TargetID, Direction, Available).Evaluate();
+            return new EntityStepEvaluator(history, this).Evaluate();
         }
     }
 }

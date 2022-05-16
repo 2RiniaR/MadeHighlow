@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid
+﻿namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public abstract record EntityStepEffect;
 }

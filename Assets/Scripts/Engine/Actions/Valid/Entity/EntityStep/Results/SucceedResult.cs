@@ -1,17 +1,21 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid
+namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public record SucceedResult(
-        [NotNull] EntityID ActorEntityID,
-        [NotNull] Direction2D Direction2D,
-        [NotNull] EntityStepCost AvailableStepCost
+        [NotNull] EntityStepAction Action,
+        [NotNull] EntityStepProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostInterrupts,
+        [NotNull] EntityStepCost ExpendedCost,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepEffect>> Interrupts
     ) : EntityStepResult
     {
         public override World Simulate(World world)
         {
-            throw new NotImplementedException();
+            return new Timeline().Then(Process.ClimbResults)
+                .Then(Process.ShiftResult)
+                .Then(Process.FallResults)
+                .Simulate(world);
         }
     }
 }

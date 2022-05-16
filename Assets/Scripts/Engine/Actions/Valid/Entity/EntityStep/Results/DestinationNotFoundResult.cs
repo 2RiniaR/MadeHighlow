@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid
+namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public record DestinationNotFoundResult([NotNull] Position2D Position) : EntityStepResult
     {
