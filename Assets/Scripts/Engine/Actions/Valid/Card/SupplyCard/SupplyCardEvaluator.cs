@@ -9,24 +9,22 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
     public class SupplyCardEvaluator
     {
-        public SupplyCardEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] PlayerID targetID,
-            [NotNull] Card initialStatus
-        )
+        public SupplyCardEvaluator([NotNull] IHistory initial, SupplyCardAction action)
         {
-            History = history;
-            TargetID = targetID;
-            InitialStatus = initialStatus;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
-        [NotNull] private PlayerID TargetID { get; }
-        [NotNull] private Card InitialStatus { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private SupplyCardAction Action { get; }
 
-        [CanBeNull] private Fragment.RegisterCard.SucceedResult RegisterCardResult { get; set; }
-        [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
-        [CanBeNull] private Fragment.PutCard.SucceedResult PutCardResult { get; set; }
+        [CanBeNull] private Event<Fragment.RegisterCard.SucceedResult> RegisterCardEvent { get; set; }
+        [CanBeNull] private ValueList<Event<ReactedResult<AddComponent.SucceedResult>>> AddComponentEvents { get; set; }
+        [CanBeNull] private Event<Fragment.PutCard.SucceedResult> PutCardEvent { get; set; }
+
+        [CanBeNull] private Process Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<SupplyCardEffect>> Interrupts { get; set; }
         [CanBeNull] private Card Generating { get; set; }
 
@@ -44,11 +42,14 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
             result = PutCard();
             if (result != null) return result;
 
-            result = GetGenerating();
+            WrapProcess();
+
+            result = FindGenerating();
             if (result != null) return result;
 
-            // 「カードを供給できるか」の判定に、交換で破棄されたカードのコンポーネントは干渉ができない
-            result = CollectInterrupts();
+            CollectInterrupts();
+
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
@@ -58,18 +59,19 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
         private SupplyCardResult RegisterCard()
         {
             Contract.Ensures(
-                (Contract.Result<SupplyCardResult>() != null) ^ (RegisterCardResult != null && Generating != null)
+                (Contract.Result<SupplyCardResult>() != null) ^ (RegisterCardEvent != null && Generating != null)
             );
 
-            var result = new RegisterCardAction(TargetID, InitialStatus).Evaluate(History);
+            var result = new RegisterCardAction(Action.TargetID, Action.InitialStatus).Evaluate(Simulating);
             if (result is not Fragment.RegisterCard.SucceedResult succeedResult)
             {
-                return new RegisterFailedResult(TargetID, InitialStatus, result);
+                return new RegisterFailedResult(Action, result);
             }
 
-            History = History.Appended(succeedResult);
-            RegisterCardResult = succeedResult;
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            RegisterCardEvent = succeedEvent;
             Generating = succeedResult.Registered;
+
             return null;
         }
 
@@ -77,27 +79,23 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
         private SupplyCardResult AddInitialComponents()
         {
             Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterCardResult != null);
-            Contract.Ensures(AddComponentResults != null);
+            Contract.Requires<InvalidOperationException>(RegisterCardEvent != null);
+            Contract.Ensures(AddComponentEvents != null);
 
-            AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
-            foreach (var component in InitialStatus.Components)
+            AddComponentEvents = ValueList<Event<ReactedResult<AddComponent.SucceedResult>>>.Empty;
+
+            foreach (var component in Action.InitialStatus.Components)
             {
-                var result = new AddComponentAction(Generating.CardID, component).Evaluate(History);
+                var result = new AddComponentAction(Generating.CardID, component).Evaluate(Simulating);
+
                 var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
                 if (succeedResult == null)
                 {
-                    return new AddComponentFailedResult(
-                        TargetID,
-                        InitialStatus,
-                        RegisterCardResult,
-                        AddComponentResults,
-                        result
-                    );
+                    return new AddComponentFailedResult(Action, RegisterCardEvent, AddComponentEvents, result);
                 }
 
-                History = History.Appended(succeedResult);
-                AddComponentResults = AddComponentResults.Add(succeedResult);
+                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+                AddComponentEvents = AddComponentEvents.Add(succeedEvent);
             }
 
             return null;
@@ -107,77 +105,74 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
         private SupplyCardResult PutCard()
         {
             Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterCardResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (PutCardResult != null));
+            Contract.Requires<InvalidOperationException>(RegisterCardEvent != null);
+            Contract.Requires<InvalidOperationException>(AddComponentEvents != null);
+            Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (PutCardEvent != null));
 
-            var result = new PutCardAction(Generating.CardID).Evaluate(History);
+            var result = new PutCardAction(Generating.CardID).Evaluate(Simulating);
             if (result is not Fragment.PutCard.SucceedResult succeedResult)
             {
-                return new PutCardFailedResult(
-                    TargetID,
-                    InitialStatus,
-                    RegisterCardResult,
-                    AddComponentResults,
-                    result
-                );
+                return new PutCardFailedResult(Action, RegisterCardEvent, AddComponentEvents, result);
             }
 
-            History = History.Appended(succeedResult);
-            PutCardResult = succeedResult;
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            PutCardEvent = succeedEvent;
 
             return null;
         }
 
+        private void WrapProcess()
+        {
+            Contract.Requires<InvalidOperationException>(RegisterCardEvent != null);
+            Contract.Requires<InvalidOperationException>(AddComponentEvents != null);
+            Contract.Requires<InvalidOperationException>(PutCardEvent != null);
+            Contract.Ensures(Process != null);
+
+            Process = new Process(RegisterCardEvent, AddComponentEvents, PutCardEvent);
+        }
+
         [CanBeNull]
-        private SupplyCardResult GetGenerating()
+        private SupplyCardResult FindGenerating()
         {
             Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterCardResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Requires<InvalidOperationException>(PutCardResult != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (Generating != null));
 
-            Generating = Generating.CardID.GetFrom(History.World);
+            Generating = Generating.CardID.GetFrom(Simulating.World);
             if (Generating == null)
             {
-                return new DestroyedResult(
-                    TargetID,
-                    InitialStatus,
-                    RegisterCardResult,
-                    AddComponentResults,
-                    PutCardResult
-                );
+                return new DestroyedResult(Action, Process);
             }
 
             return null;
         }
 
-        [CanBeNull]
-        private SupplyCardResult CollectInterrupts()
+        private void CollectInterrupts()
         {
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterCardResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Requires<InvalidOperationException>(PutCardResult != null);
-            Contract.Requires<InvalidOperationException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<ISupplyCardEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnSupplyCard(History, Generating)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<ISupplyCardEffector>(Initial.World).Sort();
+
+            Interrupts = ValueList<Interrupt<SupplyCardEffect>>.Empty;
+            foreach (var effector in effectors)
+            {
+                var interrupts = effector.EffectsOnSupplyCard(Simulating, Process);
+                Interrupts = Interrupts.AddRange(interrupts);
+            }
+        }
+
+        [CanBeNull]
+        private SupplyCardResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Requires<InvalidOperationException>(Interrupts != null);
+
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)
                 {
-                    return new RejectedResult(
-                        TargetID,
-                        InitialStatus,
-                        RegisterCardResult,
-                        AddComponentResults,
-                        PutCardResult,
-                        Interrupts,
-                        interrupt.ComponentID
-                    );
+                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
                 }
             }
 
@@ -187,22 +182,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
         [NotNull]
         private SupplyCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterCardResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Requires<InvalidOperationException>(PutCardResult != null);
-            Contract.Requires<InvalidOperationException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
 
-            return new SucceedResult(
-                TargetID,
-                InitialStatus,
-                RegisterCardResult,
-                AddComponentResults,
-                PutCardResult,
-                Interrupts,
-                Generating
-            );
+            return new SucceedResult(Action, Process, Interrupts);
         }
     }
 }

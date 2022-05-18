@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
     {
         protected override DropCardResult EvaluateBody(IHistory history)
         {
-            return new DropCardEvaluator(history, TargetID).Evaluate();
+            return new DropCardEvaluator(history, this).Evaluate();
         }
     }
 }

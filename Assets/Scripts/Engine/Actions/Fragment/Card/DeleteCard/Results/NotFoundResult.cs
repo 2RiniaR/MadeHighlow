@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.PayCard
+namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
 {
-    public record NotFoundResult([NotNull] PayCardAction Action) : PayCardResult
+    public record NotFoundResult([NotNull] DeleteCardAction Action) : DeleteCardResult
     {
         public override World Simulate(World world)
         {

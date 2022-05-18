@@ -4,9 +4,8 @@ using RineaR.MadeHighlow.Actions.Fragment.RegisterCard;
 namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
     public record RegisterFailedResult(
-        [NotNull] PlayerID TargetID,
-        [NotNull] Card InitialStatus,
-        [NotNull] RegisterCardResult FailedResult
+        [NotNull] SupplyCardAction Action,
+        [NotNull] RegisterCardResult Failed
     ) : SupplyCardResult
     {
         public override World Simulate(World world)

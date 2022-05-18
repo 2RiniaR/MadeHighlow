@@ -30,7 +30,8 @@ namespace RineaR.MadeHighlow.Actions
         ///     セッションに追記する
         /// </summary>
         [NotNull]
-        public IHistory Appended([NotNull] Result result);
+        public IHistory Appended<TResult>([NotNull] TResult result, [NotNull] out Event<TResult> @event)
+            where TResult : Result;
 
         public float GetRandom();
     }

@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
     {
         protected override SupplyCardResult EvaluateBody(IHistory history)
         {
-            return new SupplyCardEvaluator(history, TargetID, InitialStatus).Evaluate();
+            return new SupplyCardEvaluator(history, this).Evaluate();
         }
     }
 }

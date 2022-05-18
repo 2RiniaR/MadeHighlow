@@ -2,17 +2,13 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.PayCard
 {
-    /// <summary>
-    ///     カードを支払うアクションに対して、影響を与えるもの
-    /// </summary>
     public interface IPayCardEffector : IComponent
     {
-        /// <summary>
-        ///     カードを支払うアクションに対して与える影響を返す
-        /// </summary>
+        [NotNull]
+        [ItemNotNull]
         public ValueList<Interrupt<PayCardEffect>> EffectsOnPayCard(
             [NotNull] IHistory history,
-            [NotNull] Card target
+            [NotNull] Process process
         );
     }
 }

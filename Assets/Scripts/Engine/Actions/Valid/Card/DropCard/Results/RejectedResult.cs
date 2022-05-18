@@ -3,7 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.Valid.DropCard
 {
     public record RejectedResult(
-        [NotNull] Card Target,
+        [NotNull] DropCardAction Action,
+        [NotNull] Process Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DropCardEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : DropCardResult

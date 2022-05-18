@@ -4,35 +4,35 @@ namespace RineaR.MadeHighlow.Actions
 {
     public sealed record Timeline()
     {
-        private Timeline([NotNull] [ItemNotNull] ValueList<Result> results) : this()
+        private Timeline([NotNull] [ItemNotNull] ValueList<Event> events) : this()
         {
-            Results = results;
+            Events = events;
         }
 
-        [NotNull] [ItemNotNull] public ValueList<Result> Results { get; }
+        [NotNull] [ItemNotNull] public ValueList<Event> Events { get; }
 
         [NotNull]
-        public Timeline Then([NotNull] Result result)
+        public Timeline Then([NotNull] Event @event)
         {
-            return new Timeline(Results.Add(result));
-        }
-
-        [NotNull]
-        public Timeline Then([NotNull] [ItemNotNull] in ValueList<Result> results)
-        {
-            return new Timeline(Results.AddRange(results));
+            return new Timeline(Events.Add(@event));
         }
 
         [NotNull]
-        public Timeline Then<TResult>([NotNull] [ItemNotNull] ValueList<TResult> results) where TResult : Result
+        public Timeline Then([NotNull] [ItemNotNull] in ValueList<Event> events)
         {
-            return new Timeline(Results.AddRange(results));
+            return new Timeline(Events.AddRange(events));
+        }
+
+        [NotNull]
+        public Timeline Then<TEvent>([NotNull] [ItemNotNull] ValueList<TEvent> events) where TEvent : Event
+        {
+            return new Timeline(Events.AddRange(events));
         }
 
         [NotNull]
         public World Simulate([NotNull] World world)
         {
-            return Results.Aggregate(world, (current, result) => result.Simulate(current));
+            return Events.Aggregate(world, (current, @event) => @event.Result.Simulate(current));
         }
     }
 }

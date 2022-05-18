@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
     {
         protected override PayCardResult EvaluateBody(IHistory history)
         {
-            return new PayCardEvaluator(history, TargetID).Evaluate();
+            return new PayCardEvaluator(history, this).Evaluate();
         }
     }
 }

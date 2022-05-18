@@ -4,11 +4,10 @@ using RineaR.MadeHighlow.Actions.Valid.AddComponent;
 namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
     public record AddComponentFailedResult(
-        [NotNull] PlayerID TargetID,
-        [NotNull] Card InitialStatus,
-        [NotNull] Fragment.RegisterCard.SucceedResult RegisterCardResult,
-        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> SucceedResults,
-        [NotNull] ReactedResult<AddComponentResult> FailedResult
+        [NotNull] SupplyCardAction Action,
+        [NotNull] Event<Fragment.RegisterCard.SucceedResult> RegisterCardEvent,
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<AddComponent.SucceedResult>>> AddComponentEvents,
+        [NotNull] ReactedResult<AddComponentResult> Failed
     ) : SupplyCardResult
     {
         public override World Simulate(World world)

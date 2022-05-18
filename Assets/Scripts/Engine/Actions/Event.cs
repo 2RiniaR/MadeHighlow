@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions
         ID,
         BeforeID,
         Result
-    ) where TResult : ValidResult
+    ) where TResult : Result
     {
         public new TResult Result { get; init; } = Result;
 

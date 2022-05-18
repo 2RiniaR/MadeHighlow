@@ -3,11 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
     public record RejectedResult(
-        [NotNull] PlayerID TargetID,
-        [NotNull] Card InitialStatus,
-        [NotNull] Fragment.RegisterCard.SucceedResult RegisterCardResult,
-        [NotNull] [ItemNotNull] ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults,
-        [NotNull] Fragment.PutCard.SucceedResult PutCardResult,
+        [NotNull] SupplyCardAction Action,
+        [NotNull] Process Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<SupplyCardEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : SupplyCardResult

@@ -4,10 +4,9 @@ using RineaR.MadeHighlow.Actions.Valid.RemoveComponent;
 namespace RineaR.MadeHighlow.Actions.Valid.PayCard
 {
     public record RemoveComponentFailedResult(
-        [NotNull] Card Target,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardEffect>> Interrupts,
-        [NotNull] ValueList<ReactedResult<RemoveComponent.SucceedResult>> SucceedResults,
-        [NotNull] ReactedResult<RemoveComponentResult> FailedResult
+        [NotNull] PayCardAction Action,
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<RemoveComponent.SucceedResult>>> RemoveComponentEvents,
+        [NotNull] ReactedResult<RemoveComponentResult> Failed
     ) : PayCardResult
     {
         public override World Simulate(World world)

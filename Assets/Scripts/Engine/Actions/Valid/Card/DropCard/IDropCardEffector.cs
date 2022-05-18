@@ -2,11 +2,13 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.DropCard
 {
-    public interface IDropCardEffector : IComponent
+    public interface IDropCardEffector : IPriority<IDropCardEffector>
     {
+        [NotNull]
+        [ItemNotNull]
         public ValueList<Interrupt<DropCardEffect>> EffectsOnDropCard(
             [NotNull] IHistory history,
-            [NotNull] Card target
+            [NotNull] Process process
         );
     }
 }
