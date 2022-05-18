@@ -1,0 +1,16 @@
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
+{
+    public record SucceedResult(
+        [NotNull] CreateComponentAction Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<CreateComponentEffect>> Interrupts
+    ) : CreateComponentResult
+    {
+        public override World Simulate(World world)
+        {
+            return Process.Timeline.Simulate(world);
+        }
+    }
+}

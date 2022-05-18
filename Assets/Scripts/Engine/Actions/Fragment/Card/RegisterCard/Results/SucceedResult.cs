@@ -2,16 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
 {
-    public record SucceedResult(
-        [NotNull] AllocateIDResult AllocateIDResult,
-        [NotNull] Card Registered
-    ) : RegisterCardResult
+    public record SucceedResult([NotNull] RegisterCardAction Action, [NotNull] Card Registered) : RegisterCardResult
     {
         public override World Simulate(World world)
         {
-            world = AllocateIDResult.Simulate(world);
-            world = Registered.CreateIn(world);
-            return world;
+            return Registered.CreateIn(world);
         }
     }
 }

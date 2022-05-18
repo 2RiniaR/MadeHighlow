@@ -6,23 +6,15 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
 {
     public class RegisterComponentEvaluator
     {
-        public RegisterComponentEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] IAttachableID parentID,
-            [NotNull] Component initialProps
-        )
+        public RegisterComponentEvaluator([NotNull] IHistory initial, RegisterComponentAction action)
         {
-            History = history;
-            ParentID = parentID;
-            InitialProps = initialProps;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private IAttachableID ParentID { get; }
-        [NotNull] private Component InitialProps { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private RegisterComponentAction Action { get; }
 
-        [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
-        [CanBeNull] private IAttachable Parent { get; set; }
         [CanBeNull] private Component Registered { get; set; }
 
         [NotNull]
@@ -30,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
         {
             RegisterComponentResult result;
 
-            result = GetParent();
+            result = CheckParentExists();
             if (result != null) return result;
 
             Format();
@@ -38,14 +30,11 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
         }
 
         [CanBeNull]
-        private RegisterComponentResult GetParent()
+        private RegisterComponentResult CheckParentExists()
         {
-            Contract.Ensures((Contract.Result<RegisterComponentResult>() != null) ^ (Parent != null));
-
-            Parent = ParentID.GetFrom(History.World);
-            if (Parent == null)
+            if (Action.ParentID.GetFrom(Initial.World) == null)
             {
-                return new ParentNotFoundResult(ParentID);
+                return new ParentNotFoundResult(Action);
             }
 
             return null;
@@ -53,25 +42,21 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
 
         private void Format()
         {
-            Contract.Requires<InvalidOperationException>(Parent != null);
             Contract.Ensures(Registered != null);
-            Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(History);
-            Registered = InitialProps with
+            Registered = Action.InitialProps with
             {
-                ID = AllocateIDResult.AllocatedID,
-                AttachedID = ParentID,
+                ID = Action.AssignedID,
+                AttachedID = Action.ParentID,
             };
         }
 
         [NotNull]
         private RegisterComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDResult != null);
             Contract.Requires<InvalidOperationException>(Registered != null);
 
-            return new SucceedResult(AllocateIDResult, Registered);
+            return new SucceedResult(Action, Registered);
         }
     }
 }

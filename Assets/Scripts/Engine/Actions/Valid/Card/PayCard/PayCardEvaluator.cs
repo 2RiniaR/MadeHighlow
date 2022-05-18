@@ -2,7 +2,6 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.Fragment.DeleteCard;
-using RineaR.MadeHighlow.Actions.Valid.RemoveComponent;
 
 namespace RineaR.MadeHighlow.Actions.Valid.PayCard
 {
@@ -19,25 +18,15 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PayCardAction Action { get; }
 
-        [CanBeNull]
-        private ValueList<Event<ReactedResult<RemoveComponent.SucceedResult>>> RemoveComponentEvents { get; set; }
-
         [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
-
         [CanBeNull] private Process Process { get; set; }
+
         [CanBeNull] private ValueList<Interrupt<PayCardEffect>> Interrupts { get; set; }
-        [CanBeNull] private Card Target { get; set; }
 
         [NotNull]
         public PayCardResult Evaluate()
         {
             PayCardResult result;
-
-            result = FindTarget();
-            if (result != null) return result;
-
-            result = RemoveAttachedComponents();
-            if (result != null) return result;
 
             result = DeleteTarget();
             if (result != null) return result;
@@ -45,59 +34,18 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             WrapProcess();
             CollectInterrupts();
 
-            result = CheckExemption();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
-        [CanBeNull]
-        private PayCardResult FindTarget()
-        {
-            Contract.Ensures((Contract.Result<PayCardResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
-            if (Target == null)
-            {
-                return new NotFoundResult(Action);
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        private PayCardResult RemoveAttachedComponents()
-        {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(RemoveComponentEvents != null);
-
-            RemoveComponentEvents = ValueList<Event<ReactedResult<RemoveComponent.SucceedResult>>>.Empty;
-
-            foreach (var component in Target.Components)
-            {
-                var result = new RemoveComponentAction(component.ComponentID).Evaluate(Simulating);
-
-                var succeedResult = result.BodyAs<RemoveComponent.SucceedResult>();
-                if (succeedResult == null)
-                {
-                    return new RemoveComponentFailedResult(Action, RemoveComponentEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                RemoveComponentEvents = RemoveComponentEvents.Add(succeedEvent);
-            }
-
-            return null;
-        }
-
         private PayCardResult DeleteTarget()
         {
-            Contract.Requires<InvalidOperationException>(RemoveComponentEvents != null);
-
             var result = new DeleteCardAction(Action.TargetID).Evaluate(Simulating);
             if (result is not Fragment.DeleteCard.SucceedResult succeedResult)
             {
-                return new DeleteCardFailedResult(Action, RemoveComponentEvents, result);
+                return new DeleteCardFailedResult(Action, result);
             }
 
             Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
@@ -108,11 +56,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(RemoveComponentEvents != null);
             Contract.Requires<InvalidOperationException>(DeleteCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(RemoveComponentEvents, DeleteCardEvent);
+            Process = new Process(DeleteCardEvent);
         }
 
         private void CollectInterrupts()
@@ -125,13 +72,13 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             Interrupts = ValueList<Interrupt<PayCardEffect>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnPayCard(Simulating, Process);
+                var interrupts = effector.EffectsOnPayCard(Simulating, Action, Process);
                 Interrupts = Interrupts.AddRange(interrupts);
             }
         }
 
         [CanBeNull]
-        private PayCardResult CheckExemption()
+        private PayCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
@@ -140,7 +87,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             {
                 if (interrupt.Effect is ExemptEffect)
                 {
-                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
+                    return new ExemptedResult(Action, Process, Interrupts, interrupt.ComponentID);
                 }
             }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions;
 
 namespace RineaR.MadeHighlow
 {
@@ -58,16 +57,6 @@ namespace RineaR.MadeHighlow
         public ValueList<IObject> GetChildren()
         {
             return ValueList<IObject>.Empty;
-        }
-
-        public virtual ValueList<ActionConfirmation> InitializeActions([NotNull] IHistory context)
-        {
-            return ValueList<ActionConfirmation>.Empty;
-        }
-
-        public virtual ValueList<ActionConfirmation> FinalizeActions([NotNull] IHistory context)
-        {
-            return ValueList<ActionConfirmation>.Empty;
         }
     }
 }

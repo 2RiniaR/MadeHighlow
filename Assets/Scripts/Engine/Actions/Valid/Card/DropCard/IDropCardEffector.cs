@@ -8,6 +8,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         [ItemNotNull]
         public ValueList<Interrupt<DropCardEffect>> EffectsOnDropCard(
             [NotNull] IHistory history,
+            [NotNull] DropCardAction action,
             [NotNull] Process process
         );
     }

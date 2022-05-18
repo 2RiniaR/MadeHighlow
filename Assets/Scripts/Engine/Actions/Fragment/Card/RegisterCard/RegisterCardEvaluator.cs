@@ -6,23 +6,15 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
 {
     public class RegisterCardEvaluator
     {
-        public RegisterCardEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] PlayerID parentID,
-            [NotNull] Card initialProps
-        )
+        public RegisterCardEvaluator([NotNull] IHistory initial, RegisterCardAction action)
         {
-            History = history;
-            ParentID = parentID;
-            InitialProps = initialProps;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private PlayerID ParentID { get; }
-        [NotNull] private Card InitialProps { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private RegisterCardAction Action { get; }
 
-        [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
-        [CanBeNull] private Player Parent { get; set; }
         [CanBeNull] private Card Registered { get; set; }
 
         [NotNull]
@@ -30,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
         {
             RegisterCardResult result;
 
-            result = GetParent();
+            result = CheckParentExists();
             if (result != null) return result;
 
             Format();
@@ -38,14 +30,11 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
         }
 
         [CanBeNull]
-        private RegisterCardResult GetParent()
+        private RegisterCardResult CheckParentExists()
         {
-            Contract.Ensures((Contract.Result<RegisterCardResult>() != null) ^ (Parent != null));
-
-            Parent = ParentID.GetFrom(History.World);
-            if (Parent == null)
+            if (Action.ParentID.GetFrom(Initial.World) == null)
             {
-                return new ParentNotFoundResult(ParentID);
+                return new ParentNotFoundResult(Action);
             }
 
             return null;
@@ -54,12 +43,10 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
         private void Format()
         {
             Contract.Ensures(Registered != null);
-            Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(History);
-            Registered = InitialProps with
+            Registered = Action.InitialProps with
             {
-                ID = AllocateIDResult.AllocatedID,
+                ID = Action.AssignedID,
                 Components = ValueList<Component>.Empty,
             };
         }
@@ -67,10 +54,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
         [NotNull]
         private RegisterCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDResult != null);
             Contract.Requires<InvalidOperationException>(Registered != null);
 
-            return new SucceedResult(AllocateIDResult, Registered);
+            return new SucceedResult(Action, Registered);
         }
     }
 }

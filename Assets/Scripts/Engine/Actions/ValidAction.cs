@@ -31,27 +31,28 @@ namespace RineaR.MadeHighlow.Actions
             // TODO: Reactionの無限ループ対策をしないといけない。カウンター持ち2体が互いにカウンターし合ったら簡単に無限ループが完成してしまう。
             var predictionActions = Component.GetAllOfTypeFrom<IPredictor>(history.World)
                 .SelectMany(predictor => predictor.PredictionsOn(this));
-            var predictionResults = ValueList<ReactedResult>.Empty;
+            var predictionEvents = ValueList<Event<ReactedResult>>.Empty;
             foreach (var predictionAction in predictionActions)
             {
                 var predictionResult = predictionAction.EvaluateBase(history);
-                history = history.Appended(predictionResult);
-                predictionResults = predictionResults.Add(predictionResult);
+                history = history.Appended(predictionResult, out var predictionEvent);
+                predictionEvents = predictionEvents.Add(predictionEvent);
             }
 
             var bodyResult = EvaluateBody(history);
+            history = history.Appended(bodyResult, out var bodyEvent);
 
             var reactionActions = Component.GetAllOfTypeFrom<IReactor>(history.World)
                 .SelectMany(predictor => predictor.ReactionsOn(bodyResult));
-            var reactionResults = ValueList<ReactedResult>.Empty;
+            var reactionEvents = ValueList<Event<ReactedResult>>.Empty;
             foreach (var reactionAction in reactionActions)
             {
                 var reactionResult = reactionAction.EvaluateBase(history);
-                history = history.Appended(reactionResult);
-                reactionResults = reactionResults.Add(reactionResult);
+                history = history.Appended(reactionResult, out var reactionEvent);
+                reactionEvents = reactionEvents.Add(reactionEvent);
             }
 
-            return new ReactedResult<TResult>(predictionResults, bodyResult, predictionResults);
+            return new ReactedResult<TResult>(predictionEvents, bodyEvent, predictionEvents);
         }
 
         protected override ValidResult EvaluateBodyBase(IHistory history)

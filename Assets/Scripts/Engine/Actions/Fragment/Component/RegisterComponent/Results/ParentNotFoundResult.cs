@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
 {
-    public record ParentNotFoundResult([NotNull] IAttachableID ParentID) : RegisterComponentResult
+    public record ParentNotFoundResult([NotNull] RegisterComponentAction Action) : RegisterComponentResult
     {
         public override World Simulate(World world)
         {

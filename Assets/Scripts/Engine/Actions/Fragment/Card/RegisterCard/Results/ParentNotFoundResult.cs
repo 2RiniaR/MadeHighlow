@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
 {
-    public record ParentNotFoundResult([NotNull] PlayerID ParentID) : RegisterCardResult
+    public record ParentNotFoundResult([NotNull] RegisterCardAction Action) : RegisterCardResult
     {
         public override World Simulate(World world)
         {

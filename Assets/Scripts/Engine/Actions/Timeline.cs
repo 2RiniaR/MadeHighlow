@@ -12,8 +12,9 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] [ItemNotNull] public ValueList<Event> Events { get; }
 
         [NotNull]
-        public Timeline Then([NotNull] Event @event)
+        public Timeline Then([CanBeNull] Event @event)
         {
+            if (@event == null) return this;
             return new Timeline(Events.Add(@event));
         }
 

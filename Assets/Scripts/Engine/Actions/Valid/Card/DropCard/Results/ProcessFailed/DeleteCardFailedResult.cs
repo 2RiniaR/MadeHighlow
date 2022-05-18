@@ -5,7 +5,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
 {
     public record DeleteCardFailedResult(
         [NotNull] DropCardAction Action,
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<RemoveComponent.SucceedResult>>> RemoveComponentEvents,
         [NotNull] DeleteCardResult Failed
     ) : DropCardResult
     {
