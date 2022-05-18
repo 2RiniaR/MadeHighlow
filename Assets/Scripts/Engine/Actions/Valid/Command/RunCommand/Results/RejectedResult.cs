@@ -2,10 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 {
-    public record CanceledResult(
-        [NotNull] Command Command,
+    public record RejectedResult(
+        [NotNull] RunCommandAction Action,
+        [NotNull] Process Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandEffect>> Interrupts,
-        [CanBeNull] ComponentID DisallowedID
+        [CanBeNull] ComponentID RejectedID
     ) : RunCommandResult
     {
         public override World Simulate(World world)

@@ -6,5 +6,6 @@
         UnitIsDead,
         CardNotFound,
         PlayerNotFound,
+        NotOwner,
     }
 }

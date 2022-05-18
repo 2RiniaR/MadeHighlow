@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
-    public record FailedResult([NotNull] Command Command, FailedReason Reason) : ReserveCommandResult
+    public record FailedResult([NotNull] ReserveCommandAction Action, FailedReason Reason) : ReserveCommandResult
     {
         public override World Simulate(World world)
         {

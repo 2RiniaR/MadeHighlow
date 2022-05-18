@@ -4,7 +4,7 @@
     {
         protected override StartCommandsResult EvaluateBody(IHistory history)
         {
-            return new StartCommandsEvaluator(history).Evaluate();
+            return new StartCommandsEvaluator(history, this).Evaluate();
         }
     }
 }

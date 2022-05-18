@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
     public record SucceedResult(
-        [NotNull] Command Command,
+        [NotNull] ReserveCommandAction Action,
         [NotNull] [ItemNotNull] ValueList<Interrupt<ReserveCommandEffect>> Interrupts,
         [NotNull] ComponentID AllowedID
     ) : ReserveCommandResult
@@ -12,7 +12,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
         {
             return world with
             {
-                ReservedCommands = world.ReservedCommands.Add(Command),
+                ReservedCommands = world.ReservedCommands.Add(Action.Command),
             };
         }
     }

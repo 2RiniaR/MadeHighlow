@@ -4,12 +4,13 @@ using RineaR.MadeHighlow.Actions.Valid.RunCommand;
 namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
 {
     public record StartCommandsResult(
-        [NotNull] [ItemNotNull] ValueList<ReactedResult<RunCommandResult>> RunCommandResults
+        [NotNull] StartCommandsAction Action,
+        [NotNull] [ItemNotNull] ValueList<ReactedResult<RunCommandResult>> RunCommandEvents
     ) : ValidResult
     {
         public override World Simulate(World world)
         {
-            return RunCommandResults.Aggregate(world, (current, result) => result.Simulate(current));
+            return RunCommandEvents.Aggregate(world, (current, result) => result.Simulate(current));
         }
     }
 }

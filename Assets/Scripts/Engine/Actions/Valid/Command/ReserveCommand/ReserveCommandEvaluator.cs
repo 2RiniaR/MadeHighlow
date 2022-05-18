@@ -6,19 +6,16 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
     public class ReserveCommandEvaluator
     {
-        public ReserveCommandEvaluator([NotNull] IHistory history, [NotNull] Command command)
+        public ReserveCommandEvaluator([NotNull] IHistory initial, ReserveCommandAction action)
         {
-            History = history;
-            Command = command;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private Command Command { get; }
-        [CanBeNull] private ValueList<Interrupt<ReserveCommandEffect>> Interrupts { get; set; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private ReserveCommandAction Action { get; }
 
-        [CanBeNull] private Unit Unit { get; set; }
-        [CanBeNull] private Player Player { get; set; }
-        [CanBeNull] private Card Card { get; set; }
+        [CanBeNull] private ValueList<Interrupt<ReserveCommandEffect>> Interrupts { get; set; }
 
         [NotNull]
         public ReserveCommandResult Evaluate()
@@ -28,7 +25,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
             result = PreValidation();
             if (result != null) return result;
 
-            result = CollectInterrupts();
+            CollectInterrupts();
+
+            result = Judge();
             if (result != null) return result;
 
             return Disallowed();
@@ -37,59 +36,61 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
         [CanBeNull]
         private ReserveCommandResult PreValidation()
         {
-            Contract.Ensures(
-                (Contract.Result<ReserveCommandResult>() != null) ^ (Card != null && Unit != null && Player != null)
-            );
-
-            Card = Command.CardID.GetFrom(History.World);
-            if (Card == null)
+            var card = Action.Command.CardID.GetFrom(Initial.World);
+            if (card == null)
             {
-                return new FailedResult(Command, FailedReason.CardNotFound);
+                return new FailedResult(Action, FailedReason.CardNotFound);
             }
 
-            Unit = Command.UnitID.GetFrom(History.World);
-            if (Unit == null)
+            var unit = Action.Command.UnitID.GetFrom(Initial.World);
+            if (unit == null)
             {
-                return new FailedResult(Command, FailedReason.UnitNotFound);
+                return new FailedResult(Action, FailedReason.UnitNotFound);
             }
 
-            Player = Card.OwnerPlayerID.GetFrom(History.World);
-            if (Player == null)
+            var player = card.OwnerPlayerID.GetFrom(Initial.World);
+            if (player == null)
             {
-                return new FailedResult(Command, FailedReason.OwnerNotFound);
+                return new FailedResult(Action, FailedReason.OwnerNotFound);
             }
 
-            if (Unit.FollowingPlayerID != Player.PlayerID)
+            if (unit.FollowingPlayerID != player.PlayerID)
             {
-                return new FailedResult(Command, FailedReason.NotOwner);
+                return new FailedResult(Action, FailedReason.NotOwner);
             }
 
             return null;
         }
 
-        [CanBeNull]
-        private ReserveCommandResult CollectInterrupts()
+        private void CollectInterrupts()
         {
-            Contract.Requires<InvalidOperationException>(Player != null);
-            Contract.Requires<InvalidOperationException>(Unit != null);
-            Contract.Requires<InvalidOperationException>(Card != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(History.World);
-            Interrupts = effectors.SelectMany(
-                    effector => effector.EffectsOnReserveCommand(History, Player, Unit, Card, Command)
-                )
-                .Sort();
+            var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(Initial.World).Sort();
+
+            Interrupts = ValueList<Interrupt<ReserveCommandEffect>>.Empty;
+            foreach (var effector in effectors)
+            {
+                var interrupts = effector.EffectsOnReserveCommand(Initial, Action);
+                Interrupts = Interrupts.AddRange(interrupts);
+            }
+        }
+
+        [CanBeNull]
+        private ReserveCommandResult Judge()
+        {
+            Contract.Requires<InvalidOperationException>(Interrupts != null);
+
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is DisallowEffect)
                 {
-                    return new DisallowedResult(Command, Interrupts, interrupt.ComponentID);
+                    return new DisallowedResult(Action, Interrupts, interrupt.ComponentID);
                 }
 
                 if (interrupt.Effect is AllowEffect)
                 {
-                    return new SucceedResult(Command, Interrupts, interrupt.ComponentID);
+                    return new SucceedResult(Action, Interrupts, interrupt.ComponentID);
                 }
             }
 
@@ -101,7 +102,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
         {
             Contract.Requires<InvalidOperationException>(Interrupts != null);
 
-            return new DisallowedResult(Command, Interrupts, null);
+            return new DisallowedResult(Action, Interrupts, null);
         }
     }
 }

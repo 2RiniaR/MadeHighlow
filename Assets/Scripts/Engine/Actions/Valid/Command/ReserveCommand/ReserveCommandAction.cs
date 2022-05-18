@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
     {
         protected override ReserveCommandResult EvaluateBody(IHistory history)
         {
-            return new ReserveCommandEvaluator(history, Command).Evaluate();
+            return new ReserveCommandEvaluator(history, this).Evaluate();
         }
     }
 }

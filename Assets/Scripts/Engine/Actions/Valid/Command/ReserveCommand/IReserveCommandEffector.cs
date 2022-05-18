@@ -2,14 +2,13 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
-    public interface IReserveCommandEffector
+    public interface IReserveCommandEffector : IPriority<IReserveCommandEffector>
     {
+        [NotNull]
+        [ItemNotNull]
         public ValueList<Interrupt<ReserveCommandEffect>> EffectsOnReserveCommand(
             [NotNull] IHistory session,
-            [NotNull] Player player,
-            [NotNull] Unit unit,
-            [NotNull] Card card,
-            [NotNull] Command command
+            [NotNull] ReserveCommandAction action
         );
     }
 }

@@ -2,14 +2,14 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 {
-    public interface IRunCommandEffector
+    public interface IRunCommandEffector : IPriority<IRunCommandEffector>
     {
+        [NotNull]
+        [ItemNotNull]
         public ValueList<Interrupt<RunCommandEffect>> EffectsOnRunCommand(
             [NotNull] IHistory history,
-            [NotNull] Player player,
-            [NotNull] Unit unit,
-            [NotNull] Card card,
-            [NotNull] Command command
+            [NotNull] RunCommandAction action,
+            [NotNull] Process process
         );
     }
 }

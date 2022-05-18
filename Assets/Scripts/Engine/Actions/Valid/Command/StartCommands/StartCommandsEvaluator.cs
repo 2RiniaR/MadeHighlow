@@ -7,14 +7,20 @@ namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
 {
     public class StartCommandsEvaluator
     {
-        public StartCommandsEvaluator([NotNull] IHistory history)
+        public StartCommandsEvaluator([NotNull] IHistory initial, StartCommandsAction action)
         {
-            History = history;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private StartCommandsAction Action { get; }
 
-        [CanBeNull] [ItemNotNull] private ValueList<ReactedResult<RunCommandResult>> RunCommandResults { get; set; }
+        [CanBeNull]
+        [ItemNotNull]
+        private ValueList<Event<ReactedResult<RunCommandResult>>> RunCommandEvents { get; set; }
 
         [NotNull]
         public StartCommandsResult Evaluate()
@@ -25,26 +31,26 @@ namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
 
         private void RunByOrder()
         {
-            Contract.Ensures(RunCommandResults != null);
+            Contract.Ensures(RunCommandEvents != null);
 
-            RunCommandResults = ValueList<ReactedResult<RunCommandResult>>.Empty;
-            var commands = History.World.ReservedCommands;
-            var orderedCommands = new StartCommandsOrderer(commands).Resolve(History);
+            RunCommandEvents = ValueList<Event<ReactedResult<RunCommandResult>>>.Empty;
+            var commands = Initial.World.ReservedCommands;
+            var orderedCommands = new StartCommandsOrderer(commands).Resolve(Simulating);
 
             foreach (var command in orderedCommands)
             {
-                var result = new RunCommandAction(command).Evaluate(History);
-                History = History.Appended(result);
-                RunCommandResults = RunCommandResults.Add(result);
+                var result = new RunCommandAction(command).Evaluate(Initial);
+                Simulating = Simulating.Appended(result, out var @event);
+                RunCommandEvents = RunCommandEvents.Add(@event);
             }
         }
 
         [NotNull]
         private StartCommandsResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RunCommandResults != null);
+            Contract.Requires<InvalidOperationException>(RunCommandEvents != null);
 
-            return new StartCommandsResult(RunCommandResults);
+            return new StartCommandsResult(Action, RunCommandEvents);
         }
     }
 }

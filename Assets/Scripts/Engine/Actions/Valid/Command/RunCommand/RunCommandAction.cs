@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
     {
         protected override RunCommandResult EvaluateBody(IHistory history)
         {
-            return new RunCommandEvaluator(history, Command).Evaluate();
+            return new RunCommandEvaluator(history, this).Evaluate();
         }
     }
 }

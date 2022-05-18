@@ -1,18 +1,16 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Valid.PayCard;
 
 namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 {
     public record SucceedResult(
-        [NotNull] Command Command,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandEffect>> Interrupts,
-        [NotNull] ValueList<ReactedResult> CommandActionResults,
-        [NotNull] ReactedResult<PayCardResult> PayCardResult
+        [NotNull] RunCommandAction Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandEffect>> Interrupts
     ) : RunCommandResult
     {
         public override World Simulate(World world)
         {
-            return new Timeline().Then(CommandActionResults).Then(PayCardResult).Simulate(world);
+            return Process.Timeline.Simulate(world);
         }
     }
 }
