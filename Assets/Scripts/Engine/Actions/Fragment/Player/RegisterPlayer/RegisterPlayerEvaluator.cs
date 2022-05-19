@@ -6,16 +6,15 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer
 {
     public class RegisterPlayerEvaluator
     {
-        public RegisterPlayerEvaluator([NotNull] IHistory history, [NotNull] Player initialProps)
+        public RegisterPlayerEvaluator([NotNull] IHistory initial, RegisterPlayerAction action)
         {
-            History = history;
-            InitialProps = initialProps;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private Player InitialProps { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private RegisterPlayerAction Action { get; }
 
-        [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
         [CanBeNull] private Player Registered { get; set; }
 
         [NotNull]
@@ -28,12 +27,10 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer
         private void Format()
         {
             Contract.Ensures(Registered != null);
-            Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(History);
-            Registered = InitialProps with
+            Registered = Action.InitialProps with
             {
-                ID = AllocateIDResult.AllocatedID,
+                ID = Action.AssignedID,
                 Components = ValueList<Component>.Empty,
             };
         }
@@ -41,10 +38,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer
         [NotNull]
         private RegisterPlayerResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDResult != null);
             Contract.Requires<InvalidOperationException>(Registered != null);
 
-            return new RegisterPlayerResult(AllocateIDResult, Registered);
+            return new RegisterPlayerResult(Action, Registered);
         }
     }
 }

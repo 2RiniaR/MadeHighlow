@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
     {
         protected override AddComponentResult EvaluateBody(IHistory history)
         {
-            return new AddComponentEvaluator(history, TargetID, InitialStatus).Evaluate();
+            return new AddComponentEvaluator(history, this).Evaluate();
         }
     }
 }

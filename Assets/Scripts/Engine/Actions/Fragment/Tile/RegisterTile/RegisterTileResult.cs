@@ -2,13 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.RegisterTile
 {
-    public record RegisterTileResult([NotNull] AllocateIDResult AllocateIDResult, [NotNull] Tile Registered) : Result
+    public record RegisterTileResult([NotNull] RegisterTileAction Action, [NotNull] Tile Registered) : Result
     {
         public override World Simulate(World world)
         {
-            world = AllocateIDResult.Simulate(world);
-            world = Registered.CreateIn(world);
-            return world;
+            return Registered.CreateIn(world);
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.RegisterEntity
 {
-    public record RegisterEntityAction([NotNull] Entity InitialProps)
+    public record RegisterEntityAction(ID AssignedID, [NotNull] Entity InitialProps)
     {
         public RegisterEntityResult Evaluate(IHistory history)
         {
-            return new RegisterEntityEvaluator(history, InitialProps).Evaluate();
+            return new RegisterEntityEvaluator(history, this).Evaluate();
         }
     }
 }

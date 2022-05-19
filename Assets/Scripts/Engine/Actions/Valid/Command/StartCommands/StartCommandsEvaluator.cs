@@ -22,10 +22,13 @@ namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
         [ItemNotNull]
         private ValueList<Event<ReactedResult<RunCommandResult>>> RunCommandEvents { get; set; }
 
+        [CanBeNull] private Process Process { get; set; }
+
         [NotNull]
         public StartCommandsResult Evaluate()
         {
             RunByOrder();
+            WrapProcess();
             return Succeed();
         }
 
@@ -45,12 +48,20 @@ namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
             }
         }
 
+        private void WrapProcess()
+        {
+            Contract.Requires<InvalidOperationException>(RunCommandEvents != null);
+            Contract.Ensures(Process != null);
+
+            Process = new Process(RunCommandEvents);
+        }
+
         [NotNull]
         private StartCommandsResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RunCommandEvents != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
 
-            return new StartCommandsResult(Action, RunCommandEvents);
+            return new StartCommandsResult(Action, Process);
         }
     }
 }

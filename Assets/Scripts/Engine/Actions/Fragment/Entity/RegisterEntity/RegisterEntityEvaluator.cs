@@ -6,16 +6,15 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterEntity
 {
     public class RegisterEntityEvaluator
     {
-        public RegisterEntityEvaluator([NotNull] IHistory history, [NotNull] Entity initialProps)
+        public RegisterEntityEvaluator([NotNull] IHistory initial, RegisterEntityAction action)
         {
-            History = history;
-            InitialProps = initialProps;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private Entity InitialProps { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private RegisterEntityAction Action { get; }
 
-        [CanBeNull] private AllocateIDResult AllocateIDResult { get; set; }
         [CanBeNull] private Entity Registered { get; set; }
 
         [NotNull]
@@ -28,12 +27,10 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterEntity
         private void Format()
         {
             Contract.Ensures(Registered != null);
-            Contract.Ensures(AllocateIDResult != null);
 
-            AllocateIDResult = new AllocateIDAction().Evaluate(History);
-            Registered = InitialProps with
+            Registered = Action.InitialProps with
             {
-                ID = AllocateIDResult.AllocatedID,
+                ID = Action.AssignedID,
                 Components = ValueList<Component>.Empty,
             };
         }
@@ -41,10 +38,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.RegisterEntity
         [NotNull]
         private RegisterEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDResult != null);
             Contract.Requires<InvalidOperationException>(Registered != null);
 
-            return new RegisterEntityResult(AllocateIDResult, Registered);
+            return new RegisterEntityResult(Action, Registered);
         }
     }
 }

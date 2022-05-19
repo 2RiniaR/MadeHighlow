@@ -1,103 +1,66 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
 
 namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
 {
     public class RemoveComponentEvaluator
     {
-        public RemoveComponentEvaluator([NotNull] IHistory history, [NotNull] ComponentID targetID)
+        public RemoveComponentEvaluator([NotNull] IHistory initial, RemoveComponentAction action)
         {
-            History = history;
-            TargetID = targetID;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
-        [NotNull] private ComponentID TargetID { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private RemoveComponentAction Action { get; }
 
-        [CanBeNull] private ValueList<ReactedResult> FinalizeComponentResults { get; set; }
-        [CanBeNull] private ValueList<Interrupt<RemoveComponentEffect>> Interrupts { get; set; }
-        [CanBeNull] private Component Target { get; set; }
+        [CanBeNull] private Event<Fragment.DeleteComponent.SucceedResult> DeleteComponentEvent { get; set; }
+        [CanBeNull] private Process Process { get; set; }
 
         [NotNull]
         public RemoveComponentResult Evaluate()
         {
             RemoveComponentResult result;
 
-            result = GetTarget();
+            result = DeleteComponent();
             if (result != null) return result;
 
-            result = FinalizeComponent();
-            if (result != null) return result;
-
-            result = CollectInterrupts();
-            if (result != null) return result;
-
+            WrapProcess();
             return Succeed();
         }
 
-        private RemoveComponentResult GetTarget()
+        [CanBeNull]
+        private RemoveComponentResult DeleteComponent()
         {
-            Contract.Ensures((Contract.Result<RemoveComponentResult>() != null) ^ (Target != null));
-
-            Target = TargetID.GetFrom(History.World);
-            if (Target == null)
+            var result = new DeleteComponentAction(Action.TargetID).Evaluate(Simulating);
+            if (result is not Fragment.DeleteComponent.SucceedResult succeedResult)
             {
-                return new NotFoundResult(TargetID);
+                return new DeleteComponentFailedResult(Action, result);
             }
 
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            DeleteComponentEvent = succeedEvent;
             return null;
         }
 
-        private RemoveComponentResult FinalizeComponent()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(FinalizeComponentResults != null);
+            Contract.Requires<InvalidOperationException>(DeleteComponentEvent != null);
+            Contract.Ensures(Process != null);
 
-            var actionConfirmations = Target.InitializeActions(History);
-
-            FinalizeComponentResults = ValueList<ReactedResult>.Empty;
-            foreach (var actionConfirmation in actionConfirmations)
-            {
-                var result = actionConfirmation.Action.EvaluateBase(History);
-                if (!actionConfirmation.Confirmation(result))
-                {
-                    return new FinalizeFailedResult(Target, FinalizeComponentResults, result);
-                }
-
-                FinalizeComponentResults = FinalizeComponentResults.Add(result);
-                History = History.Appended(result);
-            }
-
-            return null;
+            Process = new Process(DeleteComponentEvent);
         }
 
-        private RemoveComponentResult CollectInterrupts()
-        {
-            Contract.Requires<InvalidOperationException>(FinalizeComponentResults != null);
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(Interrupts != null);
-
-            var effectors = Component.GetAllOfTypeFrom<IRemoveComponentEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnRemoveComponent(History, Target)).Sort();
-            foreach (var interrupt in Interrupts)
-            {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Target, FinalizeComponentResults, Interrupts, TargetID);
-                }
-            }
-
-            return null;
-        }
-
+        [NotNull]
         private RemoveComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(FinalizeComponentResults != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
 
-            return new SucceedResult(Target, FinalizeComponentResults, Interrupts);
+            return new SucceedResult(Action, Process);
         }
     }
 }

@@ -2,16 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer
 {
-    public record RegisterPlayerResult(
-        [NotNull] AllocateIDResult AllocateIDResult,
-        [NotNull] Player Registered
-    ) : Result
+    public record RegisterPlayerResult([NotNull] RegisterPlayerAction Action, [NotNull] Player Registered) : Result
     {
         public override World Simulate(World world)
         {
-            world = AllocateIDResult.Simulate(world);
-            world = Registered.CreateIn(world);
-            return world;
+            return Registered.CreateIn(world);
         }
     }
 }

@@ -1,170 +1,66 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterComponent;
+using RineaR.MadeHighlow.Actions.Fragment.CreateComponent;
 
 namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
 {
     public class AddComponentEvaluator
     {
-        public AddComponentEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] IAttachableID targetID,
-            [NotNull] Component initialStatus
-        )
+        public AddComponentEvaluator([NotNull] IHistory initial, AddComponentAction action)
         {
-            History = history;
-            TargetID = targetID;
-            InitialStatus = initialStatus;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
-        [NotNull] private IAttachableID TargetID { get; }
-        [NotNull] private Component InitialStatus { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private AddComponentAction Action { get; }
 
-        [CanBeNull] private Fragment.RegisterComponent.SucceedResult RegisterComponentResult { get; set; }
-        [CanBeNull] private ValueList<ReactedResult> InitializeComponentResults { get; set; }
-        [CanBeNull] private ValueList<Interrupt<AddComponentEffect>> Interrupts { get; set; }
-        [CanBeNull] private Component Generating { get; set; }
+        [CanBeNull] private Event<Fragment.CreateComponent.SucceedResult> CreateComponentEvent { get; set; }
+        [CanBeNull] private Process Process { get; set; }
 
         [NotNull]
         public AddComponentResult Evaluate()
         {
             AddComponentResult result;
 
-            result = RegisterComponent();
+            result = CreateComponent();
             if (result != null) return result;
 
-            result = InitializeComponent();
-            if (result != null) return result;
-
-            result = GetGenerating();
-            if (result != null) return result;
-
-            result = CollectInterrupts();
-            if (result != null) return result;
-
+            WrapProcess();
             return Succeed();
         }
 
         [CanBeNull]
-        private AddComponentResult RegisterComponent()
+        private AddComponentResult CreateComponent()
         {
-            Contract.Ensures(
-                (Contract.Result<AddComponentResult>() != null) ^
-                (RegisterComponentResult != null && Generating != null)
-            );
-
-            var result = new RegisterComponentAction(TargetID, InitialStatus).Evaluate(History);
-            if (result is not Fragment.RegisterComponent.SucceedResult succeedResult)
+            var result = new CreateComponentAction(Action.TargetID, Action.InitialStatus).Evaluate(Simulating);
+            if (result is not Fragment.CreateComponent.SucceedResult succeedResult)
             {
-                return new RegisterFailedResult(TargetID, InitialStatus, result);
+                return new CreateComponentFailedResult(Action, result);
             }
 
-            History = History.Appended(succeedResult);
-            RegisterComponentResult = succeedResult;
-            Generating = succeedResult.Registered;
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            CreateComponentEvent = succeedEvent;
             return null;
         }
 
-        [CanBeNull]
-        private AddComponentResult InitializeComponent()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
-            Contract.Ensures((Contract.Result<AddComponentResult>() != null) ^ (InitializeComponentResults != null));
+            Contract.Requires<InvalidOperationException>(CreateComponentEvent != null);
+            Contract.Ensures(Process != null);
 
-            var actionConfirmations = Generating.InitializeActions(History);
-
-            InitializeComponentResults = ValueList<ReactedResult>.Empty;
-            foreach (var actionConfirmation in actionConfirmations)
-            {
-                var result = actionConfirmation.Action.EvaluateBase(History);
-                if (!actionConfirmation.Confirmation(result))
-                {
-                    return new InitializeFailedResult(
-                        TargetID,
-                        InitialStatus,
-                        RegisterComponentResult,
-                        InitializeComponentResults,
-                        result
-                    );
-                }
-
-                InitializeComponentResults = InitializeComponentResults.Add(result);
-                History = History.Appended(result);
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        private AddComponentResult GetGenerating()
-        {
-            Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
-            Contract.Requires<InvalidOperationException>(InitializeComponentResults != null);
-            Contract.Ensures((Contract.Result<AddComponentResult>() != null) ^ (Generating != null));
-
-            var componentID = RegisterComponentResult.Registered.ComponentID;
-
-            Generating = componentID.GetFrom(History.World);
-            if (Generating == null)
-            {
-                return new DestroyedResult(
-                    TargetID,
-                    InitialStatus,
-                    RegisterComponentResult,
-                    InitializeComponentResults
-                );
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        private AddComponentResult CollectInterrupts()
-        {
-            Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
-            Contract.Requires<InvalidOperationException>(InitializeComponentResults != null);
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Ensures(Interrupts != null);
-
-            var effectors = Component.GetAllOfTypeFrom<IAddComponentEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnAddComponent(History, Generating)).Sort();
-            foreach (var interrupt in Interrupts)
-            {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(
-                        TargetID,
-                        InitialStatus,
-                        RegisterComponentResult,
-                        InitializeComponentResults,
-                        Interrupts,
-                        interrupt.ComponentID
-                    );
-                }
-            }
-
-            return null;
+            Process = new Process(CreateComponentEvent);
         }
 
         [NotNull]
         private AddComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RegisterComponentResult != null);
-            Contract.Requires<InvalidOperationException>(InitializeComponentResults != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
 
-            return new SucceedResult(
-                TargetID,
-                InitialStatus,
-                RegisterComponentResult,
-                InitializeComponentResults,
-                Interrupts,
-                Generating
-            );
+            return new SucceedResult(Action, Process);
         }
     }
 }
