@@ -3,8 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
 {
     public record RejectedResult(
-        [NotNull] Tile Target,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyTileEffect>> Interrupts,
+        [NotNull] DestroyTileAction Action,
+        [NotNull] DestroyTileProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyTileRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : DestroyTileResult
     {

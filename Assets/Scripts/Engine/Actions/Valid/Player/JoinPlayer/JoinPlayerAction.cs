@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.JoinPlayer
     {
         protected override JoinPlayerResult EvaluateBody(IHistory history)
         {
-            return new JoinPlayerEvaluator(history, InitialPlayer).Evaluate();
+            return new JoinPlayerEvaluator(history, this).Evaluate();
         }
     }
 }

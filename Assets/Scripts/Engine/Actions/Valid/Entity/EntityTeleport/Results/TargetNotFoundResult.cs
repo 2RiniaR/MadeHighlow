@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
 {
-    public record TargetNotFoundResult([NotNull] EntityID TargetID) : EntityTeleportResult
+    public record TargetNotFoundResult([NotNull] EntityTeleportAction Action) : EntityTeleportResult
     {
         public override World Simulate(World world)
         {

@@ -7,31 +7,28 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 {
     public class EntityFlyEvaluator
     {
-        public EntityFlyEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] EntityID targetID,
-            [NotNull] Direction3D direction
-        )
+        public EntityFlyEvaluator([NotNull] IHistory initial, EntityFlyAction action)
         {
-            History = history;
-            TargetID = targetID;
-            Direction = direction;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private EntityID TargetID { get; }
-        [NotNull] private Direction3D Direction { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private EntityFlyAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Fragment.MoveEntity.SucceedResult MoveEntityResult { get; set; }
-        [CanBeNull] private ValueList<Interrupt<EntityFlyEffect>> Interrupts { get; set; }
+        [CanBeNull] private Event<Fragment.MoveEntity.SucceedResult> MoveEntityEvent { get; set; }
+        [CanBeNull] private EntityFlyProcess Process { get; set; }
+        [CanBeNull] private ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public EntityFlyResult Evaluate()
         {
             EntityFlyResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
             result = CheckCanFly();
@@ -40,21 +37,23 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
             result = Move();
             if (result != null) return result;
 
-            result = CollectInterrupts();
+            WrapProcess();
+
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private EntityFlyResult GetTarget()
+        private EntityFlyResult FindTarget()
         {
             Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Simulating.World);
             if (Target == null)
             {
-                return new TargetNotFoundResult(TargetID);
+                return new TargetNotFoundResult(Action);
             }
 
             return null;
@@ -67,7 +66,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 
             if (Target.Levitation == false)
             {
-                return new CanNotFlyResult(TargetID);
+                return new CanNotFlyResult(Action);
             }
 
             return null;
@@ -77,35 +76,46 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
         private EntityFlyResult Move()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (MoveEntityResult != null));
+            Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (MoveEntityEvent != null));
 
-            var result = new MoveEntityAction(TargetID, Direction).Evaluate(History);
+            var result = new MoveEntityAction(Action.TargetID, Action.Direction).Evaluate(Simulating);
             if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
             {
-                return new MoveFailedResult(TargetID, Direction, result);
+                return new MoveEntityFailedResult(Action, result);
             }
 
-            MoveEntityResult = succeedResult;
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            MoveEntityEvent = succeedEvent;
+
             return null;
         }
 
-        [CanBeNull]
-        private EntityFlyResult CollectInterrupts()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(MoveEntityResult != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(MoveEntityEvent != null);
+            Contract.Ensures(Process != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IEntityFlyEffector>(History.World);
-            var actualDirection = MoveEntityResult.Direction;
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnFlyEntity(History, Target, actualDirection))
-                .Sort();
-            foreach (var interrupt in Interrupts)
+            Process = new EntityFlyProcess(MoveEntityEvent);
+        }
+
+        [CanBeNull]
+        private EntityFlyResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Ensures(RejectionInterrupts != null);
+
+            var effectors = Component.GetAllOfTypeFrom<IEntityFlyRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<EntityFlyRejection>>.Empty;
+            foreach (var effector in effectors)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(MoveEntityResult, Interrupts, interrupt.ComponentID);
-                }
+                var interrupts = effector.EntityFlyRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+            }
+
+            if (!RejectionInterrupts.IsEmpty)
+            {
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -114,11 +124,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
         [NotNull]
         private EntityFlyResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(MoveEntityResult != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(MoveEntityResult, Interrupts);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

@@ -3,9 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
 {
     public record RejectedResult(
-        [NotNull] EntityID TargetID,
-        [NotNull] Position3D Destination,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityTeleportEffect>> Interrupts,
+        [NotNull] EntityTeleportAction Action,
+        [NotNull] EntityTeleportProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityTeleportRejection>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : EntityTeleportResult
     {

@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
     {
         protected override EntityTeleportResult EvaluateBody(IHistory history)
         {
-            return new EntityTeleportEvaluator(history, TargetID, Destination).Evaluate();
+            return new EntityTeleportEvaluator(history, this).Evaluate();
         }
     }
 }

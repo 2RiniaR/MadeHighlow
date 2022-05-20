@@ -1,112 +1,85 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Valid.RemoveComponent;
+using RineaR.MadeHighlow.Actions.Fragment.DeleteTile;
 
 namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
 {
     public class DestroyTileEvaluator
     {
-        public DestroyTileEvaluator([NotNull] IHistory history, [NotNull] TileID targetID)
+        public DestroyTileEvaluator([NotNull] IHistory initial, DestroyTileAction action)
         {
-            History = history;
-            TargetID = targetID;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
-        [NotNull] private TileID TargetID { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private DestroyTileAction Action { get; }
 
-        [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }
-        [CanBeNull] private ValueList<Interrupt<DestroyTileEffect>> Interrupts { get; set; }
-        [CanBeNull] private Tile Target { get; set; }
+        [CanBeNull] private Event<Fragment.DeleteTile.SucceedResult> DeleteTileEvent { get; set; }
+        [CanBeNull] private DestroyTileProcess Process { get; set; }
+        [CanBeNull] private ValueList<Interrupt<DestroyTileRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public DestroyTileResult Evaluate()
         {
             DestroyTileResult result;
 
-            result = GetTarget();
+            result = DeleteTarget();
             if (result != null) return result;
 
-            result = CollectInterrupts();
-            if (result != null) return result;
+            WrapProcess();
 
-            result = CheckRemainingEntity();
-            if (result != null) return result;
-
-            result = RemoveAttachedComponents();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private DestroyTileResult GetTarget()
+        private DestroyTileResult DeleteTarget()
         {
-            Contract.Ensures((Contract.Result<DestroyTileResult>() != null) ^ (Target != null));
+            Contract.Ensures((Contract.Result<DestroyTileResult>() != null) ^ (DeleteTileEvent != null));
 
-            Target = TargetID.GetFrom(History.World);
-            if (Target == null)
+            var result = new DeleteTileAction(Action.TargetID).Evaluate(Simulating);
+            if (result is not Fragment.DeleteTile.SucceedResult succeedResult)
             {
-                return new NotFoundResult(TargetID);
+                return new DeleteTileFailedResult(Action, result);
             }
 
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            DeleteTileEvent = succeedEvent;
             return null;
         }
 
-        [CanBeNull]
-        private DestroyTileResult CollectInterrupts()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(DeleteTileEvent != null);
+            Contract.Ensures(Process != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDestroyTileEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyTile(History, Target)).Sort();
-            foreach (var interrupt in Interrupts)
-            {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Target, Interrupts, interrupt.ComponentID);
-                }
-            }
-
-            return null;
+            Process = new DestroyTileProcess(DeleteTileEvent);
         }
 
         [CanBeNull]
-        private DestroyTileResult CheckRemainingEntity()
+        private DestroyTileResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var removable = new EntityCondition(Target.Position2D).Search(History.World).IsEmpty;
-            if (!removable)
+            var effectors = Component.GetAllOfTypeFrom<IDestroyTileRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<DestroyTileRejection>>.Empty;
+            foreach (var effector in effectors)
             {
-                return new EntityRemainingResult(Target, Interrupts);
+                var interrupts = effector.DestroyTileRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
 
-            return null;
-        }
-
-        [CanBeNull]
-        private DestroyTileResult RemoveAttachedComponents()
-        {
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(RemoveComponentResults != null);
-
-            RemoveComponentResults = ValueList<ReactedResult<RemoveComponent.SucceedResult>>.Empty;
-            foreach (var component in Target.Components)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                var result = new RemoveComponentAction(component.ComponentID).Evaluate(History);
-                var succeedResult = result.BodyAs<RemoveComponent.SucceedResult>();
-                if (succeedResult == null)
-                {
-                    return new RemoveComponentFailedResult(Target, Interrupts, RemoveComponentResults, result);
-                }
-
-                History = History.Appended(succeedResult);
-                RemoveComponentResults = RemoveComponentResults.Add(succeedResult);
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -115,11 +88,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
         [NotNull]
         private DestroyTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Target, RemoveComponentResults, Interrupts);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

@@ -6,72 +6,64 @@ namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
 {
     public class ElevateTileEvaluator
     {
-        public ElevateTileEvaluator(
-            [NotNull] IHistory history,
-            ID sourceID,
-            [NotNull] TileID targetID,
-            [NotNull] Elevate expected
-        )
+        public ElevateTileEvaluator([NotNull] IHistory initial, ElevateTileAction action)
         {
-            History = history;
-            SourceID = sourceID;
-            TargetID = targetID;
-            Expected = expected;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        private ID SourceID { get; }
-        [NotNull] private TileID TargetID { get; }
-        [NotNull] private Elevate Expected { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private ElevateTileAction Action { get; }
+
         [CanBeNull] private Tile Target { get; set; }
 
-        [CanBeNull] private ValueList<Interrupt<ElevateTileEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<ElevateTileRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public ElevateTileResult Evaluate()
         {
             ElevateTileResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
-            result = CollectInterrupts();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private ElevateTileResult GetTarget()
+        private ElevateTileResult FindTarget()
         {
             Contract.Ensures((Contract.Result<ElevateTileResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Initial.World);
             if (Target == null)
             {
-                return new NotFoundResult(TargetID);
+                return new TargetNotFoundResult(Action);
             }
 
             return null;
         }
 
         [CanBeNull]
-        private ElevateTileResult CollectInterrupts()
+        private ElevateTileResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IElevateTileEffector>(History.World);
-            Interrupts = effectors.SelectMany(
-                    effector => effector.EffectsOnElevateTile(History, SourceID, Target, Expected)
-                )
-                .Sort();
-            foreach (var interrupt in Interrupts)
+            var effectors = Component.GetAllOfTypeFrom<IElevateTileRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<ElevateTileRejection>>.Empty;
+            foreach (var effector in effectors)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(SourceID, Target, Expected, Interrupts, interrupt.ComponentID);
-                }
+                var interrupts = effector.ElevateTileRejection(Initial, Action, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+            }
+
+            if (!RejectionInterrupts.IsEmpty)
+            {
+                return new RejectedResult(Action, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -80,10 +72,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
         [NotNull]
         private ElevateTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(SourceID, Target, Expected, Interrupts, Expected);
+            return new SucceedResult(Action, RejectionInterrupts);
         }
     }
 }

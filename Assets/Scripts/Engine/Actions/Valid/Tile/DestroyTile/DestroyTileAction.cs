@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
     {
         protected override DestroyTileResult EvaluateBody(IHistory history)
         {
-            return new DestroyTileEvaluator(history, TargetID).Evaluate();
+            return new DestroyTileEvaluator(history, this).Evaluate();
         }
     }
 }

@@ -3,10 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
 {
     public record RejectedResult(
-        ID SourceID,
-        [NotNull] Tile Target,
-        [NotNull] Elevate Expected,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<ElevateTileEffect>> Interrupts,
+        [NotNull] ElevateTileAction Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<ElevateTileRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : ElevateTileResult
     {

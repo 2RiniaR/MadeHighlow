@@ -1,151 +1,85 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.PositionTile;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterTile;
-using RineaR.MadeHighlow.Actions.Valid.AddComponent;
+using RineaR.MadeHighlow.Actions.Fragment.CreateTile;
 
 namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
 {
     public class GenerateTileEvaluator
     {
-        public GenerateTileEvaluator([NotNull] IHistory history, [NotNull] Tile initialStatus)
+        public GenerateTileEvaluator([NotNull] IHistory initial, GenerateTileAction action)
         {
-            History = history;
-            InitialStatus = initialStatus;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
-        [NotNull] private Tile InitialStatus { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private GenerateTileAction Action { get; }
 
-        [CanBeNull] private RegisterTileResult RegisterTileResult { get; set; }
-        [CanBeNull] private ValueList<ReactedResult<AddComponent.SucceedResult>> AddComponentResults { get; set; }
-        [CanBeNull] private Fragment.PositionTile.SucceedResult PositionTileResult { get; set; }
-        [CanBeNull] private ValueList<Interrupt<GenerateTileEffect>> Interrupts { get; set; }
-
-        [CanBeNull] private Tile Generating { get; set; }
+        [CanBeNull] private Event<Fragment.CreateTile.SucceedResult> CreateTileEvent { get; set; }
+        [CanBeNull] private GenerateTileProcess Process { get; set; }
+        [CanBeNull] private ValueList<Interrupt<GenerateTileRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public GenerateTileResult Evaluate()
         {
             GenerateTileResult result;
 
-            RegisterTile();
-
-            result = AddInitialComponents();
+            result = CreateTarget();
             if (result != null) return result;
 
-            result = PositionTile();
-            if (result != null) return result;
+            WrapProcess();
 
-            result = GetGenerating();
-            if (result != null) return result;
-
-            result = CollectInterrupts();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
-        private void RegisterTile()
-        {
-            Contract.Ensures(
-                (Contract.Result<GenerateTileResult>() != null) ^ (RegisterTileResult != null && Generating != null)
-            );
-
-            var result = new RegisterTileAction(InitialStatus).Evaluate(History);
-            History = History.Appended(result);
-            RegisterTileResult = result;
-            Generating = result.Registered;
-        }
-
         [CanBeNull]
-        private GenerateTileResult AddInitialComponents()
+        private GenerateTileResult CreateTarget()
         {
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
-            Contract.Ensures(AddComponentResults != null);
+            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (CreateTileEvent != null));
 
-            AddComponentResults = ValueList<ReactedResult<AddComponent.SucceedResult>>.Empty;
-            foreach (var component in InitialStatus.Components)
+            var result = new CreateTileAction(Action.InitialProps).Evaluate(Simulating);
+            if (result is not Fragment.CreateTile.SucceedResult succeedResult)
             {
-                var result = new AddComponentAction(Generating.TileID, component).Evaluate(History);
-                var succeedResult = result.BodyAs<AddComponent.SucceedResult>();
-                if (succeedResult == null)
-                {
-                    return new AddComponentFailedResult(InitialStatus, RegisterTileResult, AddComponentResults, result);
-                }
-
-                History = History.Appended(succeedResult);
-                AddComponentResults = AddComponentResults.Add(succeedResult);
+                return new CreateTileFailedResult(Action, result);
             }
 
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            CreateTileEvent = succeedEvent;
             return null;
         }
 
-        [CanBeNull]
-        private GenerateTileResult PositionTile()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (PositionTileResult != null));
+            Contract.Requires<InvalidOperationException>(CreateTileEvent != null);
+            Contract.Ensures(Process != null);
 
-            var result = new PositionTileAction(Generating.TileID, InitialStatus.Position2D).Evaluate(History);
-            if (result is not Fragment.PositionTile.SucceedResult succeedResult)
-            {
-                return new PositionFailedResult(InitialStatus, RegisterTileResult, AddComponentResults, result);
-            }
-
-            History = History.Appended(succeedResult);
-            PositionTileResult = succeedResult;
-
-            return null;
+            Process = new GenerateTileProcess(CreateTileEvent);
         }
 
         [CanBeNull]
-        private GenerateTileResult GetGenerating()
+        private GenerateTileResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Requires<InvalidOperationException>(PositionTileResult != null);
-            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (Generating != null));
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            // `RegisterTile` アクション実行後に、副作用で対象のエンティティが削除される可能性がある
-            Generating = Generating.TileID.GetFrom(History.World);
-            if (Generating == null)
+            var effectors = Component.GetAllOfTypeFrom<IGenerateTileRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<GenerateTileRejection>>.Empty;
+            foreach (var effector in effectors)
             {
-                return new DestroyedResult(InitialStatus, RegisterTileResult, AddComponentResults, PositionTileResult);
+                var interrupts = effector.GenerateTileRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
 
-            return null;
-        }
-
-        [CanBeNull]
-        private GenerateTileResult CollectInterrupts()
-        {
-            Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Requires<InvalidOperationException>(PositionTileResult != null);
-            Contract.Requires<InvalidOperationException>(Generating != null);
-            Contract.Ensures(Interrupts != null);
-
-            var effectors = Component.GetAllOfTypeFrom<IGenerateTileEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnGenerateTile(History, Generating)).Sort();
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(
-                        InitialStatus,
-                        RegisterTileResult,
-                        AddComponentResults,
-                        PositionTileResult,
-                        Interrupts,
-                        interrupt.ComponentID
-                    );
-                }
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -154,20 +88,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
         [NotNull]
         private GenerateTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RegisterTileResult != null);
-            Contract.Requires<InvalidOperationException>(AddComponentResults != null);
-            Contract.Requires<InvalidOperationException>(PositionTileResult != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Generating != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(
-                InitialStatus,
-                RegisterTileResult,
-                AddComponentResults,
-                PositionTileResult,
-                Interrupts,
-                Generating
-            );
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

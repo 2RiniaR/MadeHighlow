@@ -7,71 +7,50 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
 {
     public class EntityTeleportEvaluator
     {
-        public EntityTeleportEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] EntityID targetID,
-            [NotNull] Position3D destination
-        )
+        public EntityTeleportEvaluator([NotNull] IHistory initial, EntityTeleportAction action)
         {
-            History = history;
-            TargetID = targetID;
-            Destination = destination;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private EntityID TargetID { get; }
-        [NotNull] private Position3D Destination { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private EntityTeleportAction Action { get; }
+
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<EntityTeleportEffect>> Interrupts { get; set; }
-        [CanBeNull] private Fragment.PositionEntity.SucceedResult PositionEntityResult { get; set; }
+        [CanBeNull] private Event<Fragment.PositionEntity.SucceedResult> PositionEntityEvent { get; set; }
+        [CanBeNull] private EntityTeleportProcess Process { get; set; }
+        [CanBeNull] private ValueList<Interrupt<EntityTeleportRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public EntityTeleportResult Evaluate()
         {
             EntityTeleportResult result;
 
-            result = GetTarget();
-            if (result != null) return result;
-
-            result = CollectInterrupts();
+            result = FindTarget();
             if (result != null) return result;
 
             result = Position();
+            if (result != null) return result;
+
+            WrapProcess();
+
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private EntityTeleportResult GetTarget()
+        private EntityTeleportResult FindTarget()
         {
             Contract.Ensures((Contract.Result<EntityTeleportResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Simulating.World);
             if (Target == null)
             {
-                return new TargetNotFoundResult(TargetID);
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        private EntityTeleportResult CollectInterrupts()
-        {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(Interrupts != null);
-
-            var effectors = Component.GetAllOfTypeFrom<IEntityTeleportEffector>(History.World);
-            Interrupts = effectors
-                .SelectMany(effector => effector.EffectsOnTeleportEntity(History, Target, Destination))
-                .Sort();
-            foreach (var interrupt in Interrupts)
-            {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(TargetID, Destination, Interrupts, interrupt.ComponentID);
-                }
+                return new TargetNotFoundResult(Action);
             }
 
             return null;
@@ -81,27 +60,58 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
         private EntityTeleportResult Position()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Ensures((Contract.Result<EntityTeleportResult>() != null) ^ (PositionEntityResult != null));
+            Contract.Ensures((Contract.Result<EntityTeleportResult>() != null) ^ (PositionEntityEvent != null));
 
-            var result = new PositionEntityAction(TargetID, Destination).Evaluate(History);
+            var result = new PositionEntityAction(Action.TargetID, Action.Destination).Evaluate(Simulating);
             if (result is not Fragment.PositionEntity.SucceedResult succeedResult)
             {
-                return new PositionFailedResult(TargetID, Destination, Interrupts, result);
+                return new PositionEntityFailedResult(Action, result);
             }
 
-            PositionEntityResult = succeedResult;
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            PositionEntityEvent = succeedEvent;
+
+            return null;
+        }
+
+        private void WrapProcess()
+        {
+            Contract.Requires<InvalidOperationException>(PositionEntityEvent != null);
+            Contract.Ensures(Process != null);
+
+            Process = new EntityTeleportProcess(PositionEntityEvent);
+        }
+
+        [CanBeNull]
+        private EntityTeleportResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Ensures(RejectionInterrupts != null);
+
+            var effectors = Component.GetAllOfTypeFrom<IEntityTeleportRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<EntityTeleportRejection>>.Empty;
+            foreach (var effector in effectors)
+            {
+                var interrupts = effector.EntityTeleportRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+            }
+
+            if (!RejectionInterrupts.IsEmpty)
+            {
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
+            }
+
             return null;
         }
 
         [NotNull]
         private EntityTeleportResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(PositionEntityResult != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Interrupts, PositionEntityResult);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

@@ -3,8 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 {
     public record RejectedResult(
-        [NotNull] Fragment.MoveEntity.SucceedResult MoveEntityResult,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyEffect>> Interrupts,
+        [NotNull] EntityFlyAction Action,
+        [NotNull] EntityFlyProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : EntityFlyResult
     {

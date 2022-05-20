@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
     {
         protected override ElevateTileResult EvaluateBody(IHistory history)
         {
-            return new ElevateTileEvaluator(history, SourceID, TargetID, Elevate).Evaluate();
+            return new ElevateTileEvaluator(history, this).Evaluate();
         }
     }
 }

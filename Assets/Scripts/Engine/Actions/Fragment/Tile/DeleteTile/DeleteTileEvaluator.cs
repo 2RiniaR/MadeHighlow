@@ -32,6 +32,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
             result = FindTarget();
             if (result != null) return result;
 
+            result = CheckEntityRemaining();
+            if (result != null) return result;
+
             result = DeleteComponents();
             if (result != null) return result;
 
@@ -51,6 +54,20 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
             if (Target == null)
             {
                 return new NotFoundResult(Action);
+            }
+
+            return null;
+        }
+
+        [CanBeNull]
+        private DeleteTileResult CheckEntityRemaining()
+        {
+            Contract.Requires<InvalidOperationException>(Target != null);
+
+            var removable = new EntityCondition(Target.Position2D).Search(Simulating.World).IsEmpty;
+            if (!removable)
+            {
+                return new EntityRemainingResult(Action);
             }
 
             return null;

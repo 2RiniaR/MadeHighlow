@@ -3,13 +3,14 @@
 namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
 {
     public record SucceedResult(
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityTeleportEffect>> Interrupts,
-        [NotNull] Fragment.PositionEntity.SucceedResult PositionEntityResult
+        [NotNull] EntityTeleportAction Action,
+        [NotNull] EntityTeleportProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityTeleportRejection>> Interrupts
     ) : EntityTeleportResult
     {
         public override World Simulate(World world)
         {
-            return PositionEntityResult.Simulate(world);
+            return Process.Timeline.Simulate(world);
         }
     }
 }

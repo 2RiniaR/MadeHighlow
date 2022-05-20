@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
     {
         protected override EntityFlyResult EvaluateBody(IHistory history)
         {
-            return new EntityFlyEvaluator(history, TargetID, Direction).Evaluate();
+            return new EntityFlyEvaluator(history, this).Evaluate();
         }
     }
 }

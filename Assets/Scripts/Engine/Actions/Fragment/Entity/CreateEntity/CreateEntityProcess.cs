@@ -5,11 +5,11 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
 {
     public record CreateEntityProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,
-        [NotNull] Event<RegisterEntityResult> RegisterCardEvent,
+        [NotNull] Event<RegisterEntityResult> RegisterEntityEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents
     )
     {
         public Timeline Timeline { get; }
-            = new Timeline().Then(AllocateIDEvent).Then(RegisterCardEvent).Then(CreateComponentEvents);
+            = new Timeline().Then(AllocateIDEvent).Then(RegisterEntityEvent).Then(CreateComponentEvents);
     }
 }

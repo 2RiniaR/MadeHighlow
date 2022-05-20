@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 {
-    public record CanNotFlyResult([NotNull] EntityID TargetID) : EntityFlyResult
+    public record CanNotFlyResult([NotNull] EntityFlyAction Action) : EntityFlyResult
     {
         public override World Simulate(World world)
         {

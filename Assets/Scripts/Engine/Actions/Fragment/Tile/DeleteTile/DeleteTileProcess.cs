@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
 {
     public record DeleteTileProcess(
         [NotNull] [ItemNotNull] ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents,
-        [NotNull] Event<UnregisterTile.SucceedResult> UnregisterCardEvent
+        [NotNull] Event<UnregisterTile.SucceedResult> UnregisterTileEvent
     )
     {
-        public Timeline Timeline { get; } = new Timeline().Then(DeleteComponentEvents).Then(UnregisterCardEvent);
+        public Timeline Timeline { get; } = new Timeline().Then(DeleteComponentEvents).Then(UnregisterTileEvent);
     }
 }

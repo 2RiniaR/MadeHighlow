@@ -5,11 +5,11 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreatePlayer
 {
     public record CreatePlayerProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,
-        [NotNull] Event<RegisterPlayerResult> RegisterCardEvent,
+        [NotNull] Event<RegisterPlayerResult> RegisterPlayerEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents
     )
     {
         public Timeline Timeline { get; }
-            = new Timeline().Then(AllocateIDEvent).Then(RegisterCardEvent).Then(CreateComponentEvents);
+            = new Timeline().Then(AllocateIDEvent).Then(RegisterPlayerEvent).Then(CreateComponentEvents);
     }
 }

@@ -3,13 +3,14 @@
 namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 {
     public record SucceedResult(
-        [NotNull] Fragment.MoveEntity.SucceedResult MoveEntityResult,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyEffect>> Interrupts
+        [NotNull] EntityFlyAction Action,
+        [NotNull] EntityFlyProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts
     ) : EntityFlyResult
     {
         public override World Simulate(World world)
         {
-            return MoveEntityResult.Simulate(world);
+            return Process.Timeline.Simulate(world);
         }
     }
 }
