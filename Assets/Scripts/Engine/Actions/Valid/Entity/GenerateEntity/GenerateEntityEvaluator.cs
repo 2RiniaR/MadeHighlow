@@ -31,7 +31,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -63,7 +62,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
             Process = new GenerateEntityProcess(CreateEntityEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private GenerateEntityResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -76,13 +76,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
                 var interrupts = effector.GenerateEntityRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private GenerateEntityResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

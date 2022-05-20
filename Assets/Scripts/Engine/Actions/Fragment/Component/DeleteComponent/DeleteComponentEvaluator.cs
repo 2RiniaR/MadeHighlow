@@ -25,8 +25,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
             result = CheckTargetExist();
             if (result != null) return result;
 
-            CollectInterrupts();
-
             result = CheckRejection();
             if (result != null) return result;
 
@@ -44,7 +42,8 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
             return null;
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private DeleteComponentResult CheckRejection()
         {
             Contract.Ensures(RejectionInterrupts != null);
 
@@ -56,12 +55,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
                 var interrupts = effector.DeleteComponentRejection(Initial, Action, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private DeleteComponentResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

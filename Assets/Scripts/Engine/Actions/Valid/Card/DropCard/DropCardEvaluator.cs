@@ -32,7 +32,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -62,7 +61,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
             Process = new DropCardProcess(DeleteCardEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private DropCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -75,13 +75,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
                 var interrupts = effector.DropCardRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private DropCardResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

@@ -32,7 +32,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -62,7 +61,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             Process = new PayCardProcess(DeleteCardEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private PayCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(ExemptionInterrupts != null);
@@ -75,13 +75,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
                 var interrupts = effector.PayCardExemption(Simulating, Action, Process, ExemptionInterrupts);
                 ExemptionInterrupts = ExemptionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private PayCardResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(ExemptionInterrupts != null);
 
             if (!ExemptionInterrupts.IsEmpty)
             {

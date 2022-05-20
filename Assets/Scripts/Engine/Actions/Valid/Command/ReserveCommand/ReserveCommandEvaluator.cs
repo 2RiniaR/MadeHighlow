@@ -25,9 +25,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
             result = PreValidation();
             if (result != null) return result;
 
-            CollectInterrupts();
-
-            result = Judge();
+            result = CheckAcceptance();
             if (result != null) return result;
 
             return Disallowed();
@@ -62,7 +60,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
             return null;
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private ReserveCommandResult CheckAcceptance()
         {
             Contract.Ensures(AcceptanceInterrupts != null);
 
@@ -74,12 +73,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
                 var interrupts = effector.ReserveCommandAcceptance(Initial, Action, AcceptanceInterrupts);
                 AcceptanceInterrupts = AcceptanceInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private ReserveCommandResult Judge()
-        {
-            Contract.Requires<InvalidOperationException>(AcceptanceInterrupts != null);
 
             if (AcceptanceInterrupts.IsEmpty) return null;
 

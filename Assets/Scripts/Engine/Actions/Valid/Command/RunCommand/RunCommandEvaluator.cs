@@ -36,7 +36,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
             PayUsedCard();
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -112,7 +111,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
             Process = new RunCommandProcess(CommandActionEvents, PayCardEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private RunCommandResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -125,13 +125,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
                 var interrupts = effector.RunCommandRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private RunCommandResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

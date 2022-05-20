@@ -41,7 +41,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -137,7 +136,8 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
             Process = new PlaceCardProcess(DropCardEvent, CreateCardEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private PlaceCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -150,14 +150,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
                 var interrupts = effector.PlaceCardRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private PlaceCardResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(ReplacementInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

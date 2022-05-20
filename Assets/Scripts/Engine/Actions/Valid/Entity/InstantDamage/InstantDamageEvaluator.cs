@@ -31,10 +31,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
             result = CheckCondition();
             if (result != null) return result;
 
-            CollectEffectInterrupts();
             CalculateDamage();
 
-            CollectRejectInterrupts();
             result = CheckRejection();
             if (result != null) return result;
 
@@ -75,9 +73,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
             return null;
         }
 
-        private void CollectEffectInterrupts()
+        private void CalculateDamage()
         {
             Contract.Ensures(CalculationInterrupts != null);
+            Contract.Ensures(Calculated != null);
 
             var effectors = Component.GetAllOfTypeFrom<IInstantDamageCalculator>(Initial.World).Sort();
 
@@ -87,12 +86,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
                 var interrupts = effector.InstantDamageCalculations(Initial, Action, CalculationInterrupts);
                 CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
             }
-        }
-
-        private void CalculateDamage()
-        {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Ensures(Calculated != null);
 
             Calculated = Action.Damage;
             foreach (var interrupt in CalculationInterrupts)
@@ -104,8 +97,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
             }
         }
 
-        private void CollectRejectInterrupts()
+        [CanBeNull]
+        private InstantDamageResult CheckRejection()
         {
+            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
+            Contract.Requires<InvalidOperationException>(Calculated != null);
             Contract.Ensures(RejectionInterrupts != null);
 
             var rejectors = Component.GetAllOfTypeFrom<IInstantDamageRejector>(Initial.World).Sort();
@@ -116,14 +112,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
                 var interrupt = rejector.InstantDamageRejection(Initial, Action, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
-        }
-
-        [CanBeNull]
-        private InstantDamageResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

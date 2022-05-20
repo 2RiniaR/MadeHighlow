@@ -35,7 +35,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -84,7 +83,8 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
             Process = new CreateComponentProcess(AllocateIDEvent, RegisterComponentEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private CreateComponentResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -97,13 +97,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
                 var interrupts = effector.CreateComponentRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private CreateComponentResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

@@ -31,10 +31,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
             result = CheckCondition();
             if (result != null) return result;
 
-            CollectEffectInterrupts();
             CalculateHeal();
 
-            CollectRejectInterrupts();
             result = CheckRejection();
             if (result != null) return result;
 
@@ -75,9 +73,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
             return null;
         }
 
-        private void CollectEffectInterrupts()
+        private void CalculateHeal()
         {
             Contract.Ensures(CalculationInterrupts != null);
+            Contract.Ensures(Calculated != null);
 
             var effectors = Component.GetAllOfTypeFrom<IInstantHealCalculator>(Initial.World).Sort();
 
@@ -87,12 +86,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
                 var interrupts = effector.InstantHealCalculations(Initial, Action, CalculationInterrupts);
                 CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
             }
-        }
-
-        private void CalculateHeal()
-        {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Ensures(Calculated != null);
 
             Calculated = Action.Heal;
             foreach (var interrupt in CalculationInterrupts)
@@ -104,8 +97,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
             }
         }
 
-        private void CollectRejectInterrupts()
+        [CanBeNull]
+        private InstantHealResult CheckRejection()
         {
+            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
+            Contract.Requires<InvalidOperationException>(Calculated != null);
             Contract.Ensures(RejectionInterrupts != null);
 
             var rejectors = Component.GetAllOfTypeFrom<IInstantHealRejector>(Initial.World).Sort();
@@ -116,14 +112,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
                 var interrupt = rejector.InstantHealRejection(Initial, Action, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
-        }
-
-        [CanBeNull]
-        private InstantHealResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

@@ -32,7 +32,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -65,7 +64,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
             Process = new SupplyCardProcess(PlaceCardEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private SupplyCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -78,13 +78,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
                 var interrupts = effector.SupplyCardRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private SupplyCardResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

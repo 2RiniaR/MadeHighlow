@@ -35,7 +35,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -85,7 +84,8 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
             Process = new MoveEntityProcess(PositionEntityEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private MoveEntityResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -98,13 +98,6 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
                 var interrupts = effector.MoveEntityRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private MoveEntityResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

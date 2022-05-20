@@ -29,7 +29,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
             result = CheckCondition();
             if (result != null) return result;
 
-            CollectRejections();
             result = CheckRejection();
             if (result != null) return result;
 
@@ -70,7 +69,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
             return null;
         }
 
-        private void CollectRejections()
+        [CanBeNull]
+        private InstantDeathResult CheckRejection()
         {
             Contract.Ensures(RejectionInterrupts != null);
 
@@ -82,12 +82,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
                 var interrupt = rejector.InstantDeathRejection(Initial, Action, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
-        }
-
-        [CanBeNull]
-        private InstantDeathResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {

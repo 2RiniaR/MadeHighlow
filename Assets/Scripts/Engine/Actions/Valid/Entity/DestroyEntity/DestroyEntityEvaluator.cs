@@ -31,7 +31,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
             if (result != null) return result;
 
             WrapProcess();
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -63,7 +62,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
             Process = new DestroyEntityProcess(DeleteEntityEvent);
         }
 
-        private void CollectInterrupts()
+        [CanBeNull]
+        private DestroyEntityResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
@@ -76,13 +76,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
                 var interrupts = effector.DestroyEntityRejection(Simulating, Action, Process, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
-        }
-
-        [CanBeNull]
-        private DestroyEntityResult CheckRejection()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
             if (!RejectionInterrupts.IsEmpty)
             {
