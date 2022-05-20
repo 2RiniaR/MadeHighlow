@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
 {
     public record RejectedResult(
         [NotNull] MoveEntityAction Action,
-        [NotNull] Process Process,
+        [NotNull] MoveEntityProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<MoveEntityEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : MoveEntityResult

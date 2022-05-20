@@ -2,7 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
 {
-    public record SucceedResult([NotNull] CreateEntityAction Action, [NotNull] Process Process) : CreateEntityResult
+    public record SucceedResult(
+        [NotNull] CreateEntityAction Action,
+        [NotNull] CreateEntityProcess Process
+    ) : CreateEntityResult
     {
         public override World Simulate(World world)
         {

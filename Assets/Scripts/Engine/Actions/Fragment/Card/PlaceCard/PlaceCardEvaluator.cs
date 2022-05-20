@@ -20,11 +20,11 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
         [NotNull] private PlaceCardAction Action { get; }
 
         [CanBeNull] private Player Parent { get; set; }
-        [CanBeNull] private ValueList<Interrupt<PlaceCardReplaceEffect>> ReplaceInterrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<CardReplacement>> ReplacementInterrupts { get; set; }
         [CanBeNull] private Event<ReactedResult<Valid.DropCard.SucceedResult>> DropCardEvent { get; set; }
         [CanBeNull] private Event<CreateCard.SucceedResult> CreateCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
-        [CanBeNull] private ValueList<Interrupt<PlaceCardEffect>> Interrupts { get; set; }
+        [CanBeNull] private PlaceCardProcess Process { get; set; }
+        [CanBeNull] private ValueList<Interrupt<PlaceCardRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public PlaceCardResult Evaluate()
@@ -73,18 +73,18 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
                 return null;
             }
 
-            var effectors = Component.GetAllOfTypeFrom<IPlaceCardReplaceEffector>(Initial.World).Sort();
-            ReplaceInterrupts = ValueList<Interrupt<PlaceCardReplaceEffect>>.Empty;
+            var effectors = Component.GetAllOfTypeFrom<IPlaceCardReplacer>(Initial.World).Sort();
+            ReplacementInterrupts = ValueList<Interrupt<CardReplacement>>.Empty;
 
             foreach (var effector in effectors)
             {
-                var interrupts = effector.ReplaceEffectsOnPutCard(Initial, Action);
-                ReplaceInterrupts = ReplaceInterrupts.AddRange(interrupts);
+                var interrupts = effector.CardReplacements(Initial, Action, ReplacementInterrupts);
+                ReplacementInterrupts = ReplacementInterrupts.AddRange(interrupts);
             }
 
-            ReplaceInterrupts = ReplaceInterrupts.Sort();
+            ReplacementInterrupts = ReplacementInterrupts.Sort();
 
-            foreach (var interrupt in ReplaceInterrupts)
+            foreach (var interrupt in ReplacementInterrupts)
             {
                 var result = new DropCardAction(interrupt.Effect.ReplacedID).Evaluate(Simulating);
 
@@ -106,7 +106,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
                 return null;
             }
 
-            return new OverflowedResult(Action, ReplaceInterrupts);
+            return new OverflowedResult(Action, ReplacementInterrupts);
         }
 
         private static bool ExistDeckSpace([NotNull] Player player)
@@ -134,36 +134,40 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
             Contract.Requires<InvalidOperationException>(CreateCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DropCardEvent, CreateCardEvent);
+            Process = new PlaceCardProcess(DropCardEvent, CreateCardEvent);
         }
 
         private void CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IPlaceCardEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IPlaceCardRejector>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<PlaceCardEffect>>.Empty;
+            RejectionInterrupts = ValueList<Interrupt<PlaceCardRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnPlaceCard(Simulating, Action, Process);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.PlaceCardRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
         }
 
         [CanBeNull]
         private PlaceCardResult CheckRejection()
         {
+            Contract.Requires<InvalidOperationException>(ReplacementInterrupts != null);
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Action, ReplaceInterrupts, Process, Interrupts, interrupt.ComponentID);
-                }
+                return new RejectedResult(
+                    Action,
+                    ReplacementInterrupts,
+                    Process,
+                    RejectionInterrupts,
+                    RejectionInterrupts[0].ComponentID
+                );
             }
 
             return null;
@@ -173,9 +177,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
         private PlaceCardResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, ReplaceInterrupts, Process, Interrupts);
+            return new SucceedResult(Action, ReplacementInterrupts, Process, RejectionInterrupts);
         }
     }
 }

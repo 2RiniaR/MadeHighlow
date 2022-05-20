@@ -3,7 +3,7 @@ using RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer;
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreatePlayer
 {
-    public record Process(
+    public record CreatePlayerProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,
         [NotNull] Event<RegisterPlayerResult> RegisterCardEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents

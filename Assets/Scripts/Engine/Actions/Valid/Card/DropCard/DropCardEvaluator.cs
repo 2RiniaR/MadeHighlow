@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         [NotNull] private DropCardAction Action { get; }
 
         [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private DropCardProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<DropCardEffect>> Interrupts { get; set; }
 
@@ -59,7 +59,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
             Contract.Requires<InvalidOperationException>(DeleteCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteCardEvent);
+            Process = new DropCardProcess(DeleteCardEvent);
         }
 
         private void CollectInterrupts()

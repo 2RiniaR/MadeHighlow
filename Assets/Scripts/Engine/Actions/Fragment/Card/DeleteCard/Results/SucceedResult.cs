@@ -2,7 +2,8 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
 {
-    public record SucceedResult([NotNull] DeleteCardAction Action, [NotNull] Process Process) : DeleteCardResult
+    public record SucceedResult
+        ([NotNull] DeleteCardAction Action, [NotNull] DeleteCardProcess Process) : DeleteCardResult
     {
         public override World Simulate(World world)
         {

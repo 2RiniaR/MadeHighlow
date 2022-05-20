@@ -2,7 +2,8 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreateTile
 {
-    public record SucceedResult([NotNull] CreateTileAction Action, [NotNull] Process Process) : CreateTileResult
+    public record SucceedResult
+        ([NotNull] CreateTileAction Action, [NotNull] CreateTileProcess Process) : CreateTileResult
     {
         public override World Simulate(World world)
         {

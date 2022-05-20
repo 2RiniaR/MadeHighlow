@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
         [NotNull] private DestroyEntityAction Action { get; }
 
         [CanBeNull] private Event<Fragment.DeleteEntity.SucceedResult> DeleteEntityEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private DestroyEntityProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<DestroyEntityEffect>> Interrupts { get; set; }
 
         [NotNull]
@@ -60,7 +60,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
             Contract.Requires<InvalidOperationException>(DeleteEntityEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteEntityEvent);
+            Process = new DestroyEntityProcess(DeleteEntityEvent);
         }
 
         private void CollectInterrupts()

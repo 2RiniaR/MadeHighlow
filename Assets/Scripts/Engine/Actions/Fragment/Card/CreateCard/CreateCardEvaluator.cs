@@ -24,7 +24,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
         [CanBeNull] private ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents { get; set; }
 
         [CanBeNull] private Event<RegisterCard.SucceedResult> RegisterCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private CreateCardProcess Process { get; set; }
 
         [NotNull]
         public CreateCardResult Evaluate()
@@ -110,7 +110,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
             Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(AllocateIDEvent, RegisterCardEvent, CreateComponentEvents);
+            Process = new CreateCardProcess(AllocateIDEvent, RegisterCardEvent, CreateComponentEvents);
         }
 
         [NotNull]

@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
 {
     public record SucceedResult(
         [NotNull] CreateComponentAction Action,
-        [NotNull] Process Process,
+        [NotNull] CreateComponentProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<CreateComponentEffect>> Interrupts
     ) : CreateComponentResult
     {

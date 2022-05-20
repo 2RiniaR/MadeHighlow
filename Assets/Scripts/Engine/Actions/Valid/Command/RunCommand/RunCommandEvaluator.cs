@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 
         [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult>> CommandActionEvents { get; set; }
         [CanBeNull] private Event<ReactedResult<PayCardResult>> PayCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private RunCommandProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<RunCommandEffect>> Interrupts { get; set; }
 
@@ -109,7 +109,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
             Contract.Requires<InvalidOperationException>(PayCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(CommandActionEvents, PayCardEvent);
+            Process = new RunCommandProcess(CommandActionEvents, PayCardEvent);
         }
 
         private void CollectInterrupts()

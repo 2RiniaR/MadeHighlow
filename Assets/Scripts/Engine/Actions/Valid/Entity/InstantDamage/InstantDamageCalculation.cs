@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
-    public abstract record InstantDamageEffect;
+    public abstract record InstantDamageCalculation;
 }

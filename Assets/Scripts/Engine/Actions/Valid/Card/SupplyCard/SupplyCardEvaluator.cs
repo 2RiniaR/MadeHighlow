@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 
         [CanBeNull] private Event<Fragment.PlaceCard.SucceedResult> PlaceCardEvent { get; set; }
 
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private SupplyCardProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<SupplyCardEffect>> Interrupts { get; set; }
 
         [NotNull]
@@ -62,7 +62,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
             Contract.Requires<InvalidOperationException>(PlaceCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(PlaceCardEvent);
+            Process = new SupplyCardProcess(PlaceCardEvent);
         }
 
         private void CollectInterrupts()

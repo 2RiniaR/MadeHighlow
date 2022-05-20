@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
 {
     public record SucceedResult(
         [NotNull] GenerateEntityAction Action,
-        [NotNull] Process Process,
+        [NotNull] GenerateEntityProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityEffect>> Interrupts
     ) : GenerateEntityResult
     {

@@ -1,11 +1,10 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterEntity;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
+namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
 {
-    public record Process(
+    public record CreateCardProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,
-        [NotNull] Event<RegisterEntityResult> RegisterCardEvent,
+        [NotNull] Event<RegisterCard.SucceedResult> RegisterCardEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents
     )
     {

@@ -24,7 +24,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreatePlayer
         [CanBeNull] private ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents { get; set; }
 
         [CanBeNull] private Event<RegisterPlayerResult> RegisterPlayerEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private CreatePlayerProcess Process { get; set; }
 
         [NotNull]
         public CreatePlayerResult Evaluate()
@@ -102,7 +102,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreatePlayer
             Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(AllocateIDEvent, RegisterPlayerEvent, CreateComponentEvents);
+            Process = new CreatePlayerProcess(AllocateIDEvent, RegisterPlayerEvent, CreateComponentEvents);
         }
 
         [NotNull]

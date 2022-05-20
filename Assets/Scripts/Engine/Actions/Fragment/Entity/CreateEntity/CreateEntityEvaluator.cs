@@ -24,7 +24,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
         [CanBeNull] private ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents { get; set; }
 
         [CanBeNull] private Event<RegisterEntityResult> RegisterEntityEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private CreateEntityProcess Process { get; set; }
 
         [NotNull]
         public CreateEntityResult Evaluate()
@@ -102,7 +102,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
             Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(AllocateIDEvent, RegisterEntityEvent, CreateComponentEvents);
+            Process = new CreateEntityProcess(AllocateIDEvent, RegisterEntityEvent, CreateComponentEvents);
         }
 
         [NotNull]

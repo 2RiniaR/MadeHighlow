@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
 
         [CanBeNull] private Event<AllocateIDResult> AllocateIDEvent { get; set; }
         [CanBeNull] private Event<RegisterComponent.SucceedResult> RegisterComponentEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private CreateComponentProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<CreateComponentEffect>> Interrupts { get; set; }
 
@@ -81,7 +81,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
             Contract.Requires<InvalidOperationException>(RegisterComponentEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(AllocateIDEvent, RegisterComponentEvent);
+            Process = new CreateComponentProcess(AllocateIDEvent, RegisterComponentEvent);
         }
 
         private void CollectInterrupts()

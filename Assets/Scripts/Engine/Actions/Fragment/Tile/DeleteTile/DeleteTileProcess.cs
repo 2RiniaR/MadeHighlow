@@ -1,10 +1,10 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteEntity
+namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
 {
-    public record Process(
+    public record DeleteTileProcess(
         [NotNull] [ItemNotNull] ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents,
-        [NotNull] Event<UnregisterEntity.SucceedResult> UnregisterCardEvent
+        [NotNull] Event<UnregisterTile.SucceedResult> UnregisterCardEvent
     )
     {
         public Timeline Timeline { get; } = new Timeline().Then(DeleteComponentEvents).Then(UnregisterCardEvent);

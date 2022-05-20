@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
 {
-    public record Process(
+    public record PlaceCardProcess(
         [CanBeNull] Event<ReactedResult<Valid.DropCard.SucceedResult>> DropCardEvent,
         [NotNull] Event<CreateCard.SucceedResult> CreateCardEvent
     )

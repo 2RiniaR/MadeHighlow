@@ -4,9 +4,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
 {
     public record RejectedResult(
         [NotNull] PlaceCardAction Action,
-        [CanBeNull] [ItemNotNull] ValueList<Interrupt<PlaceCardReplaceEffect>> ReplaceInterrupts,
-        [NotNull] Process Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<PlaceCardEffect>> Interrupts,
+        [CanBeNull] [ItemNotNull] ValueList<Interrupt<CardReplacement>> ReplacementInterrupts,
+        [NotNull] PlaceCardProcess Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<PlaceCardRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : PlaceCardResult
     {

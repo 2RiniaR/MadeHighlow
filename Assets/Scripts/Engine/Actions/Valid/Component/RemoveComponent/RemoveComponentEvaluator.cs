@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
         [NotNull] private RemoveComponentAction Action { get; }
 
         [CanBeNull] private Event<Fragment.DeleteComponent.SucceedResult> DeleteComponentEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private RemoveComponentProcess Process { get; set; }
 
         [NotNull]
         public RemoveComponentResult Evaluate()
@@ -52,7 +52,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
             Contract.Requires<InvalidOperationException>(DeleteComponentEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteComponentEvent);
+            Process = new RemoveComponentProcess(DeleteComponentEvent);
         }
 
         [NotNull]

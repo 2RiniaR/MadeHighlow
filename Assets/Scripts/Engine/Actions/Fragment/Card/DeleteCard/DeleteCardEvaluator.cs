@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
         [CanBeNull] private Card Target { get; set; }
         [CanBeNull] private ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents { get; set; }
         [CanBeNull] private Event<UnregisterCard.SucceedResult> UnregisterCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private DeleteCardProcess Process { get; set; }
 
         [NotNull]
         public DeleteCardResult Evaluate()
@@ -104,7 +104,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
             Contract.Requires<InvalidOperationException>(UnregisterCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteComponentEvents, UnregisterCardEvent);
+            Process = new DeleteCardProcess(DeleteComponentEvents, UnregisterCardEvent);
         }
 
         [NotNull]

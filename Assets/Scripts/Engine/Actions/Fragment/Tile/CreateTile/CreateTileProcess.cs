@@ -1,10 +1,11 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.RegisterTile;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
+namespace RineaR.MadeHighlow.Actions.Fragment.CreateTile
 {
-    public record Process(
+    public record CreateTileProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,
-        [NotNull] Event<RegisterCard.SucceedResult> RegisterCardEvent,
+        [NotNull] Event<RegisterTileResult> RegisterCardEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents
     )
     {

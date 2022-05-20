@@ -3,7 +3,7 @@ using RineaR.MadeHighlow.Actions.Valid.PayCard;
 
 namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 {
-    public record Process(
+    public record RunCommandProcess(
         [NotNull] ValueList<Event<ReactedResult>> CommandActionEvents,
         [NotNull] Event<ReactedResult<PayCardResult>> PayCardEvent
     )

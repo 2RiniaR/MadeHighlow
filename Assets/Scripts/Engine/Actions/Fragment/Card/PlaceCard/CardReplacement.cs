@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
 {
-    public record PlaceCardReplaceEffect([NotNull] CardID ReplacedID);
+    public record CardReplacement([NotNull] CardID ReplacedID);
 }

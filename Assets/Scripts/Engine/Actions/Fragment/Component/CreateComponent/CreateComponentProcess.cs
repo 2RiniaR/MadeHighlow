@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
 {
-    public record Process(
+    public record CreateComponentProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,
         [NotNull] Event<RegisterComponent.SucceedResult> RegisterComponentEvent
     )

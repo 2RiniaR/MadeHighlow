@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
         [NotNull] private GenerateEntityAction Action { get; }
 
         [CanBeNull] private Event<Fragment.CreateEntity.SucceedResult> CreateEntityEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private GenerateEntityProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateEntityEffect>> Interrupts { get; set; }
 
         [NotNull]
@@ -60,7 +60,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
             Contract.Requires<InvalidOperationException>(CreateEntityEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(CreateEntityEvent);
+            Process = new GenerateEntityProcess(CreateEntityEvent);
         }
 
         private void CollectInterrupts()

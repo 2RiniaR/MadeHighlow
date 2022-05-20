@@ -2,8 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
 {
-    public record SucceedResult
-        ([NotNull] RemoveComponentAction Action, [NotNull] Process Process) : RemoveComponentResult
+    public record SucceedResult(
+        [NotNull] RemoveComponentAction Action,
+        [NotNull] RemoveComponentProcess Process
+    ) : RemoveComponentResult
     {
         public override World Simulate(World world)
         {

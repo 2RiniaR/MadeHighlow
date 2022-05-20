@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
 {
     public record SucceedResult(
         [NotNull] DropCardAction Action,
-        [NotNull] Process Process,
+        [NotNull] DropCardProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DropCardEffect>> Interrupts
     ) : DropCardResult
     {

@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         [NotNull] private PayCardAction Action { get; }
 
         [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private PayCardProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<PayCardEffect>> Interrupts { get; set; }
 
@@ -59,7 +59,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             Contract.Requires<InvalidOperationException>(DeleteCardEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteCardEvent);
+            Process = new PayCardProcess(DeleteCardEvent);
         }
 
         private void CollectInterrupts()

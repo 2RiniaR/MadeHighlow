@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
         [CanBeNull] private Tile Target { get; set; }
         [CanBeNull] private ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents { get; set; }
         [CanBeNull] private Event<UnregisterTile.SucceedResult> UnregisterTileEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private DeleteTileProcess Process { get; set; }
 
         [NotNull]
         public DeleteTileResult Evaluate()
@@ -104,7 +104,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
             Contract.Requires<InvalidOperationException>(UnregisterTileEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteComponentEvents, UnregisterTileEvent);
+            Process = new DeleteTileProcess(DeleteComponentEvents, UnregisterTileEvent);
         }
 
         [NotNull]

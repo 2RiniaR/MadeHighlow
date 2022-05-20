@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         public ValueList<Interrupt<PayCardEffect>> EffectsOnPayCard(
             [NotNull] IHistory history,
             [NotNull] PayCardAction action,
-            [NotNull] Process process
+            [NotNull] PayCardProcess process
         );
     }
 }

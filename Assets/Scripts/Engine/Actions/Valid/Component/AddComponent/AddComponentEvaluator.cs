@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
         [NotNull] private AddComponentAction Action { get; }
 
         [CanBeNull] private Event<Fragment.CreateComponent.SucceedResult> CreateComponentEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private AddComponentProcess Process { get; set; }
 
         [NotNull]
         public AddComponentResult Evaluate()
@@ -52,7 +52,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
             Contract.Requires<InvalidOperationException>(CreateComponentEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(CreateComponentEvent);
+            Process = new AddComponentProcess(CreateComponentEvent);
         }
 
         [NotNull]

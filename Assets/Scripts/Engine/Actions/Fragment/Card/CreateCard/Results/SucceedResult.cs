@@ -2,7 +2,8 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
 {
-    public record SucceedResult([NotNull] CreateCardAction Action, [NotNull] Process Process) : CreateCardResult
+    public record SucceedResult
+        ([NotNull] CreateCardAction Action, [NotNull] CreateCardProcess Process) : CreateCardResult
     {
         public override World Simulate(World world)
         {

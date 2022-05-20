@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteEntity
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents { get; set; }
         [CanBeNull] private Event<UnregisterEntity.SucceedResult> UnregisterEntityEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private DeleteEntityProcess Process { get; set; }
 
         [NotNull]
         public DeleteEntityResult Evaluate()
@@ -104,7 +104,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteEntity
             Contract.Requires<InvalidOperationException>(UnregisterEntityEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(DeleteComponentEvents, UnregisterEntityEvent);
+            Process = new DeleteEntityProcess(DeleteComponentEvents, UnregisterEntityEvent);
         }
 
         [NotNull]

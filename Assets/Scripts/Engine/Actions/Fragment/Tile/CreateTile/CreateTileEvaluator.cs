@@ -24,7 +24,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateTile
         [CanBeNull] private ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents { get; set; }
 
         [CanBeNull] private Event<RegisterTileResult> RegisterTileEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private CreateTileProcess Process { get; set; }
 
         [NotNull]
         public CreateTileResult Evaluate()
@@ -102,7 +102,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateTile
             Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(AllocateIDEvent, RegisterTileEvent, CreateComponentEvents);
+            Process = new CreateTileProcess(AllocateIDEvent, RegisterTileEvent, CreateComponentEvents);
         }
 
         [NotNull]

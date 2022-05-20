@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
         public ValueList<Interrupt<RunCommandEffect>> EffectsOnRunCommand(
             [NotNull] IHistory history,
             [NotNull] RunCommandAction action,
-            [NotNull] Process process
+            [NotNull] RunCommandProcess process
         );
     }
 }

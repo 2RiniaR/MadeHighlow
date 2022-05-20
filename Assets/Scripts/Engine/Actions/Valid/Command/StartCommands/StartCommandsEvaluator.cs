@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
         [ItemNotNull]
         private ValueList<Event<ReactedResult<RunCommandResult>>> RunCommandEvents { get; set; }
 
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private StartCommandsProcess Process { get; set; }
 
         [NotNull]
         public StartCommandsResult Evaluate()
@@ -53,7 +53,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
             Contract.Requires<InvalidOperationException>(RunCommandEvents != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(RunCommandEvents);
+            Process = new StartCommandsProcess(RunCommandEvents);
         }
 
         [NotNull]

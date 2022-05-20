@@ -21,7 +21,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private ValueList<Interrupt<MoveEntityEffect>> Interrupts { get; set; }
         [CanBeNull] private Event<PositionEntity.SucceedResult> PositionEntityEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [CanBeNull] private MoveEntityProcess Process { get; set; }
 
         [NotNull]
         public MoveEntityResult Evaluate()
@@ -82,7 +82,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
             Contract.Requires<InvalidOperationException>(PositionEntityEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new Process(PositionEntityEvent);
+            Process = new MoveEntityProcess(PositionEntityEvent);
         }
 
         private void CollectInterrupts()

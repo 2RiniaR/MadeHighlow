@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
     public record SucceedResult(
         [NotNull] SupplyCardAction Action,
-        [NotNull] Process Process,
+        [NotNull] SupplyCardProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<SupplyCardEffect>> Interrupts
     ) : SupplyCardResult
     {

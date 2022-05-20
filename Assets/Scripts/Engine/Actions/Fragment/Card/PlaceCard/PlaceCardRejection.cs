@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
 {
-    public abstract record PlaceCardEffect;
+    public record PlaceCardRejection;
 }

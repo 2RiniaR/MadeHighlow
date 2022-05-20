@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
         public ValueList<Interrupt<SupplyCardEffect>> EffectsOnSupplyCard(
             [NotNull] IHistory history,
             [NotNull] SupplyCardAction action,
-            [NotNull] Process process
+            [NotNull] SupplyCardProcess process
         );
     }
 }
