@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
     {
         protected override InstantDeathResult EvaluateBody(IHistory history)
         {
-            return new InstantDeathEvaluator(history, SourceID, TargetID).Evaluate();
+            return new InstantDeathEvaluator(history, this).Evaluate();
         }
     }
 }

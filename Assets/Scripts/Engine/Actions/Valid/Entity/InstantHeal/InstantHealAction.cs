@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
     {
         protected override InstantHealResult EvaluateBody(IHistory history)
         {
-            return new InstantHealEvaluator(history, SourceID, TargetID, Heal).Evaluate();
+            return new InstantHealEvaluator(history, this).Evaluate();
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
+{
+    public interface IInstantHealCalculator : IPriority<IInstantHealCalculator>
+    {
+        [NotNull]
+        [ItemNotNull]
+        public ValueList<Interrupt<InstantHealCalculation>> InstantHealCalculations(
+            [NotNull] IHistory history,
+            [NotNull] InstantHealAction action,
+            [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealCalculation>> collected
+        );
+    }
+}

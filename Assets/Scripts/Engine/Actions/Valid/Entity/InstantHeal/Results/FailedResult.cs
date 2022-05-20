@@ -1,9 +1,8 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
 {
-    /// <summary>
-    ///     治癒を与えることに失敗した結果
-    /// </summary>
-    public record FailedResult(FailedReason Reason) : InstantHealResult
+    public record FailedResult([NotNull] InstantHealAction Action, FailedReason Reason) : InstantHealResult
     {
         public override World Simulate(World world)
         {

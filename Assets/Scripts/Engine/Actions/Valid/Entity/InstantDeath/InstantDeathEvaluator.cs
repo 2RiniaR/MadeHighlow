@@ -6,85 +6,92 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
 {
     public class InstantDeathEvaluator
     {
-        public InstantDeathEvaluator([NotNull] IHistory history, ID sourceID, [NotNull] EntityID targetID)
+        public InstantDeathEvaluator([NotNull] IHistory initial, InstantDeathAction action)
         {
-            History = history;
-            SourceID = sourceID;
-            TargetID = targetID;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        private ID SourceID { get; }
-        [NotNull] private EntityID TargetID { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private InstantDeathAction Action { get; }
+
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<InstantDeathEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<InstantDeathRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public InstantDeathResult Evaluate()
         {
             InstantDeathResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
-            result = Validation();
+            result = CheckCondition();
             if (result != null) return result;
 
-            result = CollectInterrupts();
+            CollectRejections();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private InstantDeathResult GetTarget()
+        private InstantDeathResult FindTarget()
         {
             Contract.Ensures((Contract.Result<InstantDeathResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Initial.World);
             if (Target == null)
             {
-                return new FailedResult(FailedReason.NoTarget);
+                return new FailedResult(Action, FailedReason.NoTarget);
             }
 
             return null;
         }
 
         [CanBeNull]
-        private InstantDeathResult Validation()
+        private InstantDeathResult CheckCondition()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
 
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (Target.Vitality == null)
             {
-                return new FailedResult(FailedReason.NoVitality);
+                return new FailedResult(Action, FailedReason.NoVitality);
             }
 
             // 相手が生きてなければダメージは与えられないよ。仕方ないね。
             if (Target.Vitality.IsDead)
             {
-                return new FailedResult(FailedReason.TargetDead);
+                return new FailedResult(Action, FailedReason.TargetDead);
             }
 
             return null;
         }
 
-        [CanBeNull]
-        private InstantDeathResult CollectInterrupts()
+        private void CollectRejections()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantDeathEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnInstantDeath(History, SourceID, Target))
-                .Sort();
-            foreach (var interrupt in Interrupts)
+            var rejectors = Component.GetAllOfTypeFrom<IInstantDeathRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<InstantDeathRejection>>.Empty;
+            foreach (var rejector in rejectors)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(SourceID, Target, Interrupts, interrupt.ComponentID);
-                }
+                var interrupt = rejector.InstantDeathRejection(Initial, Action, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
+            }
+        }
+
+        [CanBeNull]
+        private InstantDeathResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
+
+            if (!RejectionInterrupts.IsEmpty)
+            {
+                return new RejectedResult(Action, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -93,10 +100,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
         [NotNull]
         private InstantDeathResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(SourceID, Target, Interrupts);
+            return new SucceedResult(Action, RejectionInterrupts);
         }
     }
 }

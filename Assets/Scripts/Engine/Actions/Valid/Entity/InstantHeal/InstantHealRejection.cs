@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
 {
-    public abstract record InstantHealEffect;
+    public record InstantHealRejection;
 }

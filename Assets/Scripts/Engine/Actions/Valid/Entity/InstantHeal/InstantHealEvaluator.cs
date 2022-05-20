@@ -6,110 +6,147 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
 {
     public class InstantHealEvaluator
     {
-        public InstantHealEvaluator(
-            [NotNull] IHistory history,
-            ID sourceID,
-            [NotNull] EntityID targetID,
-            [NotNull] Heal expected
-        )
+        public InstantHealEvaluator([NotNull] IHistory initial, InstantHealAction action)
         {
-            History = history;
-            SourceID = sourceID;
-            TargetID = targetID;
-            Expected = expected;
-            Calculated = Expected;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        private ID SourceID { get; }
-        [NotNull] private EntityID TargetID { get; }
-        [NotNull] private Heal Expected { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private InstantHealAction Action { get; }
+
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<InstantHealEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<InstantHealCalculation>> CalculationInterrupts { get; set; }
         [CanBeNull] private Heal Calculated { get; set; }
+        [CanBeNull] private ValueList<Interrupt<InstantHealRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public InstantHealResult Evaluate()
         {
             InstantHealResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
-            result = Validation();
+            result = CheckCondition();
             if (result != null) return result;
 
-            result = CollectInterrupts();
+            CollectEffectInterrupts();
+            CalculateHeal();
+
+            CollectRejectInterrupts();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
-        private InstantHealResult GetTarget()
+        [CanBeNull]
+        private InstantHealResult FindTarget()
         {
             Contract.Ensures((Contract.Result<InstantHealResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Initial.World);
             if (Target == null)
             {
-                return new FailedResult(FailedReason.NoTarget);
+                return new FailedResult(Action, FailedReason.NoTarget);
             }
 
             return null;
         }
 
-        private InstantHealResult Validation()
+        [CanBeNull]
+        private InstantHealResult CheckCondition()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
 
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (Target.Vitality == null)
             {
-                return new FailedResult(FailedReason.NoVitality);
+                return new FailedResult(Action, FailedReason.NoVitality);
             }
 
             // 相手が生きてなければダメージは与えられないよ。仕方ないね。
             if (Target.Vitality.IsDead)
             {
-                return new FailedResult(FailedReason.TargetDead);
+                return new FailedResult(Action, FailedReason.TargetDead);
             }
 
             return null;
         }
 
-        private InstantHealResult CollectInterrupts()
+        private void CollectEffectInterrupts()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(CalculationInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantHealEffector>(History.World);
-            Interrupts = effectors
-                .SelectMany(effector => effector.EffectsOnInstantHeal(History, SourceID, Target, Expected))
-                .Sort();
-            foreach (var interrupt in Interrupts)
+            var effectors = Component.GetAllOfTypeFrom<IInstantHealCalculator>(Initial.World).Sort();
+
+            CalculationInterrupts = ValueList<Interrupt<InstantHealCalculation>>.Empty;
+            foreach (var effector in effectors)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(SourceID, Target, Expected, Interrupts, interrupt.ComponentID);
-                }
+                var interrupts = effector.InstantHealCalculations(Initial, Action, CalculationInterrupts);
+                CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
+            }
+        }
 
-                if (interrupt.Effect is ReduceEffect reduce)
+        private void CalculateHeal()
+        {
+            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
+            Contract.Ensures(Calculated != null);
+
+            Calculated = Action.Heal;
+            foreach (var interrupt in CalculationInterrupts)
+            {
+                if (interrupt.Effect is ReduceCalculation reduceEffect)
                 {
-                    Calculated = reduce.HealReduction.Caused(Calculated);
+                    Calculated = reduceEffect.HealReduction.Caused(Calculated);
                 }
+            }
+        }
+
+        private void CollectRejectInterrupts()
+        {
+            Contract.Ensures(RejectionInterrupts != null);
+
+            var rejectors = Component.GetAllOfTypeFrom<IInstantHealRejector>(Initial.World).Sort();
+
+            RejectionInterrupts = ValueList<Interrupt<InstantHealRejection>>.Empty;
+            foreach (var rejector in rejectors)
+            {
+                var interrupt = rejector.InstantHealRejection(Initial, Action, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
+            }
+        }
+
+        [CanBeNull]
+        private InstantHealResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
+            Contract.Requires<InvalidOperationException>(Calculated != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
+
+            if (!RejectionInterrupts.IsEmpty)
+            {
+                return new RejectedResult(
+                    Action,
+                    CalculationInterrupts,
+                    Calculated,
+                    RejectionInterrupts,
+                    RejectionInterrupts[0].ComponentID
+                );
             }
 
             return null;
         }
 
+        [NotNull]
         private InstantHealResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
             Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(SourceID, Target, Expected, Interrupts, Calculated);
+            return new SucceedResult(Action, CalculationInterrupts, Calculated, RejectionInterrupts);
         }
     }
 }

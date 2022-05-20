@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
 {
     public sealed record SucceedResult(
-        ID SourceID,
-        [NotNull] Entity Target,
-        [NotNull] Heal Expected,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealEffect>> Interrupts,
-        [NotNull] Heal Calculated
+        [NotNull] InstantHealAction Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealCalculation>> CalculationInterrupts,
+        [NotNull] Heal Calculated,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealRejection>> RejectionInterrupts
     ) : InstantHealResult
     {
         public override World Simulate(World world)
         {
-            Contract.Requires<InvalidOperationException>(Target.Vitality != null);
+            var target = Action.TargetID.GetFrom(world) ?? throw new ArgumentException();
+            var vitality = target.Vitality ?? throw new ArgumentException();
 
-            var vitality = Target.Vitality;
-            var modifiedTarget = Target with
+            var modifiedTarget = target with
             {
                 Vitality = vitality with { Health = Calculated.Caused(vitality.Health) },
             };

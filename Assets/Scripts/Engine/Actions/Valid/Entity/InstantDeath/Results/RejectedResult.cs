@@ -3,9 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
 {
     public record RejectedResult(
-        ID SourceID,
-        [NotNull] Entity Target,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathEffect>> Interrupts,
+        [NotNull] InstantDeathAction Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : InstantDeathResult
     {
