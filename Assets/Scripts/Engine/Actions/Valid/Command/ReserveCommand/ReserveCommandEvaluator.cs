@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ReserveCommandAction Action { get; }
 
-        [CanBeNull] private ValueList<Interrupt<ReserveCommandEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<ReserveCommandAcceptance>> AcceptanceInterrupts { get; set; }
 
         [NotNull]
         public ReserveCommandResult Evaluate()
@@ -64,45 +64,40 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 
         private void CollectInterrupts()
         {
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(AcceptanceInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IReserveCommandEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IReserveCommandAcceptor>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<ReserveCommandEffect>>.Empty;
+            AcceptanceInterrupts = ValueList<Interrupt<ReserveCommandAcceptance>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnReserveCommand(Initial, Action);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.ReserveCommandAcceptance(Initial, Action, AcceptanceInterrupts);
+                AcceptanceInterrupts = AcceptanceInterrupts.Add(interrupts);
             }
         }
 
         [CanBeNull]
         private ReserveCommandResult Judge()
         {
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(AcceptanceInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (AcceptanceInterrupts.IsEmpty) return null;
+
+            var applied = AcceptanceInterrupts[0];
+            if (applied.Effect.Allowed)
             {
-                if (interrupt.Effect is DisallowEffect)
-                {
-                    return new DisallowedResult(Action, Interrupts, interrupt.ComponentID);
-                }
-
-                if (interrupt.Effect is AllowEffect)
-                {
-                    return new SucceedResult(Action, Interrupts, interrupt.ComponentID);
-                }
+                return new SucceedResult(Action, AcceptanceInterrupts, applied.ComponentID);
             }
 
-            return null;
+            return new DisallowedResult(Action, AcceptanceInterrupts, applied.ComponentID);
         }
 
         [NotNull]
         private ReserveCommandResult Disallowed()
         {
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(AcceptanceInterrupts != null);
 
-            return new DisallowedResult(Action, Interrupts, null);
+            return new DisallowedResult(Action, AcceptanceInterrupts, null);
         }
     }
 }

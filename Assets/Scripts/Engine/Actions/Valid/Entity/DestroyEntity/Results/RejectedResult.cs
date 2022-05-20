@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
     public record RejectedResult(
         [NotNull] DestroyEntityAction Action,
         [NotNull] DestroyEntityProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityEffect>> Interrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : DestroyEntityResult
     {

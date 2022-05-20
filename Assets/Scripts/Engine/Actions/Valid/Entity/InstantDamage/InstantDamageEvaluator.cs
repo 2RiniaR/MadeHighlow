@@ -84,7 +84,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
             CalculationInterrupts = ValueList<Interrupt<InstantDamageCalculation>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.DamageCalculations(Initial, Action, CalculationInterrupts);
+                var interrupts = effector.InstantDamageCalculations(Initial, Action, CalculationInterrupts);
                 CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
             }
         }
@@ -113,7 +113,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
             RejectionInterrupts = ValueList<Interrupt<InstantDamageRejection>>.Empty;
             foreach (var rejector in rejectors)
             {
-                var interrupt = rejector.OnInstantDamage(Initial, Action, RejectionInterrupts);
+                var interrupt = rejector.InstantDamageRejection(Initial, Action, RejectionInterrupts);
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
         }

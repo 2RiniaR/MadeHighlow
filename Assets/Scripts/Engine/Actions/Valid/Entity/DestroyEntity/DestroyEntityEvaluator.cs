@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
 
         [CanBeNull] private Event<Fragment.DeleteEntity.SucceedResult> DeleteEntityEvent { get; set; }
         [CanBeNull] private DestroyEntityProcess Process { get; set; }
-        [CanBeNull] private ValueList<Interrupt<DestroyEntityEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<DestroyEntityRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public DestroyEntityResult Evaluate()
@@ -66,15 +66,15 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
         private void CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDestroyEntityEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDestroyEntityRejector>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<DestroyEntityEffect>>.Empty;
+            RejectionInterrupts = ValueList<Interrupt<DestroyEntityRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnDestroyEntity(Simulating, Action, Process);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.DestroyEntityRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
         }
 
@@ -82,14 +82,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
         private DestroyEntityResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
-                }
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -99,9 +96,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
         private DestroyEntityResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, Process, Interrupts);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

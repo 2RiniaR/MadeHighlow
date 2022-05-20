@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
         [NotNull] private IHistory Initial { get; }
         [NotNull] private DeleteComponentAction Action { get; }
 
-        [CanBeNull] private ValueList<Interrupt<DeleteComponentEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<DeleteComponentRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public DeleteComponentResult Evaluate()
@@ -46,29 +46,26 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
 
         private void CollectInterrupts()
         {
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDeleteComponentEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDeleteComponentRejector>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<DeleteComponentEffect>>.Empty;
+            RejectionInterrupts = ValueList<Interrupt<DeleteComponentRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnDeleteComponent(Initial, Action);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.DeleteComponentRejection(Initial, Action, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
         }
 
         [CanBeNull]
         private DeleteComponentResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Action, Interrupts, interrupt.ComponentID);
-                }
+                return new RejectedResult(Action, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -77,9 +74,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
         [NotNull]
         private DeleteComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, Interrupts);
+            return new SucceedResult(Action, RejectionInterrupts);
         }
     }
 }

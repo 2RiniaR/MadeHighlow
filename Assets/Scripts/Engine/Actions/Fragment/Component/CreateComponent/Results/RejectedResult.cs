@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
     public record RejectedResult(
         [NotNull] CreateComponentAction Action,
         [NotNull] CreateComponentProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<CreateComponentEffect>> Interrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<CreateComponentRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : CreateComponentResult
     {

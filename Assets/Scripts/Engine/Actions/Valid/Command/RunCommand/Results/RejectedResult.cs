@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
     public record RejectedResult(
         [NotNull] RunCommandAction Action,
         [NotNull] RunCommandProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandEffect>> Interrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandRejection>> RejectionInterrupts,
         [CanBeNull] ComponentID RejectedID
     ) : RunCommandResult
     {

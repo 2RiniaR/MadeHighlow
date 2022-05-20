@@ -21,7 +21,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
         [CanBeNull] private DropCardProcess Process { get; set; }
 
-        [CanBeNull] private ValueList<Interrupt<DropCardEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<DropCardRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public DropCardResult Evaluate()
@@ -65,15 +65,15 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         private void CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDropCardEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDropCardRejector>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<DropCardEffect>>.Empty;
+            RejectionInterrupts = ValueList<Interrupt<DropCardRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnDropCard(Simulating, Action, Process);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.DropCardRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
         }
 
@@ -81,14 +81,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         private DropCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
-                }
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -98,9 +95,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         private DropCardResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, Process, Interrupts);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

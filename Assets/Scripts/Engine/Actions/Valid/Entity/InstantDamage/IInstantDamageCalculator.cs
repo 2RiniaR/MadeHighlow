@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
     {
         [NotNull]
         [ItemNotNull]
-        public ValueList<Interrupt<InstantDamageCalculation>> DamageCalculations(
+        public ValueList<Interrupt<InstantDamageCalculation>> InstantDamageCalculations(
             [NotNull] IHistory history,
             [NotNull] InstantDamageAction action,
             [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageCalculation>> collected

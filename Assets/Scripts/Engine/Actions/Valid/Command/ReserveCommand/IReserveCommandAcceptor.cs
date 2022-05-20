@@ -1,0 +1,14 @@
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
+{
+    public interface IReserveCommandAcceptor : IPriority<IReserveCommandAcceptor>
+    {
+        [NotNull]
+        public Interrupt<ReserveCommandAcceptance> ReserveCommandAcceptance(
+            [NotNull] IHistory session,
+            [NotNull] ReserveCommandAction action,
+            [NotNull] [ItemNotNull] ValueList<Interrupt<ReserveCommandAcceptance>> collected
+        );
+    }
+}

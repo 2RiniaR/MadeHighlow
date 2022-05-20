@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
     public record SucceedResult(
         [NotNull] ReserveCommandAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<ReserveCommandEffect>> Interrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<ReserveCommandAcceptance>> AcceptanceInterrupts,
         [NotNull] ComponentID AllowedID
     ) : ReserveCommandResult
     {

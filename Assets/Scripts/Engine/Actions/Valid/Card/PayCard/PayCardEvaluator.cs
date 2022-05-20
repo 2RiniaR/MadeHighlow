@@ -21,7 +21,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
         [CanBeNull] private PayCardProcess Process { get; set; }
 
-        [CanBeNull] private ValueList<Interrupt<PayCardEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<PayCardExemption>> ExemptionInterrupts { get; set; }
 
         [NotNull]
         public PayCardResult Evaluate()
@@ -65,15 +65,15 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         private void CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(ExemptionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IPayCardEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IPayCardExempter>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<PayCardEffect>>.Empty;
+            ExemptionInterrupts = ValueList<Interrupt<PayCardExemption>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnPayCard(Simulating, Action, Process);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.PayCardExemption(Simulating, Action, Process, ExemptionInterrupts);
+                ExemptionInterrupts = ExemptionInterrupts.Add(interrupts);
             }
         }
 
@@ -81,14 +81,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         private PayCardResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(ExemptionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!ExemptionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is ExemptEffect)
-                {
-                    return new ExemptedResult(Action, Process, Interrupts, interrupt.ComponentID);
-                }
+                return new ExemptedResult(Action, Process, ExemptionInterrupts, ExemptionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -98,9 +95,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         private PayCardResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(ExemptionInterrupts != null);
 
-            return new SucceedResult(Action, Process, Interrupts);
+            return new SucceedResult(Action, Process, ExemptionInterrupts);
         }
     }
 }

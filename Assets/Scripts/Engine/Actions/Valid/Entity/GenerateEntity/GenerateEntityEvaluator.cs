@@ -20,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
 
         [CanBeNull] private Event<Fragment.CreateEntity.SucceedResult> CreateEntityEvent { get; set; }
         [CanBeNull] private GenerateEntityProcess Process { get; set; }
-        [CanBeNull] private ValueList<Interrupt<GenerateEntityEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<GenerateEntityRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public GenerateEntityResult Evaluate()
@@ -66,15 +66,15 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
         private void CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IGenerateEntityEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IGenerateEntityRejector>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<GenerateEntityEffect>>.Empty;
+            RejectionInterrupts = ValueList<Interrupt<GenerateEntityRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnGenerateEntity(Simulating, Action, Process);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.GenerateEntityRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
         }
 
@@ -82,14 +82,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
         private GenerateEntityResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
-                }
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -99,9 +96,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
         private GenerateEntityResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, Process, Interrupts);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

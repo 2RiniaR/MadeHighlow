@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         [NotNull] private MoveEntityAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<MoveEntityEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<MoveEntityRejection>> RejectionInterrupts { get; set; }
         [CanBeNull] private Event<PositionEntity.SucceedResult> PositionEntityEvent { get; set; }
         [CanBeNull] private MoveEntityProcess Process { get; set; }
 
@@ -88,15 +88,15 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         private void CollectInterrupts()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IMoveEntityEffector>(Initial.World).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IMoveEntityRejector>(Initial.World).Sort();
 
-            Interrupts = ValueList<Interrupt<MoveEntityEffect>>.Empty;
+            RejectionInterrupts = ValueList<Interrupt<MoveEntityRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EffectsOnMoveEntity(Simulating, Action, Process);
-                Interrupts = Interrupts.AddRange(interrupts);
+                var interrupts = effector.MoveEntityRejection(Simulating, Action, Process, RejectionInterrupts);
+                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
             }
         }
 
@@ -104,14 +104,11 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         private MoveEntityResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            if (!RejectionInterrupts.IsEmpty)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
-                }
+                return new RejectedResult(Action, Process, RejectionInterrupts, RejectionInterrupts[0].ComponentID);
             }
 
             return null;
@@ -121,9 +118,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         private MoveEntityResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, Process, Interrupts);
+            return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
 }

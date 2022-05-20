@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
 {
     public record SucceedResult(
         [NotNull] DeleteComponentAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DeleteComponentEffect>> Interrupts
+        [NotNull] [ItemNotNull] ValueList<Interrupt<DeleteComponentRejection>> RejectionInterrupts
     ) : DeleteComponentResult
     {
         public override World Simulate(World world)
