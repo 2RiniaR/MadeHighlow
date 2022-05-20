@@ -1,94 +1,95 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Valid.RemoveComponent;
+using RineaR.MadeHighlow.Actions.Fragment.DeleteEntity;
 
 namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
 {
     public class DestroyEntityEvaluator
     {
-        public DestroyEntityEvaluator([NotNull] IHistory history, [NotNull] EntityID targetID)
+        public DestroyEntityEvaluator([NotNull] IHistory initial, DestroyEntityAction action)
         {
-            History = history;
-            TargetID = targetID;
+            Initial = initial;
+            Action = action;
+            Simulating = Initial;
         }
 
-        [NotNull] private IHistory History { get; set; }
-        [NotNull] private EntityID TargetID { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
+        [NotNull] private DestroyEntityAction Action { get; }
 
-        [CanBeNull] private ValueList<ReactedResult<RemoveComponent.SucceedResult>> RemoveComponentResults { get; set; }
+        [CanBeNull] private Event<Fragment.DeleteEntity.SucceedResult> DeleteEntityEvent { get; set; }
+        [CanBeNull] private Process Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<DestroyEntityEffect>> Interrupts { get; set; }
-        [CanBeNull] private Entity Target { get; set; }
 
         [NotNull]
         public DestroyEntityResult Evaluate()
         {
             DestroyEntityResult result;
 
-            result = GetTarget();
+            result = DeleteTarget();
             if (result != null) return result;
 
-            result = CollectInterrupts();
-            if (result != null) return result;
+            WrapProcess();
+            CollectInterrupts();
 
-            result = RemoveAttachedComponents();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private DestroyEntityResult GetTarget()
+        private DestroyEntityResult DeleteTarget()
         {
-            Contract.Ensures((Contract.Result<DestroyEntityResult>() != null) ^ (Target != null));
+            Contract.Ensures((Contract.Result<DestroyEntityResult>() != null) ^ (DeleteEntityEvent != null));
 
-            Target = TargetID.GetFrom(History.World);
-            if (Target == null)
+            var result = new DeleteEntityAction(Action.TargetID).Evaluate(Simulating);
+            if (result is not Fragment.DeleteEntity.SucceedResult succeedResult)
             {
-                return new NotFoundResult(TargetID);
+                return new DeleteEntityFailedResult(Action, result);
             }
 
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            DeleteEntityEvent = succeedEvent;
             return null;
         }
 
-        [CanBeNull]
-        private DestroyEntityResult CollectInterrupts()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Requires<InvalidOperationException>(DeleteEntityEvent != null);
+            Contract.Ensures(Process != null);
+
+            Process = new Process(DeleteEntityEvent);
+        }
+
+        private void CollectInterrupts()
+        {
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(Interrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IDestroyEntityEffector>(History.World);
-            Interrupts = effectors.SelectMany(effector => effector.EffectsOnDestroyEntity(History, Target)).Sort();
+            var effectors = Component.GetAllOfTypeFrom<IDestroyEntityEffector>(Initial.World).Sort();
+
+            Interrupts = ValueList<Interrupt<DestroyEntityEffect>>.Empty;
+            foreach (var effector in effectors)
+            {
+                var interrupts = effector.EffectsOnDestroyEntity(Simulating, Action, Process);
+                Interrupts = Interrupts.AddRange(interrupts);
+            }
+        }
+
+        [CanBeNull]
+        private DestroyEntityResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(Process != null);
+            Contract.Requires<InvalidOperationException>(Interrupts != null);
+
             foreach (var interrupt in Interrupts)
             {
                 if (interrupt.Effect is RejectEffect)
                 {
-                    return new RejectedResult(Target, Interrupts, interrupt.ComponentID);
+                    return new RejectedResult(Action, Process, Interrupts, interrupt.ComponentID);
                 }
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        private DestroyEntityResult RemoveAttachedComponents()
-        {
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(RemoveComponentResults != null);
-
-            RemoveComponentResults = ValueList<ReactedResult<RemoveComponent.SucceedResult>>.Empty;
-            foreach (var component in Target.Components)
-            {
-                var result = new RemoveComponentAction(component.ComponentID).Evaluate(History);
-                var succeedResult = result.BodyAs<RemoveComponent.SucceedResult>();
-                if (succeedResult == null)
-                {
-                    return new RemoveComponentFailedResult(Target, Interrupts, RemoveComponentResults, result);
-                }
-
-                History = History.Appended(succeedResult);
-                RemoveComponentResults = RemoveComponentResults.Add(succeedResult);
             }
 
             return null;
@@ -97,11 +98,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
         [NotNull]
         private DestroyEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RemoveComponentResults != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Requires<InvalidOperationException>(Interrupts != null);
-            Contract.Requires<InvalidOperationException>(Target != null);
 
-            return new SucceedResult(Target, RemoveComponentResults, Interrupts);
+            return new SucceedResult(Action, Process, Interrupts);
         }
     }
 }

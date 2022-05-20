@@ -2,15 +2,14 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
-    public interface IInstantDamageEffector
+    public interface IInstantDamageEffector : IPriority<IInstantDamageEffector>
     {
         [NotNull]
         [ItemNotNull]
         public ValueList<Interrupt<InstantDamageEffect>> EffectsOnInstantDamage(
             [NotNull] IHistory history,
-            ID sourceID,
-            [NotNull] Entity target,
-            [NotNull] Damage damage
+            [NotNull] InstantDamageAction action,
+            [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageEffect>> collected
         );
     }
 }

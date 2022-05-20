@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
     {
         protected override InstantDamageResult EvaluateBody(IHistory history)
         {
-            return new InstantDamageEvaluator(history, SourceID, TargetID, Damage).Evaluate();
+            return new InstantDamageEvaluator(history, this).Evaluate();
         }
     }
 }

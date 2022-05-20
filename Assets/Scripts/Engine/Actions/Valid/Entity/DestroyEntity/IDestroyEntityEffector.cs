@@ -6,7 +6,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
     {
         public ValueList<Interrupt<DestroyEntityEffect>> EffectsOnDestroyEntity(
             [NotNull] IHistory history,
-            [NotNull] Entity target
+            [NotNull] DestroyEntityAction action,
+            [NotNull] Process process
         );
     }
 }

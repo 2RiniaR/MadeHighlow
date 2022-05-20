@@ -1,16 +1,16 @@
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.DeleteEntity;
 
 namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
 {
-    public record SucceedResult(
+    public record DeleteEntityFailedResult(
         [NotNull] DestroyEntityAction Action,
-        [NotNull] Process Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityEffect>> Interrupts
+        [NotNull] DeleteEntityResult Failed
     ) : DestroyEntityResult
     {
         public override World Simulate(World world)
         {
-            return Process.Timeline.Simulate(world);
+            return world;
         }
     }
 }

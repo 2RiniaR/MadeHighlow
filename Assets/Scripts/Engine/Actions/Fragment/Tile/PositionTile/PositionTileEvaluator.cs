@@ -6,20 +6,14 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
 {
     public class PositionTileEvaluator
     {
-        public PositionTileEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] TileID targetID,
-            [NotNull] Position2D destination
-        )
+        public PositionTileEvaluator([NotNull] IHistory initial, PositionTileAction action)
         {
-            History = history;
-            TargetID = targetID;
-            Destination = destination;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private TileID TargetID { get; }
-        [NotNull] public Position2D Destination { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private PositionTileAction Action { get; }
 
         [CanBeNull] private Tile Target { get; set; }
         [CanBeNull] private Tile Positioned { get; set; }
@@ -29,7 +23,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
         {
             PositionTileResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
             result = Position();
@@ -39,14 +33,14 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
         }
 
         [CanBeNull]
-        private PositionTileResult GetTarget()
+        private PositionTileResult FindTarget()
         {
             Contract.Ensures((Contract.Result<PositionTileResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Initial.World);
             if (Target == null)
             {
-                return new FailedResult(TargetID, FailedReason.TileNotExist);
+                return new FailedResult(Action, FailedReason.TileNotExist);
             }
 
             return null;
@@ -58,20 +52,16 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures((Contract.Result<PositionTileResult>() != null) ^ (Positioned != null));
 
-            if (!IsPositionable(History, Target, Destination))
+            if (!IsPositionable(Initial, Action.Destination))
             {
-                return new FailedResult(TargetID, FailedReason.ResolveFailed);
+                return new FailedResult(Action, FailedReason.ResolveFailed);
             }
 
             Positioned = Target;
             return null;
         }
 
-        private static bool IsPositionable(
-            [NotNull] IHistory history,
-            [NotNull] Tile tile,
-            [NotNull] Position2D dest
-        )
+        private static bool IsPositionable([NotNull] IHistory history, [NotNull] Position2D dest)
         {
             return dest.GetTile(history.World) == null;
         }
@@ -81,7 +71,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
         {
             Contract.Requires<InvalidOperationException>(Positioned != null);
 
-            return new SucceedResult(Positioned);
+            return new SucceedResult(Action, Positioned);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
     {
         protected override DestroyEntityResult EvaluateBody(IHistory history)
         {
-            return new DestroyEntityEvaluator(history, TargetID).Evaluate();
+            return new DestroyEntityEvaluator(history, this).Evaluate();
         }
     }
 }

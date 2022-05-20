@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
     {
         public PositionEntityResult Evaluate(IHistory history)
         {
-            return new PositionEntityEvaluator(history, TargetID, Destination).Evaluate();
+            return new PositionEntityEvaluator(history, this).Evaluate();
         }
     }
 }

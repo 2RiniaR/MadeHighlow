@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
     {
         public MoveEntityResult Evaluate(IHistory history)
         {
-            return new MoveEntityEvaluator(history, TargetID, Direction).Evaluate();
+            return new MoveEntityEvaluator(history, this).Evaluate();
         }
     }
 }

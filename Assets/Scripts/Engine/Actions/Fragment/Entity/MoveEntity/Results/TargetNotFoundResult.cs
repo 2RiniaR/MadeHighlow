@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
 {
-    public record TargetNotFoundResult([NotNull] EntityID TargetID) : MoveEntityResult
+    public record TargetNotFoundResult([NotNull] MoveEntityAction Action) : MoveEntityResult
     {
         public override World Simulate(World world)
         {

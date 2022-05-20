@@ -6,20 +6,14 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
 {
     public class PositionEntityEvaluator
     {
-        public PositionEntityEvaluator(
-            [NotNull] IHistory history,
-            [NotNull] EntityID targetID,
-            [NotNull] Position3D destination
-        )
+        public PositionEntityEvaluator([NotNull] IHistory initial, PositionEntityAction action)
         {
-            History = history;
-            TargetID = targetID;
-            Destination = destination;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        [NotNull] private EntityID TargetID { get; }
-        [NotNull] public Position3D Destination { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private PositionEntityAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private Entity Positioned { get; set; }
@@ -29,7 +23,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
         {
             PositionEntityResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
             result = Position();
@@ -39,14 +33,14 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
         }
 
         [CanBeNull]
-        private PositionEntityResult GetTarget()
+        private PositionEntityResult FindTarget()
         {
             Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Initial.World);
             if (Target == null)
             {
-                return new FailedResult(TargetID, FailedReason.EntityNotExist);
+                return new FailedResult(Action, FailedReason.TargetNotExist);
             }
 
             return null;
@@ -58,9 +52,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Positioned != null));
 
-            if (!IsPositionable(History, Target, Destination))
+            if (!IsPositionable(Initial, Target, Action.Destination))
             {
-                return new FailedResult(TargetID, FailedReason.ResolveFailed);
+                return new FailedResult(Action, FailedReason.ResolveFailed);
             }
 
             Positioned = Target;
@@ -134,7 +128,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
         {
             Contract.Requires<InvalidOperationException>(Positioned != null);
 
-            return new SucceedResult(Positioned);
+            return new SucceedResult(Action, Positioned);
         }
     }
 }

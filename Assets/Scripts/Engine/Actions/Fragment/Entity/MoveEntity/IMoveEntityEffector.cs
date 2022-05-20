@@ -8,8 +8,8 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
         [ItemNotNull]
         public ValueList<Interrupt<MoveEntityEffect>> EffectsOnMoveEntity(
             [NotNull] IHistory history,
-            [NotNull] Entity entity,
-            [NotNull] Direction3D direction
+            [NotNull] MoveEntityAction action,
+            [NotNull] Process process
         );
     }
 }

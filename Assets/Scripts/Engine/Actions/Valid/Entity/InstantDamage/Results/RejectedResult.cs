@@ -3,10 +3,10 @@
 namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
     public record RejectedResult(
-        ID SourceID,
-        [NotNull] Entity Target,
-        [NotNull] Damage Expected,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageEffect>> Interrupts,
+        [NotNull] InstantDamageAction Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageEffect>> EffectInterrupts,
+        [NotNull] Damage Calculated,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageRejection>> RejectInterrupts,
         [NotNull] ComponentID RejectedID
     ) : InstantDamageResult
     {

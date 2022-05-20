@@ -6,101 +6,134 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
     public class InstantDamageEvaluator
     {
-        public InstantDamageEvaluator(
-            [NotNull] IHistory history,
-            ID sourceID,
-            [NotNull] EntityID targetID,
-            [NotNull] Damage expected
-        )
+        public InstantDamageEvaluator([NotNull] IHistory initial, InstantDamageAction action)
         {
-            History = history;
-            SourceID = sourceID;
-            TargetID = targetID;
-            Expected = expected;
-            Calculated = Expected;
+            Initial = initial;
+            Action = action;
         }
 
-        [NotNull] private IHistory History { get; }
-        private ID SourceID { get; }
-        [NotNull] private EntityID TargetID { get; }
-        [NotNull] private Damage Expected { get; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private InstantDamageAction Action { get; }
+
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<InstantDamageEffect>> Interrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<InstantDamageEffect>> EffectInterrupts { get; set; }
         [CanBeNull] private Damage Calculated { get; set; }
+        [CanBeNull] private ValueList<Interrupt<InstantDamageRejection>> RejectInterrupts { get; set; }
 
         [NotNull]
         public InstantDamageResult Evaluate()
         {
             InstantDamageResult result;
 
-            result = GetTarget();
+            result = FindTarget();
             if (result != null) return result;
 
-            result = Validation();
+            result = CheckCondition();
             if (result != null) return result;
 
-            result = CollectInterrupts();
+            CollectEffectInterrupts();
+            CalculateDamage();
+
+            CollectRejectInterrupts();
+            result = CheckRejection();
             if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private InstantDamageResult GetTarget()
+        private InstantDamageResult FindTarget()
         {
             Contract.Ensures((Contract.Result<InstantDamageResult>() != null) ^ (Target != null));
 
-            Target = TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Initial.World);
             if (Target == null)
             {
-                return new FailedResult(FailedReason.NoTarget);
+                return new FailedResult(Action, FailedReason.NoTarget);
             }
 
             return null;
         }
 
         [CanBeNull]
-        private InstantDamageResult Validation()
+        private InstantDamageResult CheckCondition()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
 
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (Target.Vitality == null)
             {
-                return new FailedResult(FailedReason.NoVitality);
+                return new FailedResult(Action, FailedReason.NoVitality);
             }
 
             // 相手が生きてなければダメージは与えられないよ。仕方ないね。
             if (Target.Vitality.IsDead)
             {
-                return new FailedResult(FailedReason.TargetDead);
+                return new FailedResult(Action, FailedReason.TargetDead);
             }
 
             return null;
         }
 
-        [CanBeNull]
-        private InstantDamageResult CollectInterrupts()
+        private void CollectEffectInterrupts()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Ensures(Interrupts != null);
+            Contract.Ensures(EffectInterrupts != null);
 
-            var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(History.World);
-            Interrupts = effectors
-                .SelectMany(effector => effector.EffectsOnInstantDamage(History, SourceID, Target, Expected))
-                .Sort();
-            foreach (var interrupt in Interrupts)
+            var effectors = Component.GetAllOfTypeFrom<IInstantDamageEffector>(Initial.World).Sort();
+
+            EffectInterrupts = ValueList<Interrupt<InstantDamageEffect>>.Empty;
+            foreach (var effector in effectors)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(SourceID, Target, Expected, Interrupts, interrupt.ComponentID);
-                }
+                var interrupts = effector.EffectsOnInstantDamage(Initial, Action, EffectInterrupts);
+                EffectInterrupts = EffectInterrupts.AddRange(interrupts);
+            }
+        }
 
-                if (interrupt.Effect is ReduceEffect reduce)
+        private void CalculateDamage()
+        {
+            Contract.Requires<InvalidOperationException>(EffectInterrupts != null);
+            Contract.Ensures(Calculated != null);
+
+            Calculated = Action.Damage;
+            foreach (var interrupt in EffectInterrupts)
+            {
+                if (interrupt.Effect is ReduceEffect reduceEffect)
                 {
-                    Calculated = reduce.DamageReduction.Caused(Calculated);
+                    Calculated = reduceEffect.DamageReduction.Caused(Calculated);
                 }
+            }
+        }
+
+        private void CollectRejectInterrupts()
+        {
+            Contract.Ensures(RejectInterrupts != null);
+
+            var rejectors = Component.GetAllOfTypeFrom<IInstantDamageRejector>(Initial.World).Sort();
+
+            RejectInterrupts = ValueList<Interrupt<InstantDamageRejection>>.Empty;
+            foreach (var rejector in rejectors)
+            {
+                var interrupt = rejector.OnInstantDamage(Initial, Action, RejectInterrupts);
+                RejectInterrupts = RejectInterrupts.Add(interrupt);
+            }
+        }
+
+        [CanBeNull]
+        private InstantDamageResult CheckRejection()
+        {
+            Contract.Requires<InvalidOperationException>(EffectInterrupts != null);
+            Contract.Requires<InvalidOperationException>(Calculated != null);
+            Contract.Requires<InvalidOperationException>(RejectInterrupts != null);
+
+            if (!RejectInterrupts.IsEmpty)
+            {
+                return new RejectedResult(
+                    Action,
+                    EffectInterrupts,
+                    Calculated,
+                    RejectInterrupts,
+                    RejectInterrupts[0].ComponentID
+                );
             }
 
             return null;
@@ -109,11 +142,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
         [NotNull]
         private InstantDamageResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Requires<InvalidOperationException>(EffectInterrupts != null);
             Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectInterrupts != null);
 
-            return new SucceedResult(SourceID, Target, Expected, Interrupts, Calculated);
+            return new SucceedResult(Action, EffectInterrupts, Calculated, RejectInterrupts);
         }
     }
 }

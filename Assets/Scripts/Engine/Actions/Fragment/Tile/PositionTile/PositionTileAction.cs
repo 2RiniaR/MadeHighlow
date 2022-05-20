@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
     {
         public PositionTileResult Evaluate(IHistory history)
         {
-            return new PositionTileEvaluator(history, TargetID, Destination).Evaluate();
+            return new PositionTileEvaluator(history, this).Evaluate();
         }
     }
 }

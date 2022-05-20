@@ -4,9 +4,8 @@ using RineaR.MadeHighlow.Actions.Fragment.PositionEntity;
 namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
 {
     public record PositionFailedResult(
-        [NotNull] EntityID TargetID,
-        [NotNull] Direction3D Direction,
-        [NotNull] PositionEntityResult FailedResult
+        [NotNull] MoveEntityAction Action,
+        [NotNull] PositionEntityResult Failed
     ) : MoveEntityResult
     {
         public override World Simulate(World world)

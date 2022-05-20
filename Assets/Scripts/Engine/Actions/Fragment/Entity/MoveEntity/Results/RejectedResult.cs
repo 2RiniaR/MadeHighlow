@@ -3,8 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
 {
     public record RejectedResult(
-        [NotNull] EntityID TargetID,
-        [NotNull] Direction3D Direction,
+        [NotNull] MoveEntityAction Action,
+        [NotNull] Process Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<MoveEntityEffect>> Interrupts,
         [NotNull] ComponentID RejectedID
     ) : MoveEntityResult

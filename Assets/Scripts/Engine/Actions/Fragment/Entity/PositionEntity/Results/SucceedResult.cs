@@ -2,7 +2,8 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
 {
-    public record SucceedResult([NotNull] Entity Positioned) : PositionEntityResult
+    public record SucceedResult
+        ([NotNull] PositionEntityAction Action, [NotNull] Entity Positioned) : PositionEntityResult
     {
         public override World Simulate(World world)
         {

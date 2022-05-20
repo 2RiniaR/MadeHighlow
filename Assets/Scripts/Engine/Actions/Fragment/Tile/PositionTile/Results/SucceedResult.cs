@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
 {
-    public record SucceedResult([NotNull] Tile Positioned) : PositionTileResult
+    public record SucceedResult([NotNull] PositionTileAction Action, [NotNull] Tile Positioned) : PositionTileResult
     {
         public override World Simulate(World world)
         {

@@ -6,7 +6,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
     {
         public ValueList<Interrupt<GenerateEntityEffect>> EffectsOnGenerateEntity(
             [NotNull] IHistory history,
-            [NotNull] Entity generation
+            [NotNull] GenerateEntityAction action,
+            [NotNull] Process process
         );
     }
 }

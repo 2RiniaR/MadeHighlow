@@ -2,7 +2,7 @@
 {
     public enum FailedReason
     {
-        EntityNotExist,
+        TargetNotExist,
         ResolveFailed,
     }
 }

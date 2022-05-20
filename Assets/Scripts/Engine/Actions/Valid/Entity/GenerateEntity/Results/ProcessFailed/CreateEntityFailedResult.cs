@@ -1,16 +1,16 @@
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.CreateEntity;
 
 namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
 {
-    public record SucceedResult(
+    public record CreateEntityFailedResult(
         [NotNull] GenerateEntityAction Action,
-        [NotNull] Process Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityEffect>> Interrupts
+        [NotNull] CreateEntityResult Failed
     ) : GenerateEntityResult
     {
         public override World Simulate(World world)
         {
-            return Process.Timeline.Simulate(world);
+            return world;
         }
     }
 }

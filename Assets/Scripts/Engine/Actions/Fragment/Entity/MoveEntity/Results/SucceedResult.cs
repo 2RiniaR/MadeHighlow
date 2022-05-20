@@ -3,13 +3,14 @@
 namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
 {
     public record SucceedResult(
-        [NotNull] PositionEntity.SucceedResult PositionEntityResult,
-        Direction3D Direction
+        [NotNull] MoveEntityAction Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<MoveEntityEffect>> Interrupts
     ) : MoveEntityResult
     {
         public override World Simulate(World world)
         {
-            return PositionEntityResult.Simulate(world);
+            return Process.Timeline.Simulate(world);
         }
     }
 }
