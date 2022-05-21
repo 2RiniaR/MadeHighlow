@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
 {
     public interface IInstantHealCalculator : IPriority<IInstantHealCalculator>
     {
-        [NotNull]
+        [CanBeNull]
         [ItemNotNull]
         public ValueList<Interrupt<InstantHealCalculation>> InstantHealCalculations(
             [NotNull] IHistory history,

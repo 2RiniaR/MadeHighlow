@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
 {
     public interface IInstantDeathRejector : IPriority<IInstantDeathRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<InstantDeathRejection> InstantDeathRejection(
             [NotNull] IHistory history,
             [NotNull] InstantDeathAction action,

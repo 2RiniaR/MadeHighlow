@@ -109,8 +109,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
             RejectionInterrupts = ValueList<Interrupt<EntityFlyRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EntityFlyRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.EntityFlyRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

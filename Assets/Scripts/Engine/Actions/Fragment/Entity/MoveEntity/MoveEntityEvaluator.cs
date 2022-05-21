@@ -95,8 +95,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
             RejectionInterrupts = ValueList<Interrupt<MoveEntityRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.MoveEntityRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.MoveEntityRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

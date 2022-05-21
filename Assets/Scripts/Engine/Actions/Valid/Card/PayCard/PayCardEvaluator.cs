@@ -72,8 +72,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
             ExemptionInterrupts = ValueList<Interrupt<PayCardExemption>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.PayCardExemption(Simulating, Action, Process, ExemptionInterrupts);
-                ExemptionInterrupts = ExemptionInterrupts.Add(interrupts);
+                var interrupt = effector.PayCardExemption(Simulating, Action, Process, ExemptionInterrupts);
+                if (interrupt == null) continue;
+                ExemptionInterrupts = ExemptionInterrupts.Add(interrupt);
             }
 
             if (!ExemptionInterrupts.IsEmpty)

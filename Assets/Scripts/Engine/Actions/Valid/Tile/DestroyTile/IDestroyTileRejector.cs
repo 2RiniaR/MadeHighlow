@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
 {
     public interface IDestroyTileRejector : IPriority<IDestroyTileRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<DestroyTileRejection> DestroyTileRejection(
             [NotNull] IHistory history,
             [NotNull] DestroyTileAction action,

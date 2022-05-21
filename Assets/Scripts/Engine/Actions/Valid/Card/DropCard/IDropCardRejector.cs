@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
 {
     public interface IDropCardRejector : IPriority<IDropCardRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<DropCardRejection> DropCardRejection(
             [NotNull] IHistory history,
             [NotNull] DropCardAction action,

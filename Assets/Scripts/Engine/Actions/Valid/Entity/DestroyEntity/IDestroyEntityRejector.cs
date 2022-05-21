@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
 {
     public interface IDestroyEntityRejector : IPriority<IDestroyEntityRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<DestroyEntityRejection> DestroyEntityRejection(
             [NotNull] IHistory history,
             [NotNull] DestroyEntityAction action,

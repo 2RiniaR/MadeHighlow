@@ -4,8 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
 {
     public interface ISupplyCardRejector : IPriority<ISupplyCardRejector>
     {
-        [NotNull]
-        [ItemNotNull]
+        [CanBeNull]
         public Interrupt<SupplyCardRejection> SupplyCardRejection(
             [NotNull] IHistory history,
             [NotNull] SupplyCardAction action,

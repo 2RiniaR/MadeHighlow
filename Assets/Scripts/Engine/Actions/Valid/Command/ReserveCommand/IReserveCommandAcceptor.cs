@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
 {
     public interface IReserveCommandAcceptor : IPriority<IReserveCommandAcceptor>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<ReserveCommandAcceptance> ReserveCommandAcceptance(
             [NotNull] IHistory session,
             [NotNull] ReserveCommandAction action,

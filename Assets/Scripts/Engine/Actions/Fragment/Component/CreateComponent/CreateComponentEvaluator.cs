@@ -94,8 +94,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
             RejectionInterrupts = ValueList<Interrupt<CreateComponentRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.CreateComponentRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.CreateComponentRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

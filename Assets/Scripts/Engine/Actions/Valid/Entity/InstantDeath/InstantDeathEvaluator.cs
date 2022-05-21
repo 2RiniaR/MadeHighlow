@@ -80,6 +80,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
             foreach (var rejector in rejectors)
             {
                 var interrupt = rejector.InstantDeathRejection(Initial, Action, RejectionInterrupts);
+                if (interrupt == null) continue;
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 

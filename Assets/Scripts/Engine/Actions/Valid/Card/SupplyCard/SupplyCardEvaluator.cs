@@ -75,8 +75,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
             RejectionInterrupts = ValueList<Interrupt<SupplyCardRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.SupplyCardRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.SupplyCardRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

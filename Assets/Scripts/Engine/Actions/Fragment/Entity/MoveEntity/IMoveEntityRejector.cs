@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
 {
     public interface IMoveEntityRejector : IPriority<IMoveEntityRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<MoveEntityRejection> MoveEntityRejection(
             [NotNull] IHistory history,
             [NotNull] MoveEntityAction action,

@@ -84,6 +84,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
             foreach (var effector in effectors)
             {
                 var interrupts = effector.InstantHealCalculations(Initial, Action, CalculationInterrupts);
+                if (interrupts == null) continue;
                 CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
             }
 
@@ -110,6 +111,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
             foreach (var rejector in rejectors)
             {
                 var interrupt = rejector.InstantHealRejection(Initial, Action, RejectionInterrupts);
+                if (interrupt == null) continue;
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 

@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public interface IEntityStepRejector : IPriority<IEntityStepRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<EntityStepRejection> EntityStepRejection(
             [NotNull] IHistory session,
             [NotNull] EntityStepAction action,

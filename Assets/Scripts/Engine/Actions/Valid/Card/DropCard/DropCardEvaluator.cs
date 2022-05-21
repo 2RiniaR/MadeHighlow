@@ -72,8 +72,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
             RejectionInterrupts = ValueList<Interrupt<DropCardRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.DropCardRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.DropCardRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

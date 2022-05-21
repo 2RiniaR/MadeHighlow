@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
 {
     public interface IEntityTeleportRejector : IPriority<IEntityTeleportRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<EntityTeleportRejection> EntityTeleportRejection(
             [NotNull] IHistory history,
             [NotNull] EntityTeleportAction action,

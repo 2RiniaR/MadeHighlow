@@ -73,8 +73,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
             RejectionInterrupts = ValueList<Interrupt<DestroyEntityRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.DestroyEntityRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.DestroyEntityRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

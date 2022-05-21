@@ -93,8 +93,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
             RejectionInterrupts = ValueList<Interrupt<EntityTeleportRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EntityTeleportRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.EntityTeleportRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

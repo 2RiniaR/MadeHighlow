@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public interface IEntityStepCostEffector : IPriority<IEntityStepCostEffector>
     {
-        [NotNull]
+        [CanBeNull]
         [ItemNotNull]
         public ValueList<Interrupt<EntityStepCostEffect>> EntityStepCostEffects(
             [NotNull] IHistory session,

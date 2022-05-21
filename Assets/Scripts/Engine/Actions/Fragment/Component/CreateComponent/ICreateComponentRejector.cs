@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
 {
     public interface ICreateComponentRejector : IPriority<ICreateComponentRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<CreateComponentRejection> CreateComponentRejection(
             [NotNull] IHistory history,
             [NotNull] CreateComponentAction action,

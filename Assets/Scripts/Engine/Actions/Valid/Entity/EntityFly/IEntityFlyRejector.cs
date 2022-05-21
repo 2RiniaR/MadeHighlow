@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
 {
     public interface IEntityFlyRejector : IPriority<IEntityFlyRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<EntityFlyRejection> EntityFlyRejection(
             [NotNull] IHistory history,
             [NotNull] EntityFlyAction action,

@@ -78,6 +78,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
             foreach (var effector in effectors)
             {
                 var interrupts = effector.CardReplacements(Initial, Action, ReplacementInterrupts);
+                if (interrupts == null) continue;
                 ReplacementInterrupts = ReplacementInterrupts.AddRange(interrupts);
             }
 
@@ -147,8 +148,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
             RejectionInterrupts = ValueList<Interrupt<PlaceCardRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.PlaceCardRejection(Simulating, Action, Process, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.PlaceCardRejection(Simulating, Action, Process, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

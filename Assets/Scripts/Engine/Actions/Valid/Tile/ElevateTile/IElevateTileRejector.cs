@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
 {
     public interface IElevateTileRejector : IPriority<IEntityTeleportRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<ElevateTileRejection> ElevateTileRejection(
             [NotNull] IHistory history,
             [NotNull] ElevateTileAction action,

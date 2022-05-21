@@ -57,8 +57,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
             RejectionInterrupts = ValueList<Interrupt<ElevateTileRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.ElevateTileRejection(Initial, Action, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.ElevateTileRejection(Initial, Action, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

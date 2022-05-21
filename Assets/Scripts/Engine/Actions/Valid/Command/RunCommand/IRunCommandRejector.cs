@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
 {
     public interface IRunCommandRejector : IPriority<IRunCommandRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<RunCommandRejection> RunCommandRejection(
             [NotNull] IHistory history,
             [NotNull] RunCommandAction action,

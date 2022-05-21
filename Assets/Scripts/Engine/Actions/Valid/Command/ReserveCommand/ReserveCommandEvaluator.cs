@@ -70,8 +70,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
             AcceptanceInterrupts = ValueList<Interrupt<ReserveCommandAcceptance>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.ReserveCommandAcceptance(Initial, Action, AcceptanceInterrupts);
-                AcceptanceInterrupts = AcceptanceInterrupts.Add(interrupts);
+                var interrupt = effector.ReserveCommandAcceptance(Initial, Action, AcceptanceInterrupts);
+                if (interrupt == null) continue;
+                AcceptanceInterrupts = AcceptanceInterrupts.Add(interrupt);
             }
 
             if (AcceptanceInterrupts.IsEmpty) return null;

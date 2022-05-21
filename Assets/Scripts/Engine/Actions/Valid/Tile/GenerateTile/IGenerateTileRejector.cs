@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
 {
     public interface IGenerateTileRejector : IPriority<IGenerateTileRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<GenerateTileRejection> GenerateTileRejection(
             [NotNull] IHistory history,
             [NotNull] GenerateTileAction action,

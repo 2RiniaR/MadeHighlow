@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
 {
     public interface IPayCardExempter : IPriority<IPayCardExempter>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<PayCardExemption> PayCardExemption(
             [NotNull] IHistory history,
             [NotNull] PayCardAction action,

@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantHeal
 {
     public interface IInstantHealRejector : IPriority<IInstantHealRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<InstantHealRejection> InstantHealRejection(
             [NotNull] IHistory history,
             [NotNull] InstantHealAction action,

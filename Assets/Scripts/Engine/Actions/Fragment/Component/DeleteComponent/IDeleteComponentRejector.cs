@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
 {
     public interface IDeleteComponentRejector : IPriority<IDeleteComponentRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<DeleteComponentRejection> DeleteComponentRejection(
             [NotNull] IHistory history,
             [NotNull] DeleteComponentAction action,

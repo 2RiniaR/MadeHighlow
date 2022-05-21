@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
 {
     public interface IGenerateEntityRejector : IPriority<IGenerateEntityRejector>
     {
-        [NotNull]
+        [CanBeNull]
         public Interrupt<GenerateEntityRejection> GenerateEntityRejection(
             [NotNull] IHistory history,
             [NotNull] GenerateEntityAction action,

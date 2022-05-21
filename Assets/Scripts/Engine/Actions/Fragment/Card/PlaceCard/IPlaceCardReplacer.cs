@@ -4,8 +4,8 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
 {
     public interface IPlaceCardReplacer : IPriority<IPlaceCardReplacer>
     {
-        [NotNull]
         [ItemNotNull]
+        [CanBeNull]
         public ValueList<Interrupt<CardReplacement>> CardReplacements(
             [NotNull] IHistory history,
             [NotNull] PlaceCardAction action,

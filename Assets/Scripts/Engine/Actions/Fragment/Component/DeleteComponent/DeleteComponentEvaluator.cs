@@ -52,8 +52,9 @@ namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
             RejectionInterrupts = ValueList<Interrupt<DeleteComponentRejection>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.DeleteComponentRejection(Initial, Action, RejectionInterrupts);
-                RejectionInterrupts = RejectionInterrupts.Add(interrupts);
+                var interrupt = effector.DeleteComponentRejection(Initial, Action, RejectionInterrupts);
+                if (interrupt == null) continue;
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
             if (!RejectionInterrupts.IsEmpty)

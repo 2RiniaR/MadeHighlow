@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
     public interface IInstantDamageCalculator : IPriority<IInstantDamageCalculator>
     {
-        [NotNull]
+        [CanBeNull]
         [ItemNotNull]
         public ValueList<Interrupt<InstantDamageCalculation>> InstantDamageCalculations(
             [NotNull] IHistory history,

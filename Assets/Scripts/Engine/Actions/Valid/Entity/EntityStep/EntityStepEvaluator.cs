@@ -56,6 +56,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             result = MoveFall();
             if (result != null) return result;
 
+            WrapProcess();
+
             CalculateCost();
             result = CheckCostIsEnough();
             if (result != null) return result;
@@ -201,6 +203,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             foreach (var effector in effectors)
             {
                 var interrupts = effector.EntityStepCostEffects(Simulating, Action, Process, CostEffectInterrupts);
+                if (interrupts == null) continue;
                 // TODO: CostInterrupts を PriorityQueue にした方がいい
                 CostEffectInterrupts = CostEffectInterrupts.AddRange(interrupts);
             }
@@ -259,6 +262,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
                     ExpendedCost,
                     RejectionInterrupts
                 );
+                if (interrupt == null) continue;
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
 
