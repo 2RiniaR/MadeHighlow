@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
 {
     public class InstantDeathEvaluator
     {
-        public InstantDeathEvaluator([NotNull] IHistory initial, InstantDeathAction action)
+        public InstantDeathEvaluator([NotNull] IHistory initial, [NotNull] InstantDeathAction action)
         {
             Initial = initial;
             Action = action;

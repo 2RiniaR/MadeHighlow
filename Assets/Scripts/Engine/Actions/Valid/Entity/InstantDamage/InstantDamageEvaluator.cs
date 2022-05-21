@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
 {
     public class InstantDamageEvaluator
     {
-        public InstantDamageEvaluator([NotNull] IHistory initial, InstantDamageAction action)
+        public InstantDamageEvaluator([NotNull] IHistory initial, [NotNull] InstantDamageAction action)
         {
             Initial = initial;
             Action = action;

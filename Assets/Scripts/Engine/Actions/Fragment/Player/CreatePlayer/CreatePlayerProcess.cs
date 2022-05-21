@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
 using RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer;
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreatePlayer

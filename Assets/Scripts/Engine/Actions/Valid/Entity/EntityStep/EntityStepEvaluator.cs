@@ -58,7 +58,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 
             WrapProcess();
 
-            CalculateCost();
             result = CheckCostIsEnough();
             if (result != null) return result;
 
@@ -192,7 +191,8 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             return ClimbCost * process.ClimbMoveEvents.Count + HorizontalCost + FallCost * process.FallMoveEvents.Count;
         }
 
-        private void CalculateCost()
+        [CanBeNull]
+        private EntityStepResult CheckCostIsEnough()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(CostEffectInterrupts != null);
@@ -204,7 +204,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             {
                 var interrupts = effector.EntityStepCostEffects(Simulating, Action, Process, CostEffectInterrupts);
                 if (interrupts == null) continue;
-                // TODO: CostInterrupts を PriorityQueue にした方がいい
                 CostEffectInterrupts = CostEffectInterrupts.AddRange(interrupts);
             }
 
@@ -225,14 +224,6 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
                     ExpendedCost = overwrite.Value;
                 }
             }
-        }
-
-        [CanBeNull]
-        private EntityStepResult CheckCostIsEnough()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostEffectInterrupts != null);
-            Contract.Requires<InvalidOperationException>(ExpendedCost != null);
 
             if (Action.Available > ExpendedCost)
             {

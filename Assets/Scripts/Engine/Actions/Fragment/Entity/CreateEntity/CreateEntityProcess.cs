@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
 using RineaR.MadeHighlow.Actions.Fragment.RegisterEntity;
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity

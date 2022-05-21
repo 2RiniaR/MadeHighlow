@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
 using RineaR.MadeHighlow.Actions.Fragment.CreateComponent;
 using RineaR.MadeHighlow.Actions.Fragment.RegisterTile;
 

@@ -1,4 +1,6 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
-    public record CostOverwriteEffect(EntityStepCost Value) : EntityStepCostEffect;
+    public record CostOverwriteEffect([NotNull] EntityStepCost Value) : EntityStepCostEffect;
 }

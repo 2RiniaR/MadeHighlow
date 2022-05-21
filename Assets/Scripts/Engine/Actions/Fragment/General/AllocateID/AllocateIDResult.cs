@@ -1,6 +1,8 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.Fragment.AllocateID
 {
-    public record AllocateIDResult(ID AllocatedID) : Result
+    public record AllocateIDResult([NotNull] AllocateIDAction Action, ID AllocatedID) : Result
     {
         public override World Simulate(World world)
         {

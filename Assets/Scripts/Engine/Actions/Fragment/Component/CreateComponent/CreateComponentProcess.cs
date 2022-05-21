@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
 
 namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
 {
