@@ -163,26 +163,31 @@ public sealed class ValueList<T> : IEnumerable<T>
 
 public static class ValueList
 {
-    public static ValueList<T> ToValueList<T>(this IEnumerable<T> source)
+    [NotNull]
+    public static ValueList<T> ToValueList<T>([NotNull] this IEnumerable<T> source)
     {
         return new ValueList<T>(source.ToImmutableList());
     }
 
-    public static ValueList<T> ToValueList<T>(this ImmutableList<T> source)
+    [NotNull]
+    public static ValueList<T> ToValueList<T>([NotNull] this ImmutableList<T> source)
     {
         return new ValueList<T>(source);
     }
 
+    [NotNull]
     public static ValueList<T> Create<T>(T item)
     {
         return ImmutableList.Create(item).ToValueList();
     }
 
+    [NotNull]
     public static ValueList<T> Create<T>(params T[] items)
     {
         return ImmutableList.Create(items).ToValueList();
     }
 
+    [NotNull]
     public static ValueList<T> Concat<T>(params ValueList<T>[] lists)
     {
         return lists.SelectMany(list => list).ToValueList();

@@ -36,14 +36,16 @@ namespace RineaR.MadeHighlow.Actions.Valid.General.UpdateTurn
         {
             Contract.Ensures(ActorEvents != null);
 
-            ActorInterrupts = ValueList<Interrupt<ValidAction>>.Empty;
+            var interruptsQueue = ValuePriorityQueue<Interrupt<ValidAction>>.Empty;
             var actors = Component.GetAllOfTypeFrom<IUpdateTurnActor>(Simulating.World).Sort();
             foreach (var actor in actors)
             {
-                var interrupts = actor.UpdateTurnActions(Simulating, Action, ActorInterrupts);
+                var interrupts = actor.UpdateTurnActions(Simulating, Action, interruptsQueue.ToValueList());
                 if (interrupts == null) continue;
-                ActorInterrupts = ActorInterrupts.AddRange(interrupts);
+                interruptsQueue = interruptsQueue.EnqueueRange(interrupts);
             }
+
+            ActorInterrupts = interruptsQueue.ToValueList();
 
             ActorEvents = ValueList<Event<ReactedResult>>.Empty;
             foreach (var interrupt in ActorInterrupts)
