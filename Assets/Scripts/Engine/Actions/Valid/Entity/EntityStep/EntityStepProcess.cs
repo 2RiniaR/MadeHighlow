@@ -3,8 +3,12 @@
 namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public record EntityStepProcess(
-        [NotNull] ValueList<Fragment.MoveEntity.SucceedResult> ClimbResults,
-        [NotNull] Fragment.MoveEntity.SucceedResult ShiftResult,
-        [NotNull] ValueList<Fragment.MoveEntity.SucceedResult> FallResults
-    );
+        [NotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> ClimbMoveEvents,
+        [NotNull] Event<Fragment.MoveEntity.SucceedResult> ShiftMoveEvent,
+        [NotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> FallMoveEvents
+    )
+    {
+        public Timeline Timeline { get; }
+            = new Timeline().Then(ClimbMoveEvents).Then(ShiftMoveEvent).Then(FallMoveEvents);
+    }
 }

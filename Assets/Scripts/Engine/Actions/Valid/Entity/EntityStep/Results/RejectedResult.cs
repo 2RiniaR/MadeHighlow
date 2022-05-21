@@ -5,9 +5,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
     public record RejectedResult(
         [NotNull] EntityStepAction Action,
         [NotNull] EntityStepProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostInterrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostEffectInterrupts,
         [NotNull] EntityStepCost ExpendedCost,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepEffect>> Interrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
     ) : EntityStepResult
     {

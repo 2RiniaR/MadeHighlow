@@ -7,43 +7,37 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public class EntityStepEvaluator
     {
-        public EntityStepEvaluator([NotNull] IHistory history, [NotNull] EntityStepAction action)
+        public EntityStepEvaluator([NotNull] IHistory initial, EntityStepAction action)
         {
-            History = history;
+            Initial = initial;
             Action = action;
+            Simulating = Initial;
         }
 
-        private static readonly EntityStepCost ClimbCost = new(5);
-        private static readonly EntityStepCost HorizontalCost = new(1);
-        private static readonly EntityStepCost FallCost = new(0);
-
-        [NotNull] private IHistory History { get; set; }
+        [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityStepAction Action { get; }
+
+        [NotNull] private static readonly EntityStepCost ClimbCost = new(5);
+        [NotNull] private static readonly EntityStepCost HorizontalCost = new(1);
+        [NotNull] private static readonly EntityStepCost FallCost = new(0);
 
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private Entity SteppingTarget { get; set; }
         [CanBeNull] private GroundElevation DestinationElevation { get; set; }
 
-        [CanBeNull] private ValueList<Fragment.MoveEntity.SucceedResult> ClimbResults { get; set; }
-        [CanBeNull] private Fragment.MoveEntity.SucceedResult ShiftResult { get; set; }
-        [CanBeNull] private ValueList<Fragment.MoveEntity.SucceedResult> FallResults { get; set; }
+        [CanBeNull] private ValueList<Event<Fragment.MoveEntity.SucceedResult>> ClimbMoveEvents { get; set; }
+        [CanBeNull] private Event<Fragment.MoveEntity.SucceedResult> ShiftMoveEvent { get; set; }
+        [CanBeNull] private ValueList<Event<Fragment.MoveEntity.SucceedResult>> FallMoveEvents { get; set; }
         [CanBeNull] private EntityStepProcess Process { get; set; }
 
-        [CanBeNull] private ValueList<Interrupt<EntityStepCostEffect>> CostInterrupts { get; set; }
+        [CanBeNull] private ValueList<Interrupt<EntityStepCostEffect>> CostEffectInterrupts { get; set; }
         [CanBeNull] private EntityStepCost ExpendedCost { get; set; }
-        [CanBeNull] private ValueList<Interrupt<EntityStepEffect>> Interrupts { get; set; }
+
+        [CanBeNull] private ValueList<Interrupt<EntityStepRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public EntityStepResult Evaluate()
-        {
-            var result = UpdateHistory();
-            if (result != null) return result;
-
-            return Validate();
-        }
-
-        [CanBeNull]
-        private EntityStepResult UpdateHistory()
         {
             EntityStepResult result;
 
@@ -53,30 +47,18 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             result = FindDestination();
             if (result != null) return result;
 
-            result = Climb();
+            result = MoveClimb();
             if (result != null) return result;
 
-            result = Shift();
+            result = MoveShift();
             if (result != null) return result;
 
-            result = Fall();
+            result = MoveFall();
             if (result != null) return result;
 
-            return null;
-        }
-
-        [NotNull]
-        private EntityStepResult Validate()
-        {
-            EntityStepResult result;
-
-            CollectCostInterrupts();
             CalculateCost();
-
             result = CheckCostIsEnough();
             if (result != null) return result;
-
-            CollectInterrupts();
 
             result = CheckRejection();
             if (result != null) return result;
@@ -89,10 +71,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
         {
             Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (Target != null));
 
-            Target = Action.TargetID.GetFrom(History.World);
+            Target = Action.TargetID.GetFrom(Simulating.World);
             if (Target == null)
             {
-                return new TargetNotFoundResult(Action.TargetID);
+                return new TargetNotFoundResult(Action);
             }
 
             return null;
@@ -105,12 +87,13 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (DestinationElevation != null));
 
             var position = Target.Position3D.To2D().MoveTo(Action.Direction, new Distance(1));
-            var destination = position.GetTile(History.World);
+            var destination = position.GetTile(Simulating.World);
+
             if (destination == null ||
                 destination.Elevation is not GroundElevation groundElevation ||
                 groundElevation.Placeable == false)
             {
-                return new DestinationNotFoundResult(position);
+                return new DestinationNotFoundResult(Action);
             }
 
             DestinationElevation = groundElevation;
@@ -118,108 +101,113 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
         }
 
         [CanBeNull]
-        private EntityStepResult Climb()
+        private EntityStepResult MoveClimb()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Requires<InvalidOperationException>(DestinationElevation != null);
-            Contract.Ensures(ClimbResults != null);
+            Contract.Ensures(ClimbMoveEvents != null);
 
             var distance = new Distance(DestinationElevation.Height.Value - Target.Position3D.Z.Value);
-            ClimbResults = ValueList<Fragment.MoveEntity.SucceedResult>.Empty;
+            ClimbMoveEvents = ValueList<Event<Fragment.MoveEntity.SucceedResult>>.Empty;
 
             for (var i = 0; i < distance.Value; i++)
             {
-                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(History);
+                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
                 if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
                 {
-                    return new ClimbFailedResult(Action, ClimbResults, result);
+                    return new ClimbFailedResult(Action, ClimbMoveEvents, result);
                 }
 
-                ClimbResults = ClimbResults.Add(succeedResult);
-                SteppingTarget = succeedResult.PositionEntityResult.Positioned;
-                History = History.Appended(succeedResult);
+                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+                ClimbMoveEvents = ClimbMoveEvents.Add(succeedEvent);
+                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
             }
 
             return null;
         }
 
         [CanBeNull]
-        private EntityStepResult Shift()
+        private EntityStepResult MoveShift()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(ClimbResults != null);
-            Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (ShiftResult != null));
+            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
+            Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (ShiftMoveEvent != null));
 
-            var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(History);
+            var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(Simulating);
             if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
             {
-                return new ShiftFailedResult(Action, ClimbResults, result);
+                return new ShiftFailedResult(Action, ClimbMoveEvents, result);
             }
 
-            ShiftResult = succeedResult;
-            SteppingTarget = succeedResult.PositionEntityResult.Positioned;
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            ShiftMoveEvent = succeedEvent;
+            SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+
             return null;
         }
 
         [CanBeNull]
-        private EntityStepResult Fall()
+        private EntityStepResult MoveFall()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
             Contract.Requires<InvalidOperationException>(SteppingTarget != null);
             Contract.Requires<InvalidOperationException>(DestinationElevation != null);
-            Contract.Requires<InvalidOperationException>(ClimbResults != null);
-            Contract.Requires<InvalidOperationException>(ShiftResult != null);
+            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
+            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
 
-            var distance = new Distance(DestinationElevation.Height.Value - SteppingTarget.Position3D.Z.Value);
-            FallResults = ValueList<Fragment.MoveEntity.SucceedResult>.Empty;
+            var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
+            FallMoveEvents = ValueList<Event<Fragment.MoveEntity.SucceedResult>>.Empty;
 
             for (var i = 0; i < distance.Value; i++)
             {
-                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZNegative).Evaluate(History);
+                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
                 if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
                 {
-                    return new FallFailedResult(Action, ClimbResults, ShiftResult, FallResults, result);
+                    return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
                 }
 
-                FallResults = FallResults.Add(succeedResult);
-                SteppingTarget = succeedResult.PositionEntityResult.Positioned;
-                History = History.Appended(succeedResult);
+                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+                FallMoveEvents = FallMoveEvents.Add(succeedEvent);
+                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
             }
 
-            Process = new EntityStepProcess(ClimbResults, ShiftResult, FallResults);
             return null;
         }
 
-        private void CollectCostInterrupts()
+        private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(CostInterrupts != null);
+            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
+            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
+            Contract.Requires<InvalidOperationException>(FallMoveEvents != null);
+            Contract.Ensures(Process != null);
 
-            CostInterrupts = ValueList<Interrupt<EntityStepCostEffect>>.Empty;
-            var effectors = Component.GetAllOfTypeFrom<IEntityStepCostEffector>(History.World).Sort();
-            foreach (var effector in effectors)
-            {
-                var interrupts = effector.CostEffectsOnEntityStep(History, Action, Process);
-                // TODO: CostInterrupts を PriorityQueue にした方がいい
-                CostInterrupts = CostInterrupts.AddRange(interrupts);
-            }
+            Process = new EntityStepProcess(ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents);
         }
 
         [NotNull]
         private static EntityStepCost BaseCost([NotNull] EntityStepProcess process)
         {
-            return ClimbCost * process.ClimbResults.Count + HorizontalCost + FallCost * process.FallResults.Count;
+            return ClimbCost * process.ClimbMoveEvents.Count + HorizontalCost + FallCost * process.FallMoveEvents.Count;
         }
 
         private void CalculateCost()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostInterrupts != null);
+            Contract.Ensures(CostEffectInterrupts != null);
             Contract.Ensures(ExpendedCost != null);
 
-            CostInterrupts = CostInterrupts.Sort();
+            CostEffectInterrupts = ValueList<Interrupt<EntityStepCostEffect>>.Empty;
+            var effectors = Component.GetAllOfTypeFrom<IEntityStepCostEffector>(Simulating.World).Sort();
+            foreach (var effector in effectors)
+            {
+                var interrupts = effector.EntityStepCostEffects(Simulating, Action, Process, CostEffectInterrupts);
+                // TODO: CostInterrupts を PriorityQueue にした方がいい
+                CostEffectInterrupts = CostEffectInterrupts.AddRange(interrupts);
+            }
+
+            CostEffectInterrupts = CostEffectInterrupts.Sort();
             ExpendedCost = BaseCost(Process);
-            foreach (var costInterrupt in CostInterrupts)
+            foreach (var costInterrupt in CostEffectInterrupts)
             {
                 if (costInterrupt.Effect is CostAdditionEffect addition)
                 {
@@ -240,54 +228,50 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
         private EntityStepResult CheckCostIsEnough()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostInterrupts != null);
+            Contract.Requires<InvalidOperationException>(CostEffectInterrupts != null);
             Contract.Requires<InvalidOperationException>(ExpendedCost != null);
 
             if (Action.Available > ExpendedCost)
             {
-                return new CostOverResult(Action, Process, CostInterrupts, ExpendedCost);
+                return new CostOverResult(Action, Process, CostEffectInterrupts, ExpendedCost);
             }
 
             return null;
-        }
-
-        private void CollectInterrupts()
-        {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostInterrupts != null);
-            Contract.Requires<InvalidOperationException>(ExpendedCost != null);
-            Contract.Ensures(Interrupts != null);
-
-            Interrupts = ValueList<Interrupt<EntityStepEffect>>.Empty;
-            var effectors = Component.GetAllOfTypeFrom<IEntityStepEffector>(History.World).Sort();
-            foreach (var effector in effectors)
-            {
-                var interrupts = effector.EffectsOnEntityStep(History, Action, Process, CostInterrupts, ExpendedCost);
-                Interrupts = Interrupts.AddRange(interrupts);
-            }
         }
 
         [CanBeNull]
         private EntityStepResult CheckRejection()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostInterrupts != null);
+            Contract.Requires<InvalidOperationException>(CostEffectInterrupts != null);
             Contract.Requires<InvalidOperationException>(ExpendedCost != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Ensures(RejectionInterrupts != null);
 
-            foreach (var interrupt in Interrupts)
+            RejectionInterrupts = ValueList<Interrupt<EntityStepRejection>>.Empty;
+            var effectors = Component.GetAllOfTypeFrom<IEntityStepRejector>(Simulating.World).Sort();
+            foreach (var effector in effectors)
             {
-                if (interrupt.Effect is RejectEffect)
-                {
-                    return new RejectedResult(
-                        Action,
-                        Process,
-                        CostInterrupts,
-                        ExpendedCost,
-                        Interrupts,
-                        interrupt.ComponentID
-                    );
-                }
+                var interrupt = effector.EntityStepRejection(
+                    Simulating,
+                    Action,
+                    Process,
+                    CostEffectInterrupts,
+                    ExpendedCost,
+                    RejectionInterrupts
+                );
+                RejectionInterrupts = RejectionInterrupts.Add(interrupt);
+            }
+
+            if (!RejectionInterrupts.IsEmpty)
+            {
+                return new RejectedResult(
+                    Action,
+                    Process,
+                    CostEffectInterrupts,
+                    ExpendedCost,
+                    RejectionInterrupts,
+                    RejectionInterrupts[0].ComponentID
+                );
             }
 
             return null;
@@ -297,11 +281,11 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
         private EntityStepResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostInterrupts != null);
+            Contract.Requires<InvalidOperationException>(CostEffectInterrupts != null);
             Contract.Requires<InvalidOperationException>(ExpendedCost != null);
-            Contract.Requires<InvalidOperationException>(Interrupts != null);
+            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult(Action, Process, CostInterrupts, ExpendedCost, Interrupts);
+            return new SucceedResult(Action, Process, CostEffectInterrupts, ExpendedCost, RejectionInterrupts);
         }
     }
 }

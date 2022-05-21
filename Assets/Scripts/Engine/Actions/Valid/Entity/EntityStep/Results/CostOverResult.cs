@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
     public record CostOverResult(
         [NotNull] EntityStepAction Action,
         [NotNull] EntityStepProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostInterrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostEffectInterrupts,
         [NotNull] EntityStepCost Required
     ) : EntityStepResult
     {

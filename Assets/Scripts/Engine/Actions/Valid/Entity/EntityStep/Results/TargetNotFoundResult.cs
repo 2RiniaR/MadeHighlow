@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
-    public record TargetNotFoundResult([NotNull] EntityID TargetID) : EntityStepResult
+    public record TargetNotFoundResult([NotNull] EntityStepAction Action) : EntityStepResult
     {
         public override World Simulate(World world)
         {

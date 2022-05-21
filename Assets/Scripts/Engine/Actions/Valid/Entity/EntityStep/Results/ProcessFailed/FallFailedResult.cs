@@ -5,10 +5,10 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
 {
     public record FallFailedResult(
         [NotNull] EntityStepAction Action,
-        [NotNull] [ItemNotNull] ValueList<Fragment.MoveEntity.SucceedResult> ClimbResults,
-        [NotNull] Fragment.MoveEntity.SucceedResult ShiftResult,
-        [NotNull] [ItemNotNull] ValueList<Fragment.MoveEntity.SucceedResult> SucceedResults,
-        [NotNull] MoveEntityResult FailedResult
+        [NotNull] [ItemNotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> ClimbMoveEvents,
+        [NotNull] Event<Fragment.MoveEntity.SucceedResult> ShiftMoveEvent,
+        [NotNull] [ItemNotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> FallMoveEvents,
+        [NotNull] MoveEntityResult Failed
     ) : EntityStepResult
     {
         public override World Simulate(World world)

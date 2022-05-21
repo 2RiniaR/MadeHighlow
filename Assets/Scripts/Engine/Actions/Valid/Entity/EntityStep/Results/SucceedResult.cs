@@ -5,17 +5,14 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
     public record SucceedResult(
         [NotNull] EntityStepAction Action,
         [NotNull] EntityStepProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostInterrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostEffectInterrupts,
         [NotNull] EntityStepCost ExpendedCost,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepEffect>> Interrupts
+        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepRejection>> RejectionInterrupts
     ) : EntityStepResult
     {
         public override World Simulate(World world)
         {
-            return new Timeline().Then(Process.ClimbResults)
-                .Then(Process.ShiftResult)
-                .Then(Process.FallResults)
-                .Simulate(world);
+            return Process.Timeline.Simulate(world);
         }
     }
 }
