@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
+﻿namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public record CreateComponentRejection;
 }

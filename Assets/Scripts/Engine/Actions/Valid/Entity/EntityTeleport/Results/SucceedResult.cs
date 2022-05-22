@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
+namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
     public record SucceedResult(
         [NotNull] EntityTeleportAction Action,

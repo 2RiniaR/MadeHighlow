@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
+namespace RineaR.MadeHighlow.Actions.StartCommands
 {
     public record StartCommandsResult(
         [NotNull] StartCommandsAction Action,

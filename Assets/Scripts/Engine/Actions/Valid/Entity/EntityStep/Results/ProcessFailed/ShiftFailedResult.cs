@@ -1,11 +1,11 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.MoveEntity;
+using RineaR.MadeHighlow.Actions.MoveEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
+namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public record ShiftFailedResult(
         [NotNull] EntityStepAction Action,
-        [NotNull] [ItemNotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> ClimbMoveEvents,
+        [NotNull] [ItemNotNull] ValueList<Event<MoveEntity.SucceedResult>> ClimbMoveEvents,
         [NotNull] MoveEntityResult Failed
     ) : EntityStepResult
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterComponent;
+using RineaR.MadeHighlow.Actions.AllocateID;
+using RineaR.MadeHighlow.Actions.RegisterComponent;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
+namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public class CreateComponentEvaluator
     {

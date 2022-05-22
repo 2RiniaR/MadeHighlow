@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
+namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record RejectedResult(
         [NotNull] GenerateTileAction Action,

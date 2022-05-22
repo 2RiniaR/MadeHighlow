@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
+namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public record SucceedResult(
         [NotNull] RemoveComponentAction Action,

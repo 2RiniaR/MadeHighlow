@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
-using RineaR.MadeHighlow.Actions.Fragment.UnregisterCard;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
+using RineaR.MadeHighlow.Actions.UnregisterCard;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
+namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
     public class DeleteCardEvaluator
     {

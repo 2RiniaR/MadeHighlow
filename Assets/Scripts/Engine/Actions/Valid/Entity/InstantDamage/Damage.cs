@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public record Damage(int Value)
     {

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterTile
+namespace RineaR.MadeHighlow.Actions.RegisterTile
 {
     public record RegisterTileResult([NotNull] RegisterTileAction Action, [NotNull] Tile Registered) : Result
     {

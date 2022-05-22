@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
+using RineaR.MadeHighlow.Actions.AllocateID;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
+namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public record CreateComponentProcess(
         [NotNull] Event<AllocateIDResult> AllocateIDEvent,

@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.UnregisterCard;
+using RineaR.MadeHighlow.Actions.UnregisterCard;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
+namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
     public record UnregisterCardFailedResult(
         [NotNull] DeleteCardAction Action,

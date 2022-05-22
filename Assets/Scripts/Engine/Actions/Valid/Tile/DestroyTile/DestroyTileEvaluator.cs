@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteTile;
+using RineaR.MadeHighlow.Actions.DeleteTile;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
+namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
     public class DestroyTileEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyTileAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.DeleteTile.SucceedResult> DeleteTileEvent { get; set; }
+        [CanBeNull] private Event<DeleteTile.SucceedResult> DeleteTileEvent { get; set; }
         [CanBeNull] private DestroyTileProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<DestroyTileRejection>> RejectionInterrupts { get; set; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
             Contract.Ensures((Contract.Result<DestroyTileResult>() != null) ^ (DeleteTileEvent != null));
 
             var result = new DeleteTileAction(Action.TargetID).Evaluate(Simulating);
-            if (result is not Fragment.DeleteTile.SucceedResult succeedResult)
+            if (result is not DeleteTile.SucceedResult succeedResult)
             {
                 return new DeleteTileFailedResult(Action, result);
             }

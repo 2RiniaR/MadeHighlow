@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
+namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public sealed record EntityStepCost(int Value)
     {

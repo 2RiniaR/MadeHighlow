@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterTile
+namespace RineaR.MadeHighlow.Actions.RegisterTile
 {
     public class RegisterTileEvaluator
     {

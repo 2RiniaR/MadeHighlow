@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.CreateTile
+﻿namespace RineaR.MadeHighlow.Actions.CreateTile
 {
     public abstract record CreateTileResult : Result;
 }

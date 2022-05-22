@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
+namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
     public abstract record Elevate
     {

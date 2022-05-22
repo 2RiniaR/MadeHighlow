@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Valid.PayCard;
+using RineaR.MadeHighlow.Actions.PayCard;
 
-namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
+namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public class RunCommandEvaluator
     {

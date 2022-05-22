@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterEntity
+namespace RineaR.MadeHighlow.Actions.RegisterEntity
 {
     public record RegisterEntityAction(ID AssignedID, [NotNull] Entity InitialProps)
     {

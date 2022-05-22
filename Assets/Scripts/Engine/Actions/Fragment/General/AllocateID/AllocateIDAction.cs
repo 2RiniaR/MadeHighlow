@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.AllocateID
+﻿namespace RineaR.MadeHighlow.Actions.AllocateID
 {
     public record AllocateIDAction
     {

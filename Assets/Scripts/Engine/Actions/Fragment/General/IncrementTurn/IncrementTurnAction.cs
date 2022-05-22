@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.IncrementTurn
+﻿namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
     public record IncrementTurnAction
     {

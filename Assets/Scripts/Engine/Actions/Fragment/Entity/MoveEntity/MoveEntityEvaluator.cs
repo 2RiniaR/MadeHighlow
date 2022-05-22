@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.PositionEntity;
+using RineaR.MadeHighlow.Actions.PositionEntity;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
+namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
     public class MoveEntityEvaluator
     {

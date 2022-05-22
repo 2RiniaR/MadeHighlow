@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
-    public record SupplyCardProcess([NotNull] Event<Fragment.PlaceCard.SucceedResult> PlaceCard)
+    public record SupplyCardProcess([NotNull] Event<PlaceCard.SucceedResult> PlaceCard)
     {
         public Timeline Timeline { get; } = new Timeline().Then(PlaceCard);
     }

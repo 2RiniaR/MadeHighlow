@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
+namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public class InstantDeathEvaluator
     {

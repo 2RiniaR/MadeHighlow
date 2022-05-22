@@ -1,9 +1,9 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
+namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public record PlaceCardProcess(
-        [CanBeNull] Event<ReactedResult<Valid.DropCard.SucceedResult>> DropCardEvent,
+        [CanBeNull] Event<ReactedResult<DropCard.SucceedResult>> DropCardEvent,
         [NotNull] Event<CreateCard.SucceedResult> CreateCardEvent
     )
     {

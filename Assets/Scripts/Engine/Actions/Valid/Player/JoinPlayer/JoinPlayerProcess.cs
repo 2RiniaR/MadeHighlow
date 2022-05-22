@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.JoinPlayer
+namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
-    public record JoinPlayerProcess([NotNull] Event<Fragment.CreatePlayer.SucceedResult> CreatePlayerEvent)
+    public record JoinPlayerProcess([NotNull] Event<CreatePlayer.SucceedResult> CreatePlayerEvent)
     {
         public Timeline Timeline { get; } = new Timeline().Then(CreatePlayerEvent);
     }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.MoveEntity;
+using RineaR.MadeHighlow.Actions.MoveEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
+namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public class EntityFlyEvaluator
     {
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
         [NotNull] private EntityFlyAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Event<Fragment.MoveEntity.SucceedResult> MoveEntityEvent { get; set; }
+        [CanBeNull] private Event<MoveEntity.SucceedResult> MoveEntityEvent { get; set; }
         [CanBeNull] private EntityFlyProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts { get; set; }
 
@@ -79,7 +79,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
             Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (MoveEntityEvent != null));
 
             var result = new MoveEntityAction(Action.TargetID, Action.Direction).Evaluate(Simulating);
-            if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
+            if (result is not MoveEntity.SucceedResult succeedResult)
             {
                 return new MoveEntityFailedResult(Action, result);
             }

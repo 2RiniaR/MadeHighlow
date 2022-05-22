@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
+﻿namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
     public record ElevateTileRejection;
 }

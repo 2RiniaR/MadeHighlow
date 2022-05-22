@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
+namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
     public record DeleteComponentFailedResult(
         [NotNull] DeleteTileAction Action,

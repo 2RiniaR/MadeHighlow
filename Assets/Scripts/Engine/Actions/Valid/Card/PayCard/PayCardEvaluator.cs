@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteCard;
+using RineaR.MadeHighlow.Actions.DeleteCard;
 
-namespace RineaR.MadeHighlow.Actions.Valid.PayCard
+namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public class PayCardEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PayCardAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
+        [CanBeNull] private Event<DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
         [CanBeNull] private PayCardProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<PayCardExemption>> ExemptionInterrupts { get; set; }
@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.PayCard
         private PayCardResult DeleteTarget()
         {
             var result = new DeleteCardAction(Action.TargetID).Evaluate(Simulating);
-            if (result is not Fragment.DeleteCard.SucceedResult succeedResult)
+            if (result is not DeleteCard.SucceedResult succeedResult)
             {
                 return new DeleteCardFailedResult(Action, result);
             }

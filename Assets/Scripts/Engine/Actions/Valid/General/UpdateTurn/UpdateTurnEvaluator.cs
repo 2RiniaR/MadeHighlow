@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.IncrementTurn;
+using RineaR.MadeHighlow.Actions.IncrementTurn;
 
-namespace RineaR.MadeHighlow.Actions.Valid.General.UpdateTurn
+namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
 {
     public class UpdateTurnEvaluator
     {

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
+﻿namespace RineaR.MadeHighlow.Actions.PositionEntity
 {
     public enum FailedReason
     {

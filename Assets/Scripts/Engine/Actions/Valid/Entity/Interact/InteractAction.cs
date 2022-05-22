@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid
+﻿namespace RineaR.MadeHighlow.Actions
 {
     /// <summary>
     ///     相互作用の発生

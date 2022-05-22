@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
+namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public sealed record SucceedResult(
         [NotNull] InstantDeathAction Action,

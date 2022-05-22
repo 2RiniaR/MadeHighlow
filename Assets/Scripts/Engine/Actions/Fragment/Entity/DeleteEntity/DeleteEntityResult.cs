@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.DeleteEntity
+﻿namespace RineaR.MadeHighlow.Actions.DeleteEntity
 {
     public abstract record DeleteEntityResult : Result;
 }

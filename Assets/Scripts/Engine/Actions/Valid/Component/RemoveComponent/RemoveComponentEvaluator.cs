@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
 
-namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
+namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public class RemoveComponentEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private RemoveComponentAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.DeleteComponent.SucceedResult> DeleteComponentEvent { get; set; }
+        [CanBeNull] private Event<DeleteComponent.SucceedResult> DeleteComponentEvent { get; set; }
         [CanBeNull] private RemoveComponentProcess Process { get; set; }
 
         [NotNull]
@@ -37,7 +37,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
         private RemoveComponentResult DeleteComponent()
         {
             var result = new DeleteComponentAction(Action.TargetID).Evaluate(Simulating);
-            if (result is not Fragment.DeleteComponent.SucceedResult succeedResult)
+            if (result is not DeleteComponent.SucceedResult succeedResult)
             {
                 return new DeleteComponentFailedResult(Action, result);
             }

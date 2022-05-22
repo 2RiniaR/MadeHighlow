@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
+﻿namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public record EntityFlyRejection;
 }

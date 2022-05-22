@@ -1,11 +1,11 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
+namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public record EntityStepProcess(
-        [NotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> ClimbMoveEvents,
-        [NotNull] Event<Fragment.MoveEntity.SucceedResult> ShiftMoveEvent,
-        [NotNull] ValueList<Event<Fragment.MoveEntity.SucceedResult>> FallMoveEvents
+        [NotNull] ValueList<Event<MoveEntity.SucceedResult>> ClimbMoveEvents,
+        [NotNull] Event<MoveEntity.SucceedResult> ShiftMoveEvent,
+        [NotNull] ValueList<Event<MoveEntity.SucceedResult>> FallMoveEvents
     )
     {
         public Timeline Timeline { get; }

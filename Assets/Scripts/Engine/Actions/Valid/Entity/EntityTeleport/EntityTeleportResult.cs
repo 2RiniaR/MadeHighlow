@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
+﻿namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
     public abstract record EntityTeleportResult : ValidResult;
 }

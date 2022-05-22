@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
+namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
     public class RegisterComponentEvaluator
     {

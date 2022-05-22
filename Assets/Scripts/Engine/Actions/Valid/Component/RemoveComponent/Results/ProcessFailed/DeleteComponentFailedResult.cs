@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
 
-namespace RineaR.MadeHighlow.Actions.Valid.RemoveComponent
+namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public record DeleteComponentFailedResult(
         [NotNull] RemoveComponentAction Action,

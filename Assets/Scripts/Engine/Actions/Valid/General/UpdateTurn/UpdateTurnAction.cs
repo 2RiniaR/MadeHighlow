@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RineaR.MadeHighlow.Actions.Valid.General.UpdateTurn
+namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
 {
     public record UpdateTurnAction : ValidAction<UpdateTurnResult>
     {

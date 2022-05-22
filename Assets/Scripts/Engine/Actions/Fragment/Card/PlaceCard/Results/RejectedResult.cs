@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
+namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public record RejectedResult(
         [NotNull] PlaceCardAction Action,

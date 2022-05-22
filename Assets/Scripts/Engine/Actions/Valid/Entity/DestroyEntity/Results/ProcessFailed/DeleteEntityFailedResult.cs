@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteEntity;
+using RineaR.MadeHighlow.Actions.DeleteEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
+namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public record DeleteEntityFailedResult(
         [NotNull] DestroyEntityAction Action,

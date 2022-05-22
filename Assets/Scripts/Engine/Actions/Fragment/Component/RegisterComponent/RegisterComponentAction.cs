@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
+namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
     public record RegisterComponentAction(
         [NotNull] IAttachableID ParentID,

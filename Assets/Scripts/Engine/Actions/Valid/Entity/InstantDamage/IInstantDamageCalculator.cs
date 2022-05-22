@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public interface IInstantDamageCalculator : IPriority<IInstantDamageCalculator>
     {

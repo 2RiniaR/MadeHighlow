@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
+namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public interface IPlaceCardReplacer : IPriority<IPlaceCardReplacer>
     {

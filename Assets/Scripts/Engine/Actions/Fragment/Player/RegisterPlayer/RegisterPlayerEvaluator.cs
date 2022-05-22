@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterPlayer
+namespace RineaR.MadeHighlow.Actions.RegisterPlayer
 {
     public class RegisterPlayerEvaluator
     {

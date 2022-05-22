@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DropCard
+namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public record NotFoundResult([NotNull] DropCardAction Action) : DropCardResult
     {

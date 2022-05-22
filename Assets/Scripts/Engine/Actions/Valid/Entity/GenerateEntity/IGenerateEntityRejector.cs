@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
+namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public interface IGenerateEntityRejector : IPriority<IGenerateEntityRejector>
     {

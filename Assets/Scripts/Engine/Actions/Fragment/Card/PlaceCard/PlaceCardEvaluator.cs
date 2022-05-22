@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateCard;
-using RineaR.MadeHighlow.Actions.Valid.DropCard;
+using RineaR.MadeHighlow.Actions.CreateCard;
+using RineaR.MadeHighlow.Actions.DropCard;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
+namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public class PlaceCardEvaluator
     {
@@ -21,7 +21,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
 
         [CanBeNull] private Player Parent { get; set; }
         [CanBeNull] private ValueList<Interrupt<CardReplacement>> ReplacementInterrupts { get; set; }
-        [CanBeNull] private Event<ReactedResult<Valid.DropCard.SucceedResult>> DropCardEvent { get; set; }
+        [CanBeNull] private Event<ReactedResult<DropCard.SucceedResult>> DropCardEvent { get; set; }
         [CanBeNull] private Event<CreateCard.SucceedResult> CreateCardEvent { get; set; }
         [CanBeNull] private PlaceCardProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<PlaceCardRejection>> RejectionInterrupts { get; set; }
@@ -88,7 +88,7 @@ namespace RineaR.MadeHighlow.Actions.Fragment.PlaceCard
             {
                 var result = new DropCardAction(interrupt.Effect.ReplacedID).Evaluate(Simulating);
 
-                var succeedResult = result.BodyAs<Valid.DropCard.SucceedResult>();
+                var succeedResult = result.BodyAs<DropCard.SucceedResult>();
                 if (succeedResult == null)
                 {
                     continue;

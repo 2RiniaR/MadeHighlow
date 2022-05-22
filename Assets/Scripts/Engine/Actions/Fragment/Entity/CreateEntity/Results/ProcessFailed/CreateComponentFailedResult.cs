@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateComponent;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterEntity;
+using RineaR.MadeHighlow.Actions.CreateComponent;
+using RineaR.MadeHighlow.Actions.RegisterEntity;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
+namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
     public record CreateComponentFailedResult(
         [NotNull] CreateEntityAction Action,

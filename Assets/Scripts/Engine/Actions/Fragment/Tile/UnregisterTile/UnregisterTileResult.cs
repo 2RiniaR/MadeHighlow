@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.UnregisterTile
+﻿namespace RineaR.MadeHighlow.Actions.UnregisterTile
 {
     public abstract record UnregisterTileResult : Result;
 }

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
+﻿namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
     public abstract record MoveEntityResult : Result;
 }

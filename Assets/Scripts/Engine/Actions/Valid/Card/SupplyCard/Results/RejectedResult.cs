@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public record RejectedResult(
         [NotNull] SupplyCardAction Action,

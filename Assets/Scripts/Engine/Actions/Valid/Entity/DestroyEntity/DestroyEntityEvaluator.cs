@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteEntity;
+using RineaR.MadeHighlow.Actions.DeleteEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
+namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public class DestroyEntityEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyEntityAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.DeleteEntity.SucceedResult> DeleteEntityEvent { get; set; }
+        [CanBeNull] private Event<DeleteEntity.SucceedResult> DeleteEntityEvent { get; set; }
         [CanBeNull] private DestroyEntityProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<DestroyEntityRejection>> RejectionInterrupts { get; set; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
             Contract.Ensures((Contract.Result<DestroyEntityResult>() != null) ^ (DeleteEntityEvent != null));
 
             var result = new DeleteEntityAction(Action.TargetID).Evaluate(Simulating);
-            if (result is not Fragment.DeleteEntity.SucceedResult succeedResult)
+            if (result is not DeleteEntity.SucceedResult succeedResult)
             {
                 return new DeleteEntityFailedResult(Action, result);
             }

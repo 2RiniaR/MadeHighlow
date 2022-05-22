@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.MoveEntity
+namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
     public record SucceedResult(
         [NotNull] MoveEntityAction Action,

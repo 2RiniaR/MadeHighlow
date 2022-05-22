@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.MoveEntity;
+using RineaR.MadeHighlow.Actions.MoveEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
+namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public class EntityStepEvaluator
     {
@@ -26,9 +26,9 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
         [CanBeNull] private Entity SteppingTarget { get; set; }
         [CanBeNull] private GroundElevation DestinationElevation { get; set; }
 
-        [CanBeNull] private ValueList<Event<Fragment.MoveEntity.SucceedResult>> ClimbMoveEvents { get; set; }
-        [CanBeNull] private Event<Fragment.MoveEntity.SucceedResult> ShiftMoveEvent { get; set; }
-        [CanBeNull] private ValueList<Event<Fragment.MoveEntity.SucceedResult>> FallMoveEvents { get; set; }
+        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> ClimbMoveEvents { get; set; }
+        [CanBeNull] private Event<MoveEntity.SucceedResult> ShiftMoveEvent { get; set; }
+        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> FallMoveEvents { get; set; }
         [CanBeNull] private EntityStepProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<EntityStepCostEffect>> CostEffectInterrupts { get; set; }
@@ -109,12 +109,12 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             Contract.Ensures(ClimbMoveEvents != null);
 
             var distance = new Distance(DestinationElevation.Height.Value - Target.Position3D.Z.Value);
-            ClimbMoveEvents = ValueList<Event<Fragment.MoveEntity.SucceedResult>>.Empty;
+            ClimbMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
 
             for (var i = 0; i < distance.Value; i++)
             {
                 var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
-                if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
+                if (result is not MoveEntity.SucceedResult succeedResult)
                 {
                     return new ClimbFailedResult(Action, ClimbMoveEvents, result);
                 }
@@ -135,7 +135,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (ShiftMoveEvent != null));
 
             var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(Simulating);
-            if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
+            if (result is not MoveEntity.SucceedResult succeedResult)
             {
                 return new ShiftFailedResult(Action, ClimbMoveEvents, result);
             }
@@ -157,12 +157,12 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
             Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
 
             var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
-            FallMoveEvents = ValueList<Event<Fragment.MoveEntity.SucceedResult>>.Empty;
+            FallMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
 
             for (var i = 0; i < distance.Value; i++)
             {
                 var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
-                if (result is not Fragment.MoveEntity.SucceedResult succeedResult)
+                if (result is not MoveEntity.SucceedResult succeedResult)
                 {
                     return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
                 }

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
+﻿namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
     public abstract record DeleteCardResult : Result;
 }

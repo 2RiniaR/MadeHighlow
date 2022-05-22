@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DestroyEntity
+namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public record RejectedResult(
         [NotNull] DestroyEntityAction Action,

@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
+﻿namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public record GenerateEntityRejection;
 }

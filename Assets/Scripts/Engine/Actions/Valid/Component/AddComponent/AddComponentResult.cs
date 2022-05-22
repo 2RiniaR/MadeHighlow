@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
+﻿namespace RineaR.MadeHighlow.Actions.AddComponent
 {
     public abstract record AddComponentResult : ValidResult;
 }

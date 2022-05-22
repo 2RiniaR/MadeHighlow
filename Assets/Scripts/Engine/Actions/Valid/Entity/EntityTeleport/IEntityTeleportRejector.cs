@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
+namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
     public interface IEntityTeleportRejector : IPriority<IEntityTeleportRejector>
     {

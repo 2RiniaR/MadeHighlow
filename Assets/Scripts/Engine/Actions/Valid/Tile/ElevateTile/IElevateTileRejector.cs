@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Valid.EntityTeleport;
+using RineaR.MadeHighlow.Actions.EntityTeleport;
 
-namespace RineaR.MadeHighlow.Actions.Valid.ElevateTile
+namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
     public interface IElevateTileRejector : IPriority<IEntityTeleportRejector>
     {

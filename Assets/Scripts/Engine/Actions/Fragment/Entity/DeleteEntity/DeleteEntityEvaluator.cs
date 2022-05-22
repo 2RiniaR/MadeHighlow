@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
-using RineaR.MadeHighlow.Actions.Fragment.UnregisterEntity;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
+using RineaR.MadeHighlow.Actions.UnregisterEntity;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteEntity
+namespace RineaR.MadeHighlow.Actions.DeleteEntity
 {
     public class DeleteEntityEvaluator
     {

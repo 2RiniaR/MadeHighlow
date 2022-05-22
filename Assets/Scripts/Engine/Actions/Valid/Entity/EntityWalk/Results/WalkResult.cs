@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Valid.EntityStep;
+using RineaR.MadeHighlow.Actions.EntityStep;
 
-namespace RineaR.MadeHighlow.Actions.Valid
+namespace RineaR.MadeHighlow.Actions
 {
     public record WalkResult(
         [NotNull] EntityID ActorEntityID,

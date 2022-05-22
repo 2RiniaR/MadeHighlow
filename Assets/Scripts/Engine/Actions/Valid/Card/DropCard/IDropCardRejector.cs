@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DropCard
+namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public interface IDropCardRejector : IPriority<IDropCardRejector>
     {

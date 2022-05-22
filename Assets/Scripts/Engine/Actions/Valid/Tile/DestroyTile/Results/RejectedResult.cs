@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DestroyTile
+namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
     public record RejectedResult(
         [NotNull] DestroyTileAction Action,

@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
+namespace RineaR.MadeHighlow.Actions.PositionTile
 {
     public class PositionTileEvaluator
     {

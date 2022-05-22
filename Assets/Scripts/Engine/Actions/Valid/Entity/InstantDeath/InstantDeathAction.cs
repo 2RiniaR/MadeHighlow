@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
+namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public record InstantDeathAction(ID SourceID, [NotNull] EntityID TargetID) : ValidAction<InstantDeathResult>
     {

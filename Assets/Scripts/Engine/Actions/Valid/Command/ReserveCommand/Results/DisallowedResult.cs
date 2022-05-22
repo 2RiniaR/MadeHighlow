@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
+namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     public record DisallowedResult(
         [NotNull] ReserveCommandAction Action,

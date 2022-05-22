@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.ReserveCommand
+﻿namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     public enum FailedReason
     {

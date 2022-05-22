@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteComponent
+namespace RineaR.MadeHighlow.Actions.DeleteComponent
 {
     public interface IDeleteComponentRejector : IPriority<IDeleteComponentRejector>
     {

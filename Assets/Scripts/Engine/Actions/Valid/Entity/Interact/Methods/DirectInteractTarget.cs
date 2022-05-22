@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid
+namespace RineaR.MadeHighlow.Actions
 {
     public record DirectInteractTarget(
         [NotNull] EntityID TargetEntityID,

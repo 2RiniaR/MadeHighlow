@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
+﻿namespace RineaR.MadeHighlow.Actions.StartCommands
 {
     public record StartCommandsAction : ValidAction<StartCommandsResult>
     {

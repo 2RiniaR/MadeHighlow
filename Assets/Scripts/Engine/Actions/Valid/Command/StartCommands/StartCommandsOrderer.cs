@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.StartCommands
+namespace RineaR.MadeHighlow.Actions.StartCommands
 {
     /// <summary>
     ///     ユニットが現在受けている命令を実行する際の、行動順を決定するクエリ

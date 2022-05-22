@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteEntity
+namespace RineaR.MadeHighlow.Actions.DeleteEntity
 {
     public record SucceedResult(
         [NotNull] DeleteEntityAction Action,

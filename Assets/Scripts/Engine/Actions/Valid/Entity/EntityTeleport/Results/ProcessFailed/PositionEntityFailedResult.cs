@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.PositionEntity;
+using RineaR.MadeHighlow.Actions.PositionEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
+namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
     public record PositionEntityFailedResult(
         [NotNull] EntityTeleportAction Action,

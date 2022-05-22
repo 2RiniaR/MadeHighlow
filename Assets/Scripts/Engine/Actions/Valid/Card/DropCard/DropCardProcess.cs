@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DropCard
+namespace RineaR.MadeHighlow.Actions.DropCard
 {
-    public record DropCardProcess([NotNull] Event<Fragment.DeleteCard.SucceedResult> DeleteCard)
+    public record DropCardProcess([NotNull] Event<DeleteCard.SucceedResult> DeleteCard)
     {
         public Timeline Timeline { get; } = new Timeline().Then(DeleteCard);
     }

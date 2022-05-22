@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
+namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
     public record SucceedResult(
         [NotNull] CreateEntityAction Action,

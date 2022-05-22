@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateEntity;
+using RineaR.MadeHighlow.Actions.CreateEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
+namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public class GenerateEntityEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateEntityAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.CreateEntity.SucceedResult> CreateEntityEvent { get; set; }
+        [CanBeNull] private Event<CreateEntity.SucceedResult> CreateEntityEvent { get; set; }
         [CanBeNull] private GenerateEntityProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateEntityRejection>> RejectionInterrupts { get; set; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateEntity
             Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (CreateEntityEvent != null));
 
             var result = new CreateEntityAction(Action.InitialProps).Evaluate(Simulating);
-            if (result is not Fragment.CreateEntity.SucceedResult succeedResult)
+            if (result is not CreateEntity.SucceedResult succeedResult)
             {
                 return new CreateEntityFailedResult(Action, result);
             }

@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteCard
+namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
     public record DeleteComponentFailedResult(
         [NotNull] DeleteCardAction Action,

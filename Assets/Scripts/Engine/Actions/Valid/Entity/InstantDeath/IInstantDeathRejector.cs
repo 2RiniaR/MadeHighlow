@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDeath
+namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public interface IInstantDeathRejector : IPriority<IInstantDeathRejector>
     {

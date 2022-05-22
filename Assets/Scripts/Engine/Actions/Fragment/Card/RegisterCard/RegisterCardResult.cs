@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
+﻿namespace RineaR.MadeHighlow.Actions.RegisterCard
 {
     public abstract record RegisterCardResult : Result;
 }

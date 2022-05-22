@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
+namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public record EntityFlyAction
         ([NotNull] EntityID TargetID, [NotNull] Direction3D Direction) : ValidAction<EntityFlyResult>

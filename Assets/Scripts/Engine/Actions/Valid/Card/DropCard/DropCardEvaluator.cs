@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteCard;
+using RineaR.MadeHighlow.Actions.DeleteCard;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DropCard
+namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public class DropCardEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DropCardAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
+        [CanBeNull] private Event<DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
         [CanBeNull] private DropCardProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<DropCardRejection>> RejectionInterrupts { get; set; }
@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.DropCard
         private DropCardResult DeleteTarget()
         {
             var result = new DeleteCardAction(Action.TargetID).Evaluate(Simulating);
-            if (result is not Fragment.DeleteCard.SucceedResult succeedResult)
+            if (result is not DeleteCard.SucceedResult succeedResult)
             {
                 return new DeleteCardFailedResult(Action, result);
             }

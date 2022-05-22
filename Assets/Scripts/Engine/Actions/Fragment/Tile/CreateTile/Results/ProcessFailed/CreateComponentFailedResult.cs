@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateComponent;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterTile;
+using RineaR.MadeHighlow.Actions.CreateComponent;
+using RineaR.MadeHighlow.Actions.RegisterTile;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateTile
+namespace RineaR.MadeHighlow.Actions.CreateTile
 {
     public record CreateComponentFailedResult(
         [NotNull] CreateTileAction Action,

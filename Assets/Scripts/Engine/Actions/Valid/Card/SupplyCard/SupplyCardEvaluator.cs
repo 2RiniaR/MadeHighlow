@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.PlaceCard;
+using RineaR.MadeHighlow.Actions.PlaceCard;
 
-namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public class SupplyCardEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private SupplyCardAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.PlaceCard.SucceedResult> PlaceCardEvent { get; set; }
+        [CanBeNull] private Event<PlaceCard.SucceedResult> PlaceCardEvent { get; set; }
 
         [CanBeNull] private SupplyCardProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<SupplyCardRejection>> RejectionInterrupts { get; set; }
@@ -45,7 +45,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
             Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (PlaceCardEvent != null));
 
             var result = new PlaceCardAction(Action.TargetID, Action.InitialStatus).Evaluate(Simulating);
-            if (result is not Fragment.PlaceCard.SucceedResult succeedResult)
+            if (result is not PlaceCard.SucceedResult succeedResult)
             {
                 return new PlaceCardFailedResult(Action, result);
             }

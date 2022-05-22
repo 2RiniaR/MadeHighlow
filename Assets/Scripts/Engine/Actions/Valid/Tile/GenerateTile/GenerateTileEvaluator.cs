@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateTile;
+using RineaR.MadeHighlow.Actions.CreateTile;
 
-namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
+namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public class GenerateTileEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateTileAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.CreateTile.SucceedResult> CreateTileEvent { get; set; }
+        [CanBeNull] private Event<CreateTile.SucceedResult> CreateTileEvent { get; set; }
         [CanBeNull] private GenerateTileProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<GenerateTileRejection>> RejectionInterrupts { get; set; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
             Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (CreateTileEvent != null));
 
             var result = new CreateTileAction(Action.InitialProps).Evaluate(Simulating);
-            if (result is not Fragment.CreateTile.SucceedResult succeedResult)
+            if (result is not CreateTile.SucceedResult succeedResult)
             {
                 return new CreateTileFailedResult(Action, result);
             }

@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.PositionEntity
+namespace RineaR.MadeHighlow.Actions.PositionEntity
 {
     public class PositionEntityEvaluator
     {

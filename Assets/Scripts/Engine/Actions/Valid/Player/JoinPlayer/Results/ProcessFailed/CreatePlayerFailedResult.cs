@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreatePlayer;
+using RineaR.MadeHighlow.Actions.CreatePlayer;
 
-namespace RineaR.MadeHighlow.Actions.Valid.JoinPlayer
+namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public record CreatePlayerFailedResult(
         [NotNull] JoinPlayerAction Action,

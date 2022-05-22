@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateTile;
+using RineaR.MadeHighlow.Actions.CreateTile;
 
-namespace RineaR.MadeHighlow.Actions.Valid.GenerateTile
+namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record CreateTileFailedResult(
         [NotNull] GenerateTileAction Action,

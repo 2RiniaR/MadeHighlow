@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterCard;
+using RineaR.MadeHighlow.Actions.RegisterCard;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
+namespace RineaR.MadeHighlow.Actions.CreateCard
 {
     public record RegisterCardFailedResult(
         [NotNull] CreateCardAction Action,

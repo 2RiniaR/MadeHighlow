@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.AllocateID
+namespace RineaR.MadeHighlow.Actions.AllocateID
 {
     public record AllocateIDResult([NotNull] AllocateIDAction Action, ID AllocatedID) : Result
     {

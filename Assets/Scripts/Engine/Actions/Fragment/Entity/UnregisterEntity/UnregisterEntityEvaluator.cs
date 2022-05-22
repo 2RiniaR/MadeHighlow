@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.UnregisterEntity
+namespace RineaR.MadeHighlow.Actions.UnregisterEntity
 {
     public class UnregisterEntityEvaluator
     {

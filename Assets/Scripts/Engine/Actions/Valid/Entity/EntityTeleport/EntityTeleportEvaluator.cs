@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.PositionEntity;
+using RineaR.MadeHighlow.Actions.PositionEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
+namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
     public class EntityTeleportEvaluator
     {
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
         [NotNull] private EntityTeleportAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Event<Fragment.PositionEntity.SucceedResult> PositionEntityEvent { get; set; }
+        [CanBeNull] private Event<PositionEntity.SucceedResult> PositionEntityEvent { get; set; }
         [CanBeNull] private EntityTeleportProcess Process { get; set; }
         [CanBeNull] private ValueList<Interrupt<EntityTeleportRejection>> RejectionInterrupts { get; set; }
 
@@ -63,7 +63,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.EntityTeleport
             Contract.Ensures((Contract.Result<EntityTeleportResult>() != null) ^ (PositionEntityEvent != null));
 
             var result = new PositionEntityAction(Action.TargetID, Action.Destination).Evaluate(Simulating);
-            if (result is not Fragment.PositionEntity.SucceedResult succeedResult)
+            if (result is not PositionEntity.SucceedResult succeedResult)
             {
                 return new PositionEntityFailedResult(Action, result);
             }

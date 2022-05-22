@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityStep
+namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public record SucceedResult(
         [NotNull] EntityStepAction Action,

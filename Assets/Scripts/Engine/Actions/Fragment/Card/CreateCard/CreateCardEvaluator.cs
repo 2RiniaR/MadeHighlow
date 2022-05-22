@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.AllocateID;
-using RineaR.MadeHighlow.Actions.Fragment.CreateComponent;
-using RineaR.MadeHighlow.Actions.Fragment.RegisterCard;
+using RineaR.MadeHighlow.Actions.AllocateID;
+using RineaR.MadeHighlow.Actions.CreateComponent;
+using RineaR.MadeHighlow.Actions.RegisterCard;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateCard
+namespace RineaR.MadeHighlow.Actions.CreateCard
 {
     public class CreateCardEvaluator
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public sealed record SucceedResult(
         [NotNull] InstantDamageAction Action,

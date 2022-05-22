@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.PositionTile
+﻿namespace RineaR.MadeHighlow.Actions.PositionTile
 {
     public enum FailedReason
     {

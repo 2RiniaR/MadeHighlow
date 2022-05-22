@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.IncrementTurn
+namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
     public record IncrementTurnResult([NotNull] IncrementTurnAction Action, [NotNull] Turn Updated) : Result
     {

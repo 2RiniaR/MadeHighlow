@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.UnregisterTile
+namespace RineaR.MadeHighlow.Actions.UnregisterTile
 {
     public class UnregisterTileEvaluator
     {

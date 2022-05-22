@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Valid.RunCommand
+﻿namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public record RunCommandRejection;
 }

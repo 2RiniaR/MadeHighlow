@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.MoveEntity;
+using RineaR.MadeHighlow.Actions.MoveEntity;
 
-namespace RineaR.MadeHighlow.Actions.Valid.EntityFly
+namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public record MoveEntityFailedResult(EntityFlyAction Action, [NotNull] MoveEntityResult Failed) : EntityFlyResult
     {

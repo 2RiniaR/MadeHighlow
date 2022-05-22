@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.RegisterCard
+namespace RineaR.MadeHighlow.Actions.RegisterCard
 {
     public class RegisterCardEvaluator
     {

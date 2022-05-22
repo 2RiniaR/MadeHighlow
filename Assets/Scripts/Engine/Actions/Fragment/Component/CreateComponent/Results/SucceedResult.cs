@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.CreateComponent
+namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public record SucceedResult(
         [NotNull] CreateComponentAction Action,

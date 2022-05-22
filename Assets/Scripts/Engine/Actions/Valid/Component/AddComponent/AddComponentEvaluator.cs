@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.CreateComponent;
+using RineaR.MadeHighlow.Actions.CreateComponent;
 
-namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
+namespace RineaR.MadeHighlow.Actions.AddComponent
 {
     public class AddComponentEvaluator
     {
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private AddComponentAction Action { get; }
 
-        [CanBeNull] private Event<Fragment.CreateComponent.SucceedResult> CreateComponentEvent { get; set; }
+        [CanBeNull] private Event<CreateComponent.SucceedResult> CreateComponentEvent { get; set; }
         [CanBeNull] private AddComponentProcess Process { get; set; }
 
         [NotNull]
@@ -37,7 +37,7 @@ namespace RineaR.MadeHighlow.Actions.Valid.AddComponent
         private AddComponentResult CreateComponent()
         {
             var result = new CreateComponentAction(Action.TargetID, Action.InitialStatus).Evaluate(Simulating);
-            if (result is not Fragment.CreateComponent.SucceedResult succeedResult)
+            if (result is not CreateComponent.SucceedResult succeedResult)
             {
                 return new CreateComponentFailedResult(Action, result);
             }

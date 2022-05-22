@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.RegisterComponent
+﻿namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
     public abstract record RegisterComponentResult : Result;
 }

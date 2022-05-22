@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteComponent;
-using RineaR.MadeHighlow.Actions.Fragment.UnregisterTile;
+using RineaR.MadeHighlow.Actions.DeleteComponent;
+using RineaR.MadeHighlow.Actions.UnregisterTile;
 
-namespace RineaR.MadeHighlow.Actions.Fragment.DeleteTile
+namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
     public class DeleteTileEvaluator
     {

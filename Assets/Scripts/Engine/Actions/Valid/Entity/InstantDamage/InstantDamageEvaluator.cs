@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.Valid.InstantDamage
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public class InstantDamageEvaluator
     {

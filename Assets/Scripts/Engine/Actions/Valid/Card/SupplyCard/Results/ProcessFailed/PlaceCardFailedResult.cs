@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.PlaceCard;
+using RineaR.MadeHighlow.Actions.PlaceCard;
 
-namespace RineaR.MadeHighlow.Actions.Valid.SupplyCard
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public record PlaceCardFailedResult(
         [NotNull] SupplyCardAction Action,

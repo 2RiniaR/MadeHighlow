@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.Fragment.DeleteCard;
+using RineaR.MadeHighlow.Actions.DeleteCard;
 
-namespace RineaR.MadeHighlow.Actions.Valid.DropCard
+namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public record DeleteCardFailedResult(
         [NotNull] DropCardAction Action,

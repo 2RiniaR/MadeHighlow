@@ -1,4 +1,4 @@
-﻿namespace RineaR.MadeHighlow.Actions.Fragment.CreateEntity
+﻿namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
     public abstract record CreateEntityResult : Result;
 }
