@@ -1,18 +1,18 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.EntityFly;
 
 namespace RineaR.MadeHighlow.Actions.KnockBack
 {
-    public record SucceedResult(
+    public record EntityFlyFailedResult(
         [NotNull] KnockBackAction Action,
         [NotNull] [ItemNotNull] ValueList<Interrupt<KnockBackCalculation>> Calculations,
         [NotNull] KnockBack Calculated,
-        [NotNull] KnockBackProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<KnockBackRejection>> Rejections
+        [NotNull] ReactedResult<EntityFlyResult> Failed
     ) : KnockBackResult
     {
         public override World Simulate(World world)
         {
-            return Process.Timeline.Simulate(world);
+            return world;
         }
     }
 }

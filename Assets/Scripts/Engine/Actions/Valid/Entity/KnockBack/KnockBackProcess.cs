@@ -1,9 +1,7 @@
-﻿using JetBrains.Annotations;
-
-namespace RineaR.MadeHighlow.Actions.KnockBack
+﻿namespace RineaR.MadeHighlow.Actions.KnockBack
 {
-    public record KnockBackProcess(
-        [NotNull] ValueList<Event<MoveEntity.SucceedResult>> ShiftMoveEvents,
-        [NotNull] ValueList<Event<MoveEntity.SucceedResult>> FallMoveEvents
-    );
+    public record KnockBackProcess(Event<ReactedResult<EntityFly.SucceedResult>> EntityFlyEvent)
+    {
+        public Timeline Timeline { get; } = new Timeline().Then(EntityFlyEvent);
+    }
 }

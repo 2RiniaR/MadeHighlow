@@ -54,7 +54,7 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
 
             if (!IsPositionable(Initial, Target, Action.Destination))
             {
-                return new FailedResult(Action, FailedReason.ResolveFailed);
+                return new FailedResult(Action, FailedReason.CantEnter);
             }
 
             Positioned = Target;

@@ -3,6 +3,6 @@
     public enum FailedReason
     {
         TargetNotExist,
-        ResolveFailed,
+        CantEnter,
     }
 }

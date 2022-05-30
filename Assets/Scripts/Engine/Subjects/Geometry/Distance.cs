@@ -8,5 +8,7 @@ namespace RineaR.MadeHighlow
     public sealed record Distance(int Value)
     {
         public int Value { get; } = Math.Max(0, Value);
+
+        public static Distance Step => new(1);
     }
 }

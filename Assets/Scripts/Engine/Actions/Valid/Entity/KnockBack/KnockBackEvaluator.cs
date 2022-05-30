@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.EntityFly;
 
 namespace RineaR.MadeHighlow.Actions.KnockBack
 {
@@ -13,15 +15,14 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         }
 
         [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private KnockBackAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private ValueList<Interrupt<KnockBackCalculation>> CalculationInterrupts { get; set; }
         [CanBeNull] private KnockBack Calculated { get; set; }
 
-        [CanBeNull] private Event<MoveEntity.SucceedResult> ShiftMoveEvent { get; set; }
-        [CanBeNull] private GroundElevation DestinationElevation { get; set; }
-        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> FallMoveEvents { get; set; }
+        [CanBeNull] private Event<ReactedResult<EntityFly.SucceedResult>> EntityFlyEvent { get; set; }
         [CanBeNull] private KnockBackProcess Process { get; set; }
 
         [CanBeNull] private ValueList<Interrupt<KnockBackRejection>> RejectionInterrupts { get; set; }
@@ -30,27 +31,20 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         public KnockBackResult Evaluate()
         {
             KnockBackResult result;
-/*
+
             result = FindTarget();
             if (result != null) return result;
 
             CalculateKnockBack();
-
-            result = MoveShift();
-            if (result != null) return result;
-
-            result = MoveFall();
-            if (result != null) return result;
-
+            Fly();
             WrapProcess();
 
             result = CheckRejection();
             if (result != null) return result;
-*/
+
             return Succeed();
         }
 
-/*
         [CanBeNull]
         private KnockBackResult FindTarget()
         {
@@ -91,62 +85,33 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         }
 
         [CanBeNull]
-        private KnockBackResult MoveShift()
+        private KnockBackResult Fly()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(
-                (Contract.Result<KnockBackResult>() != null) ^ (ShiftMoveEvent != null && DestinationElevation != null)
-            );
+            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
+            Contract.Requires<InvalidOperationException>(Calculated != null);
 
-            var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(Simulating);
-            if (result is not MoveEntity.SucceedResult succeedResult)
+            var steps = Enumerable.Range(0, Calculated.Distance.Value)
+                .Select(_ => new EntityFlyStep(Calculated.Direction))
+                .ToValueList();
+            var result = new EntityFlyAction(Action.TargetID, steps).Evaluate(Simulating);
+            var succeedResult = result.BodyAs<EntityFly.SucceedResult>();
+            if (succeedResult == null)
             {
-                return new ShiftFailedResult(Action, ClimbMoveEvents, result);
+                return new EntityFlyFailedResult(Action, CalculationInterrupts, Calculated, result);
             }
 
             Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            ShiftMoveEvent = succeedEvent;
-            SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
-
-            return null;
-        }
-
-        [CanBeNull]
-        private KnockBackResult MoveFall()
-        {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(SteppingTarget != null);
-            Contract.Requires<InvalidOperationException>(DestinationElevation != null);
-            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
-            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
-
-            var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
-            FallMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
-
-            for (var i = 0; i < distance.Value; i++)
-            {
-                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
-                if (result is not MoveEntity.SucceedResult succeedResult)
-                {
-                    return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                FallMoveEvents = FallMoveEvents.Add(succeedEvent);
-                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
-            }
+            EntityFlyEvent = succeedEvent;
 
             return null;
         }
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
-            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
-            Contract.Requires<InvalidOperationException>(FallMoveEvents != null);
+            Contract.Requires<InvalidOperationException>(EntityFlyEvent != null);
             Contract.Ensures(Process != null);
 
-            Process = new EntityStepProcess(ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents);
+            Process = new KnockBackProcess(EntityFlyEvent);
         }
 
         [CanBeNull]
@@ -154,6 +119,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         {
             Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
             Contract.Requires<InvalidOperationException>(Calculated != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Ensures(RejectionInterrupts != null);
 
             var rejectors = Component.GetAllOfTypeFrom<IKnockBackRejector>(Initial.World).Sort();
@@ -161,7 +127,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
             RejectionInterrupts = ValueList<Interrupt<KnockBackRejection>>.Empty;
             foreach (var rejector in rejectors)
             {
-                var interrupt = rejector.KnockBackRejection(Initial, Action, RejectionInterrupts);
+                var interrupt = rejector.KnockBackRejection(Initial, Action, Process, RejectionInterrupts);
                 if (interrupt == null) continue;
                 RejectionInterrupts = RejectionInterrupts.Add(interrupt);
             }
@@ -172,6 +138,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
                     Action,
                     CalculationInterrupts,
                     Calculated,
+                    Process,
                     RejectionInterrupts,
                     RejectionInterrupts[0].ComponentID
                 );
@@ -179,15 +146,16 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
 
             return null;
         }
-*/
+
         [NotNull]
         private KnockBackResult Succeed()
         {
             Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
             Contract.Requires<InvalidOperationException>(Calculated != null);
+            Contract.Requires<InvalidOperationException>(Process != null);
             Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
 
-            return new SucceedResult();
+            return new SucceedResult(Action, CalculationInterrupts, Calculated, Process, RejectionInterrupts);
         }
     }
 }

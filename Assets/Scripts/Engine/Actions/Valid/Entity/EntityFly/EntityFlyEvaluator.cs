@@ -19,32 +19,32 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [NotNull] private EntityFlyAction Action { get; }
 
         [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Event<MoveEntity.SucceedResult> MoveEntityEvent { get; set; }
+
+        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> FollowMoveEvents { get; set; }
+        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> FallMoveEvents { get; set; }
         [CanBeNull] private EntityFlyProcess Process { get; set; }
+
         [CanBeNull] private ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts { get; set; }
 
         [NotNull]
         public EntityFlyResult Evaluate()
         {
             EntityFlyResult result;
-/*
+
             result = FindTarget();
             if (result != null) return result;
 
-            result = MoveShift();
-            if (result != null) return result;
-
-            result = MoveFall();
+            result = FollowRoute();
             if (result != null) return result;
 
             WrapProcess();
 
             result = CheckRejection();
             if (result != null) return result;
-*/
+
             return Succeed();
         }
-/*
+
         [CanBeNull]
         private EntityFlyResult FindTarget()
         {
@@ -60,60 +60,80 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         }
 
         [CanBeNull]
-        private EntityFlyResult MoveShift()
+        private EntityFlyResult FollowRoute()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(
-                (Contract.Result<EntityFlyResult>() != null) ^ (ShiftMoveEvent != null && DestinationElevation != null)
-            );
+            Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (FollowMoveEvents != null));
 
-            var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(Simulating);
-            if (result is not MoveEntity.SucceedResult succeedResult)
+            FollowMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
+            foreach (var step in Action.Steps)
             {
-                return new ShiftFailedResult(Action, ClimbMoveEvents, result);
-            }
+                var result = new MoveEntityAction(Action.TargetID, step.Direction).Evaluate(Simulating);
+                if (result is not MoveEntity.SucceedResult succeedResult)
+                {
+                    break;
+                }
 
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            ShiftMoveEvent = succeedEvent;
-            SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+                var moved = Simulating.Appended(succeedResult, out var succeedEvent);
+
+                var fallMoveEvents = Fall(Action.TargetID, moved);
+                if (fallMoveEvents == null)
+                {
+                    break;
+                }
+
+                Simulating = moved;
+                FollowMoveEvents = FollowMoveEvents!.Add(succeedEvent);
+                FallMoveEvents = fallMoveEvents;
+            }
 
             return null;
         }
 
         [CanBeNull]
-        private EntityFlyResult MoveFall()
+        [ItemNotNull]
+        private static ValueList<Event<MoveEntity.SucceedResult>> Fall(
+            [NotNull] EntityID entityID,
+            [NotNull] IHistory initial
+        )
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(SteppingTarget != null);
-            Contract.Requires<InvalidOperationException>(DestinationElevation != null);
-            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
-            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
+            var target = entityID.GetFrom(initial.World);
+            Contract.Requires<InvalidOperationException>(target != null, "この時点で必ず、移動対象のエンティティが存在するはず。");
 
-            var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
-            FallMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
-
-            for (var i = 0; i < distance.Value; i++)
+            if (target.Levitation)
             {
-                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
-                if (result is not MoveEntity.SucceedResult succeedResult)
-                {
-                    return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                FallMoveEvents = FallMoveEvents.Add(succeedEvent);
-                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+                return ValueList<Event<MoveEntity.SucceedResult>>.Empty;
             }
 
-            return null;
+            var destinationTile = target.Position3D.To2D().GetTile(initial.World);
+            Contract.Requires<InvalidOperationException>(destinationTile != null, "この時点で必ず、落下先のタイルが存在するはず。");
+
+            var destinationElevation = destinationTile.Elevation as GroundElevation;
+            Contract.Requires<InvalidOperationException>(destinationElevation != null, "この時点で必ず、落下先のタイルは着地可能なはず。");
+
+            var distance = new Distance(target.Position3D.Z.Value - destinationElevation.Height.Value);
+
+            var simulating = initial;
+            var events = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
+            for (var i = 0; i < distance.Value; i++)
+            {
+                var result = new MoveEntityAction(entityID, Direction3D.ZNegative).Evaluate(initial);
+                if (result is not MoveEntity.SucceedResult succeedResult) return null;
+
+                simulating = simulating.Appended(succeedResult, out var succeedEvent);
+                events = events.Add(succeedEvent);
+            }
+
+            return events;
         }
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(MoveEntityEvent != null);
+            Contract.Requires<InvalidOperationException>(FollowMoveEvents != null);
+            Contract.Requires<InvalidOperationException>(FallMoveEvents != null);
             Contract.Ensures(Process != null);
 
-            Process = new EntityFlyProcess(MoveEntityEvent);
+            Process = new EntityFlyProcess(FollowMoveEvents, FallMoveEvents);
         }
 
         [CanBeNull]
@@ -139,7 +159,7 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 
             return null;
         }
-*/
+
         [NotNull]
         private EntityFlyResult Succeed()
         {
