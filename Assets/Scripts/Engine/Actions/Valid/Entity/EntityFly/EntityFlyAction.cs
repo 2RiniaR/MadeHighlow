@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public record EntityFlyAction
-        ([NotNull] EntityID TargetID, [NotNull] Direction3D Direction) : ValidAction<EntityFlyResult>
+        ([NotNull] EntityID TargetID, [NotNull] ValueList<EntityFlyStep> Steps) : ValidAction<EntityFlyResult>
     {
         protected override EntityFlyResult EvaluateBody(IHistory history)
         {

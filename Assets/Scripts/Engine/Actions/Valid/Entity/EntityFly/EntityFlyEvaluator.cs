@@ -27,24 +27,24 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         public EntityFlyResult Evaluate()
         {
             EntityFlyResult result;
-
+/*
             result = FindTarget();
             if (result != null) return result;
 
-            result = CheckCanFly();
+            result = MoveShift();
             if (result != null) return result;
 
-            result = Move();
+            result = MoveFall();
             if (result != null) return result;
 
             WrapProcess();
 
             result = CheckRejection();
             if (result != null) return result;
-
+*/
             return Succeed();
         }
-
+/*
         [CanBeNull]
         private EntityFlyResult FindTarget()
         {
@@ -60,32 +60,50 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         }
 
         [CanBeNull]
-        private EntityFlyResult CheckCanFly()
+        private EntityFlyResult MoveShift()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
+            Contract.Ensures(
+                (Contract.Result<EntityFlyResult>() != null) ^ (ShiftMoveEvent != null && DestinationElevation != null)
+            );
 
-            if (Target.Levitation == false)
+            var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(Simulating);
+            if (result is not MoveEntity.SucceedResult succeedResult)
             {
-                return new CanNotFlyResult(Action);
+                return new ShiftFailedResult(Action, ClimbMoveEvents, result);
             }
+
+            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+            ShiftMoveEvent = succeedEvent;
+            SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
 
             return null;
         }
 
         [CanBeNull]
-        private EntityFlyResult Move()
+        private EntityFlyResult MoveFall()
         {
             Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (MoveEntityEvent != null));
+            Contract.Requires<InvalidOperationException>(SteppingTarget != null);
+            Contract.Requires<InvalidOperationException>(DestinationElevation != null);
+            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
+            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
 
-            var result = new MoveEntityAction(Action.TargetID, Action.Direction).Evaluate(Simulating);
-            if (result is not MoveEntity.SucceedResult succeedResult)
+            var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
+            FallMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
+
+            for (var i = 0; i < distance.Value; i++)
             {
-                return new MoveEntityFailedResult(Action, result);
-            }
+                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
+                if (result is not MoveEntity.SucceedResult succeedResult)
+                {
+                    return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
+                }
 
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            MoveEntityEvent = succeedEvent;
+                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
+                FallMoveEvents = FallMoveEvents.Add(succeedEvent);
+                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+            }
 
             return null;
         }
@@ -121,7 +139,7 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 
             return null;
         }
-
+*/
         [NotNull]
         private EntityFlyResult Succeed()
         {

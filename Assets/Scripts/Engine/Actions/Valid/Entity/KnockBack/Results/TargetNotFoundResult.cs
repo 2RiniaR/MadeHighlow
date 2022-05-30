@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.EntityFly
+namespace RineaR.MadeHighlow.Actions.KnockBack
 {
-    public record CanNotFlyResult([NotNull] EntityFlyAction Action) : EntityFlyResult
+    public record TargetNotFoundResult([NotNull] KnockBackAction Action) : KnockBackResult
     {
         public override World Simulate(World world)
         {

@@ -1,9 +1,4 @@
-﻿using System;
-
-namespace RineaR.MadeHighlow.Actions.KnockBack
+﻿namespace RineaR.MadeHighlow.Actions.KnockBack
 {
-    public record Reduction(int Value) : KnockBackCalculation
-    {
-        public int Value { get; } = Math.Max(0, Value);
-    }
+    public record Reduction(KnockBackReduction Value) : KnockBackCalculation;
 }

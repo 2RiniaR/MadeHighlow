@@ -3,7 +3,11 @@ using RineaR.MadeHighlow.Actions.MoveEntity;
 
 namespace RineaR.MadeHighlow.Actions.EntityFly
 {
-    public record MoveEntityFailedResult(EntityFlyAction Action, [NotNull] MoveEntityResult Failed) : EntityFlyResult
+    public record ShiftFailedResult(
+        [NotNull] EntityFlyAction Action,
+        [NotNull] [ItemNotNull] ValueList<Event<MoveEntity.SucceedResult>> ShiftMoveEvents,
+        [NotNull] MoveEntityResult Failed
+    ) : EntityFlyResult
     {
         public override World Simulate(World world)
         {
