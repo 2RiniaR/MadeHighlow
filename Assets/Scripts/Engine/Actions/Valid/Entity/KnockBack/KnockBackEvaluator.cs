@@ -36,7 +36,10 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
             if (result != null) return result;
 
             CalculateKnockBack();
-            Fly();
+
+            result = Fly();
+            if (result != null) return result;
+
             WrapProcess();
 
             result = CheckRejection();
@@ -93,7 +96,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
             var steps = Enumerable.Range(0, Calculated.Distance.Value)
                 .Select(_ => new EntityFlyStep(Calculated.Direction))
                 .ToValueList();
-            var result = new EntityFlyAction(Action.TargetID, steps).Evaluate(Simulating);
+            var result = new EntityFlyAction(Action.TargetID, new EntityFlyRoute(steps)).Evaluate(Simulating);
             var succeedResult = result.BodyAs<EntityFly.SucceedResult>();
             if (succeedResult == null)
             {

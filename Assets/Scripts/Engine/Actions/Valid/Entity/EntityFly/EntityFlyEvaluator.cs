@@ -66,7 +66,7 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
             Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (FollowMoveEvents != null));
 
             FollowMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
-            foreach (var step in Action.Steps)
+            foreach (var step in Action.Route.Steps)
             {
                 var result = new MoveEntityAction(Action.TargetID, step.Direction).Evaluate(Simulating);
                 if (result is not MoveEntity.SucceedResult succeedResult)
