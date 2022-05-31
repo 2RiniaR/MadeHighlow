@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow
 
         public bool Equals(ID other)
         {
-            return InternalValue != 0 && InternalValue == other.InternalValue;
+            return InternalValue == other.InternalValue;
         }
 
         public override bool Equals(object obj)
@@ -47,6 +47,11 @@ namespace RineaR.MadeHighlow
             }
 
             return new ID(value);
+        }
+
+        public override string ToString()
+        {
+            return InternalValue == 0 ? "None" : InternalValue.ToString();
         }
 
         public static bool operator ==(ID item1, ID item2)

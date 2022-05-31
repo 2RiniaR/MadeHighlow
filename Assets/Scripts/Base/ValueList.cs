@@ -64,6 +64,11 @@ public sealed class ValueList<T> : IEnumerable<T>
         }
     }
 
+    public override string ToString()
+    {
+        return "[" + Items.Aggregate("", (current, item) => current + ", " + item) + "]";
+    }
+
     public ValueList<T> ReplaceItem(Predicate<T> predicate, T newItem)
     {
         var index = Items.FindIndex(predicate);

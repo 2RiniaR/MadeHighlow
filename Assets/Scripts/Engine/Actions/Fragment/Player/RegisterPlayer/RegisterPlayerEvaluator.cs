@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.RegisterPlayer
 {
@@ -26,8 +24,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
 
         private void Format()
         {
-            Contract.Ensures(Registered != null);
-
             Registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
@@ -38,8 +34,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
         [NotNull]
         private RegisterPlayerResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Registered != null);
-
             return new RegisterPlayerResult(Action, Registered);
         }
     }
