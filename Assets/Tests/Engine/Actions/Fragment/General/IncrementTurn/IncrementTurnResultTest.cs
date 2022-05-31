@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
         public void Simulate_Always_ReturnsUpdated()
         {
             var beforeWorld = WorldGenerator.Empty with { CurrentTurn = new Turn(1) };
-            var result = new IncrementTurnResult(new IncrementTurnAction(), new Turn(2));
+            var result = new IncrementTurnResult(IncrementTurnActionGenerator.Empty, new Turn(2));
 
             var actual = result.Simulate(beforeWorld);
 
