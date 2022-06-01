@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
     public class KnockBackEvaluator
     {
         public KnockBackEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] KnockBackAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private KnockBackAction Action { get; }
@@ -66,7 +66,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
 
         private void CalculateKnockBack()
         {
-            var effectors = Component.GetAllOfTypeFrom<IKnockBackCalculator>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IKnockBackCalculator>(Initial.World).Sort();
 
             CalculationInterrupts = ValueList<Interrupt<KnockBackCalculation>>.Empty;
             foreach (var effector in effectors)
@@ -116,7 +116,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [CanBeNull]
         private KnockBackResult CheckRejection()
         {
-            var rejectors = Component.GetAllOfTypeFrom<IKnockBackRejector>(Initial.World).Sort();
+            var rejectors = Context.Finder.GetAllComponents<IKnockBackRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<KnockBackRejection>>.Empty;
             foreach (var rejector in rejectors)

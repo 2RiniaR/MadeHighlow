@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
 {
     public class BigBangEvaluator
     {
-        public BigBangEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, BigBangAction action)
+        public BigBangEvaluator([NotNull] EvaluationContext context, [NotNull] IHistory initial, BigBangAction action)
         {
             Initial = initial;
             Context = context;
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private BigBangAction Action { get; }

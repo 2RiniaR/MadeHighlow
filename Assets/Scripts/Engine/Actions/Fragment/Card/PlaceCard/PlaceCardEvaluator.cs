@@ -6,7 +6,11 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public class PlaceCardEvaluator
     {
-        public PlaceCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, PlaceCardAction action)
+        public PlaceCardEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            PlaceCardAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -14,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PlaceCardAction Action { get; }
@@ -68,7 +72,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
                 return null;
             }
 
-            var effectors = Component.GetAllOfTypeFrom<IPlaceCardReplacer>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IPlaceCardReplacer>(Initial.World).Sort();
             ReplacementInterrupts = ValueList<Interrupt<CardReplacement>>.Empty;
 
             foreach (var effector in effectors)
@@ -136,7 +140,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [CanBeNull]
         private PlaceCardResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IPlaceCardRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IPlaceCardRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<PlaceCardRejection>>.Empty;
             foreach (var effector in effectors)

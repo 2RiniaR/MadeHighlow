@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
     public class DeleteEntityEvaluator
     {
         public DeleteEntityEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] DeleteEntityAction action
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DeleteEntityAction Action { get; }

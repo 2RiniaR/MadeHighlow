@@ -48,5 +48,17 @@ namespace RineaR.MadeHighlow.Actions
 
         [NotNull]
         World DeletePlayer([NotNull] World world, [NotNull] PlayerID id);
+
+        [NotNull]
+        World UpdateUnit([NotNull] World world, [NotNull] Unit after);
+
+        [NotNull]
+        World CreateUnit([NotNull] World world, [NotNull] Unit after);
+
+        [NotNull]
+        World DeleteUnit([NotNull] World world, [NotNull] UnitID id);
+
+        [NotNull]
+        World UpdateAttachable([NotNull] World world, [NotNull] IAttachable after);
     }
 }

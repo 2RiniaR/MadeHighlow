@@ -63,6 +63,16 @@ namespace RineaR.MadeHighlow.Actions
             return GetAllCards(world).Find(card => card.CardID == id);
         }
 
+        public ValueList<Unit> GetAllUnits(World world)
+        {
+            return GetAllPlayers(world).SelectMany(player => player.Units);
+        }
+
+        public Unit FindUnit(World world, UnitID id)
+        {
+            return GetAllUnits(world).Find(unit => unit.UnitID == id);
+        }
+
         public IAttachable FindAttachable(World world, IAttachableID id)
         {
             throw new NotImplementedException();

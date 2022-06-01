@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
     public class PositionEntityEvaluator
     {
         public PositionEntityEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             PositionEntityAction action
         )
@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private PositionEntityAction Action { get; }
 

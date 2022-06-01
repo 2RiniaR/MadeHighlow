@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
     public class UpdateTurnEvaluator
     {
         public UpdateTurnEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] UpdateTurnAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private UpdateTurnAction Action { get; }
@@ -39,7 +39,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
         private void RunActions()
         {
             var interruptsQueue = ValuePriorityQueue<Interrupt<IValidAction>>.Empty;
-            var actors = Component.GetAllOfTypeFrom<IUpdateTurnActor>(Simulating.World).Sort();
+            var actors = Context.Finder.GetAllComponents<IUpdateTurnActor>(Simulating.World).Sort();
             foreach (var actor in actors)
             {
                 var interrupts = actor.UpdateTurnActions(Simulating, Action, interruptsQueue.ToValueList());

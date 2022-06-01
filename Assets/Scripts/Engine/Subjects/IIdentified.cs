@@ -1,6 +1,6 @@
 ﻿namespace RineaR.MadeHighlow
 {
-    public interface IIdentified : IObject
+    public interface IIdentified
     {
         public ID ID { get; init; }
     }

@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow
 {
-    public interface IAttachable : IObject
+    public interface IAttachable
     {
         [NotNull] public IAttachableID AttachableID { get; }
 
@@ -10,8 +10,5 @@ namespace RineaR.MadeHighlow
 
         [NotNull]
         public IAttachable WithComponents([NotNull] [ItemNotNull] ValueList<Component> components);
-
-        [NotNull]
-        public World UpdateIn([NotNull] World world);
     }
 }

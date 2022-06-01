@@ -8,7 +8,11 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
 {
     public class CreateCardEvaluator
     {
-        public CreateCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, CreateCardAction action)
+        public CreateCardEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            CreateCardAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -16,7 +20,7 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateCardAction Action { get; }

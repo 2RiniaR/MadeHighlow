@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
     public class GenerateTileEvaluator
     {
         public GenerateTileEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             GenerateTileAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateTileAction Action { get; }
@@ -64,7 +64,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [CanBeNull]
         private GenerateTileResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IGenerateTileRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IGenerateTileRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<GenerateTileRejection>>.Empty;
             foreach (var effector in effectors)

@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
     public class ReserveCommandEvaluator
     {
         public ReserveCommandEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             ReserveCommandAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ReserveCommandAction Action { get; }
 
@@ -44,7 +44,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
                 return new FailedResult(Action, FailedReason.CardNotFound);
             }
 
-            var unit = Action.Command.UnitID.GetFrom(Initial.World);
+            var unit = Context.Finder.FindUnit(Initial.World, Action.Command.UnitID);
             if (unit == null)
             {
                 return new FailedResult(Action, FailedReason.UnitNotFound);
@@ -56,7 +56,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
                 return new FailedResult(Action, FailedReason.OwnerNotFound);
             }
 
-            if (unit.FollowingPlayerID != player.PlayerID)
+            if (unit.FollowingID != player.PlayerID)
             {
                 return new FailedResult(Action, FailedReason.NotOwner);
             }
@@ -67,7 +67,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [CanBeNull]
         private ReserveCommandResult CheckAcceptance()
         {
-            var effectors = Component.GetAllOfTypeFrom<IReserveCommandAcceptor>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IReserveCommandAcceptor>(Initial.World).Sort();
 
             AcceptanceInterrupts = ValueList<Interrupt<ReserveCommandAcceptance>>.Empty;
             foreach (var effector in effectors)

@@ -29,7 +29,8 @@ namespace RineaR.MadeHighlow.Actions
         [ItemNotNull]
         ValueList<Entity> SearchEntities([NotNull] World world, [NotNull] EntityCondition condition);
 
-        [CanBeNull]
+        [NotNull]
+        [ItemNotNull]
         ValueList<T> GetAllComponents<T>([NotNull] World world) where T : class;
 
         [CanBeNull]
@@ -41,6 +42,13 @@ namespace RineaR.MadeHighlow.Actions
 
         [CanBeNull]
         Card FindCard([NotNull] World world, [NotNull] CardID id);
+
+        [NotNull]
+        [ItemNotNull]
+        ValueList<Unit> GetAllUnits([NotNull] World world);
+
+        [CanBeNull]
+        Unit FindUnit([NotNull] World world, [NotNull] UnitID id);
 
         [CanBeNull]
         IAttachable FindAttachable([NotNull] World world, [NotNull] IAttachableID id);

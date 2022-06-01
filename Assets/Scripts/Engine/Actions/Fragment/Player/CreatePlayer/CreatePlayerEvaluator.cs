@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
     public class CreatePlayerEvaluator
     {
         public CreatePlayerEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             CreatePlayerAction action
         )
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreatePlayerAction Action { get; }

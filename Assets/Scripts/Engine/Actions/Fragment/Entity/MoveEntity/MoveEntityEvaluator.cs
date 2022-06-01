@@ -5,7 +5,11 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
     public class MoveEntityEvaluator
     {
-        public MoveEntityEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, MoveEntityAction action)
+        public MoveEntityEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            MoveEntityAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -13,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private MoveEntityAction Action { get; }
@@ -79,7 +83,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
         [CanBeNull]
         private MoveEntityResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IMoveEntityRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IMoveEntityRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<MoveEntityRejection>>.Empty;
             foreach (var effector in effectors)

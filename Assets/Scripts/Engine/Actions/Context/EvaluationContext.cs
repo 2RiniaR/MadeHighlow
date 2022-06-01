@@ -1,8 +1,8 @@
 ﻿namespace RineaR.MadeHighlow.Actions
 {
-    public class ActionContext
+    public class EvaluationContext
     {
-        public ActionContext(IActionRunner actions, IWorldFinder finder, IRandomGenerator randomGenerator)
+        public EvaluationContext(IActionRunner actions, IWorldFinder finder, IRandomGenerator randomGenerator)
         {
             Actions = actions;
             Finder = finder;

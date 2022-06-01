@@ -6,7 +6,11 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public class EntityFlyEvaluator
     {
-        public EntityFlyEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, EntityFlyAction action)
+        public EntityFlyEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            EntityFlyAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -14,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityFlyAction Action { get; }
@@ -129,7 +133,7 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [CanBeNull]
         private EntityFlyResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IEntityFlyRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IEntityFlyRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<EntityFlyRejection>>.Empty;
             foreach (var effector in effectors)

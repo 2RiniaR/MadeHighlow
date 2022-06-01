@@ -5,7 +5,11 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public class EntityStepEvaluator
     {
-        public EntityStepEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, EntityStepAction action)
+        public EntityStepEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            EntityStepAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -13,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityStepAction Action { get; }
@@ -180,7 +184,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         private EntityStepResult CheckCostIsEnough()
         {
             CostEffectInterrupts = ValueList<Interrupt<EntityStepCostEffect>>.Empty;
-            var effectors = Component.GetAllOfTypeFrom<IEntityStepCostEffector>(Simulating.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IEntityStepCostEffector>(Simulating.World).Sort();
             foreach (var effector in effectors)
             {
                 var interrupts = effector.EntityStepCostEffects(Simulating, Action, Process, CostEffectInterrupts);
@@ -218,7 +222,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         private EntityStepResult CheckRejection()
         {
             RejectionInterrupts = ValueList<Interrupt<EntityStepRejection>>.Empty;
-            var effectors = Component.GetAllOfTypeFrom<IEntityStepRejector>(Simulating.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IEntityStepRejector>(Simulating.World).Sort();
             foreach (var effector in effectors)
             {
                 var interrupt = effector.EntityStepRejection(

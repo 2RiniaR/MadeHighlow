@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public class InstantHealEvaluator
     {
         public InstantHealEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             InstantHealAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantHealAction Action { get; }
 
@@ -75,7 +75,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
 
         private void CalculateHeal()
         {
-            var effectors = Component.GetAllOfTypeFrom<IInstantHealCalculator>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IInstantHealCalculator>(Initial.World).Sort();
 
             CalculationInterrupts = ValueList<Interrupt<InstantHealCalculation>>.Empty;
             foreach (var effector in effectors)
@@ -98,7 +98,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [CanBeNull]
         private InstantHealResult CheckRejection()
         {
-            var rejectors = Component.GetAllOfTypeFrom<IInstantHealRejector>(Initial.World).Sort();
+            var rejectors = Context.Finder.GetAllComponents<IInstantHealRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<InstantHealRejection>>.Empty;
             foreach (var rejector in rejectors)

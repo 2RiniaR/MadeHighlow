@@ -5,7 +5,11 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public class SupplyCardEvaluator
     {
-        public SupplyCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, SupplyCardAction action)
+        public SupplyCardEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            SupplyCardAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -13,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private SupplyCardAction Action { get; }
@@ -65,7 +69,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [CanBeNull]
         private SupplyCardResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<ISupplyCardRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<ISupplyCardRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<SupplyCardRejection>>.Empty;
             foreach (var effector in effectors)

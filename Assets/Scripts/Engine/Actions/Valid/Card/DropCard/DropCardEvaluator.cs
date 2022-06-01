@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public class DropCardEvaluator
     {
-        public DropCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, DropCardAction action)
+        public DropCardEvaluator([NotNull] EvaluationContext context, [NotNull] IHistory initial, DropCardAction action)
         {
             Initial = initial;
             Context = context;
@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DropCardAction Action { get; }
@@ -61,7 +61,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
         [CanBeNull]
         private DropCardResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IDropCardRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IDropCardRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DropCardRejection>>.Empty;
             foreach (var effector in effectors)

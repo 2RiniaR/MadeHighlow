@@ -8,12 +8,12 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     /// </summary>
     public class StartCommandsOrderer
     {
-        public StartCommandsOrderer([NotNull] ActionContext context)
+        public StartCommandsOrderer([NotNull] EvaluationContext context)
         {
             Context = context;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
 
         /// <summary>
         ///     命令の実行順を決定する
@@ -48,8 +48,8 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             }
 
             // ユニットが削除されるときは、コマンドも同時に削除されるはずなので、例外を投げる
-            var unit1 = command1.UnitID.GetFrom(world) ?? throw new NullReferenceException();
-            var unit2 = command2.UnitID.GetFrom(world) ?? throw new NullReferenceException();
+            var unit1 = Context.Finder.FindUnit(world, command1.UnitID) ?? throw new NullReferenceException();
+            var unit2 = Context.Finder.FindUnit(world, command2.UnitID) ?? throw new NullReferenceException();
 
             // (2) (1)が同一の場合、「行動するユニットのメド」が高い順に行動する。
             var medoCompare = CompareMedo(unit1, unit2);
@@ -59,14 +59,14 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             }
 
             // (3) (2)が同一の場合、「行動するユニットの体力」が高い順に行動する。
-            var healthCompare = CompareHealth(unit1, unit2);
+            var healthCompare = CompareHealth(unit1, unit2, world);
             if (healthCompare != 0)
             {
                 return healthCompare;
             }
 
             // (4) (3)が同一の場合、ユニットの行動順はランダムとなる。
-            return CompareRandom(history);
+            return CompareRandom();
         }
 
         private int CompareQuickness([NotNull] Command command1, [NotNull] Command command2, [NotNull] World world)
@@ -89,25 +89,23 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return medo1.Value.CompareTo(medo2.Value);
         }
 
-        private int CompareHealth([NotNull] Unit unit1, [NotNull] Unit unit2)
+        private int CompareHealth([NotNull] Unit unit1, [NotNull] Unit unit2, [NotNull] World world)
         {
-            if (unit1.Vitality == null)
-            {
-                return unit2.Vitality == null ? 0 : -1;
-            }
+            var entity1 = Context.Finder.FindEntity(world, unit1.EntityID);
+            var entity2 = Context.Finder.FindEntity(world, unit2.EntityID);
+            if (entity1 == null) return entity2 == null ? 0 : -1;
+            if (entity2 == null) return 1;
 
-            if (unit2.Vitality == null)
-            {
-                return 1;
-            }
+            if (entity1.Vitality == null) return entity2.Vitality == null ? 0 : -1;
+            if (entity2.Vitality == null) return 1;
 
-            var health1 = unit1.Vitality.Health;
-            var health2 = unit2.Vitality.Health;
+            var health1 = entity1.Vitality.Health;
+            var health2 = entity2.Vitality.Health;
 
             return health2.Value.CompareTo(health1.Value);
         }
 
-        private int CompareRandom([NotNull] IHistory history)
+        private int CompareRandom()
         {
             return Context.RandomGenerator.GetRandom() > 1 / 2f ? 1 : 0;
         }

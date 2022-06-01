@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
     public class CreateComponentEvaluator
     {
         public CreateComponentEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             CreateComponentAction action
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateComponentAction Action { get; }
@@ -81,7 +81,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [CanBeNull]
         private CreateComponentResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<ICreateComponentRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<ICreateComponentRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<CreateComponentRejection>>.Empty;
             foreach (var effector in effectors)

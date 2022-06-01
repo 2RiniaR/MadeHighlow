@@ -5,7 +5,11 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
 {
     public class EntityWalkEvaluator
     {
-        public EntityWalkEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, EntityWalkAction action)
+        public EntityWalkEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            EntityWalkAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -13,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityWalkAction Action { get; }
@@ -82,7 +86,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [CanBeNull]
         private EntityWalkResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IEntityWalkRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IEntityWalkRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<EntityWalkRejection>>.Empty;
             foreach (var effector in effectors)

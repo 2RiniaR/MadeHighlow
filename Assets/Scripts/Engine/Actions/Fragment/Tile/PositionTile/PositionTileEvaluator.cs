@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
     public class PositionTileEvaluator
     {
         public PositionTileEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             PositionTileAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private PositionTileAction Action { get; }
 

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public class GenerateEntityEvaluator
     {
         public GenerateEntityEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             GenerateEntityAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateEntityAction Action { get; }
@@ -64,7 +64,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [CanBeNull]
         private GenerateEntityResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IGenerateEntityRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IGenerateEntityRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<GenerateEntityRejection>>.Empty;
             foreach (var effector in effectors)

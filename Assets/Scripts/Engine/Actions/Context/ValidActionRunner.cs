@@ -8,7 +8,7 @@
         {
             // TODO: PredictAction, ReactAction の実行優先順位をどうやって決めるか...
             // TODO: Reactionの無限ループ対策をしないといけない。カウンター持ち2体が互いにカウンターし合ったら簡単に無限ループが完成してしまう。
-            var predictionActions = Component.GetAllOfTypeFrom<IPredictor>(history.World)
+            var predictionActions = Context.Finder.GetAllComponents<IPredictor>(history.World)
                 .SelectMany(predictor => predictor.PredictionsOn(this));
             var predictionEvents = ValueList<Event<ReactedResult>>.Empty;
             foreach (var predictionAction in predictionActions)
@@ -21,7 +21,7 @@
             var bodyResult = EvaluateBody(history);
             history = history.Appended(bodyResult, out var bodyEvent);
 
-            var reactionActions = Component.GetAllOfTypeFrom<IReactor>(history.World)
+            var reactionActions = Context.Finder.GetAllComponents<IReactor>(history.World)
                 .SelectMany(predictor => predictor.ReactionsOn(bodyResult));
             var reactionEvents = ValueList<Event<ReactedResult>>.Empty;
             foreach (var reactionAction in reactionActions)

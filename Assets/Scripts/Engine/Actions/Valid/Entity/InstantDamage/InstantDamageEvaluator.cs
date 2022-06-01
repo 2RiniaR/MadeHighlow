@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     public class InstantDamageEvaluator
     {
         public InstantDamageEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] InstantDamageAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantDamageAction Action { get; }
 
@@ -75,7 +75,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
 
         private void CalculateDamage()
         {
-            var effectors = Component.GetAllOfTypeFrom<IInstantDamageCalculator>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IInstantDamageCalculator>(Initial.World).Sort();
 
             CalculationInterrupts = ValueList<Interrupt<InstantDamageCalculation>>.Empty;
             foreach (var effector in effectors)
@@ -98,7 +98,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [CanBeNull]
         private InstantDamageResult CheckRejection()
         {
-            var rejectors = Component.GetAllOfTypeFrom<IInstantDamageRejector>(Initial.World).Sort();
+            var rejectors = Context.Finder.GetAllComponents<IInstantDamageRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<InstantDamageRejection>>.Empty;
             foreach (var rejector in rejectors)

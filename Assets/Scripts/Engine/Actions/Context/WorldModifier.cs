@@ -54,14 +54,14 @@ namespace RineaR.MadeHighlow.Actions
             var modifiedAttached = attached.WithComponents(
                 attached.Components.ReplaceItem(card => card.ComponentID == after.ComponentID, after)
             );
-            return modifiedAttached.UpdateIn(world);
+            return UpdateAttachable(world, modifiedAttached);
         }
 
         public World CreateComponent(World world, Component after)
         {
             var attached = Finder.FindAttachable(world, after.AttachedID) ?? throw new NullReferenceException();
             var modifiedAttached = attached.WithComponents(attached.Components.Add(after));
-            return modifiedAttached.UpdateIn(world);
+            return UpdateAttachable(world, modifiedAttached);
         }
 
         public World DeleteComponent(World world, ComponentID id)
@@ -98,6 +98,33 @@ namespace RineaR.MadeHighlow.Actions
         }
 
         public World DeletePlayer(World world, PlayerID id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public World UpdateUnit(World world, Unit after)
+        {
+            var player = Finder.FindPlayer(world, after.FollowingID) ?? throw new NullReferenceException();
+            var modifiedPlayer = player with
+            {
+                Units = player.Units.ReplaceItem(card => card.UnitID == after.UnitID, after),
+            };
+            return UpdatePlayer(world, modifiedPlayer);
+        }
+
+        public World CreateUnit(World world, Unit after)
+        {
+            var player = Finder.FindPlayer(world, after.FollowingID) ?? throw new NullReferenceException();
+            var modifiedPlayer = player with { Units = player.Units.Add(after) };
+            return UpdatePlayer(world, modifiedPlayer);
+        }
+
+        public World DeleteUnit(World world, UnitID id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public World UpdateAttachable(World world, IAttachable after)
         {
             throw new NotImplementedException();
         }

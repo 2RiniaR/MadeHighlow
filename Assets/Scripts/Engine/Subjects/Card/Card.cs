@@ -21,15 +21,5 @@ namespace RineaR.MadeHighlow
         }
 
         IAttachableID IAttachable.AttachableID => CardID;
-
-        [NotNull]
-        [ItemNotNull]
-        public ValueList<IObject> GetChildren()
-        {
-            return ValueList.Concat(
-                Components.Select(item => item as IObject),
-                Components.SelectMany(item => item.GetChildren())
-            );
-        }
     }
 }

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
     public class RemoveComponentEvaluator
     {
         public RemoveComponentEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             RemoveComponentAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private RemoveComponentAction Action { get; }

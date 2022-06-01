@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
     public class EntityTeleportEvaluator
     {
         public EntityTeleportEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             EntityTeleportAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityTeleportAction Action { get; }
@@ -84,7 +84,7 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [CanBeNull]
         private EntityTeleportResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IEntityTeleportRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IEntityTeleportRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<EntityTeleportRejection>>.Empty;
             foreach (var effector in effectors)

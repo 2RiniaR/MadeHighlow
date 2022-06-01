@@ -7,7 +7,11 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
 {
     public class CreateTileEvaluator
     {
-        public CreateTileEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, CreateTileAction action)
+        public CreateTileEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            CreateTileAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -15,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateTileAction Action { get; }

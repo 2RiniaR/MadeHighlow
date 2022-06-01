@@ -5,7 +5,11 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public class RunCommandEvaluator
     {
-        public RunCommandEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, RunCommandAction action)
+        public RunCommandEvaluator(
+            [NotNull] EvaluationContext context,
+            [NotNull] IHistory initial,
+            RunCommandAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -13,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private RunCommandAction Action { get; }
@@ -46,14 +50,14 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [CanBeNull]
         private RunCommandResult PreValidation()
         {
-            var unit = Action.Command.UnitID.GetFrom(Initial.World);
+            var unit = Context.Finder.FindUnit(Initial.World, Action.Command.UnitID);
 
             if (unit == null)
             {
                 return new FailedResult(Action, FailedReason.UnitNotFound);
             }
 
-            if (unit.Vitality != null && unit.Vitality.IsDead)
+            if (unit.IsDead)
             {
                 return new FailedResult(Action, FailedReason.UnitIsDead);
             }
@@ -70,7 +74,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
                 return new FailedResult(Action, FailedReason.PlayerNotFound);
             }
 
-            if (unit.FollowingPlayerID != player.PlayerID)
+            if (unit.FollowingID != player.PlayerID)
             {
                 return new FailedResult(Action, FailedReason.NotOwner);
             }
@@ -106,7 +110,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [CanBeNull]
         private RunCommandResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IRunCommandRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IRunCommandRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<RunCommandRejection>>.Empty;
             foreach (var effector in effectors)

@@ -2,9 +2,6 @@
 
 namespace RineaR.MadeHighlow
 {
-    /// <summary>
-    ///     タイル
-    /// </summary>
     public record Tile(
         ID ID,
         [NotNull] Position2D Position2D,
@@ -20,16 +17,6 @@ namespace RineaR.MadeHighlow
         public IAttachable WithComponents(ValueList<Component> components)
         {
             return this with { Components = components };
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        public ValueList<IObject> GetChildren()
-        {
-            return ValueList.Concat(
-                Components.Select(item => item as IObject),
-                Components.SelectMany(item => item.GetChildren())
-            );
         }
     }
 }

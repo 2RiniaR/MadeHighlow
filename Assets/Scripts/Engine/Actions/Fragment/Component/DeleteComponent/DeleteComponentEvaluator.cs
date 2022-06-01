@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
     public class DeleteComponentEvaluator
     {
         public DeleteComponentEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             DeleteComponentAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private DeleteComponentAction Action { get; }
 
@@ -38,7 +38,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
         [CanBeNull]
         private DeleteComponentResult CheckTargetExist()
         {
-            if (Action.TargetID.GetFrom(Initial.World) == null)
+            if (Context.Finder.FindComponent(Initial.World, Action.TargetID) == null)
             {
                 return new NotFoundResult(Action);
             }
@@ -49,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
         [CanBeNull]
         private DeleteComponentResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IDeleteComponentRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IDeleteComponentRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DeleteComponentRejection>>.Empty;
             foreach (var effector in effectors)

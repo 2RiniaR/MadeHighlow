@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public class PayCardEvaluator
     {
-        public PayCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, PayCardAction action)
+        public PayCardEvaluator([NotNull] EvaluationContext context, [NotNull] IHistory initial, PayCardAction action)
         {
             Initial = initial;
             Context = context;
@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PayCardAction Action { get; }
@@ -61,7 +61,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         [CanBeNull]
         private PayCardResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IPayCardExempter>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IPayCardExempter>(Initial.World).Sort();
 
             ExemptionInterrupts = ValueList<Interrupt<PayCardExemption>>.Empty;
             foreach (var effector in effectors)

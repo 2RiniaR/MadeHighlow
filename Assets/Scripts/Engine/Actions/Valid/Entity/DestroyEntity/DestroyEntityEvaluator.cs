@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
     public class DestroyEntityEvaluator
     {
         public DestroyEntityEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             DestroyEntityAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyEntityAction Action { get; }
@@ -64,7 +64,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [CanBeNull]
         private DestroyEntityResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IDestroyEntityRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IDestroyEntityRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DestroyEntityRejection>>.Empty;
             foreach (var effector in effectors)

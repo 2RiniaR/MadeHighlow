@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
     public class InstantDeathEvaluator
     {
         public InstantDeathEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] InstantDeathAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantDeathAction Action { get; }
 
@@ -72,7 +72,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [CanBeNull]
         private InstantDeathResult CheckRejection()
         {
-            var rejectors = Component.GetAllOfTypeFrom<IInstantDeathRejector>(Initial.World).Sort();
+            var rejectors = Context.Finder.GetAllComponents<IInstantDeathRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<InstantDeathRejection>>.Empty;
             foreach (var rejector in rejectors)

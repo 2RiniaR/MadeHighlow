@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public class ElevateTileEvaluator
     {
         public ElevateTileEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             ElevateTileAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
             Action = action;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ElevateTileAction Action { get; }
 
@@ -52,7 +52,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [CanBeNull]
         private ElevateTileResult CheckRejection()
         {
-            var effectors = Component.GetAllOfTypeFrom<IElevateTileRejector>(Initial.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<IElevateTileRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<ElevateTileRejection>>.Empty;
             foreach (var effector in effectors)

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     public class StartCommandsEvaluator
     {
         public StartCommandsEvaluator(
-            [NotNull] ActionContext context,
+            [NotNull] EvaluationContext context,
             [NotNull] IHistory initial,
             StartCommandsAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             Simulating = Initial;
         }
 
-        [NotNull] private ActionContext Context { get; }
+        [NotNull] private EvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private StartCommandsAction Action { get; }
