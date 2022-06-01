@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.AllocateID;
 using RineaR.MadeHighlow.Actions.CreateComponent;
 using RineaR.MadeHighlow.Actions.RegisterPlayer;
@@ -46,8 +44,6 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
 
         private void AllocateID()
         {
-            Contract.Ensures(AllocateIDEvent != null);
-
             var result = new AllocateIDAction().Evaluate(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             AllocateIDEvent = @event;
@@ -56,9 +52,6 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         [CanBeNull]
         private CreatePlayerResult Register()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Ensures((Contract.Result<CreatePlayerResult>() != null) ^ (RegisterPlayerEvent != null));
-
             var result = new RegisterPlayerAction(
                 AllocateIDEvent.Result.AllocatedID,
                 Action.InitialProps
@@ -73,9 +66,6 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         [CanBeNull]
         private CreatePlayerResult CreateComponents()
         {
-            Contract.Requires<InvalidOperationException>(RegisterPlayerEvent != null);
-            Contract.Ensures(CreateComponentEvents != null);
-
             CreateComponentEvents = ValueList<Event<CreateComponent.SucceedResult>>.Empty;
 
             foreach (var component in Action.InitialProps.Components)
@@ -98,19 +88,12 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Requires<InvalidOperationException>(RegisterPlayerEvent != null);
-            Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new CreatePlayerProcess(AllocateIDEvent, RegisterPlayerEvent, CreateComponentEvents);
         }
 
         [NotNull]
         private CreatePlayerResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

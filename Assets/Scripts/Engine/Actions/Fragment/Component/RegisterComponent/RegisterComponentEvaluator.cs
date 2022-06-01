@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
@@ -42,8 +40,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
 
         private void Format()
         {
-            Contract.Ensures(Registered != null);
-
             Registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
@@ -54,8 +50,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         [NotNull]
         private RegisterComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Registered != null);
-
             return new SucceedResult(Action, Registered);
         }
     }
