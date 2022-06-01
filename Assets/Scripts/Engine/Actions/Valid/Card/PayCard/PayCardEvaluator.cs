@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteCard;
 
 namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public class PayCardEvaluator
     {
-        public PayCardEvaluator([NotNull] IHistory initial, PayCardAction action)
+        public PayCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, PayCardAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PayCardAction Action { get; }
@@ -41,7 +41,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 
         private PayCardResult DeleteTarget()
         {
-            var result = new DeleteCardAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.DeleteCard(Simulating, new DeleteCardAction(Action.TargetID));
             if (result is not DeleteCard.SucceedResult succeedResult)
             {
                 return new DeleteCardFailedResult(Action, result);
@@ -55,18 +55,12 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteCardEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new PayCardProcess(DeleteCardEvent);
         }
 
         [CanBeNull]
         private PayCardResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(ExemptionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IPayCardExempter>(Initial.World).Sort();
 
             ExemptionInterrupts = ValueList<Interrupt<PayCardExemption>>.Empty;
@@ -88,9 +82,6 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         [NotNull]
         private PayCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(ExemptionInterrupts != null);
-
             return new SucceedResult(Action, Process, ExemptionInterrupts);
         }
     }

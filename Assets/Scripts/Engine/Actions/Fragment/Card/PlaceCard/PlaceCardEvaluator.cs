@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.CreateCard;
 using RineaR.MadeHighlow.Actions.DropCard;
 
@@ -8,13 +6,15 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public class PlaceCardEvaluator
     {
-        public PlaceCardEvaluator([NotNull] IHistory initial, PlaceCardAction action)
+        public PlaceCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, PlaceCardAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PlaceCardAction Action { get; }
@@ -51,9 +51,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [CanBeNull]
         private PlaceCardResult FindParent()
         {
-            Contract.Ensures((Contract.Result<PlaceCardResult>() != null) ^ (Parent != null));
-
-            Parent = Action.ParentID.GetFrom(Simulating.World);
+            Parent = Context.Finder.FindPlayer(Simulating.World, Action.ParentID);
             if (Parent == null)
             {
                 return new ParentNotFoundResult(Action);
@@ -65,8 +63,6 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [CanBeNull]
         private PlaceCardResult AllocateDeckSpace()
         {
-            Contract.Requires<InvalidOperationException>(Parent != null);
-
             if (ExistDeckSpace(Parent))
             {
                 return null;
@@ -86,7 +82,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
 
             foreach (var interrupt in ReplacementInterrupts)
             {
-                var result = new DropCardAction(interrupt.Effect.ReplacedID).Evaluate(Simulating);
+                var result = Context.Actions.DropCard(Simulating, new DropCardAction(interrupt.Effect.ReplacedID));
 
                 var succeedResult = result.BodyAs<DropCard.SucceedResult>();
                 if (succeedResult == null)
@@ -96,7 +92,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
 
                 Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
 
-                var parent = Action.ParentID.GetFrom(Simulating.World);
+                var parent = Context.Finder.FindPlayer(Simulating.World, Action.ParentID);
                 if (parent == null || !ExistDeckSpace(parent))
                 {
                     continue;
@@ -117,7 +113,10 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [CanBeNull]
         private PlaceCardResult CreateCard()
         {
-            var result = new CreateCardAction(Action.ParentID, Action.InitialProps).Evaluate(Simulating);
+            var result = Context.Actions.CreateCard(
+                Simulating,
+                new CreateCardAction(Action.ParentID, Action.InitialProps)
+            );
             if (result is not CreateCard.SucceedResult succeedResult)
             {
                 return new CreateCardFailedResult(Action, DropCardEvent, result);
@@ -131,18 +130,12 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(CreateCardEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new PlaceCardProcess(DropCardEvent, CreateCardEvent);
         }
 
         [CanBeNull]
         private PlaceCardResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IPlaceCardRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<PlaceCardRejection>>.Empty;
@@ -170,9 +163,6 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [NotNull]
         private PlaceCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, ReplacementInterrupts, Process, RejectionInterrupts);
         }
     }

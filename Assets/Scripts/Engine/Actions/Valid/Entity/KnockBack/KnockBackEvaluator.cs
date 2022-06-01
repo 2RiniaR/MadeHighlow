@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.EntityFly;
 
@@ -8,12 +6,18 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
 {
     public class KnockBackEvaluator
     {
-        public KnockBackEvaluator([NotNull] IHistory initial, [NotNull] KnockBackAction action)
+        public KnockBackEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] KnockBackAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private KnockBackAction Action { get; }
@@ -51,9 +55,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [CanBeNull]
         private KnockBackResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<KnockBackResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -64,9 +66,6 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
 
         private void CalculateKnockBack()
         {
-            Contract.Ensures(CalculationInterrupts != null);
-            Contract.Ensures(Calculated != null);
-
             var effectors = Component.GetAllOfTypeFrom<IKnockBackCalculator>(Initial.World).Sort();
 
             CalculationInterrupts = ValueList<Interrupt<KnockBackCalculation>>.Empty;
@@ -90,13 +89,13 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [CanBeNull]
         private KnockBackResult Fly()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-
             var steps = Enumerable.Range(0, Calculated.Distance.Value)
                 .Select(_ => new EntityFlyStep(Calculated.Direction))
                 .ToValueList();
-            var result = new EntityFlyAction(Action.TargetID, new EntityFlyRoute(steps)).Evaluate(Simulating);
+            var result = Context.Actions.EntityFly(
+                Simulating,
+                new EntityFlyAction(Action.TargetID, new EntityFlyRoute(steps))
+            );
             var succeedResult = result.BodyAs<EntityFly.SucceedResult>();
             if (succeedResult == null)
             {
@@ -111,20 +110,12 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(EntityFlyEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new KnockBackProcess(EntityFlyEvent);
         }
 
         [CanBeNull]
         private KnockBackResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var rejectors = Component.GetAllOfTypeFrom<IKnockBackRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<KnockBackRejection>>.Empty;
@@ -153,11 +144,6 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [NotNull]
         private KnockBackResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, CalculationInterrupts, Calculated, Process, RejectionInterrupts);
         }
     }

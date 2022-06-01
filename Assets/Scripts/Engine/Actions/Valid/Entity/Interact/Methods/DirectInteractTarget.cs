@@ -4,6 +4,6 @@ namespace RineaR.MadeHighlow.Actions
 {
     public record DirectInteractTarget(
         [NotNull] EntityID TargetEntityID,
-        [NotNull] [ItemNotNull] ValueList<ValidAction> Effects
+        [NotNull] [ItemNotNull] ValueList<IValidAction> Effects
     );
 }

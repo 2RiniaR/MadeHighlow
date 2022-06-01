@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
     public class InstantHealEvaluator
     {
-        public InstantHealEvaluator([NotNull] IHistory initial, InstantHealAction action)
+        public InstantHealEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            InstantHealAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantHealAction Action { get; }
 
@@ -42,9 +46,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [CanBeNull]
         private InstantHealResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<InstantHealResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new FailedResult(Action, FailedReason.NoTarget);
@@ -56,8 +58,6 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [CanBeNull]
         private InstantHealResult CheckCondition()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (Target.Vitality == null)
             {
@@ -75,9 +75,6 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
 
         private void CalculateHeal()
         {
-            Contract.Ensures(CalculationInterrupts != null);
-            Contract.Ensures(Calculated != null);
-
             var effectors = Component.GetAllOfTypeFrom<IInstantHealCalculator>(Initial.World).Sort();
 
             CalculationInterrupts = ValueList<Interrupt<InstantHealCalculation>>.Empty;
@@ -101,10 +98,6 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [CanBeNull]
         private InstantHealResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var rejectors = Component.GetAllOfTypeFrom<IInstantHealRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<InstantHealRejection>>.Empty;
@@ -132,10 +125,6 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [NotNull]
         private InstantHealResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, CalculationInterrupts, Calculated, RejectionInterrupts);
         }
     }

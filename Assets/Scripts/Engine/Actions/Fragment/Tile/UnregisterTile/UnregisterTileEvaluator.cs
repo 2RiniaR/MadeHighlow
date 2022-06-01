@@ -4,12 +4,18 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
 {
     public class UnregisterTileEvaluator
     {
-        public UnregisterTileEvaluator([NotNull] IHistory initial, [NotNull] UnregisterTileAction action)
+        public UnregisterTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] UnregisterTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private UnregisterTileAction Action { get; }
 
@@ -27,7 +33,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
         [CanBeNull]
         private UnregisterTileResult FindTarget()
         {
-            if (Action.TargetID.GetFrom(Initial.World) == null)
+            if (Context.Finder.FindTile(Initial.World, Action.TargetID) == null)
             {
                 return new NotFoundResult(Action);
             }

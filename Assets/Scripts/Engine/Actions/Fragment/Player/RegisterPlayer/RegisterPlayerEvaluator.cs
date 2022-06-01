@@ -4,12 +4,18 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
 {
     public class RegisterPlayerEvaluator
     {
-        public RegisterPlayerEvaluator([NotNull] IHistory initial, RegisterPlayerAction action)
+        public RegisterPlayerEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            RegisterPlayerAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterPlayerAction Action { get; }
 

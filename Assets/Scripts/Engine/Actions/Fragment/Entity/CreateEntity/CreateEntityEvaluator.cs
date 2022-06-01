@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.AllocateID;
 using RineaR.MadeHighlow.Actions.CreateComponent;
 using RineaR.MadeHighlow.Actions.RegisterEntity;
@@ -9,13 +7,19 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
     public class CreateEntityEvaluator
     {
-        public CreateEntityEvaluator([NotNull] IHistory initial, CreateEntityAction action)
+        public CreateEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            CreateEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateEntityAction Action { get; }
@@ -46,9 +50,7 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
 
         private void AllocateID()
         {
-            Contract.Ensures(AllocateIDEvent != null);
-
-            var result = new AllocateIDAction().Evaluate(Simulating);
+            var result = Context.Actions.AllocateID(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             AllocateIDEvent = @event;
         }
@@ -56,13 +58,10 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
         [CanBeNull]
         private CreateEntityResult Register()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Ensures((Contract.Result<CreateEntityResult>() != null) ^ (RegisterEntityEvent != null));
-
-            var result = new RegisterEntityAction(
-                AllocateIDEvent.Result.AllocatedID,
-                Action.InitialProps
-            ).Evaluate(Simulating);
+            var result = Context.Actions.RegisterEntity(
+                Simulating,
+                new RegisterEntityAction(AllocateIDEvent.Result.AllocatedID, Action.InitialProps)
+            );
 
             Simulating = Simulating.Appended(result, out var @event);
             RegisterEntityEvent = @event;
@@ -73,15 +72,14 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
         [CanBeNull]
         private CreateEntityResult CreateComponents()
         {
-            Contract.Requires<InvalidOperationException>(RegisterEntityEvent != null);
-            Contract.Ensures(CreateComponentEvents != null);
-
             CreateComponentEvents = ValueList<Event<CreateComponent.SucceedResult>>.Empty;
 
             foreach (var component in Action.InitialProps.Components)
             {
-                var result = new CreateComponentAction(RegisterEntityEvent.Result.Registered.EntityID, component)
-                    .Evaluate(Simulating);
+                var result = Context.Actions.CreateComponent(
+                    Simulating,
+                    new CreateComponentAction(RegisterEntityEvent.Result.Registered.EntityID, component)
+                );
 
                 var succeedResult = result as CreateComponent.SucceedResult;
                 if (succeedResult == null)
@@ -98,19 +96,12 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Requires<InvalidOperationException>(RegisterEntityEvent != null);
-            Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new CreateEntityProcess(AllocateIDEvent, RegisterEntityEvent, CreateComponentEvents);
         }
 
         [NotNull]
         private CreateEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

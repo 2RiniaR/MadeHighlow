@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
             var stubHistory = new Mock<IHistory>();
             stubHistory.SetupGet(history => history.World)
                 .Returns(WorldGenerator.Empty with { CurrentTurn = new Turn(1) });
-            var action = new IncrementTurnAction();
+            var action = new IncrementTurnEvaluator();
 
             var actual = action.Evaluate(stubHistory.Object);
 

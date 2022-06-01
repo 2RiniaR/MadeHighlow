@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public class InstantDamageEvaluator
     {
-        public InstantDamageEvaluator([NotNull] IHistory initial, [NotNull] InstantDamageAction action)
+        public InstantDamageEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] InstantDamageAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantDamageAction Action { get; }
 
@@ -42,9 +46,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [CanBeNull]
         private InstantDamageResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<InstantDamageResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new FailedResult(Action, FailedReason.NoTarget);
@@ -56,8 +58,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [CanBeNull]
         private InstantDamageResult CheckCondition()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (Target.Vitality == null)
             {
@@ -75,9 +75,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
 
         private void CalculateDamage()
         {
-            Contract.Ensures(CalculationInterrupts != null);
-            Contract.Ensures(Calculated != null);
-
             var effectors = Component.GetAllOfTypeFrom<IInstantDamageCalculator>(Initial.World).Sort();
 
             CalculationInterrupts = ValueList<Interrupt<InstantDamageCalculation>>.Empty;
@@ -101,10 +98,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [CanBeNull]
         private InstantDamageResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var rejectors = Component.GetAllOfTypeFrom<IInstantDamageRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<InstantDamageRejection>>.Empty;
@@ -132,10 +125,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [NotNull]
         private InstantDamageResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(CalculationInterrupts != null);
-            Contract.Requires<InvalidOperationException>(Calculated != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, CalculationInterrupts, Calculated, RejectionInterrupts);
         }
     }

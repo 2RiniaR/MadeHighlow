@@ -6,13 +6,19 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public class CreateComponentEvaluator
     {
-        public CreateComponentEvaluator([NotNull] IHistory initial, CreateComponentAction action)
+        public CreateComponentEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            CreateComponentAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateComponentAction Action { get; }
@@ -43,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
 
         private void AllocateID()
         {
-            var result = new AllocateIDAction().Evaluate(Simulating);
+            var result = Context.Actions.AllocateID(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             AllocateIDEvent = @event;
         }
@@ -51,11 +57,10 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [CanBeNull]
         private CreateComponentResult Register()
         {
-            var result = new RegisterComponentAction(
-                Action.TargetID,
-                AllocateIDEvent.Result.AllocatedID,
-                Action.InitialStatus
-            ).Evaluate(Simulating);
+            var result = Context.Actions.RegisterComponent(
+                Simulating,
+                new RegisterComponentAction(Action.TargetID, AllocateIDEvent.Result.AllocatedID, Action.InitialStatus)
+            );
 
             if (result is not RegisterComponent.SucceedResult succeedResult)
             {

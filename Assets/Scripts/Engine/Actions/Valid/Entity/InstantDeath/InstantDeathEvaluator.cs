@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public class InstantDeathEvaluator
     {
-        public InstantDeathEvaluator([NotNull] IHistory initial, [NotNull] InstantDeathAction action)
+        public InstantDeathEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] InstantDeathAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantDeathAction Action { get; }
 
@@ -38,9 +42,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [CanBeNull]
         private InstantDeathResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<InstantDeathResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new FailedResult(Action, FailedReason.NoTarget);
@@ -52,8 +54,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [CanBeNull]
         private InstantDeathResult CheckCondition()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-
             // そもそも体力という概念がないものには、ダメージが与えられない。
             if (Target.Vitality == null)
             {
@@ -72,8 +72,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [CanBeNull]
         private InstantDeathResult CheckRejection()
         {
-            Contract.Ensures(RejectionInterrupts != null);
-
             var rejectors = Component.GetAllOfTypeFrom<IInstantDeathRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<InstantDeathRejection>>.Empty;
@@ -95,8 +93,6 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [NotNull]
         private InstantDeathResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, RejectionInterrupts);
         }
     }

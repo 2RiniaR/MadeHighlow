@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.RegisterEntity
 {
     public class RegisterEntityEvaluator
     {
-        public RegisterEntityEvaluator([NotNull] IHistory initial, RegisterEntityAction action)
+        public RegisterEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            RegisterEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterEntityAction Action { get; }
 
@@ -26,8 +30,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
 
         private void Format()
         {
-            Contract.Ensures(Registered != null);
-
             Registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
@@ -38,8 +40,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
         [NotNull]
         private RegisterEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Registered != null);
-
             return new RegisterEntityResult(Action, Registered);
         }
     }

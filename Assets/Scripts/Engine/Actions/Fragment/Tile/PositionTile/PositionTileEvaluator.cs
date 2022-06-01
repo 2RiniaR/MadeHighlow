@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.PositionTile
 {
     public class PositionTileEvaluator
     {
-        public PositionTileEvaluator([NotNull] IHistory initial, PositionTileAction action)
+        public PositionTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            PositionTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private PositionTileAction Action { get; }
 
@@ -35,9 +39,7 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
         [CanBeNull]
         private PositionTileResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<PositionTileResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindTile(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new FailedResult(Action, FailedReason.TileNotExist);
@@ -49,9 +51,6 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
         [CanBeNull]
         private PositionTileResult Position()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<PositionTileResult>() != null) ^ (Positioned != null));
-
             if (!IsPositionable(Initial, Action.Destination))
             {
                 return new FailedResult(Action, FailedReason.ResolveFailed);
@@ -69,8 +68,6 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
         [NotNull]
         private PositionTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Positioned != null);
-
             return new SucceedResult(Action, Positioned);
         }
     }

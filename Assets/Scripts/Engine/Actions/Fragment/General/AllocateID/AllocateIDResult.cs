@@ -1,8 +1,6 @@
-﻿using JetBrains.Annotations;
-
-namespace RineaR.MadeHighlow.Actions.AllocateID
+﻿namespace RineaR.MadeHighlow.Actions.AllocateID
 {
-    public record AllocateIDResult([NotNull] AllocateIDAction Action, ID AllocatedID) : Result
+    public record AllocateIDResult(ID AllocatedID) : Result
     {
         public override World Simulate(World world)
         {

@@ -2,6 +2,6 @@
 {
     public static class IncrementTurnActionGenerator
     {
-        public static IncrementTurnAction Empty => new();
+        public static IncrementTurnEvaluator Empty => new();
     }
 }

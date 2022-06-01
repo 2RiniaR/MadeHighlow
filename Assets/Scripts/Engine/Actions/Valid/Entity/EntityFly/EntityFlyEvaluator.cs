@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.MoveEntity;
 
@@ -7,13 +6,15 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 {
     public class EntityFlyEvaluator
     {
-        public EntityFlyEvaluator([NotNull] IHistory initial, EntityFlyAction action)
+        public EntityFlyEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, EntityFlyAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityFlyAction Action { get; }
@@ -48,9 +49,7 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [CanBeNull]
         private EntityFlyResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -62,13 +61,13 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [CanBeNull]
         private EntityFlyResult FollowRoute()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<EntityFlyResult>() != null) ^ (FollowMoveEvents != null));
-
             FollowMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
             foreach (var step in Action.Route.Steps)
             {
-                var result = new MoveEntityAction(Action.TargetID, step.Direction).Evaluate(Simulating);
+                var result = Context.Actions.MoveEntity(
+                    Simulating,
+                    new MoveEntityAction(Action.TargetID, step.Direction)
+                );
                 if (result is not MoveEntity.SucceedResult succeedResult)
                 {
                     break;
@@ -92,32 +91,27 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 
         [CanBeNull]
         [ItemNotNull]
-        private static ValueList<Event<MoveEntity.SucceedResult>> Fall(
-            [NotNull] EntityID entityID,
-            [NotNull] IHistory initial
-        )
+        private ValueList<Event<MoveEntity.SucceedResult>> Fall([NotNull] EntityID entityID, [NotNull] IHistory initial)
         {
-            var target = entityID.GetFrom(initial.World);
-            Contract.Requires<InvalidOperationException>(target != null, "この時点で必ず、移動対象のエンティティが存在するはず。");
+            var target = Context.Finder.FindEntity(initial.World, entityID) ??
+                         throw new InvalidOperationException("この時点で必ず、移動対象のエンティティが存在するはず。");
 
             if (target.Levitation)
             {
                 return ValueList<Event<MoveEntity.SucceedResult>>.Empty;
             }
 
-            var destinationTile = target.Position3D.To2D().GetTile(initial.World);
-            Contract.Requires<InvalidOperationException>(destinationTile != null, "この時点で必ず、落下先のタイルが存在するはず。");
-
-            var destinationElevation = destinationTile.Elevation as GroundElevation;
-            Contract.Requires<InvalidOperationException>(destinationElevation != null, "この時点で必ず、落下先のタイルは着地可能なはず。");
-
+            var destinationTile = target.Position3D.To2D().GetTile(initial.World) ??
+                                  throw new InvalidOperationException("この時点で必ず、落下先のタイルが存在するはず。");
+            var destinationElevation = destinationTile.Elevation as GroundElevation ??
+                                       throw new InvalidOperationException("この時点で必ず、落下先のタイルは着地可能なはず。");
             var distance = new Distance(target.Position3D.Z.Value - destinationElevation.Height.Value);
 
             var simulating = initial;
             var events = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
             for (var i = 0; i < distance.Value; i++)
             {
-                var result = new MoveEntityAction(entityID, Direction3D.ZNegative).Evaluate(initial);
+                var result = Context.Actions.MoveEntity(initial, new MoveEntityAction(entityID, Direction3D.ZNegative));
                 if (result is not MoveEntity.SucceedResult succeedResult) return null;
 
                 simulating = simulating.Appended(succeedResult, out var succeedEvent);
@@ -129,19 +123,12 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(FollowMoveEvents != null);
-            Contract.Requires<InvalidOperationException>(FallMoveEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new EntityFlyProcess(FollowMoveEvents, FallMoveEvents);
         }
 
         [CanBeNull]
         private EntityFlyResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IEntityFlyRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<EntityFlyRejection>>.Empty;
@@ -163,9 +150,6 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [NotNull]
         private EntityFlyResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

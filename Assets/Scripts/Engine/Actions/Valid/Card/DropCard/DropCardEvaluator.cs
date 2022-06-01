@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteCard;
 
 namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public class DropCardEvaluator
     {
-        public DropCardEvaluator([NotNull] IHistory initial, DropCardAction action)
+        public DropCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, DropCardAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DropCardAction Action { get; }
@@ -41,7 +41,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 
         private DropCardResult DeleteTarget()
         {
-            var result = new DeleteCardAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.DeleteCard(Simulating, new DeleteCardAction(Action.TargetID));
             if (result is not DeleteCard.SucceedResult succeedResult)
             {
                 return new DeleteCardFailedResult(Action, result);
@@ -55,18 +55,12 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteCardEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new DropCardProcess(DeleteCardEvent);
         }
 
         [CanBeNull]
         private DropCardResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IDropCardRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DropCardRejection>>.Empty;
@@ -88,9 +82,6 @@ namespace RineaR.MadeHighlow.Actions.DropCard
         [NotNull]
         private DropCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.EntityStep;
 
 namespace RineaR.MadeHighlow.Actions.EntityWalk
@@ -8,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [NotNull] EntityID ActorID,
         [NotNull] EntityWalkRoute Route,
         [NotNull] EntityStepCost Available
-    ) : ValidAction<EntityWalkResult>
-    {
-        protected override EntityWalkResult EvaluateBody(IHistory history)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    ) : IValidAction;
 }

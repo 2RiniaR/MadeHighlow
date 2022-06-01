@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.CreateEntity;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public class GenerateEntityEvaluator
     {
-        public GenerateEntityEvaluator([NotNull] IHistory initial, GenerateEntityAction action)
+        public GenerateEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            GenerateEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateEntityAction Action { get; }
@@ -41,9 +45,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [CanBeNull]
         private GenerateEntityResult CreateTarget()
         {
-            Contract.Ensures((Contract.Result<GenerateEntityResult>() != null) ^ (CreateEntityEvent != null));
-
-            var result = new CreateEntityAction(Action.InitialProps).Evaluate(Simulating);
+            var result = Context.Actions.CreateEntity(Simulating, new CreateEntityAction(Action.InitialProps));
             if (result is not CreateEntity.SucceedResult succeedResult)
             {
                 return new CreateEntityFailedResult(Action, result);
@@ -56,18 +58,12 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(CreateEntityEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new GenerateEntityProcess(CreateEntityEvent);
         }
 
         [CanBeNull]
         private GenerateEntityResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IGenerateEntityRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<GenerateEntityRejection>>.Empty;
@@ -89,9 +85,6 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull]
         private GenerateEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

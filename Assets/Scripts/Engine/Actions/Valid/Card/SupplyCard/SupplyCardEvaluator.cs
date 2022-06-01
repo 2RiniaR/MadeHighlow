@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.PlaceCard;
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public class SupplyCardEvaluator
     {
-        public SupplyCardEvaluator([NotNull] IHistory initial, SupplyCardAction action)
+        public SupplyCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, SupplyCardAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private SupplyCardAction Action { get; }
@@ -42,9 +42,10 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [CanBeNull]
         private SupplyCardResult PlaceCard()
         {
-            Contract.Ensures((Contract.Result<SupplyCardResult>() != null) ^ (PlaceCardEvent != null));
-
-            var result = new PlaceCardAction(Action.TargetID, Action.InitialStatus).Evaluate(Simulating);
+            var result = Context.Actions.PlaceCard(
+                Simulating,
+                new PlaceCardAction(Action.TargetID, Action.InitialStatus)
+            );
             if (result is not PlaceCard.SucceedResult succeedResult)
             {
                 return new PlaceCardFailedResult(Action, result);
@@ -58,18 +59,12 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(PlaceCardEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new SupplyCardProcess(PlaceCardEvent);
         }
 
         [CanBeNull]
         private SupplyCardResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<ISupplyCardRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<SupplyCardRejection>>.Empty;
@@ -91,9 +86,6 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [NotNull]
         private SupplyCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

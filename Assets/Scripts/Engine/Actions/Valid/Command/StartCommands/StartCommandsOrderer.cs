@@ -6,16 +6,26 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     /// <summary>
     ///     ユニットが現在受けている命令を実行する際の、行動順を決定するクエリ
     /// </summary>
-    public record StartCommandsOrderer([NotNull] [ItemNotNull] ValueList<Command> Commands)
+    public class StartCommandsOrderer
     {
+        public StartCommandsOrderer([NotNull] ActionContext context)
+        {
+            Context = context;
+        }
+
+        [NotNull] private ActionContext Context { get; }
+
         /// <summary>
         ///     命令の実行順を決定する
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public ValueList<Command> Resolve([NotNull] IHistory history)
+        public ValueList<Command> Resolve(
+            [NotNull] IHistory history,
+            [NotNull] [ItemNotNull] ValueList<Command> commands
+        )
         {
-            return Commands.Sort((unit1, unit2) => Compare(unit1, unit2, history));
+            return commands.Sort((unit1, unit2) => Compare(unit1, unit2, history));
         }
 
         /// <summary>
@@ -59,15 +69,11 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return CompareRandom(history);
         }
 
-        private static int CompareQuickness(
-            [NotNull] Command command1,
-            [NotNull] Command command2,
-            [NotNull] World world
-        )
+        private int CompareQuickness([NotNull] Command command1, [NotNull] Command command2, [NotNull] World world)
         {
             // カードが削除されるときは、コマンドも同時に削除されるはずなので、例外を投げる
-            var card1 = command1.CardID.GetFrom(world) ?? throw new NullReferenceException();
-            var card2 = command2.CardID.GetFrom(world) ?? throw new NullReferenceException();
+            var card1 = Context.Finder.FindCard(world, command1.CardID) ?? throw new NullReferenceException();
+            var card2 = Context.Finder.FindCard(world, command2.CardID) ?? throw new NullReferenceException();
 
             var quickness1 = card1.Quickness;
             var quickness2 = card2.Quickness;
@@ -75,7 +81,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return quickness1.CompareTo(quickness2);
         }
 
-        private static int CompareMedo([NotNull] Unit unit1, [NotNull] Unit unit2)
+        private int CompareMedo([NotNull] Unit unit1, [NotNull] Unit unit2)
         {
             var medo1 = unit1.Medo;
             var medo2 = unit2.Medo;
@@ -83,7 +89,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return medo1.Value.CompareTo(medo2.Value);
         }
 
-        private static int CompareHealth([NotNull] Unit unit1, [NotNull] Unit unit2)
+        private int CompareHealth([NotNull] Unit unit1, [NotNull] Unit unit2)
         {
             if (unit1.Vitality == null)
             {
@@ -101,9 +107,9 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             return health2.Value.CompareTo(health1.Value);
         }
 
-        private static int CompareRandom([NotNull] IHistory history)
+        private int CompareRandom([NotNull] IHistory history)
         {
-            return history.GetRandom() > 1 / 2f ? 1 : 0;
+            return Context.RandomGenerator.GetRandom() > 1 / 2f ? 1 : 0;
         }
     }
 }

@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.DeleteComponent
 {
     public class DeleteComponentEvaluator
     {
-        public DeleteComponentEvaluator([NotNull] IHistory initial, DeleteComponentAction action)
+        public DeleteComponentEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            DeleteComponentAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private DeleteComponentAction Action { get; }
 
@@ -45,8 +49,6 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
         [CanBeNull]
         private DeleteComponentResult CheckRejection()
         {
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IDeleteComponentRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DeleteComponentRejection>>.Empty;
@@ -68,8 +70,6 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
         [NotNull]
         private DeleteComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, RejectionInterrupts);
         }
     }

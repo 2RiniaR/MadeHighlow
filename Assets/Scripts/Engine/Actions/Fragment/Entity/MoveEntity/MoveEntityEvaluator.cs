@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.PositionEntity;
 
 namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
     public class MoveEntityEvaluator
     {
-        public MoveEntityEvaluator([NotNull] IHistory initial, MoveEntityAction action)
+        public MoveEntityEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, MoveEntityAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private MoveEntityAction Action { get; }
@@ -45,9 +45,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
         [CanBeNull]
         private MoveEntityResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<MoveEntityResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -59,13 +57,10 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
         [CanBeNull]
         private MoveEntityResult Position()
         {
-            Contract.Ensures((Contract.Result<MoveEntityResult>() != null) ^ (PositionEntityEvent != null));
-            Contract.Requires<InvalidOperationException>(Target != null);
-
-            var result = new PositionEntityAction(
-                Action.TargetID,
-                Target.Position3D.MoveTo(Action.Direction, new Distance(1))
-            ).Evaluate(Simulating);
+            var result = Context.Actions.PositionEntity(
+                Simulating,
+                new PositionEntityAction(Action.TargetID, Target.Position3D.MoveTo(Action.Direction, new Distance(1)))
+            );
             if (result is not PositionEntity.SucceedResult succeedResult)
             {
                 return new PositionFailedResult(Action, result);
@@ -78,18 +73,12 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(PositionEntityEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new MoveEntityProcess(PositionEntityEvent);
         }
 
         [CanBeNull]
         private MoveEntityResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IMoveEntityRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<MoveEntityRejection>>.Empty;
@@ -111,9 +100,6 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
         [NotNull]
         private MoveEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

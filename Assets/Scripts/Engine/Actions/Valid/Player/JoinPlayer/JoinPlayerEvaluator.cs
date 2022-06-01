@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.CreatePlayer;
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
     public class JoinPlayerEvaluator
     {
-        public JoinPlayerEvaluator([NotNull] IHistory initial, JoinPlayerAction action)
+        public JoinPlayerEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, JoinPlayerAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private JoinPlayerAction Action { get; }
@@ -37,9 +37,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [CanBeNull]
         private JoinPlayerResult CreatePlayer()
         {
-            Contract.Ensures((Contract.Result<JoinPlayerResult>() != null) ^ (CreatePlayerEvent != null));
-
-            var result = new CreatePlayerAction(Action.InitialPlayer).Evaluate(Simulating);
+            var result = Context.Actions.CreatePlayer(Simulating, new CreatePlayerAction(Action.InitialPlayer));
             if (result is not CreatePlayer.SucceedResult succeedResult)
             {
                 return new CreatePlayerFailedResult(Action, result);
@@ -53,17 +51,12 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(CreatePlayerEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new JoinPlayerProcess(CreatePlayerEvent);
         }
 
         [NotNull]
         private JoinPlayerResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

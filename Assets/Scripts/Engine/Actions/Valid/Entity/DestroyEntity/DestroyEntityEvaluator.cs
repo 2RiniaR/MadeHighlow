@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteEntity;
 
 namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {
     public class DestroyEntityEvaluator
     {
-        public DestroyEntityEvaluator([NotNull] IHistory initial, DestroyEntityAction action)
+        public DestroyEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            DestroyEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyEntityAction Action { get; }
@@ -41,9 +45,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [CanBeNull]
         private DestroyEntityResult DeleteTarget()
         {
-            Contract.Ensures((Contract.Result<DestroyEntityResult>() != null) ^ (DeleteEntityEvent != null));
-
-            var result = new DeleteEntityAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.DeleteEntity(Simulating, new DeleteEntityAction(Action.TargetID));
             if (result is not DeleteEntity.SucceedResult succeedResult)
             {
                 return new DeleteEntityFailedResult(Action, result);
@@ -56,18 +58,12 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteEntityEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new DestroyEntityProcess(DeleteEntityEvent);
         }
 
         [CanBeNull]
         private DestroyEntityResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IDestroyEntityRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DestroyEntityRejection>>.Empty;
@@ -89,9 +85,6 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [NotNull]
         private DestroyEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

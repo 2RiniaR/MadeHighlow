@@ -1,17 +1,22 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.PositionEntity
 {
     public class PositionEntityEvaluator
     {
-        public PositionEntityEvaluator([NotNull] IHistory initial, PositionEntityAction action)
+        public PositionEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            PositionEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private PositionEntityAction Action { get; }
 
@@ -35,9 +40,7 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
         [CanBeNull]
         private PositionEntityResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new FailedResult(Action, FailedReason.TargetNotExist);
@@ -49,9 +52,6 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
         [CanBeNull]
         private PositionEntityResult Position()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<PositionEntityResult>() != null) ^ (Positioned != null));
-
             if (!IsPositionable(Initial, Target, Action.Destination))
             {
                 return new FailedResult(Action, FailedReason.CantEnter);
@@ -126,8 +126,6 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
         [NotNull]
         private PositionEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Positioned != null);
-
             return new SucceedResult(Action, Positioned);
         }
     }

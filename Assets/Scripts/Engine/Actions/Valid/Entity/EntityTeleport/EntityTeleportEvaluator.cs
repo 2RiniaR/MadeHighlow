@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.PositionEntity;
 
 namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
     public class EntityTeleportEvaluator
     {
-        public EntityTeleportEvaluator([NotNull] IHistory initial, EntityTeleportAction action)
+        public EntityTeleportEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            EntityTeleportAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityTeleportAction Action { get; }
@@ -45,9 +49,7 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [CanBeNull]
         private EntityTeleportResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<EntityTeleportResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -59,10 +61,10 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [CanBeNull]
         private EntityTeleportResult Position()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<EntityTeleportResult>() != null) ^ (PositionEntityEvent != null));
-
-            var result = new PositionEntityAction(Action.TargetID, Action.Destination).Evaluate(Simulating);
+            var result = Context.Actions.PositionEntity(
+                Simulating,
+                new PositionEntityAction(Action.TargetID, Action.Destination)
+            );
             if (result is not PositionEntity.SucceedResult succeedResult)
             {
                 return new PositionEntityFailedResult(Action, result);
@@ -76,18 +78,12 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(PositionEntityEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new EntityTeleportProcess(PositionEntityEvent);
         }
 
         [CanBeNull]
         private EntityTeleportResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IEntityTeleportRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<EntityTeleportRejection>>.Empty;
@@ -109,9 +105,6 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [NotNull]
         private EntityTeleportResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

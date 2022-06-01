@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [NotNull] EntityID TargetID,
         [NotNull] Direction2D Direction,
         [NotNull] EntityStepCost Available
-    ) : ValidAction<EntityStepResult>
-    {
-        protected override EntityStepResult EvaluateBody(IHistory history)
-        {
-            return new EntityStepEvaluator(history, this).Evaluate();
-        }
-    }
+    ) : IValidAction;
 }

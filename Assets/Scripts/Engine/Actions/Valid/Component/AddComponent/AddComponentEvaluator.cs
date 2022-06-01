@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.CreateComponent;
 
 namespace RineaR.MadeHighlow.Actions.AddComponent
 {
     public class AddComponentEvaluator
     {
-        public AddComponentEvaluator([NotNull] IHistory initial, AddComponentAction action)
+        public AddComponentEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            AddComponentAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private AddComponentAction Action { get; }
@@ -36,7 +40,10 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [CanBeNull]
         private AddComponentResult CreateComponent()
         {
-            var result = new CreateComponentAction(Action.TargetID, Action.InitialStatus).Evaluate(Simulating);
+            var result = Context.Actions.CreateComponent(
+                Simulating,
+                new CreateComponentAction(Action.TargetID, Action.InitialStatus)
+            );
             if (result is not CreateComponent.SucceedResult succeedResult)
             {
                 return new CreateComponentFailedResult(Action, result);
@@ -49,17 +56,12 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(CreateComponentEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new AddComponentProcess(CreateComponentEvent);
         }
 
         [NotNull]
         private AddComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

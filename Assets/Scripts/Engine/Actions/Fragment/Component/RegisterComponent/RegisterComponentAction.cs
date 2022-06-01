@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         [NotNull] IAttachableID ParentID,
         ID AssignedID,
         [NotNull] Component InitialProps
-    )
-    {
-        public RegisterComponentResult Evaluate(IHistory history)
-        {
-            return new RegisterComponentEvaluator(history, this).Evaluate();
-        }
-    }
+    );
 }

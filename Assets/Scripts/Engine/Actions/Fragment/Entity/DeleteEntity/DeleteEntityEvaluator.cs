@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteComponent;
 using RineaR.MadeHighlow.Actions.UnregisterEntity;
 
@@ -8,13 +6,19 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
 {
     public class DeleteEntityEvaluator
     {
-        public DeleteEntityEvaluator([NotNull] IHistory initial, [NotNull] DeleteEntityAction action)
+        public DeleteEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] DeleteEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DeleteEntityAction Action { get; }
@@ -45,9 +49,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
         [CanBeNull]
         private DeleteEntityResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<DeleteEntityResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
             if (Target == null)
             {
                 return new NotFoundResult(Action);
@@ -59,14 +61,14 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
         [CanBeNull]
         private DeleteEntityResult DeleteComponents()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(DeleteComponentEvents != null);
-
             DeleteComponentEvents = ValueList<Event<DeleteComponent.SucceedResult>>.Empty;
 
             foreach (var component in Target.Components)
             {
-                var result = new DeleteComponentAction(component.ComponentID).Evaluate(Simulating);
+                var result = Context.Actions.DeleteComponent(
+                    Simulating,
+                    new DeleteComponentAction(component.ComponentID)
+                );
 
                 var succeedResult = result as DeleteComponent.SucceedResult;
                 if (succeedResult == null)
@@ -83,10 +85,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
 
         private DeleteEntityResult Unregister()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvents != null);
-            Contract.Ensures(UnregisterEntityEvent != null);
-
-            var result = new UnregisterEntityAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.UnregisterEntity(Simulating, new UnregisterEntityAction(Action.TargetID));
             if (result is not UnregisterEntity.SucceedResult succeedResult)
             {
                 return new UnregisterEntityFailedResult(Action, DeleteComponentEvents, result);
@@ -100,18 +99,12 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvents != null);
-            Contract.Requires<InvalidOperationException>(UnregisterEntityEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new DeleteEntityProcess(DeleteComponentEvents, UnregisterEntityEvent);
         }
 
         [NotNull]
         private DeleteEntityResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

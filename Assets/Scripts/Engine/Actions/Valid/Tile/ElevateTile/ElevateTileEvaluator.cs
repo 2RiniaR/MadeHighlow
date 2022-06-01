@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
     public class ElevateTileEvaluator
     {
-        public ElevateTileEvaluator([NotNull] IHistory initial, ElevateTileAction action)
+        public ElevateTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            ElevateTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ElevateTileAction Action { get; }
 
@@ -36,9 +40,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [CanBeNull]
         private ElevateTileResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<ElevateTileResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Initial.World);
+            Target = Context.Finder.FindTile(Initial.World, Action.TargetID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -50,8 +52,6 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [CanBeNull]
         private ElevateTileResult CheckRejection()
         {
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IElevateTileRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<ElevateTileRejection>>.Empty;
@@ -73,8 +73,6 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [NotNull]
         private ElevateTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, RejectionInterrupts);
         }
     }

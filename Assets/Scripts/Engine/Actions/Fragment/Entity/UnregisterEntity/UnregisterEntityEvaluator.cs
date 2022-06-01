@@ -4,12 +4,18 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
 {
     public class UnregisterEntityEvaluator
     {
-        public UnregisterEntityEvaluator([NotNull] IHistory initial, [NotNull] UnregisterEntityAction action)
+        public UnregisterEntityEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] UnregisterEntityAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private UnregisterEntityAction Action { get; }
 
@@ -27,7 +33,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
         [CanBeNull]
         private UnregisterEntityResult FindTarget()
         {
-            if (Action.TargetID.GetFrom(Initial.World) == null)
+            if (Context.Finder.FindEntity(Initial.World, Action.TargetID) == null)
             {
                 return new NotFoundResult(Action);
             }

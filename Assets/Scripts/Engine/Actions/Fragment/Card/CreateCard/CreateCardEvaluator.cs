@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.AllocateID;
 using RineaR.MadeHighlow.Actions.CreateComponent;
@@ -9,13 +8,15 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
 {
     public class CreateCardEvaluator
     {
-        public CreateCardEvaluator([NotNull] IHistory initial, CreateCardAction action)
+        public CreateCardEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, CreateCardAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateCardAction Action { get; }
@@ -48,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
         {
             Contract.Ensures(AllocateIDEvent != null);
 
-            var result = new AllocateIDAction().Evaluate(Simulating);
+            var result = Context.Actions.AllocateID(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             AllocateIDEvent = @event;
         }
@@ -56,14 +57,10 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
         [CanBeNull]
         private CreateCardResult Register()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Ensures((Contract.Result<CreateCardResult>() != null) ^ (RegisterCardEvent != null));
-
-            var result = new RegisterCardAction(
-                Action.ParentID,
-                AllocateIDEvent.Result.AllocatedID,
-                Action.InitialProps
-            ).Evaluate(Simulating);
+            var result = Context.Actions.RegisterCard(
+                Simulating,
+                new RegisterCardAction(Action.ParentID, AllocateIDEvent.Result.AllocatedID, Action.InitialProps)
+            );
 
             if (result is not RegisterCard.SucceedResult succeedResult)
             {
@@ -79,17 +76,14 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
         [CanBeNull]
         private CreateCardResult CreateComponents()
         {
-            Contract.Requires<InvalidOperationException>(RegisterCardEvent != null);
-            Contract.Ensures(CreateComponentEvents != null);
-
             CreateComponentEvents = ValueList<Event<CreateComponent.SucceedResult>>.Empty;
 
             foreach (var component in Action.InitialProps.Components)
             {
-                var result
-                    = new CreateComponentAction(RegisterCardEvent.Result.Registered.CardID, component).Evaluate(
-                        Simulating
-                    );
+                var result = Context.Actions.CreateComponent(
+                    Simulating,
+                    new CreateComponentAction(RegisterCardEvent.Result.Registered.CardID, component)
+                );
 
                 var succeedResult = result as CreateComponent.SucceedResult;
                 if (succeedResult == null)
@@ -106,19 +100,12 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Requires<InvalidOperationException>(RegisterCardEvent != null);
-            Contract.Requires<InvalidOperationException>(CreateComponentEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new CreateCardProcess(AllocateIDEvent, RegisterCardEvent, CreateComponentEvents);
         }
 
         [NotNull]
         private CreateCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

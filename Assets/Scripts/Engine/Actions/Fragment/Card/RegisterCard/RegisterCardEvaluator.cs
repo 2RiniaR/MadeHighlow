@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.RegisterCard
 {
     public class RegisterCardEvaluator
     {
-        public RegisterCardEvaluator([NotNull] IHistory initial, RegisterCardAction action)
+        public RegisterCardEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            RegisterCardAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterCardAction Action { get; }
 
@@ -32,7 +36,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
         [CanBeNull]
         private RegisterCardResult CheckParentExists()
         {
-            if (Action.ParentID.GetFrom(Initial.World) == null)
+            if (Context.Finder.FindPlayer(Initial.World, Action.ParentID) == null)
             {
                 return new ParentNotFoundResult(Action);
             }
@@ -42,8 +46,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
 
         private void Format()
         {
-            Contract.Ensures(Registered != null);
-
             Registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
@@ -54,8 +56,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
         [NotNull]
         private RegisterCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Registered != null);
-
             return new SucceedResult(Action, Registered);
         }
     }

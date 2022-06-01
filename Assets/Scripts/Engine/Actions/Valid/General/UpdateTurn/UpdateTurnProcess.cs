@@ -4,7 +4,7 @@ using RineaR.MadeHighlow.Actions.IncrementTurn;
 namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
 {
     public record UpdateTurnProcess(
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult>> ActorEvents,
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<ValidResult>>> ActorEvents,
         [NotNull] Event<IncrementTurnResult> IncrementTurnEvent
     )
     {

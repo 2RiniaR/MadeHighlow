@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.EntityStep;
 
 namespace RineaR.MadeHighlow.Actions.EntityWalk
 {
     public class EntityWalkEvaluator
     {
-        public EntityWalkEvaluator([NotNull] IHistory initial, EntityWalkAction action)
+        public EntityWalkEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, EntityWalkAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityWalkAction Action { get; }
@@ -45,9 +45,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [CanBeNull]
         private EntityWalkResult FindActor()
         {
-            Contract.Ensures((Contract.Result<EntityWalkResult>() != null) ^ (Target != null));
-
-            Target = Action.ActorID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindEntity(Simulating.World, Action.ActorID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -59,14 +57,13 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [CanBeNull]
         private EntityWalkResult FollowRoute()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<EntityWalkResult>() != null) ^ (EntityStepEvents != null));
-
             EntityStepEvents = ValueList<Event<ReactedResult<EntityStep.SucceedResult>>>.Empty;
             foreach (var step in Action.Route.Steps)
             {
-                var result = new EntityStepAction(Action.ActorID, step.Direction, Action.Available)
-                    .Evaluate(Simulating);
+                var result = Context.Actions.EntityStep(
+                    Simulating,
+                    new EntityStepAction(Action.ActorID, step.Direction, Action.Available)
+                );
                 var succeedResult = result.BodyAs<EntityStep.SucceedResult>();
                 if (succeedResult == null) break;
 
@@ -79,18 +76,12 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(EntityStepEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new EntityWalkProcess(EntityStepEvents);
         }
 
         [CanBeNull]
         private EntityWalkResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IEntityWalkRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<EntityWalkRejection>>.Empty;
@@ -112,9 +103,6 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [NotNull]
         private EntityWalkResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

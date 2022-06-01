@@ -1,10 +1,10 @@
 ﻿namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
-    public record IncrementTurnAction
+    public class IncrementTurnEvaluator
     {
         public IncrementTurnResult Evaluate(IHistory history)
         {
-            return new IncrementTurnResult(this, history.World.CurrentTurn.Increment());
+            return new IncrementTurnResult(history.World.CurrentTurn.Increment());
         }
     }
 }

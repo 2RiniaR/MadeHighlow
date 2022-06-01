@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteComponent;
 using RineaR.MadeHighlow.Actions.UnregisterCard;
 
@@ -8,13 +6,19 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
     public class DeleteCardEvaluator
     {
-        public DeleteCardEvaluator([NotNull] IHistory initial, [NotNull] DeleteCardAction action)
+        public DeleteCardEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] DeleteCardAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DeleteCardAction Action { get; }
@@ -45,9 +49,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
         [CanBeNull]
         private DeleteCardResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<DeleteCardResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindCard(Simulating.World, Action.TargetID);
             if (Target == null)
             {
                 return new NotFoundResult(Action);
@@ -59,14 +61,14 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
         [CanBeNull]
         private DeleteCardResult DeleteComponents()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(DeleteComponentEvents != null);
-
             DeleteComponentEvents = ValueList<Event<DeleteComponent.SucceedResult>>.Empty;
 
             foreach (var component in Target.Components)
             {
-                var result = new DeleteComponentAction(component.ComponentID).Evaluate(Simulating);
+                var result = Context.Actions.DeleteComponent(
+                    Simulating,
+                    new DeleteComponentAction(component.ComponentID)
+                );
 
                 var succeedResult = result as DeleteComponent.SucceedResult;
                 if (succeedResult == null)
@@ -83,10 +85,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
 
         private DeleteCardResult Unregister()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvents != null);
-            Contract.Ensures(UnregisterCardEvent != null);
-
-            var result = new UnregisterCardAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.UnregisterCard(Simulating, new UnregisterCardAction(Action.TargetID));
             if (result is not UnregisterCard.SucceedResult succeedResult)
             {
                 return new UnregisterCardFailedResult(Action, DeleteComponentEvents, result);
@@ -100,18 +99,12 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvents != null);
-            Contract.Requires<InvalidOperationException>(UnregisterCardEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new DeleteCardProcess(DeleteComponentEvents, UnregisterCardEvent);
         }
 
         [NotNull]
         private DeleteCardResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

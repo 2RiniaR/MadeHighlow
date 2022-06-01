@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.GenerateEntity;
 using RineaR.MadeHighlow.Actions.GenerateTile;
 using RineaR.MadeHighlow.Actions.JoinPlayer;
@@ -9,13 +7,15 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
 {
     public class BigBangEvaluator
     {
-        public BigBangEvaluator([NotNull] IHistory initial, BigBangAction action)
+        public BigBangEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, BigBangAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private BigBangAction Action { get; }
@@ -46,12 +46,10 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
 
         private void JoinPlayers()
         {
-            Contract.Ensures(JoinPlayerEvents != null);
-
             JoinPlayerEvents = ValueList<Event<ReactedResult<JoinPlayerResult>>>.Empty;
             foreach (var player in Action.InitialWorld.Players)
             {
-                var result = new JoinPlayerAction(player).Evaluate(Simulating);
+                var result = Context.Actions.JoinPlayer(Simulating, new JoinPlayerAction(player));
                 Simulating = Simulating.Appended(result, out var @event);
                 JoinPlayerEvents = JoinPlayerEvents.Add(@event);
             }
@@ -59,12 +57,10 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
 
         private void GenerateTiles()
         {
-            Contract.Ensures(GenerateTileEvents != null);
-
             GenerateTileEvents = ValueList<Event<ReactedResult<GenerateTileResult>>>.Empty;
             foreach (var tile in Action.InitialWorld.Tiles)
             {
-                var result = new GenerateTileAction(tile).Evaluate(Simulating);
+                var result = Context.Actions.GenerateTile(Simulating, new GenerateTileAction(tile));
                 Simulating = Simulating.Appended(result, out var @event);
                 GenerateTileEvents = GenerateTileEvents.Add(@event);
             }
@@ -72,12 +68,10 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
 
         private void GenerateEntities()
         {
-            Contract.Ensures(GenerateEntityEvents != null);
-
             GenerateEntityEvents = ValueList<Event<ReactedResult<GenerateEntityResult>>>.Empty;
             foreach (var entity in Action.InitialWorld.Entities)
             {
-                var result = new GenerateEntityAction(entity).Evaluate(Simulating);
+                var result = Context.Actions.GenerateEntity(Simulating, new GenerateEntityAction(entity));
                 Simulating = Simulating.Appended(result, out var @event);
                 GenerateEntityEvents = GenerateEntityEvents.Add(@event);
             }
@@ -85,19 +79,12 @@ namespace RineaR.MadeHighlow.Actions.General.BigBang
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(JoinPlayerEvents != null);
-            Contract.Requires<InvalidOperationException>(GenerateTileEvents != null);
-            Contract.Requires<InvalidOperationException>(GenerateEntityEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new BigBangProcess(JoinPlayerEvents, GenerateTileEvents, GenerateEntityEvents);
         }
 
         [NotNull]
         private BigBangResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new BigBangResult(Action, Process);
         }
     }

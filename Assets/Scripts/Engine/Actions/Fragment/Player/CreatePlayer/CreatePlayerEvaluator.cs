@@ -7,13 +7,19 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
 {
     public class CreatePlayerEvaluator
     {
-        public CreatePlayerEvaluator([NotNull] IHistory initial, CreatePlayerAction action)
+        public CreatePlayerEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            CreatePlayerAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreatePlayerAction Action { get; }
@@ -44,7 +50,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
 
         private void AllocateID()
         {
-            var result = new AllocateIDAction().Evaluate(Simulating);
+            var result = Context.Actions.AllocateID(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             AllocateIDEvent = @event;
         }
@@ -52,10 +58,10 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         [CanBeNull]
         private CreatePlayerResult Register()
         {
-            var result = new RegisterPlayerAction(
-                AllocateIDEvent.Result.AllocatedID,
-                Action.InitialProps
-            ).Evaluate(Simulating);
+            var result = Context.Actions.RegisterPlayer(
+                Simulating,
+                new RegisterPlayerAction(AllocateIDEvent.Result.AllocatedID, Action.InitialProps)
+            );
 
             Simulating = Simulating.Appended(result, out var @event);
             RegisterPlayerEvent = @event;
@@ -70,8 +76,10 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
 
             foreach (var component in Action.InitialProps.Components)
             {
-                var result = new CreateComponentAction(RegisterPlayerEvent.Result.Registered.PlayerID, component)
-                    .Evaluate(Simulating);
+                var result = Context.Actions.CreateComponent(
+                    Simulating,
+                    new CreateComponentAction(RegisterPlayerEvent.Result.Registered.PlayerID, component)
+                );
 
                 var succeedResult = result as CreateComponent.SucceedResult;
                 if (succeedResult == null)

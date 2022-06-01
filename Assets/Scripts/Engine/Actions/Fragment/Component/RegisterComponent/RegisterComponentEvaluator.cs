@@ -4,12 +4,18 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
     public class RegisterComponentEvaluator
     {
-        public RegisterComponentEvaluator([NotNull] IHistory initial, RegisterComponentAction action)
+        public RegisterComponentEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            RegisterComponentAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterComponentAction Action { get; }
 
@@ -30,7 +36,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         [CanBeNull]
         private RegisterComponentResult CheckParentExists()
         {
-            if (Action.ParentID.GetFrom(Initial.World) == null)
+            if (Context.Finder.FindAttachable(Initial.World, Action.ParentID) == null)
             {
                 return new ParentNotFoundResult(Action);
             }

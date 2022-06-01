@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow
 {
@@ -22,30 +21,6 @@ namespace RineaR.MadeHighlow
         public IAttachable WithComponents(ValueList<Component> components)
         {
             return this with { Components = components };
-        }
-
-        public World UpdateIn(World world)
-        {
-            return world with { Entities = world.Entities.ReplaceItem(tile => tile.EntityID == EntityID, this) };
-        }
-
-        [NotNull]
-        public World CreateIn([NotNull] World world)
-        {
-            return world with { Entities = world.Entities.Add(this) };
-        }
-
-        [NotNull]
-        public World DeleteFrom([NotNull] World world)
-        {
-            throw new NotImplementedException();
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        public static ValueList<Entity> GetAllFrom([NotNull] World world)
-        {
-            return world.Entities;
         }
 
         [NotNull]

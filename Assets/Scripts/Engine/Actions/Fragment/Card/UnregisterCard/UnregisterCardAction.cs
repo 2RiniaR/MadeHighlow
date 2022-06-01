@@ -2,11 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.UnregisterCard
 {
-    public record UnregisterCardAction([NotNull] CardID TargetID)
-    {
-        public UnregisterCardResult Evaluate(IHistory history)
-        {
-            return new UnregisterCardEvaluator(history, this).Evaluate();
-        }
-    }
+    public record UnregisterCardAction([NotNull] CardID TargetID);
 }

@@ -22,29 +22,6 @@ namespace RineaR.MadeHighlow
             return this with { Components = components };
         }
 
-        public World UpdateIn(World world)
-        {
-            return world with { Players = world.Players.ReplaceItem(player => player.PlayerID == PlayerID, this) };
-        }
-
-        [NotNull]
-        public World CreateIn([NotNull] World world)
-        {
-            return world with { Players = world.Players.Add(this) };
-        }
-
-        [NotNull]
-        public World DeleteFrom([NotNull] World world)
-        {
-            throw new NotImplementedException();
-        }
-
-        [NotNull]
-        public static ValueList<Player> GetAllFrom([NotNull] World world)
-        {
-            return world.Players;
-        }
-
         [NotNull]
         [ItemNotNull]
         public ValueList<IObject> GetChildren()

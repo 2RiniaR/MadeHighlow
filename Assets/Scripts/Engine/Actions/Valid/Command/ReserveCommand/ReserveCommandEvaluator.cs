@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     public class ReserveCommandEvaluator
     {
-        public ReserveCommandEvaluator([NotNull] IHistory initial, ReserveCommandAction action)
+        public ReserveCommandEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            ReserveCommandAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ReserveCommandAction Action { get; }
 
@@ -34,7 +38,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [CanBeNull]
         private ReserveCommandResult PreValidation()
         {
-            var card = Action.Command.CardID.GetFrom(Initial.World);
+            var card = Context.Finder.FindCard(Initial.World, Action.Command.CardID);
             if (card == null)
             {
                 return new FailedResult(Action, FailedReason.CardNotFound);
@@ -46,7 +50,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
                 return new FailedResult(Action, FailedReason.UnitNotFound);
             }
 
-            var player = card.OwnerPlayerID.GetFrom(Initial.World);
+            var player = Context.Finder.FindPlayer(Initial.World, card.OwnerPlayerID);
             if (player == null)
             {
                 return new FailedResult(Action, FailedReason.OwnerNotFound);
@@ -63,8 +67,6 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [CanBeNull]
         private ReserveCommandResult CheckAcceptance()
         {
-            Contract.Ensures(AcceptanceInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IReserveCommandAcceptor>(Initial.World).Sort();
 
             AcceptanceInterrupts = ValueList<Interrupt<ReserveCommandAcceptance>>.Empty;
@@ -89,8 +91,6 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [NotNull]
         private ReserveCommandResult Disallowed()
         {
-            Contract.Requires<InvalidOperationException>(AcceptanceInterrupts != null);
-
             return new DisallowedResult(Action, AcceptanceInterrupts, null);
         }
     }

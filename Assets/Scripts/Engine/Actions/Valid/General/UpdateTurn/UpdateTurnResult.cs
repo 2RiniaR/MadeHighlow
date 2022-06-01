@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
 {
     public record UpdateTurnResult(
         [NotNull] UpdateTurnAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<ValidAction>> ActorInterrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<IValidAction>> ActorInterrupts,
         [NotNull] UpdateTurnProcess Process
     ) : ValidResult
     {

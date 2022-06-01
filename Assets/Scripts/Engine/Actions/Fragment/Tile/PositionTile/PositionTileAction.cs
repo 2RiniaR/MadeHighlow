@@ -2,11 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.PositionTile
 {
-    public record PositionTileAction([NotNull] TileID TargetID, [NotNull] Position2D Destination)
-    {
-        public PositionTileResult Evaluate(IHistory history)
-        {
-            return new PositionTileEvaluator(history, this).Evaluate();
-        }
-    }
+    public record PositionTileAction([NotNull] TileID TargetID, [NotNull] Position2D Destination);
 }

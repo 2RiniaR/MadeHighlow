@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteTile;
 
 namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
     public class DestroyTileEvaluator
     {
-        public DestroyTileEvaluator([NotNull] IHistory initial, DestroyTileAction action)
+        public DestroyTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            DestroyTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyTileAction Action { get; }
@@ -41,9 +45,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [CanBeNull]
         private DestroyTileResult DeleteTarget()
         {
-            Contract.Ensures((Contract.Result<DestroyTileResult>() != null) ^ (DeleteTileEvent != null));
-
-            var result = new DeleteTileAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.DeleteTile(Simulating, new DeleteTileAction(Action.TargetID));
             if (result is not DeleteTile.SucceedResult succeedResult)
             {
                 return new DeleteTileFailedResult(Action, result);
@@ -56,18 +58,12 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteTileEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new DestroyTileProcess(DeleteTileEvent);
         }
 
         [CanBeNull]
         private DestroyTileResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IDestroyTileRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<DestroyTileRejection>>.Empty;
@@ -89,9 +85,6 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [NotNull]
         private DestroyTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

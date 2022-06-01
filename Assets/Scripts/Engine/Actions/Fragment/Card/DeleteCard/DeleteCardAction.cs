@@ -2,11 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
-    public record DeleteCardAction([NotNull] CardID TargetID)
-    {
-        public DeleteCardResult Evaluate(IHistory history)
-        {
-            return new DeleteCardEvaluator(history, this).Evaluate();
-        }
-    }
+    public record DeleteCardAction([NotNull] CardID TargetID);
 }

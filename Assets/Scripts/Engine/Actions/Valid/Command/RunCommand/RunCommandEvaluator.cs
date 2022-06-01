@@ -1,24 +1,24 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.PayCard;
 
 namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public class RunCommandEvaluator
     {
-        public RunCommandEvaluator([NotNull] IHistory initial, RunCommandAction action)
+        public RunCommandEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, RunCommandAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private RunCommandAction Action { get; }
 
-        [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult>> CommandActionEvents { get; set; }
+        [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult<ValidResult>>> CommandActionEvents { get; set; }
         [CanBeNull] private Event<ReactedResult<PayCardResult>> PayCardEvent { get; set; }
         [CanBeNull] private RunCommandProcess Process { get; set; }
 
@@ -58,13 +58,13 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
                 return new FailedResult(Action, FailedReason.UnitIsDead);
             }
 
-            var card = Action.Command.CardID.GetFrom(Initial.World);
+            var card = Context.Finder.FindCard(Initial.World, Action.Command.CardID);
             if (card == null)
             {
                 return new FailedResult(Action, FailedReason.CardNotFound);
             }
 
-            var player = card.OwnerPlayerID.GetFrom(Initial.World);
+            var player = Context.Finder.FindPlayer(Initial.World, card.OwnerPlayerID);
             if (player == null)
             {
                 return new FailedResult(Action, FailedReason.PlayerNotFound);
@@ -80,14 +80,12 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 
         private void ActuateCommand()
         {
-            Contract.Ensures(CommandActionEvents != null);
-
-            CommandActionEvents = ValueList<Event<ReactedResult>>.Empty;
+            CommandActionEvents = ValueList<Event<ReactedResult<ValidResult>>>.Empty;
             var actions = Action.Command.ActionsIn(Simulating);
 
             foreach (var action in actions)
             {
-                var result = action.EvaluateBase(Simulating);
+                var result = Context.Actions.Run(Simulating, action);
                 Simulating = Simulating.Appended(result, out var @event);
                 CommandActionEvents = CommandActionEvents.Add(@event);
             }
@@ -95,28 +93,19 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 
         private void PayUsedCard()
         {
-            Contract.Ensures(PayCardEvent != null);
-
-            var result = new PayCardAction(Action.Command.CardID).Evaluate(Simulating);
+            var result = Context.Actions.PayCard(Simulating, new PayCardAction(Action.Command.CardID));
             Simulating = Simulating.Appended(result, out var @event);
             PayCardEvent = @event;
         }
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(CommandActionEvents != null);
-            Contract.Requires<InvalidOperationException>(PayCardEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new RunCommandProcess(CommandActionEvents, PayCardEvent);
         }
 
         [CanBeNull]
         private RunCommandResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IRunCommandRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<RunCommandRejection>>.Empty;
@@ -138,9 +127,6 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [NotNull]
         private RunCommandResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

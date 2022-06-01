@@ -2,12 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
-    public record EntityTeleportAction
-        ([NotNull] EntityID TargetID, [NotNull] Position3D Destination) : ValidAction<EntityTeleportResult>
-    {
-        protected override EntityTeleportResult EvaluateBody(IHistory history)
-        {
-            return new EntityTeleportEvaluator(history, this).Evaluate();
-        }
-    }
+    public record EntityTeleportAction([NotNull] EntityID TargetID, [NotNull] Position3D Destination) : IValidAction;
 }

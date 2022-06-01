@@ -1,13 +1,7 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions
 {
-    public record DirectInteractAction([NotNull] [ItemNotNull] ValueList<DirectInteractTarget> Targets) : InteractAction
-    {
-        protected override InteractResult EvaluateBody(IHistory history)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    public record DirectInteractAction
+        ([NotNull] [ItemNotNull] ValueList<DirectInteractTarget> Targets) : InteractAction;
 }

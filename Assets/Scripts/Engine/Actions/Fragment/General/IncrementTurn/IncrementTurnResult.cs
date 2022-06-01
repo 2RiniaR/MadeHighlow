@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
-    public record IncrementTurnResult([NotNull] IncrementTurnAction Action, [NotNull] Turn Updated) : Result
+    public record IncrementTurnResult([NotNull] Turn Updated) : Result
     {
         public override World Simulate(World world)
         {

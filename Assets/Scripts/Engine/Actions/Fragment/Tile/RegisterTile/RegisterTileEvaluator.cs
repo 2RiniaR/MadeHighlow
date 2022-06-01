@@ -1,17 +1,21 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.RegisterTile
 {
     public class RegisterTileEvaluator
     {
-        public RegisterTileEvaluator([NotNull] IHistory initial, RegisterTileAction action)
+        public RegisterTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            RegisterTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterTileAction Action { get; }
 
@@ -26,8 +30,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
 
         private void Format()
         {
-            Contract.Ensures(Registered != null);
-
             Registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
@@ -38,8 +40,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
         [NotNull]
         private RegisterTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Registered != null);
-
             return new RegisterTileResult(Action, Registered);
         }
     }

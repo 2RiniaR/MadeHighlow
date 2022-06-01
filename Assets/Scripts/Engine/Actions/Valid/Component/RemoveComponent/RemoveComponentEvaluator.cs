@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteComponent;
 
 namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
     public class RemoveComponentEvaluator
     {
-        public RemoveComponentEvaluator([NotNull] IHistory initial, RemoveComponentAction action)
+        public RemoveComponentEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            RemoveComponentAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private RemoveComponentAction Action { get; }
@@ -36,7 +40,7 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         [CanBeNull]
         private RemoveComponentResult DeleteComponent()
         {
-            var result = new DeleteComponentAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.DeleteComponent(Simulating, new DeleteComponentAction(Action.TargetID));
             if (result is not DeleteComponent.SucceedResult succeedResult)
             {
                 return new DeleteComponentFailedResult(Action, result);
@@ -49,17 +53,12 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new RemoveComponentProcess(DeleteComponentEvent);
         }
 
         [NotNull]
         private RemoveComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }

@@ -1,19 +1,23 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.CreateTile;
 
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public class GenerateTileEvaluator
     {
-        public GenerateTileEvaluator([NotNull] IHistory initial, GenerateTileAction action)
+        public GenerateTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            GenerateTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateTileAction Action { get; }
@@ -41,9 +45,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [CanBeNull]
         private GenerateTileResult CreateTarget()
         {
-            Contract.Ensures((Contract.Result<GenerateTileResult>() != null) ^ (CreateTileEvent != null));
-
-            var result = new CreateTileAction(Action.InitialProps).Evaluate(Simulating);
+            var result = Context.Actions.CreateTile(Simulating, new CreateTileAction(Action.InitialProps));
             if (result is not CreateTile.SucceedResult succeedResult)
             {
                 return new CreateTileFailedResult(Action, result);
@@ -56,18 +58,12 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(CreateTileEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new GenerateTileProcess(CreateTileEvent);
         }
 
         [CanBeNull]
         private GenerateTileResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<IGenerateTileRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<GenerateTileRejection>>.Empty;
@@ -89,9 +85,6 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull]
         private GenerateTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }

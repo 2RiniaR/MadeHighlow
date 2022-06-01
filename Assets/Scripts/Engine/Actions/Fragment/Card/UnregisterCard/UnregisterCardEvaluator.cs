@@ -4,12 +4,18 @@ namespace RineaR.MadeHighlow.Actions.UnregisterCard
 {
     public class UnregisterCardEvaluator
     {
-        public UnregisterCardEvaluator([NotNull] IHistory initial, [NotNull] UnregisterCardAction action)
+        public UnregisterCardEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] UnregisterCardAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private UnregisterCardAction Action { get; }
 
@@ -27,7 +33,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterCard
         [CanBeNull]
         private UnregisterCardResult FindTarget()
         {
-            if (Action.TargetID.GetFrom(Initial.World) == null)
+            if (Context.Finder.FindCard(Initial.World, Action.TargetID) == null)
             {
                 return new NotFoundResult(Action);
             }

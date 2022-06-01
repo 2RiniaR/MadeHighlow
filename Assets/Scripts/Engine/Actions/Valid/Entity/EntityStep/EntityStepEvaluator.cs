@@ -1,19 +1,19 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.MoveEntity;
 
 namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public class EntityStepEvaluator
     {
-        public EntityStepEvaluator([NotNull] IHistory initial, EntityStepAction action)
+        public EntityStepEvaluator([NotNull] ActionContext context, [NotNull] IHistory initial, EntityStepAction action)
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityStepAction Action { get; }
@@ -70,9 +70,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult FindActor()
         {
-            Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
             if (Target == null)
             {
                 return new TargetNotFoundResult(Action);
@@ -84,9 +82,6 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult FindDestination()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (DestinationElevation != null));
-
             var position = Target.Position3D.To2D().MoveTo(Action.Direction, new Distance(1));
             var destination = position.GetTile(Simulating.World);
 
@@ -104,16 +99,15 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult MoveClimb()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(DestinationElevation != null);
-            Contract.Ensures(ClimbMoveEvents != null);
-
             var distance = new Distance(DestinationElevation.Height.Value - Target.Position3D.Z.Value);
             ClimbMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
 
             for (var i = 0; i < distance.Value; i++)
             {
-                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
+                var result = Context.Actions.MoveEntity(
+                    Simulating,
+                    new MoveEntityAction(Action.TargetID, Direction3D.ZPositive)
+                );
                 if (result is not MoveEntity.SucceedResult succeedResult)
                 {
                     return new ClimbFailedResult(Action, ClimbMoveEvents, result);
@@ -130,11 +124,10 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult MoveShift()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
-            Contract.Ensures((Contract.Result<EntityStepResult>() != null) ^ (ShiftMoveEvent != null));
-
-            var result = new MoveEntityAction(Action.TargetID, Action.Direction.To3D).Evaluate(Simulating);
+            var result = Context.Actions.MoveEntity(
+                Simulating,
+                new MoveEntityAction(Action.TargetID, Action.Direction.To3D)
+            );
             if (result is not MoveEntity.SucceedResult succeedResult)
             {
                 return new ShiftFailedResult(Action, ClimbMoveEvents, result);
@@ -150,18 +143,15 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult MoveFall()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Requires<InvalidOperationException>(SteppingTarget != null);
-            Contract.Requires<InvalidOperationException>(DestinationElevation != null);
-            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
-            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
-
             var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
             FallMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
 
             for (var i = 0; i < distance.Value; i++)
             {
-                var result = new MoveEntityAction(Action.TargetID, Direction3D.ZPositive).Evaluate(Simulating);
+                var result = Context.Actions.MoveEntity(
+                    Simulating,
+                    new MoveEntityAction(Action.TargetID, Direction3D.ZPositive)
+                );
                 if (result is not MoveEntity.SucceedResult succeedResult)
                 {
                     return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
@@ -177,11 +167,6 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(ClimbMoveEvents != null);
-            Contract.Requires<InvalidOperationException>(ShiftMoveEvent != null);
-            Contract.Requires<InvalidOperationException>(FallMoveEvents != null);
-            Contract.Ensures(Process != null);
-
             Process = new EntityStepProcess(ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents);
         }
 
@@ -194,10 +179,6 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult CheckCostIsEnough()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(CostEffectInterrupts != null);
-            Contract.Ensures(ExpendedCost != null);
-
             CostEffectInterrupts = ValueList<Interrupt<EntityStepCostEffect>>.Empty;
             var effectors = Component.GetAllOfTypeFrom<IEntityStepCostEffector>(Simulating.World).Sort();
             foreach (var effector in effectors)
@@ -236,11 +217,6 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [CanBeNull]
         private EntityStepResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostEffectInterrupts != null);
-            Contract.Requires<InvalidOperationException>(ExpendedCost != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             RejectionInterrupts = ValueList<Interrupt<EntityStepRejection>>.Empty;
             var effectors = Component.GetAllOfTypeFrom<IEntityStepRejector>(Simulating.World).Sort();
             foreach (var effector in effectors)
@@ -275,11 +251,6 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [NotNull]
         private EntityStepResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(CostEffectInterrupts != null);
-            Contract.Requires<InvalidOperationException>(ExpendedCost != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, CostEffectInterrupts, ExpendedCost, RejectionInterrupts);
         }
     }

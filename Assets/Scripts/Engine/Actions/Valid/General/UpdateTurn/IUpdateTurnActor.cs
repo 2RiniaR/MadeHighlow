@@ -6,10 +6,10 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
     {
         [CanBeNull]
         [ItemNotNull]
-        public ValueList<Interrupt<ValidAction>> UpdateTurnActions(
+        public ValueList<Interrupt<IValidAction>> UpdateTurnActions(
             [NotNull] IHistory history,
             [NotNull] UpdateTurnAction action,
-            [NotNull] [ItemNotNull] ValueList<Interrupt<ValidAction>> collected
+            [NotNull] [ItemNotNull] ValueList<Interrupt<IValidAction>> collected
         );
     }
 }

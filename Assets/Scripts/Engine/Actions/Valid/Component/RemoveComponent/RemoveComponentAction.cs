@@ -2,11 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
-    public record RemoveComponentAction([NotNull] ComponentID TargetID) : ValidAction<RemoveComponentResult>
-    {
-        protected override RemoveComponentResult EvaluateBody(IHistory history)
-        {
-            return new RemoveComponentEvaluator(history, this).Evaluate();
-        }
-    }
+    public record RemoveComponentAction([NotNull] ComponentID TargetID) : IValidAction;
 }

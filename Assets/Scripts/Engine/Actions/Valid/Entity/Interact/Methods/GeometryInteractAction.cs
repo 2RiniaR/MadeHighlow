@@ -1,14 +1,7 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions
 {
     public record GeometryInteractAction
-        ([NotNull] [ItemNotNull] ValueList<GeometryInteractTarget> Targets) : InteractAction
-    {
-        protected override InteractResult EvaluateBody(IHistory history)
-        {
-            throw new NotImplementedException();
-        }
-    }
+        ([NotNull] [ItemNotNull] ValueList<GeometryInteractTarget> Targets) : InteractAction;
 }

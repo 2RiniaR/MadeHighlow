@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.DeleteComponent;
 using RineaR.MadeHighlow.Actions.UnregisterTile;
 
@@ -8,13 +6,19 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
     public class DeleteTileEvaluator
     {
-        public DeleteTileEvaluator([NotNull] IHistory initial, [NotNull] DeleteTileAction action)
+        public DeleteTileEvaluator(
+            [NotNull] ActionContext context,
+            [NotNull] IHistory initial,
+            [NotNull] DeleteTileAction action
+        )
         {
             Initial = initial;
+            Context = context;
             Action = action;
             Simulating = Initial;
         }
 
+        [NotNull] private ActionContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DeleteTileAction Action { get; }
@@ -48,9 +52,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
         [CanBeNull]
         private DeleteTileResult FindTarget()
         {
-            Contract.Ensures((Contract.Result<DeleteTileResult>() != null) ^ (Target != null));
-
-            Target = Action.TargetID.GetFrom(Simulating.World);
+            Target = Context.Finder.FindTile(Simulating.World, Action.TargetID);
             if (Target == null)
             {
                 return new NotFoundResult(Action);
@@ -62,9 +64,8 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
         [CanBeNull]
         private DeleteTileResult CheckEntityRemaining()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-
-            var removable = new EntityCondition(Target.Position2D).Search(Simulating.World).IsEmpty;
+            var removable = Context.Finder.SearchEntities(Simulating.World, new EntityCondition(Target.Position2D))
+                .IsEmpty;
             if (!removable)
             {
                 return new EntityRemainingResult(Action);
@@ -76,14 +77,14 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
         [CanBeNull]
         private DeleteTileResult DeleteComponents()
         {
-            Contract.Requires<InvalidOperationException>(Target != null);
-            Contract.Ensures(DeleteComponentEvents != null);
-
             DeleteComponentEvents = ValueList<Event<DeleteComponent.SucceedResult>>.Empty;
 
             foreach (var component in Target.Components)
             {
-                var result = new DeleteComponentAction(component.ComponentID).Evaluate(Simulating);
+                var result = Context.Actions.DeleteComponent(
+                    Simulating,
+                    new DeleteComponentAction(component.ComponentID)
+                );
 
                 var succeedResult = result as DeleteComponent.SucceedResult;
                 if (succeedResult == null)
@@ -100,10 +101,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
 
         private DeleteTileResult Unregister()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvents != null);
-            Contract.Ensures(UnregisterTileEvent != null);
-
-            var result = new UnregisterTileAction(Action.TargetID).Evaluate(Simulating);
+            var result = Context.Actions.UnregisterTile(Simulating, new UnregisterTileAction(Action.TargetID));
             if (result is not UnregisterTile.SucceedResult succeedResult)
             {
                 return new UnregisterTileFailedResult(Action, DeleteComponentEvents, result);
@@ -117,18 +115,12 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(DeleteComponentEvents != null);
-            Contract.Requires<InvalidOperationException>(UnregisterTileEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new DeleteTileProcess(DeleteComponentEvents, UnregisterTileEvent);
         }
 
         [NotNull]
         private DeleteTileResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-
             return new SucceedResult(Action, Process);
         }
     }
