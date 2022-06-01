@@ -66,7 +66,7 @@ public sealed class ValueList<T> : IEnumerable<T>
 
     public override string ToString()
     {
-        return "[" + Items.Aggregate("", (current, item) => current + ", " + item) + "]";
+        return "[ " + string.Join(", ", Items.Select(item => item.ToString())) + " ]";
     }
 
     public ValueList<T> ReplaceItem(Predicate<T> predicate, T newItem)

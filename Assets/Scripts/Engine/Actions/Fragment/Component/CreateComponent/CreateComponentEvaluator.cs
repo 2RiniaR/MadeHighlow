@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.AllocateID;
 using RineaR.MadeHighlow.Actions.RegisterComponent;
 
@@ -45,8 +43,6 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
 
         private void AllocateID()
         {
-            Contract.Ensures(AllocateIDEvent != null);
-
             var result = new AllocateIDAction().Evaluate(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             AllocateIDEvent = @event;
@@ -55,9 +51,6 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [CanBeNull]
         private CreateComponentResult Register()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Ensures((Contract.Result<CreateComponentResult>() != null) ^ (RegisterComponentEvent != null));
-
             var result = new RegisterComponentAction(
                 Action.TargetID,
                 AllocateIDEvent.Result.AllocatedID,
@@ -77,19 +70,12 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
 
         private void WrapProcess()
         {
-            Contract.Requires<InvalidOperationException>(AllocateIDEvent != null);
-            Contract.Requires<InvalidOperationException>(RegisterComponentEvent != null);
-            Contract.Ensures(Process != null);
-
             Process = new CreateComponentProcess(AllocateIDEvent, RegisterComponentEvent);
         }
 
         [CanBeNull]
         private CreateComponentResult CheckRejection()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Ensures(RejectionInterrupts != null);
-
             var effectors = Component.GetAllOfTypeFrom<ICreateComponentRejector>(Initial.World).Sort();
 
             RejectionInterrupts = ValueList<Interrupt<CreateComponentRejection>>.Empty;
@@ -111,9 +97,6 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [NotNull]
         private CreateComponentResult Succeed()
         {
-            Contract.Requires<InvalidOperationException>(Process != null);
-            Contract.Requires<InvalidOperationException>(RejectionInterrupts != null);
-
             return new SucceedResult(Action, Process, RejectionInterrupts);
         }
     }
