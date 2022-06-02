@@ -31,6 +31,6 @@ namespace RineaR.MadeHighlow.Actions
         /// </summary>
         [NotNull]
         public IHistory Appended<TResult>([NotNull] TResult result, [NotNull] out Event<TResult> @event)
-            where TResult : Result;
+            where TResult : IResult;
     }
 }

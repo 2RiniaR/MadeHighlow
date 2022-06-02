@@ -1,10 +1,10 @@
 ﻿namespace RineaR.MadeHighlow.Actions.AllocateID
 {
-    public record AllocateIDResult(ID AllocatedID) : Result
+    public record AllocateIDResult(ID AllocatedID) : IResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return world with { LatestAllocatedID = AllocatedID };
+            return new AllocateIDSimulator(context, world, this).Simulate();
         }
     }
 }

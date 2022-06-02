@@ -1,10 +1,19 @@
-﻿namespace RineaR.MadeHighlow.Actions.AllocateID
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.AllocateID
 {
     public class AllocateIDEvaluator
     {
-        public AllocateIDResult Evaluate(IHistory history)
+        public AllocateIDEvaluator([NotNull] IHistory initial)
         {
-            var latestID = history.World.LatestAllocatedID;
+            Initial = initial;
+        }
+
+        [NotNull] private IHistory Initial { get; }
+
+        public AllocateIDResult Evaluate()
+        {
+            var latestID = Initial.World.LatestAllocatedID;
             return new AllocateIDResult(ID.From(latestID.InternalValue + 1));
         }
     }

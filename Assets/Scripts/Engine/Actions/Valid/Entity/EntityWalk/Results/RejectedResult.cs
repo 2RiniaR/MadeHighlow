@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [NotNull] EntityWalkProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<EntityWalkRejection>> Interrupts,
         [NotNull] ComponentID RejectedID
-    ) : EntityWalkResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : EntityWalkResult;
 }

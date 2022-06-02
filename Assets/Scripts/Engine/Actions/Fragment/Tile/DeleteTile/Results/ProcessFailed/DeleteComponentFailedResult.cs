@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
         [NotNull] DeleteTileAction Action,
         [NotNull] [ItemNotNull] ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents,
         [NotNull] DeleteComponentResult Failed
-    ) : DeleteTileResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : DeleteTileResult;
 }

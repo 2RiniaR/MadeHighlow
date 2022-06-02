@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [NotNull] EntityTeleportProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<EntityTeleportRejection>> Interrupts,
         [NotNull] ComponentID RejectedID
-    ) : EntityTeleportResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : EntityTeleportResult;
 }

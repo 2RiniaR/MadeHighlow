@@ -5,11 +5,11 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     public record StartCommandsResult(
         [NotNull] StartCommandsAction Action,
         [NotNull] StartCommandsProcess Process
-    ) : ValidResult
+    ) : IValidResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return Process.Timeline.Simulate(world);
+            return new StartCommandsSimulator(context, world, this).Simulate();
         }
     }
 }

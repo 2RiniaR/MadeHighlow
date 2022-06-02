@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [NotNull] CreateComponentAction Action,
         [NotNull] CreateComponentProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<CreateComponentRejection>> RejectionInterrupts
-    ) : CreateComponentResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : CreateComponentResult;
 }

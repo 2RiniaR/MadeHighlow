@@ -9,11 +9,5 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         [NotNull] Event<RegisterPlayerResult> RegisterPlayerEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents,
         [NotNull] CreateComponentResult Failed
-    ) : CreatePlayerResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : CreatePlayerResult;
 }

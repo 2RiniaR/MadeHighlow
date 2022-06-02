@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
         [NotNull] DeleteCardAction Action,
         [NotNull] [ItemNotNull] ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents,
         [NotNull] DeleteComponentResult Failed
-    ) : DeleteCardResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : DeleteCardResult;
 }

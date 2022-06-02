@@ -2,13 +2,13 @@
 
 namespace RineaR.MadeHighlow.Actions
 {
-    public record Event([NotNull] EventID ID, [NotNull] EventID BeforeID, [NotNull] Result Result);
+    public record Event([NotNull] EventID ID, [NotNull] EventID BeforeID, [NotNull] IResult Result);
 
     public record Event<TResult>([NotNull] EventID ID, [NotNull] EventID BeforeID, [NotNull] TResult Result) : Event(
         ID,
         BeforeID,
         Result
-    ) where TResult : Result
+    ) where TResult : IResult
     {
         public new TResult Result { get; init; } = Result;
 

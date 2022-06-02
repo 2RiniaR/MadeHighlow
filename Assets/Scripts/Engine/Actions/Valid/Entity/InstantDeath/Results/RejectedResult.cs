@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [NotNull] InstantDeathAction Action,
         [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : InstantDeathResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : InstantDeathResult;
 }

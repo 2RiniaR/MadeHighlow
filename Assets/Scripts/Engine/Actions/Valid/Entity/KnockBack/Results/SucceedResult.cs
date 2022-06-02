@@ -8,11 +8,5 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [NotNull] KnockBack Calculated,
         [NotNull] KnockBackProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<KnockBackRejection>> Rejections
-    ) : KnockBackResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : KnockBackResult;
 }

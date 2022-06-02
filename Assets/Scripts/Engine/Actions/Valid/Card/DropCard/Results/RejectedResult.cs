@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.DropCard
         [NotNull] DropCardProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DropCardRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : DropCardResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : DropCardResult;
 }

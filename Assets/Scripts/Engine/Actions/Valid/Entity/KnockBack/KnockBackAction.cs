@@ -6,5 +6,11 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         ID SourceID,
         [NotNull] EntityID TargetID,
         [NotNull] KnockBack KnockBack
-    ) : IValidAction;
+    ) : IValidAction
+    {
+        public IValidResult Evaluate(IActionRunner runner, IHistory history)
+        {
+            return runner.KnockBack(history, this);
+        }
+    }
 }

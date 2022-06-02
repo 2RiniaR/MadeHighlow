@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull] GenerateTileProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : GenerateTileResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : GenerateTileResult;
 }

@@ -2,5 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    public record InstantDamageAction(ID SourceID, [NotNull] EntityID TargetID, [NotNull] Damage Damage) : IValidAction;
+    public record InstantDamageAction(ID SourceID, [NotNull] EntityID TargetID, [NotNull] Damage Damage) : IValidAction
+    {
+        public IValidResult Evaluate(IActionRunner runner, IHistory history)
+        {
+            return runner.InstantDamage(history, this);
+        }
+    }
 }

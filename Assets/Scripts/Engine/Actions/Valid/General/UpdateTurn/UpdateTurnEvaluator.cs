@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.IncrementTurn;
 
-namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
+namespace RineaR.MadeHighlow.Actions.UpdateTurn
 {
     public class UpdateTurnEvaluator
     {
@@ -23,7 +23,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
         [NotNull] private UpdateTurnAction Action { get; }
 
         [CanBeNull] private ValueList<Interrupt<IValidAction>> ActorInterrupts { get; set; }
-        [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult<ValidResult>>> ActorEvents { get; set; }
+        [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult<IValidResult>>> ActorEvents { get; set; }
         [CanBeNull] private Event<IncrementTurnResult> IncrementTurnEvent { get; set; }
         [CanBeNull] private UpdateTurnProcess Process { get; set; }
 
@@ -49,7 +49,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
 
             ActorInterrupts = interruptsQueue.ToValueList();
 
-            ActorEvents = ValueList<Event<ReactedResult<ValidResult>>>.Empty;
+            ActorEvents = ValueList<Event<ReactedResult<IValidResult>>>.Empty;
             foreach (var interrupt in ActorInterrupts)
             {
                 var result = Context.Actions.Run(Simulating, interrupt.Effect);
@@ -60,7 +60,7 @@ namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
 
         private void IncrementTurn()
         {
-            var result = new IncrementTurnEvaluator().Evaluate(Simulating);
+            var result = Context.Actions.IncrementTurn(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
             IncrementTurnEvent = @event;
         }

@@ -9,11 +9,5 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
         [NotNull] Event<RegisterEntityResult> RegisterEntityEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents,
         [NotNull] CreateComponentResult Failed
-    ) : CreateEntityResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : CreateEntityResult;
 }

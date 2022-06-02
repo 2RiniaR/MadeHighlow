@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.PayCard
         [NotNull] PayCardAction Action,
         [NotNull] PayCardProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardExemption>> ExemptionInterrupts
-    ) : PayCardResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : PayCardResult;
 }

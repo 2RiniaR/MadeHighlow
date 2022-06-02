@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [NotNull] EntityFlyProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : EntityFlyResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : EntityFlyResult;
 }

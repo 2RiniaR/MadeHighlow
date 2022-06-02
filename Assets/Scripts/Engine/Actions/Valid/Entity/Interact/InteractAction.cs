@@ -1,7 +1,10 @@
 ﻿namespace RineaR.MadeHighlow.Actions
 {
-    /// <summary>
-    ///     相互作用の発生
-    /// </summary>
-    public abstract record InteractAction : IValidAction;
+    public abstract record InteractAction : IValidAction
+    {
+        public IValidResult Evaluate(IActionRunner runner, IHistory history)
+        {
+            return runner.Interact(history, this);
+        }
+    }
 }

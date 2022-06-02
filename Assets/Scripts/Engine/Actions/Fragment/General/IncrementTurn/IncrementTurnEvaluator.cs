@@ -1,10 +1,19 @@
-﻿namespace RineaR.MadeHighlow.Actions.IncrementTurn
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
     public class IncrementTurnEvaluator
     {
-        public IncrementTurnResult Evaluate(IHistory history)
+        public IncrementTurnEvaluator([NotNull] IHistory initial)
         {
-            return new IncrementTurnResult(history.World.CurrentTurn.Increment());
+            Initial = initial;
+        }
+
+        [NotNull] private IHistory Initial { get; }
+
+        public IncrementTurnResult Evaluate()
+        {
+            return new IncrementTurnResult(Initial.World.CurrentTurn.Increment());
         }
     }
 }

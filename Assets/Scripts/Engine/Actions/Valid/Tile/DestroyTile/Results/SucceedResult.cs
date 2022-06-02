@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [NotNull] DestroyTileAction Action,
         [NotNull] DestroyTileProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyTileRejection>> RejectionInterrupts
-    ) : DestroyTileResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : DestroyTileResult;
 }

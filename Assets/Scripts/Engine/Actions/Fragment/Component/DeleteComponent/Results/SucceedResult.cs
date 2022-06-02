@@ -1,17 +1,9 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.DeleteComponent
 {
     public record SucceedResult(
         [NotNull] DeleteComponentAction Action,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DeleteComponentRejection>> RejectionInterrupts
-    ) : DeleteComponentResult
-    {
-        public override World Simulate(World world)
-        {
-            var target = Action.TargetID.GetFrom(world) ?? throw new ArgumentException();
-            return target.DeleteFrom(world);
-        }
-    }
+    ) : DeleteComponentResult;
 }

@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [NotNull] DestroyEntityAction Action,
         [NotNull] DestroyEntityProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyEntityRejection>> RejectionInterrupts
-    ) : DestroyEntityResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : DestroyEntityResult;
 }

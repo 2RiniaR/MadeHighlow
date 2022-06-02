@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
     public record RegisterComponentFailedResult(
         [NotNull] CreateComponentAction Action,
         [NotNull] RegisterComponentResult Failed
-    ) : CreateComponentResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : CreateComponentResult;
 }

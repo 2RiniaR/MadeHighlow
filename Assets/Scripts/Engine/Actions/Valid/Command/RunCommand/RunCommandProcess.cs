@@ -4,7 +4,7 @@ using RineaR.MadeHighlow.Actions.PayCard;
 namespace RineaR.MadeHighlow.Actions.RunCommand
 {
     public record RunCommandProcess(
-        [NotNull] ValueList<Event<ReactedResult<ValidResult>>> CommandActionEvents,
+        [NotNull] ValueList<Event<ReactedResult<IValidResult>>> CommandActionEvents,
         [NotNull] Event<ReactedResult<PayCardResult>> PayCardEvent
     )
     {

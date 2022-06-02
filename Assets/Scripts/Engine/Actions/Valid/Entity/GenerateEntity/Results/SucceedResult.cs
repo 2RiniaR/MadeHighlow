@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull] GenerateEntityAction Action,
         [NotNull] GenerateEntityProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityRejection>> RejectionInterrupts
-    ) : GenerateEntityResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : GenerateEntityResult;
 }

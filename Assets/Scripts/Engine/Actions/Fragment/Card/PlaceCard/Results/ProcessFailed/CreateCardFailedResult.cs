@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [NotNull] PlaceCardAction Action,
         [CanBeNull] Event<ReactedResult<DropCard.SucceedResult>> DropCardEvent,
         [NotNull] CreateCardResult Failed
-    ) : PlaceCardResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : PlaceCardResult;
 }

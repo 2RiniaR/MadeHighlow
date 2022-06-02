@@ -31,9 +31,9 @@ namespace RineaR.MadeHighlow.Actions
         }
 
         [NotNull]
-        public World Simulate([NotNull] World world)
+        public World Simulate([NotNull] SimulationContext context, [NotNull] World world)
         {
-            return Events.Aggregate(world, (current, @event) => @event.Result.Simulate(current));
+            return Events.Aggregate(world, (current, @event) => @event.Result.Simulate(context, current));
         }
     }
 }

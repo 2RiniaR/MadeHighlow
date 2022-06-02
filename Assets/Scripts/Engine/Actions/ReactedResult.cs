@@ -3,22 +3,22 @@
 namespace RineaR.MadeHighlow.Actions
 {
     public record ReactedResult(
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult>> Predictions,
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<IValidResult>>> Predictions,
         [NotNull] Event Body,
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult>> Reactions
-    ) : ValidResult
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<IValidResult>>> Reactions
+    ) : IValidResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return new Timeline().Then(Predictions).Then(Body).Then(Reactions).Simulate(world);
+            return new Timeline().Then(Predictions).Then(Body).Then(Reactions).Simulate(context, world);
         }
     }
 
     public record ReactedResult<TResult>(
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult>> Predictions,
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<IValidResult>>> Predictions,
         [NotNull] Event<TResult> Body,
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult>> Reactions
-    ) : ReactedResult(Predictions, Body, Reactions) where TResult : ValidResult
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<IValidResult>>> Reactions
+    ) : ReactedResult(Predictions, Body, Reactions) where TResult : IValidResult
     {
         public new Event<TResult> Body { get; init; } = Body;
 

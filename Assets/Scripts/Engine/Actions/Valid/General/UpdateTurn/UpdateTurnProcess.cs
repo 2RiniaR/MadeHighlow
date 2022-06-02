@@ -1,10 +1,10 @@
 ﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.IncrementTurn;
 
-namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
+namespace RineaR.MadeHighlow.Actions.UpdateTurn
 {
     public record UpdateTurnProcess(
-        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<ValidResult>>> ActorEvents,
+        [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<IValidResult>>> ActorEvents,
         [NotNull] Event<IncrementTurnResult> IncrementTurnEvent
     )
     {

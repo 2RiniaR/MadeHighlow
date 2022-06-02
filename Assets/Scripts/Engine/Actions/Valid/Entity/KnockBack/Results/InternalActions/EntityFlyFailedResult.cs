@@ -8,11 +8,5 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [NotNull] [ItemNotNull] ValueList<Interrupt<KnockBackCalculation>> Calculations,
         [NotNull] KnockBack Calculated,
         [NotNull] ReactedResult<EntityFlyResult> Failed
-    ) : KnockBackResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : KnockBackResult;
 }

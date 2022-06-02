@@ -22,7 +22,10 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private RunCommandAction Action { get; }
 
-        [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult<ValidResult>>> CommandActionEvents { get; set; }
+        [CanBeNull]
+        [ItemNotNull]
+        private ValueList<Event<ReactedResult<IValidResult>>> CommandActionEvents { get; set; }
+
         [CanBeNull] private Event<ReactedResult<PayCardResult>> PayCardEvent { get; set; }
         [CanBeNull] private RunCommandProcess Process { get; set; }
 
@@ -84,7 +87,7 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
 
         private void ActuateCommand()
         {
-            CommandActionEvents = ValueList<Event<ReactedResult<ValidResult>>>.Empty;
+            CommandActionEvents = ValueList<Event<ReactedResult<IValidResult>>>.Empty;
             var actions = Action.Command.ActionsIn(Simulating);
 
             foreach (var action in actions)

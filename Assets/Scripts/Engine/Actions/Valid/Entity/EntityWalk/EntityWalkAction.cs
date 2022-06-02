@@ -7,5 +7,11 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [NotNull] EntityID ActorID,
         [NotNull] EntityWalkRoute Route,
         [NotNull] EntityStepCost Available
-    ) : IValidAction;
+    ) : IValidAction
+    {
+        public IValidResult Evaluate(IActionRunner runner, IHistory history)
+        {
+            return runner.EntityWalk(history, this);
+        }
+    }
 }

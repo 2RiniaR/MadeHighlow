@@ -2,5 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.DropCard
 {
-    public record DropCardAction([NotNull] CardID TargetID) : IValidAction;
+    public record DropCardAction([NotNull] CardID TargetID) : IValidAction
+    {
+        public IValidResult Evaluate(IActionRunner runner, IHistory history)
+        {
+            return runner.DropCard(history, this);
+        }
+    }
 }

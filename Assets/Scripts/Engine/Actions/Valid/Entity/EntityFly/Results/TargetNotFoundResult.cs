@@ -2,11 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityFly
 {
-    public record TargetNotFoundResult([NotNull] EntityFlyAction Action) : EntityFlyResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    public record TargetNotFoundResult([NotNull] EntityFlyAction Action) : EntityFlyResult;
 }

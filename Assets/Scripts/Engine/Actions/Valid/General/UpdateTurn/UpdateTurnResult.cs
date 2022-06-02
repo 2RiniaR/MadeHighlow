@@ -1,16 +1,16 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
+namespace RineaR.MadeHighlow.Actions.UpdateTurn
 {
     public record UpdateTurnResult(
         [NotNull] UpdateTurnAction Action,
         [NotNull] [ItemNotNull] ValueList<Interrupt<IValidAction>> ActorInterrupts,
         [NotNull] UpdateTurnProcess Process
-    ) : ValidResult
+    ) : IValidResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return Process.Timeline.Simulate(world);
+            return new UpdateTurnSimulator(context, world, this).Simulate();
         }
     }
 }

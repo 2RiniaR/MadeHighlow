@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow.Actions
 {
-    public record InteractResult : ValidResult
+    public record InteractResult : IValidResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
             throw new NotImplementedException();
         }

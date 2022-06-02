@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
         [NotNull] MoveEntityAction Action,
         [NotNull] MoveEntityProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<MoveEntityRejection>> RejectionInterrupts
-    ) : MoveEntityResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : MoveEntityResult;
 }

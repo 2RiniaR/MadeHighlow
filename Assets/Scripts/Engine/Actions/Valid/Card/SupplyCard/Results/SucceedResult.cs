@@ -6,11 +6,5 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
         [NotNull] SupplyCardAction Action,
         [NotNull] SupplyCardProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<SupplyCardRejection>> RejectionInterrupts
-    ) : SupplyCardResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : SupplyCardResult;
 }

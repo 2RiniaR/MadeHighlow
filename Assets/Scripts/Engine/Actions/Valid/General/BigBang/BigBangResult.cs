@@ -1,12 +1,12 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.General.BigBang
+namespace RineaR.MadeHighlow.Actions.BigBang
 {
-    public record BigBangResult([NotNull] BigBangAction Action, [NotNull] BigBangProcess Process) : ValidResult
+    public record BigBangResult([NotNull] BigBangAction Action, [NotNull] BigBangProcess Process) : IValidResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return Process.Timeline.Simulate(world);
+            return new BigBangSimulator(context, world, this).Simulate();
         }
     }
 }

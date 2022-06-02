@@ -8,11 +8,5 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
         [NotNull] PlaceCardProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<PlaceCardRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : PlaceCardResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : PlaceCardResult;
 }

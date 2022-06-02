@@ -2,11 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
-    public record IncrementTurnResult([NotNull] Turn Updated) : Result
+    public record IncrementTurnResult([NotNull] Turn Updated) : IResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return world with { CurrentTurn = Updated };
+            return new IncrementTurnSimulator(context, world, this).Simulate();
         }
     }
 }

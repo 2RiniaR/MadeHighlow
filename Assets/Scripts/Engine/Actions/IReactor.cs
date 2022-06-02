@@ -6,6 +6,6 @@ namespace RineaR.MadeHighlow.Actions
     {
         [ItemNotNull]
         [NotNull]
-        public ValueList<IValidAction> ReactionsOn([NotNull] ValidResult result);
+        public ValueList<IValidAction> ReactionsOn([NotNull] IValidResult result);
     }
 }

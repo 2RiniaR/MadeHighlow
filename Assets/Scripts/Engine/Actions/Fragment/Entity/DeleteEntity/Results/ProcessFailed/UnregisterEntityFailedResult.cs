@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
         [NotNull] DeleteEntityAction Action,
         [NotNull] [ItemNotNull] ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents,
         [NotNull] UnregisterEntityResult Failed
-    ) : DeleteEntityResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : DeleteEntityResult;
 }

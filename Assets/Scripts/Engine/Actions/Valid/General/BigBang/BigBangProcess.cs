@@ -3,7 +3,7 @@ using RineaR.MadeHighlow.Actions.GenerateEntity;
 using RineaR.MadeHighlow.Actions.GenerateTile;
 using RineaR.MadeHighlow.Actions.JoinPlayer;
 
-namespace RineaR.MadeHighlow.Actions.General.BigBang
+namespace RineaR.MadeHighlow.Actions.BigBang
 {
     public record BigBangProcess(
         [NotNull] ValueList<Event<ReactedResult<JoinPlayerResult>>> JoinPlayerEvents,

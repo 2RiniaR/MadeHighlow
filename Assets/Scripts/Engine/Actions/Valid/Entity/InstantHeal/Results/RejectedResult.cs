@@ -8,11 +8,5 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         [NotNull] Heal Calculated,
         [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : InstantHealResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : InstantHealResult;
 }

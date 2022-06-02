@@ -3,11 +3,5 @@
 namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
     public record SucceedResult
-        ([NotNull] DeleteTileAction Action, [NotNull] DeleteTileProcess Process) : DeleteTileResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+        ([NotNull] DeleteTileAction Action, [NotNull] DeleteTileProcess Process) : DeleteTileResult;
 }

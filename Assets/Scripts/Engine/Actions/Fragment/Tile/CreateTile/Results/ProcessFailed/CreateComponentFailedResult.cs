@@ -9,11 +9,5 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
         [NotNull] Event<RegisterTileResult> RegisterTileEvent,
         [NotNull] [ItemNotNull] ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents,
         [NotNull] CreateComponentResult Failed
-    ) : CreateTileResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : CreateTileResult;
 }

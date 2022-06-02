@@ -6,5 +6,11 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [NotNull] EntityID TargetID,
         [NotNull] Direction2D Direction,
         [NotNull] EntityStepCost Available
-    ) : IValidAction;
+    ) : IValidAction
+    {
+        public IValidResult Evaluate(IActionRunner runner, IHistory history)
+        {
+            return runner.EntityStep(history, this);
+        }
+    }
 }

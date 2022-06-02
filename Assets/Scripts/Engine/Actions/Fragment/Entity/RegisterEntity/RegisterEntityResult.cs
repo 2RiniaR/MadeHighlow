@@ -2,11 +2,11 @@
 
 namespace RineaR.MadeHighlow.Actions.RegisterEntity
 {
-    public record RegisterEntityResult([NotNull] RegisterEntityAction Action, [NotNull] Entity Registered) : Result
+    public record RegisterEntityResult([NotNull] RegisterEntityAction Action, [NotNull] Entity Registered) : IResult
     {
-        public override World Simulate(World world)
+        public World Simulate(SimulationContext context, World world)
         {
-            return Registered.CreateIn(world);
+            return new RegisterEntitySimulator(context, world, this).Simulate();
         }
     }
 }

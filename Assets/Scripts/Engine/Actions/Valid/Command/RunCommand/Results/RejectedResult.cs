@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [NotNull] RunCommandProcess Process,
         [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandRejection>> RejectionInterrupts,
         [CanBeNull] ComponentID RejectedID
-    ) : RunCommandResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : RunCommandResult;
 }

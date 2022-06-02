@@ -8,11 +8,5 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepCostEffect>> CostEffectInterrupts,
         [NotNull] EntityStepCost ExpendedCost,
         [NotNull] [ItemNotNull] ValueList<Interrupt<EntityStepRejection>> RejectionInterrupts
-    ) : EntityStepResult
-    {
-        public override World Simulate(World world)
-        {
-            return Process.Timeline.Simulate(world);
-        }
-    }
+    ) : EntityStepResult;
 }

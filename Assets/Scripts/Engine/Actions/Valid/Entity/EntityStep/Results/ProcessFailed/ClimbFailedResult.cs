@@ -7,11 +7,5 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [NotNull] EntityStepAction Action,
         [NotNull] [ItemNotNull] ValueList<Event<MoveEntity.SucceedResult>> SucceedResults,
         [NotNull] MoveEntityResult Failed
-    ) : EntityStepResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : EntityStepResult;
 }

@@ -8,11 +8,5 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [NotNull] Damage Calculated,
         [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageRejection>> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : InstantDamageResult
-    {
-        public override World Simulate(World world)
-        {
-            return world;
-        }
-    }
+    ) : InstantDamageResult;
 }

@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.AddComponent;
 using RineaR.MadeHighlow.Actions.AllocateID;
+using RineaR.MadeHighlow.Actions.BigBang;
 using RineaR.MadeHighlow.Actions.CreateCard;
 using RineaR.MadeHighlow.Actions.CreateComponent;
 using RineaR.MadeHighlow.Actions.CreateEntity;
@@ -18,8 +19,6 @@ using RineaR.MadeHighlow.Actions.EntityFly;
 using RineaR.MadeHighlow.Actions.EntityStep;
 using RineaR.MadeHighlow.Actions.EntityTeleport;
 using RineaR.MadeHighlow.Actions.EntityWalk;
-using RineaR.MadeHighlow.Actions.General.BigBang;
-using RineaR.MadeHighlow.Actions.General.UpdateTurn;
 using RineaR.MadeHighlow.Actions.GenerateEntity;
 using RineaR.MadeHighlow.Actions.GenerateTile;
 using RineaR.MadeHighlow.Actions.IncrementTurn;
@@ -46,13 +45,14 @@ using RineaR.MadeHighlow.Actions.SupplyCard;
 using RineaR.MadeHighlow.Actions.UnregisterCard;
 using RineaR.MadeHighlow.Actions.UnregisterEntity;
 using RineaR.MadeHighlow.Actions.UnregisterTile;
+using RineaR.MadeHighlow.Actions.UpdateTurn;
 
 namespace RineaR.MadeHighlow.Actions
 {
     public interface IActionRunner
     {
         [NotNull]
-        ReactedResult<ValidResult> Run([NotNull] IHistory history, [NotNull] IValidAction action);
+        ReactedResult<IValidResult> Run([NotNull] IHistory history, [NotNull] IValidAction action);
 
         [NotNull]
         CreateCardResult CreateCard([NotNull] IHistory history, [NotNull] CreateCardAction action);
@@ -100,7 +100,7 @@ namespace RineaR.MadeHighlow.Actions
         AllocateIDResult AllocateID([NotNull] IHistory history);
 
         [NotNull]
-        IncrementTurnResult IncrementTurn([NotNull] IHistory history, [NotNull] IncrementTurnEvaluator action);
+        IncrementTurnResult IncrementTurn([NotNull] IHistory history);
 
         [NotNull]
         CreatePlayerResult CreatePlayer([NotNull] IHistory history, [NotNull] CreatePlayerAction action);

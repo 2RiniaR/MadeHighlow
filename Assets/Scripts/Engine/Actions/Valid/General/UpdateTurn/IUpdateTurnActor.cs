@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.General.UpdateTurn
+namespace RineaR.MadeHighlow.Actions.UpdateTurn
 {
     public interface IUpdateTurnActor : IPriority<IUpdateTurnActor>
     {
