@@ -22,7 +22,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
                 new EventID(ID.From(1)),
                 new AllocateID.Result(ID.From(2))
             );
-            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
+            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Content.Allocated };
 
             var registerComponentEvent = new Event<RegisterComponent.SucceedResult>(
                 new EventID(ID.From(3)),
@@ -108,7 +108,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
                 new EventID(ID.From(1)),
                 new AllocateID.Result(ID.From(2))
             );
-            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
+            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Content.Allocated };
 
             var registerComponentEvent = new Event<RegisterComponent.SucceedResult>(
                 new EventID(ID.From(3)),
@@ -176,7 +176,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
                 new EventID(ID.From(1)),
                 new AllocateID.Result(ID.From(2))
             );
-            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
+            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Content.Allocated };
 
             var registerComponentEvent = new Event<RegisterComponent.SucceedResult>(
                 new EventID(ID.From(3)),

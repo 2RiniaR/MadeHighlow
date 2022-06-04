@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.DropCard;
 
 namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
@@ -10,26 +11,21 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        private Player Parent { get; set; }
-        private ValueList<Interrupt<CardReplacement>> Replacements { get; set; }
-        private Event<ReactedResult<DropCard.SucceedResult>> DropCardEvent { get; set; }
-        private Event<CreateCard.SucceedResult> CreateCardEvent { get; set; }
-        private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var parent = FindParent();
 
-            result = FindParent();
-            if (result != null) return result;
+            if (parent == null) return Result;
 
             result = AllocateDeckSpace();
             if (result != null) return result;
@@ -37,43 +33,24 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
             result = CreateCard();
             if (result != null) return result;
 
-            Process = new Process(DropCardEvent, CreateCardEvent);
-
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action, Process),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    Replacements,
-                    Process,
-                    rejection,
-                    rejectedID
-                )
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
             return Succeed();
         }
 
         [CanBeNull]
-        private Result FindParent()
+        private Player FindParent()
         {
-            Parent = Context.Finder.FindPlayer(Simulating.World, Action.ParentID);
-            if (Parent == null)
-            {
-                return new ParentNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindPlayer(Initial.World, Action.ParentID);
         }
 
-        [CanBeNull]
-        private Result AllocateDeckSpace()
+        private void AllocateDeckSpace(Player parent)
         {
-            if (ExistDeckSpace(Parent))
-            {
-                return null;
-            }
+            if (ExistDeckSpace(parent)) return;
 
             var effectors = Context.Finder.GetAllComponents<IReplacer>(Initial.World).Sort();
             Replacements = ValueList<Interrupt<CardReplacement>>.Empty;
@@ -91,7 +68,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
             {
                 var result = Context.Actions.DropCard(Simulating, new DropCard.Action(interrupt.Effect.ReplacedID));
 
-                var succeedResult = result.BodyAs<DropCard.SucceedResult>();
+                var succeedResult = result.BodyAs<SucceedResult>();
                 if (succeedResult == null)
                 {
                     continue;
@@ -133,11 +110,6 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
             CreateCardEvent = succeedEvent;
 
             return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(DropCardEvent, CreateCardEvent);
         }
 
         [NotNull]

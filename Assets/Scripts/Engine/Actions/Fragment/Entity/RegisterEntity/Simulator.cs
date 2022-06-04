@@ -18,6 +18,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
         [NotNull]
         public World Simulate()
         {
+            if (Result.Registered == null) return Initial;
             return Context.Modifier.CreateEntity(Initial, Result.Registered);
         }
     }

@@ -18,6 +18,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
         [NotNull]
         public World Simulate()
         {
+            if (Result.Registered == null) return Initial;
             return Context.Modifier.CreatePlayer(Initial, Result.Registered);
         }
     }

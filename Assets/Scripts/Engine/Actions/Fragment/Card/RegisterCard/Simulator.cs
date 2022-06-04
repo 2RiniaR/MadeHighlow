@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return Context.Modifier.CreateCard(Initial, succeedResult.Registered);
-            }
-
-            return Initial;
+            if (Result.Registered == null) return Initial;
+            return Context.Modifier.CreateCard(Initial, Result.Registered);
         }
     }
 }

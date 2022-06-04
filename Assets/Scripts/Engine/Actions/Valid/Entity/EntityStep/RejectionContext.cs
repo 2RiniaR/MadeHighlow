@@ -4,10 +4,9 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public record RejectionContext(
         [NotNull] IHistory History,
+        [NotNull] Result Result,
         [NotNull] ValueList<Interrupt> Collected,
-        [NotNull] Action Action,
-        [NotNull] Process Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<CostEffect>> CostEffectInterrupts,
-        [NotNull] Cost ExpendedCost
+        [NotNull] [ItemNotNull] ValueList<Interrupt<CostEffect>> CostEffects,
+        [NotNull] Cost Expended
     );
 }

@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
@@ -10,96 +11,64 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        private Card Target { get; set; }
-        private ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents { get; set; }
-        private Event<UnregisterCard.SucceedResult> UnregisterCardEvent { get; set; }
-        private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
 
-            result = DeleteComponents();
-            if (result != null) return result;
+            DeleteComponents(target);
 
-            result = Unregister();
-            if (result != null) return result;
+            if (Result.DeleteComponents.Any(@event => @event.Content.DeletedID == null)) return Result;
 
-            WrapProcess();
-            return Succeed();
+            Unregister();
+
+            if (Result.UnregisterCard.Content.UnregisteredID == null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Card FindTarget()
         {
-            Target = Context.Finder.FindCard(Simulating.World, Action.TargetID);
-            if (Target == null)
+            return Context.Finder.FindCard(Initial.World, Action.TargetID);
+        }
+
+        private void DeleteComponents([NotNull] Card target)
+        {
+            Result = Result with { DeleteComponents = ValueList<Event<DeleteComponent.Result>>.Empty };
+            foreach (var component in target.Components)
             {
-                return new NotFoundResult(Action);
+                var action = new DeleteComponent.Action(component.ComponentID);
+                var result = Context.Actions.DeleteComponent(Simulating, action);
+                Simulating = Simulating.Appended(result, out var @event);
+                Result = Result with { DeleteComponents = Result.DeleteComponents.Add(@event) };
             }
-
-            return null;
         }
 
-        [CanBeNull]
-        private Result DeleteComponents()
+        private void Unregister()
         {
-            DeleteComponentEvents = ValueList<Event<DeleteComponent.SucceedResult>>.Empty;
-
-            foreach (var component in Target.Components)
-            {
-                var result = Context.Actions.DeleteComponent(
-                    Simulating,
-                    new DeleteComponent.Action(component.ComponentID)
-                );
-
-                var succeedResult = result as DeleteComponent.SucceedResult;
-                if (succeedResult == null)
-                {
-                    return new DeleteComponentFailedResult(Action, DeleteComponentEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                DeleteComponentEvents = DeleteComponentEvents.Add(succeedEvent);
-            }
-
-            return null;
+            var action = new UnregisterCard.Action(Action.TargetID);
+            var result = Context.Actions.UnregisterCard(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { UnregisterCard = @event };
         }
 
-        private Result Unregister()
+        private void Confirm()
         {
-            var result = Context.Actions.UnregisterCard(Simulating, new UnregisterCard.Action(Action.TargetID));
-            if (result is not UnregisterCard.SucceedResult succeedResult)
-            {
-                return new UnregisterCardFailedResult(Action, DeleteComponentEvents, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            UnregisterCardEvent = succeedEvent;
-
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(DeleteComponentEvents, UnregisterCardEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { DeletedID = Action.TargetID };
         }
     }
 }

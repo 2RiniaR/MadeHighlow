@@ -9,47 +9,40 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
-
-        private ValueList<Interrupt<RejectionContext>> RejectionInterrupts { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
-            result = CheckTargetExist();
-            if (result != null) return result;
+            if (!IsTargetExists()) return Result;
 
             Context.Flows.CheckRejection(
                 history: Initial,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(Action, rejection, rejectedID)
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result CheckTargetExist()
+        private bool IsTargetExists()
         {
-            if (Context.Finder.FindComponent(Initial.World, Action.TargetID) == null)
-            {
-                return new NotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindComponent(Initial.World, Action.TargetID) != null;
         }
 
-        [NotNull]
-        private Result Succeed()
+        private void Confirm()
         {
-            return new SucceedResult(Action, RejectionInterrupts);
+            Result = Result with { DeletedID = Result.Action.TargetID };
         }
     }
 }

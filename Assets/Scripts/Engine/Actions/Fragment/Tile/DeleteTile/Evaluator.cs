@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
@@ -10,112 +11,70 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Tile Target { get; set; }
-        [CanBeNull] private ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents { get; set; }
-        [CanBeNull] private Event<UnregisterTile.SucceedResult> UnregisterTileEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
+            if (IsEntityRemaining(target)) return Result;
 
-            result = CheckEntityRemaining();
-            if (result != null) return result;
+            DeleteComponents(target);
 
-            result = DeleteComponents();
-            if (result != null) return result;
+            if (Result.DeleteComponents.Any(@event => @event.Content.DeletedID == null)) return Result;
 
-            result = Unregister();
-            if (result != null) return result;
+            Unregister();
 
-            WrapProcess();
-            return Succeed();
+            if (Result.UnregisterTile.Content.UnregisteredID == null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Tile FindTarget()
         {
-            Target = Context.Finder.FindTile(Simulating.World, Action.TargetID);
-            if (Target == null)
+            return Context.Finder.FindTile(Initial.World, Action.TargetID);
+        }
+
+        private bool IsEntityRemaining([NotNull] Tile target)
+        {
+            return !Context.Finder.SearchEntities(Simulating.World, new EntityCondition(target.Position2D)).IsEmpty;
+        }
+
+        private void DeleteComponents([NotNull] Tile target)
+        {
+            Result = Result with { DeleteComponents = ValueList<Event<DeleteComponent.Result>>.Empty };
+            foreach (var component in target.Components)
             {
-                return new NotFoundResult(Action);
+                var action = new DeleteComponent.Action(component.ComponentID);
+                var result = Context.Actions.DeleteComponent(Simulating, action);
+                Simulating = Simulating.Appended(result, out var @event);
+                Result = Result with { DeleteComponents = Result.DeleteComponents.Add(@event) };
             }
-
-            return null;
         }
 
-        [CanBeNull]
-        private Result CheckEntityRemaining()
+        private void Unregister()
         {
-            var removable = Context.Finder.SearchEntities(Simulating.World, new EntityCondition(Target.Position2D))
-                .IsEmpty;
-            if (!removable)
-            {
-                return new EntityRemainingResult(Action);
-            }
-
-            return null;
+            var action = new UnregisterTile.Action(Action.TargetID);
+            var result = Context.Actions.UnregisterTile(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { UnregisterTile = @event };
         }
 
-        [CanBeNull]
-        private Result DeleteComponents()
+        private void Confirm()
         {
-            DeleteComponentEvents = ValueList<Event<DeleteComponent.SucceedResult>>.Empty;
-
-            foreach (var component in Target.Components)
-            {
-                var result = Context.Actions.DeleteComponent(
-                    Simulating,
-                    new DeleteComponent.Action(component.ComponentID)
-                );
-
-                var succeedResult = result as DeleteComponent.SucceedResult;
-                if (succeedResult == null)
-                {
-                    return new DeleteComponentFailedResult(Action, DeleteComponentEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                DeleteComponentEvents = DeleteComponentEvents.Add(succeedEvent);
-            }
-
-            return null;
-        }
-
-        private Result Unregister()
-        {
-            var result = Context.Actions.UnregisterTile(Simulating, new UnregisterTile.Action(Action.TargetID));
-            if (result is not UnregisterTile.SucceedResult succeedResult)
-            {
-                return new UnregisterTileFailedResult(Action, DeleteComponentEvents, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            UnregisterTileEvent = succeedEvent;
-
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(DeleteComponentEvents, UnregisterTileEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { DeletedID = Action.TargetID };
         }
     }
 }

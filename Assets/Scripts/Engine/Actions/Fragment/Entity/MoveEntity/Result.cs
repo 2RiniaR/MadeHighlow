@@ -1,10 +1,16 @@
-﻿namespace RineaR.MadeHighlow.Actions.MoveEntity
+﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+
+namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
-    public abstract record Result : IResult
+    public record Result([NotNull] Action Action) : IResult
     {
         public World Simulate(ISimulationContext context, World world)
         {
             return new Simulator(context, world, this).Simulate();
         }
+
+        public Event<PositionEntity.Result> PositionEntity { get; init; }
+        public Rejection Rejection { get; init; }
     }
 }

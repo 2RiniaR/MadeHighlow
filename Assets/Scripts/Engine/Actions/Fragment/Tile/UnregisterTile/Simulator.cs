@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return Context.Modifier.DeleteTile(Initial, succeedResult.Action.TargetID);
-            }
-
-            return Initial;
+            if (Result.UnregisteredID == null) return Initial;
+            return Context.Modifier.DeleteTile(Initial, Result.UnregisteredID);
         }
     }
 }

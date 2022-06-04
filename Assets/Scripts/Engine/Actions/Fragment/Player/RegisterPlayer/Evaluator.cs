@@ -9,34 +9,30 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Player Registered { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Format();
-            return Succeed();
+            Confirm();
+
+            return Result;
         }
 
-        private void Format()
+        private void Confirm()
         {
-            Registered = Action.InitialProps with
+            var registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
                 Components = ValueList<Component>.Empty,
             };
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new Result(Action, Registered);
+            Result = Result with { Registered = registered };
         }
     }
 }

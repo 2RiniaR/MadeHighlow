@@ -1,10 +1,14 @@
-﻿namespace RineaR.MadeHighlow.Actions.UnregisterEntity
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.UnregisterEntity
 {
-    public abstract record Result : IResult
+    public record Result([NotNull] Action Action) : IResult
     {
         public World Simulate(ISimulationContext context, World world)
         {
             return new Simulator(context, world, this).Simulate();
         }
+
+        public EntityID UnregisteredID { get; init; }
     }
 }

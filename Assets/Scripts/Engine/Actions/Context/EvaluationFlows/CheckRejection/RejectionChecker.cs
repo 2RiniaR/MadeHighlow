@@ -26,7 +26,8 @@ namespace RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection
 
             if (interrupts.IsEmpty) return;
 
-            onRejected(interrupts, interrupts[0].ComponentID);
+            var rejection = new Rejection(interrupts[0].ComponentID);
+            onRejected(rejection);
         }
     }
 }

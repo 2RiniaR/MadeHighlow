@@ -9,38 +9,32 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            if (!IsTargetExists()) return Result;
 
-            result = FindTarget();
-            if (result != null) return result;
+            Confirm();
 
-            return Succeed();
+            return Result;
         }
 
-        [CanBeNull]
-        private Result FindTarget()
+        private bool IsTargetExists()
         {
-            if (Context.Finder.FindEntity(Initial.World, Action.TargetID) == null)
-            {
-                return new NotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID) != null;
         }
 
-        [NotNull]
-        private Result Succeed()
+        private void Confirm()
         {
-            return new SucceedResult(Action);
+            Result = Result with { UnregisteredID = Result.Action.TargetID };
         }
     }
 }

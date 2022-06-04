@@ -25,7 +25,7 @@ namespace RineaR.MadeHighlow.Actions
         [CanBeNull]
         public ReactedResult<TTarget> BodyAs<TTarget>() where TTarget : TResult
         {
-            return Body.Result is TTarget targetResult
+            return Body.Content is TTarget targetResult
                 ? new ReactedResult<TTarget>(
                     Predictions,
                     new Event<TTarget>(Body.ID, Body.BeforeID, targetResult),

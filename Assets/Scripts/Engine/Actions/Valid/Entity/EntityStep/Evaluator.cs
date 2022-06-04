@@ -130,7 +130,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 
                 Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
                 ClimbMoveEvents = ClimbMoveEvents.Add(succeedEvent);
-                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+                SteppingTarget = succeedResult.Process.PositionEntityEvent.Content.Positioned;
             }
 
             return null;
@@ -150,7 +150,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 
             Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
             ShiftMoveEvent = succeedEvent;
-            SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+            SteppingTarget = succeedResult.Process.PositionEntityEvent.Content.Positioned;
 
             return null;
         }
@@ -174,7 +174,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 
                 Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
                 FallMoveEvents = FallMoveEvents.Add(succeedEvent);
-                SteppingTarget = succeedResult.Process.PositionEntityEvent.Result.Positioned;
+                SteppingTarget = succeedResult.Process.PositionEntityEvent.Content.Positioned;
             }
 
             return null;

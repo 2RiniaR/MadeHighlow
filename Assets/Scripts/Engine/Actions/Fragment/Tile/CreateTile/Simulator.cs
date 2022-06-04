@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return succeedResult.Process.Timeline.Simulate(Context, Initial);
-            }
-
-            return Initial;
+            if (Result.Created == null) return Initial;
+            return Context.Modifier.CreateTile(Initial, Result.Created);
         }
     }
 }

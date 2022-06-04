@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Linq;
 using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.CreateCard
@@ -11,86 +11,73 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        private Event<AllocateID.Result> AllocateIDEvent { get; set; }
-        private ValueList<Event<CreateComponent.SucceedResult>> CreateComponentEvents { get; set; }
-        private Event<RegisterCard.SucceedResult> RegisterCardEvent { get; set; }
-        private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
             AllocateID();
+            Register();
 
-            result = Register();
-            if (result != null) return result;
+            if (Result.RegisterCard.Content.Registered == null) return Result;
 
-            result = CreateComponents();
-            if (result != null) return result;
+            CreateComponents();
 
-            Process = new Process(AllocateIDEvent, RegisterCardEvent, CreateComponentEvents);
-            return new SucceedResult(Action, Process);
+            if (Result.CreateComponents.Any(@event => @event.Content.Created == null)) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
         private void AllocateID()
         {
-            Contract.Ensures(AllocateIDEvent != null);
-
             var result = Context.Actions.AllocateID(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
-            AllocateIDEvent = @event;
+            Result = Result with { AllocateID = @event };
         }
 
-        [CanBeNull]
-        private Result Register()
+        private void Register()
         {
-            var result = Context.Actions.RegisterCard(
-                Simulating,
-                new RegisterCard.Action(Action.ParentID, AllocateIDEvent.Result.AllocatedID, Action.InitialProps)
+            var action = new RegisterCard.Action(
+                Action.ParentID,
+                Result.AllocateID.Content.Allocated,
+                Action.InitialProps
             );
-
-            if (result is not RegisterCard.SucceedResult succeedResult)
-            {
-                return new RegisterCardFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            RegisterCardEvent = succeedEvent;
-
-            return null;
+            var result = Context.Actions.RegisterCard(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { RegisterCard = @event };
         }
 
-        [CanBeNull]
-        private Result CreateComponents()
+        private void CreateComponents()
         {
-            CreateComponentEvents = ValueList<Event<CreateComponent.SucceedResult>>.Empty;
-
+            var cardID = Result.RegisterCard.Content.Registered.CardID;
+            Result = Result with { CreateComponents = ValueList<Event<CreateComponent.Result>>.Empty };
             foreach (var component in Action.InitialProps.Components)
             {
-                var result = Context.Actions.CreateComponent(
-                    Simulating,
-                    new CreateComponent.Action(RegisterCardEvent.Result.Registered.CardID, component)
-                );
-
-                var succeedResult = result as CreateComponent.SucceedResult;
-                if (succeedResult == null)
-                {
-                    return new CreateComponentFailedResult(Action, RegisterCardEvent, CreateComponentEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                CreateComponentEvents = CreateComponentEvents.Add(succeedEvent);
+                var action = new CreateComponent.Action(cardID, component);
+                var result = Context.Actions.CreateComponent(Simulating, action);
+                Simulating = Simulating.Appended(result, out var @event);
+                Result = Result with { CreateComponents = Result.CreateComponents.Add(@event) };
             }
+        }
 
-            return null;
+        private void Confirm()
+        {
+            Result = Result with
+            {
+                Created = Result.RegisterCard.Content.Registered with
+                {
+                    Components = Result.CreateComponents.Select(@event => @event.Content.Created),
+                },
+            };
         }
     }
 }

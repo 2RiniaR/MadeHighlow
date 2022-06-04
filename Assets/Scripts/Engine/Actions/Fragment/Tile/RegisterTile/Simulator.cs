@@ -18,6 +18,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
         [NotNull]
         public World Simulate()
         {
+            if (Result.Registered == null) return Initial;
             return Context.Modifier.CreateTile(Initial, Result.Registered);
         }
     }

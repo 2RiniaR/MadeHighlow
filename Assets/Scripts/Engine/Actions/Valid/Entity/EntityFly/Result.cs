@@ -1,10 +1,17 @@
-﻿namespace RineaR.MadeHighlow.Actions.EntityFly
+﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+
+namespace RineaR.MadeHighlow.Actions.EntityFly
 {
-    public abstract record Result : IValidResult
+    public record Result([NotNull] Action Action) : IValidResult
     {
         public World Simulate(ISimulationContext context, World world)
         {
             return new Simulator(context, world, this).Simulate();
         }
+
+        public ValueList<Event<MoveEntity.Result>> FollowMoves { get; init; }
+        public ValueList<Event<MoveEntity.Result>> FallMoves { get; init; }
+        public Rejection Rejection { get; init; }
     }
 }

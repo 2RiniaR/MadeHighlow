@@ -9,10 +9,7 @@ namespace RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection
     );
 
     [NotNull]
-    public delegate void RejectHandler(
-        [NotNull] [ItemNotNull] ValueList<Interrupt> collected,
-        [NotNull] ComponentID rejectedID
-    );
+    public delegate void RejectHandler([NotNull] Rejection rejection);
 
     public interface IRejectionChecker<TContext>
     {

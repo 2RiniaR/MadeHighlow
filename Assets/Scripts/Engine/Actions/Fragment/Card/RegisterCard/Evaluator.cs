@@ -9,50 +9,37 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
-
-        private Card Registered { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            if (!IsParentExists()) return Result;
 
-            result = CheckParentExists();
-            if (result != null) return result;
+            Confirm();
 
-            Format();
-            return Succeed();
+            return Result;
         }
 
-        [CanBeNull]
-        private Result CheckParentExists()
+        private bool IsParentExists()
         {
-            if (Context.Finder.FindPlayer(Initial.World, Action.ParentID) == null)
-            {
-                return new ParentNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindPlayer(Initial.World, Action.ParentID) != null;
         }
 
-        private void Format()
+        private void Confirm()
         {
-            Registered = Action.InitialProps with
+            var registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
                 Components = ValueList<Component>.Empty,
             };
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Registered);
+            Result = Result with { Registered = registered };
         }
     }
 }

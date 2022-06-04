@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return Context.Modifier.CreateComponent(Initial, succeedResult.Registered);
-            }
-
-            return Initial;
+            if (Result.Registered == null) return Initial;
+            return Context.Modifier.CreateComponent(Initial, Result.Registered);
         }
     }
 }

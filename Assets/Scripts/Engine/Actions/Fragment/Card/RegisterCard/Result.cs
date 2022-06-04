@@ -1,10 +1,14 @@
-﻿namespace RineaR.MadeHighlow.Actions.RegisterCard
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.RegisterCard
 {
-    public abstract record Result : IResult
+    public record Result([NotNull] Action Action) : IResult
     {
         public World Simulate(ISimulationContext context, World world)
         {
             return new Simulator(context, world, this).Simulate();
         }
+
+        public Card Registered { get; init; }
     }
 }

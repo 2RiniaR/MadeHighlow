@@ -10,75 +10,58 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
-
         [NotNull] private IHistory Simulating { get; set; }
-        private Event<AllocateID.Result> AllocateIDEvent { get; set; }
-        private Event<RegisterComponent.SucceedResult> RegisterComponentEvent { get; set; }
-        private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
             AllocateID();
+            Register();
 
-            result = Register();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.RegisterComponent.Content.Registered == null) return Result;
 
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action, Process),
-                onRejected: (rejection, rejectedID) =>
-                    result = new RejectedResult(Action, Process, rejection, rejectedID)
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
         private void AllocateID()
         {
             var result = Context.Actions.AllocateID(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
-            AllocateIDEvent = @event;
+            Result = Result with { AllocateID = @event };
         }
 
-        [CanBeNull]
-        private Result Register()
+        private void Register()
         {
-            var result = Context.Actions.RegisterComponent(
-                Simulating,
-                new RegisterComponent.Action(Action.TargetID, AllocateIDEvent.Result.AllocatedID, Action.InitialStatus)
+            var action = new RegisterComponent.Action(
+                Action.TargetID,
+                Result.AllocateID.Content.Allocated,
+                Action.InitialStatus
             );
-
-            if (result is not RegisterComponent.SucceedResult succeedResult)
-            {
-                return new RegisterComponentFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            RegisterComponentEvent = succeedEvent;
-
-            return null;
+            var result = Context.Actions.RegisterComponent(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { RegisterComponent = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(AllocateIDEvent, RegisterComponentEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Created = Result.RegisterComponent.Content.Registered };
         }
     }
 }

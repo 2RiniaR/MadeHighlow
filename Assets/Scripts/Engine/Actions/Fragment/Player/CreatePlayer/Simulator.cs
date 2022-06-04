@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return succeedResult.Process.Timeline.Simulate(Context, Initial);
-            }
-
-            return Initial;
+            if (Result.Created == null) return Initial;
+            return Context.Modifier.CreatePlayer(Initial, Result.Created);
         }
     }
 }
