@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
-    public sealed record SucceedResult(
-        [NotNull] InstantDeathAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathRejection>> RejectionInterrupts
-    ) : InstantDeathResult;
+    public sealed record SucceedResult([NotNull] Action Action) : Result;
 }

@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.UnregisterEntity
 {
-    public record NotFoundResult([NotNull] UnregisterEntityAction Action) : UnregisterEntityResult;
+    public record NotFoundResult([NotNull] Action Action) : Result;
 }

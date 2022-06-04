@@ -2,6 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
-    public record SucceedResult
-        ([NotNull] DeleteCardAction Action, [NotNull] DeleteCardProcess Process) : DeleteCardResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

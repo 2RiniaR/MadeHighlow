@@ -11,8 +11,8 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
             var context = new Mock<ISimulationContext>().Object;
             var world = WorldGenerator.Empty with { Players = ValueList<Player>.Empty };
             var registered = PlayerGenerator.Empty with { ID = ID.From(1) };
-            var result = new RegisterPlayerResult(RegisterPlayerActionGenerator.Empty, registered);
-            var simulator = new RegisterPlayerSimulator(context, world, result);
+            var result = new Result(RegisterPlayerActionGenerator.Empty, registered);
+            var simulator = new Simulator(context, world, result);
 
             var actual = simulator.Simulate();
 

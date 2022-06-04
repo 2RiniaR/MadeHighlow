@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteComponent
 {
-    public record NotFoundResult([NotNull] DeleteComponentAction Action) : DeleteComponentResult;
+    public record NotFoundResult([NotNull] Action Action) : Result;
 }

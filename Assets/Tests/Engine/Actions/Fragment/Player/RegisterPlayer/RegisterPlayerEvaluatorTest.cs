@@ -10,12 +10,12 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
         {
             var context = new Mock<IEvaluationContext>().Object;
             var history = new Mock<IHistory>().Object;
-            var action = new RegisterPlayerAction(ID.From(1), PlayerGenerator.Empty);
-            var evaluator = new RegisterPlayerEvaluator(context, history, action);
+            var action = new Action(ID.From(1), PlayerGenerator.Empty);
+            var evaluator = new Evaluator(context, history, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new RegisterPlayerResult(
+            var expected = new Result(
                 action,
                 PlayerGenerator.Empty with { ID = ID.From(1), Components = ValueList<Component>.Empty }
             );

@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.RegisterCard
 {
-    public record ParentNotFoundResult([NotNull] RegisterCardAction Action) : RegisterCardResult;
+    public record ParentNotFoundResult([NotNull] Action Action) : Result;
 }

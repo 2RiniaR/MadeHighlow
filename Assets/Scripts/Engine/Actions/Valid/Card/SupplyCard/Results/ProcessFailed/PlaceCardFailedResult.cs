@@ -1,10 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.PlaceCard;
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
-    public record PlaceCardFailedResult(
-        [NotNull] SupplyCardAction Action,
-        [NotNull] PlaceCardResult Failed
-    ) : SupplyCardResult;
+    public record PlaceCardFailedResult([NotNull] Action Action, [NotNull] PlaceCard.Result Failed) : Result;
 }

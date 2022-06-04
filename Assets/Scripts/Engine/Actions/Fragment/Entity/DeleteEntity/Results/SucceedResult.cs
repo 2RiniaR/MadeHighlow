@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteEntity
 {
-    public record SucceedResult(
-        [NotNull] DeleteEntityAction Action,
-        [NotNull] DeleteEntityProcess Process
-    ) : DeleteEntityResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

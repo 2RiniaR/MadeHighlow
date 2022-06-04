@@ -1,51 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.AllocateID;
-using RineaR.MadeHighlow.Actions.BigBang;
 using RineaR.MadeHighlow.Actions.CreateCard;
-using RineaR.MadeHighlow.Actions.CreateComponent;
-using RineaR.MadeHighlow.Actions.CreateEntity;
-using RineaR.MadeHighlow.Actions.CreatePlayer;
-using RineaR.MadeHighlow.Actions.CreateTile;
-using RineaR.MadeHighlow.Actions.DeleteCard;
-using RineaR.MadeHighlow.Actions.DeleteComponent;
-using RineaR.MadeHighlow.Actions.DeleteEntity;
-using RineaR.MadeHighlow.Actions.DeleteTile;
-using RineaR.MadeHighlow.Actions.DestroyEntity;
-using RineaR.MadeHighlow.Actions.DestroyTile;
-using RineaR.MadeHighlow.Actions.DropCard;
-using RineaR.MadeHighlow.Actions.ElevateTile;
-using RineaR.MadeHighlow.Actions.EntityFly;
-using RineaR.MadeHighlow.Actions.EntityStep;
-using RineaR.MadeHighlow.Actions.EntityTeleport;
-using RineaR.MadeHighlow.Actions.EntityWalk;
-using RineaR.MadeHighlow.Actions.GenerateEntity;
-using RineaR.MadeHighlow.Actions.GenerateTile;
-using RineaR.MadeHighlow.Actions.IncrementTurn;
-using RineaR.MadeHighlow.Actions.InstantDamage;
-using RineaR.MadeHighlow.Actions.InstantDeath;
-using RineaR.MadeHighlow.Actions.InstantHeal;
-using RineaR.MadeHighlow.Actions.JoinPlayer;
-using RineaR.MadeHighlow.Actions.KnockBack;
-using RineaR.MadeHighlow.Actions.MoveEntity;
-using RineaR.MadeHighlow.Actions.PayCard;
-using RineaR.MadeHighlow.Actions.PlaceCard;
-using RineaR.MadeHighlow.Actions.PositionEntity;
-using RineaR.MadeHighlow.Actions.PositionTile;
-using RineaR.MadeHighlow.Actions.RegisterCard;
-using RineaR.MadeHighlow.Actions.RegisterComponent;
-using RineaR.MadeHighlow.Actions.RegisterEntity;
-using RineaR.MadeHighlow.Actions.RegisterPlayer;
-using RineaR.MadeHighlow.Actions.RegisterTile;
-using RineaR.MadeHighlow.Actions.RemoveComponent;
-using RineaR.MadeHighlow.Actions.ReserveCommand;
-using RineaR.MadeHighlow.Actions.RunCommand;
-using RineaR.MadeHighlow.Actions.StartCommands;
-using RineaR.MadeHighlow.Actions.SupplyCard;
-using RineaR.MadeHighlow.Actions.UnregisterCard;
-using RineaR.MadeHighlow.Actions.UnregisterEntity;
-using RineaR.MadeHighlow.Actions.UnregisterTile;
-using RineaR.MadeHighlow.Actions.UpdateTurn;
 
 namespace RineaR.MadeHighlow.Actions
 {
@@ -55,168 +9,180 @@ namespace RineaR.MadeHighlow.Actions
         ReactedResult<IValidResult> Run([NotNull] IHistory history, [NotNull] IValidAction action);
 
         [NotNull]
-        CreateCardResult CreateCard([NotNull] IHistory history, [NotNull] CreateCardAction action);
+        Result CreateCard([NotNull] IHistory history, [NotNull] Action action);
 
         [NotNull]
-        DeleteCardResult DeleteCard([NotNull] IHistory history, [NotNull] DeleteCardAction action);
+        DeleteCard.Result DeleteCard([NotNull] IHistory history, [NotNull] DeleteCard.Action action);
 
         [NotNull]
-        PlaceCardResult PlaceCard([NotNull] IHistory history, [NotNull] PlaceCardAction action);
+        PlaceCard.Result PlaceCard([NotNull] IHistory history, [NotNull] PlaceCard.Action action);
 
         [NotNull]
-        RegisterCardResult RegisterCard([NotNull] IHistory history, [NotNull] RegisterCardAction action);
+        RegisterCard.Result RegisterCard([NotNull] IHistory history, [NotNull] RegisterCard.Action action);
 
         [NotNull]
-        UnregisterCardResult UnregisterCard([NotNull] IHistory history, [NotNull] UnregisterCardAction action);
+        UnregisterCard.Result UnregisterCard([NotNull] IHistory history, [NotNull] UnregisterCard.Action action);
 
         [NotNull]
-        CreateComponentResult CreateComponent([NotNull] IHistory history, [NotNull] CreateComponentAction action);
+        CreateComponent.Result CreateComponent([NotNull] IHistory history, [NotNull] CreateComponent.Action action);
 
         [NotNull]
-        DeleteComponentResult DeleteComponent([NotNull] IHistory history, [NotNull] DeleteComponentAction action);
+        DeleteComponent.Result DeleteComponent([NotNull] IHistory history, [NotNull] DeleteComponent.Action action);
 
         [NotNull]
-        RegisterComponentResult RegisterComponent([NotNull] IHistory history, [NotNull] RegisterComponentAction action);
-
-        [NotNull]
-        CreateEntityResult CreateEntity([NotNull] IHistory history, [NotNull] CreateEntityAction action);
-
-        [NotNull]
-        DeleteEntityResult DeleteEntity([NotNull] IHistory history, [NotNull] DeleteEntityAction action);
-
-        [NotNull]
-        MoveEntityResult MoveEntity([NotNull] IHistory history, [NotNull] MoveEntityAction action);
-
-        [NotNull]
-        PositionEntityResult PositionEntity([NotNull] IHistory history, [NotNull] PositionEntityAction action);
-
-        [NotNull]
-        RegisterEntityResult RegisterEntity([NotNull] IHistory history, [NotNull] RegisterEntityAction action);
-
-        [NotNull]
-        UnregisterEntityResult UnregisterEntity([NotNull] IHistory history, [NotNull] UnregisterEntityAction action);
-
-        [NotNull]
-        AllocateIDResult AllocateID([NotNull] IHistory history);
-
-        [NotNull]
-        IncrementTurnResult IncrementTurn([NotNull] IHistory history);
-
-        [NotNull]
-        CreatePlayerResult CreatePlayer([NotNull] IHistory history, [NotNull] CreatePlayerAction action);
-
-        [NotNull]
-        RegisterPlayerResult RegisterPlayer([NotNull] IHistory history, [NotNull] RegisterPlayerAction action);
-
-        [NotNull]
-        CreateTileResult CreateTile([NotNull] IHistory history, [NotNull] CreateTileAction action);
-
-        [NotNull]
-        DeleteTileResult DeleteTile([NotNull] IHistory history, [NotNull] DeleteTileAction action);
-
-        [NotNull]
-        PositionTileResult PositionTile([NotNull] IHistory history, [NotNull] PositionTileAction action);
-
-        [NotNull]
-        RegisterTileResult RegisterTile([NotNull] IHistory history, [NotNull] RegisterTileAction action);
-
-        [NotNull]
-        UnregisterTileResult UnregisterTile([NotNull] IHistory history, [NotNull] UnregisterTileAction action);
-
-        [NotNull]
-        ReactedResult<DropCardResult> DropCard([NotNull] IHistory history, [NotNull] DropCardAction action);
-
-        [NotNull]
-        ReactedResult<PayCardResult> PayCard([NotNull] IHistory history, [NotNull] PayCardAction action);
-
-        [NotNull]
-        ReactedResult<SupplyCardResult> SupplyCard([NotNull] IHistory history, [NotNull] SupplyCardAction action);
-
-        [NotNull]
-        ReactedResult<ReserveCommandResult> ReserveCommand(
+        RegisterComponent.Result RegisterComponent(
             [NotNull] IHistory history,
-            [NotNull] ReserveCommandAction action
+            [NotNull] RegisterComponent.Action action
         );
 
         [NotNull]
-        ReactedResult<RunCommandResult> RunCommand([NotNull] IHistory history, [NotNull] RunCommandAction action);
+        CreateEntity.Result CreateEntity([NotNull] IHistory history, [NotNull] CreateEntity.Action action);
 
         [NotNull]
-        ReactedResult<StartCommandsResult> StartCommands(
+        DeleteEntity.Result DeleteEntity([NotNull] IHistory history, [NotNull] DeleteEntity.Action action);
+
+        [NotNull]
+        MoveEntity.Result MoveEntity([NotNull] IHistory history, [NotNull] MoveEntity.Action action);
+
+        [NotNull]
+        PositionEntity.Result PositionEntity([NotNull] IHistory history, [NotNull] PositionEntity.Action action);
+
+        [NotNull]
+        RegisterEntity.Result RegisterEntity([NotNull] IHistory history, [NotNull] RegisterEntity.Action action);
+
+        [NotNull]
+        UnregisterEntity.Result UnregisterEntity([NotNull] IHistory history, [NotNull] UnregisterEntity.Action action);
+
+        [NotNull]
+        AllocateID.Result AllocateID([NotNull] IHistory history);
+
+        [NotNull]
+        IncrementTurn.Result IncrementTurn([NotNull] IHistory history);
+
+        [NotNull]
+        CreatePlayer.Result CreatePlayer([NotNull] IHistory history, [NotNull] CreatePlayer.Action action);
+
+        [NotNull]
+        RegisterPlayer.Result RegisterPlayer([NotNull] IHistory history, [NotNull] RegisterPlayer.Action action);
+
+        [NotNull]
+        CreateTile.Result CreateTile([NotNull] IHistory history, [NotNull] CreateTile.Action action);
+
+        [NotNull]
+        DeleteTile.Result DeleteTile([NotNull] IHistory history, [NotNull] DeleteTile.Action action);
+
+        [NotNull]
+        PositionTile.Result PositionTile([NotNull] IHistory history, [NotNull] PositionTile.Action action);
+
+        [NotNull]
+        RegisterTile.Result RegisterTile([NotNull] IHistory history, [NotNull] RegisterTile.Action action);
+
+        [NotNull]
+        UnregisterTile.Result UnregisterTile([NotNull] IHistory history, [NotNull] UnregisterTile.Action action);
+
+        [NotNull]
+        ReactedResult<DropCard.Result> DropCard([NotNull] IHistory history, [NotNull] DropCard.Action action);
+
+        [NotNull]
+        ReactedResult<PayCard.Result> PayCard([NotNull] IHistory history, [NotNull] PayCard.Action action);
+
+        [NotNull]
+        ReactedResult<SupplyCard.Result> SupplyCard([NotNull] IHistory history, [NotNull] SupplyCard.Action action);
+
+        [NotNull]
+        ReactedResult<ReserveCommand.Result> ReserveCommand(
             [NotNull] IHistory history,
-            [NotNull] StartCommandsAction action
+            [NotNull] ReserveCommand.Action action
         );
 
         [NotNull]
-        ReactedResult<AddComponentResult> AddComponent([NotNull] IHistory history, [NotNull] AddComponentAction action);
+        ReactedResult<RunCommand.Result> RunCommand([NotNull] IHistory history, [NotNull] RunCommand.Action action);
 
         [NotNull]
-        ReactedResult<RemoveComponentResult> RemoveComponent(
+        ReactedResult<StartCommands.Result> StartCommands(
             [NotNull] IHistory history,
-            [NotNull] RemoveComponentAction action
+            [NotNull] StartCommands.Action action
         );
 
         [NotNull]
-        ReactedResult<DestroyEntityResult> DestroyEntity(
+        ReactedResult<AddComponent.Result> AddComponent(
             [NotNull] IHistory history,
-            [NotNull] DestroyEntityAction action
+            [NotNull] AddComponent.Action action
         );
 
         [NotNull]
-        ReactedResult<EntityFlyResult> EntityFly([NotNull] IHistory history, [NotNull] EntityFlyAction action);
-
-        [NotNull]
-        ReactedResult<EntityStepResult> EntityStep([NotNull] IHistory history, [NotNull] EntityStepAction action);
-
-        [NotNull]
-        ReactedResult<EntityTeleportResult> EntityTeleport(
+        ReactedResult<RemoveComponent.Result> RemoveComponent(
             [NotNull] IHistory history,
-            [NotNull] EntityTeleportAction action
+            [NotNull] RemoveComponent.Action action
         );
 
         [NotNull]
-        ReactedResult<EntityWalkResult> EntityWalk([NotNull] IHistory history, [NotNull] EntityWalkAction action);
-
-        [NotNull]
-        ReactedResult<GenerateEntityResult> GenerateEntity(
+        ReactedResult<DestroyEntity.Result> DestroyEntity(
             [NotNull] IHistory history,
-            [NotNull] GenerateEntityAction action
+            [NotNull] DestroyEntity.Action action
         );
 
         [NotNull]
-        ReactedResult<InstantDamageResult> InstantDamage(
+        ReactedResult<EntityFly.Result> EntityFly([NotNull] IHistory history, [NotNull] EntityFly.Action action);
+
+        [NotNull]
+        ReactedResult<EntityStep.Result> EntityStep([NotNull] IHistory history, [NotNull] EntityStep.Action action);
+
+        [NotNull]
+        ReactedResult<EntityTeleport.Result> EntityTeleport(
             [NotNull] IHistory history,
-            [NotNull] InstantDamageAction action
+            [NotNull] EntityTeleport.Action action
         );
 
         [NotNull]
-        ReactedResult<InstantDeathResult> InstantDeath([NotNull] IHistory history, [NotNull] InstantDeathAction action);
+        ReactedResult<EntityWalk.Result> EntityWalk([NotNull] IHistory history, [NotNull] EntityWalk.Action action);
 
         [NotNull]
-        ReactedResult<InstantHealResult> InstantHeal([NotNull] IHistory history, [NotNull] InstantHealAction action);
+        ReactedResult<GenerateEntity.Result> GenerateEntity(
+            [NotNull] IHistory history,
+            [NotNull] GenerateEntity.Action action
+        );
+
+        [NotNull]
+        ReactedResult<InstantDamage.Result> InstantDamage(
+            [NotNull] IHistory history,
+            [NotNull] InstantDamage.Action action
+        );
+
+        [NotNull]
+        ReactedResult<InstantDeath.Result> InstantDeath(
+            [NotNull] IHistory history,
+            [NotNull] InstantDeath.Action action
+        );
+
+        [NotNull]
+        ReactedResult<InstantHeal.Result> InstantHeal([NotNull] IHistory history, [NotNull] InstantHeal.Action action);
 
         [NotNull]
         ReactedResult<InteractResult> Interact([NotNull] IHistory history, [NotNull] InteractAction action);
 
         [NotNull]
-        ReactedResult<KnockBackResult> KnockBack([NotNull] IHistory history, [NotNull] KnockBackAction action);
+        ReactedResult<KnockBack.Result> KnockBack([NotNull] IHistory history, [NotNull] KnockBack.Action action);
 
         [NotNull]
-        ReactedResult<BigBangResult> BigBang([NotNull] IHistory history, [NotNull] BigBangAction action);
+        ReactedResult<BigBang.Result> BigBang([NotNull] IHistory history, [NotNull] BigBang.Action action);
 
         [NotNull]
-        ReactedResult<UpdateTurnResult> UpdateTurn([NotNull] IHistory history, [NotNull] UpdateTurnAction action);
+        ReactedResult<UpdateTurn.Result> UpdateTurn([NotNull] IHistory history, [NotNull] UpdateTurn.Action action);
 
         [NotNull]
-        ReactedResult<JoinPlayerResult> JoinPlayer([NotNull] IHistory history, [NotNull] JoinPlayerAction action);
+        ReactedResult<JoinPlayer.Result> JoinPlayer([NotNull] IHistory history, [NotNull] JoinPlayer.Action action);
 
         [NotNull]
-        ReactedResult<DestroyTileResult> DestroyTile([NotNull] IHistory history, [NotNull] DestroyTileAction action);
+        ReactedResult<DestroyTile.Result> DestroyTile([NotNull] IHistory history, [NotNull] DestroyTile.Action action);
 
         [NotNull]
-        ReactedResult<ElevateTileResult> ElevateTile([NotNull] IHistory history, [NotNull] ElevateTileAction action);
+        ReactedResult<ElevateTile.Result> ElevateTile([NotNull] IHistory history, [NotNull] ElevateTile.Action action);
 
         [NotNull]
-        ReactedResult<GenerateTileResult> GenerateTile([NotNull] IHistory history, [NotNull] GenerateTileAction action);
+        ReactedResult<GenerateTile.Result> GenerateTile(
+            [NotNull] IHistory history,
+            [NotNull] GenerateTile.Action action
+        );
     }
 }

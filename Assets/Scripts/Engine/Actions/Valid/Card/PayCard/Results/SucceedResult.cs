@@ -2,9 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.PayCard
 {
-    public record SucceedResult(
-        [NotNull] PayCardAction Action,
-        [NotNull] PayCardProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardExemption>> ExemptionInterrupts
-    ) : PayCardResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

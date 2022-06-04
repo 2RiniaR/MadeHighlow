@@ -2,9 +2,5 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.DestroyTile
 {
-    public record SucceedResult(
-        [NotNull] DestroyTileAction Action,
-        [NotNull] DestroyTileProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DestroyTileRejection>> RejectionInterrupts
-    ) : DestroyTileResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

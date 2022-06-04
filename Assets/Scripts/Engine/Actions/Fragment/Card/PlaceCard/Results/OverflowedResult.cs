@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public record OverflowedResult(
-        [NotNull] PlaceCardAction Action,
+        [NotNull] Action Action,
         [NotNull] [ItemNotNull] ValueList<Interrupt<CardReplacement>> ReplacementInterrupts
-    ) : PlaceCardResult;
+    ) : Result;
 }

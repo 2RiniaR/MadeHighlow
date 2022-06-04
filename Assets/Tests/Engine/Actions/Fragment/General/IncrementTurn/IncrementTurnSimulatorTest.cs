@@ -10,8 +10,8 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
         {
             var context = new Mock<ISimulationContext>().Object;
             var world = WorldGenerator.Empty with { CurrentTurn = new Turn(1) };
-            var result = new IncrementTurnResult(new Turn(2));
-            var simulator = new IncrementTurnSimulator(context, world, result);
+            var result = new Result(new Turn(2));
+            var simulator = new Simulator(context, world, result);
 
             var actual = simulator.Simulate();
 

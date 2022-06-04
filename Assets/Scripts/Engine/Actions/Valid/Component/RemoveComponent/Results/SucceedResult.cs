@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.RemoveComponent
 {
-    public record SucceedResult(
-        [NotNull] RemoveComponentAction Action,
-        [NotNull] RemoveComponentProcess Process
-    ) : RemoveComponentResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

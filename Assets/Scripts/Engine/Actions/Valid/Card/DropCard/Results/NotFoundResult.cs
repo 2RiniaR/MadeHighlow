@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DropCard
 {
-    public record NotFoundResult([NotNull] DropCardAction Action) : DropCardResult;
+    public record NotFoundResult([NotNull] Action Action) : Result;
 }

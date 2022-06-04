@@ -3,10 +3,10 @@
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public record RejectedResult(
-        [NotNull] InstantDamageAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageCalculation>> CalculationInterrupts,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<Calculation>> CalculationInterrupts,
         [NotNull] Damage Calculated,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDamageRejection>> RejectionInterrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : InstantDamageResult;
+    ) : Result;
 }

@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
-    public record ReduceCalculation([NotNull] HealReduction HealReduction) : InstantHealCalculation;
+    public record ReduceCalculation([NotNull] HealReduction HealReduction) : Calculation;
 }

@@ -3,9 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public record SucceedResult(
-        [NotNull] PlaceCardAction Action,
+        [NotNull] Action Action,
         [CanBeNull] [ItemNotNull] ValueList<Interrupt<CardReplacement>> ReplacementInterrupts,
-        [NotNull] PlaceCardProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<PlaceCardRejection>> RejectionInterrupts
-    ) : PlaceCardResult;
+        [NotNull] Process Process
+    ) : Result;
 }

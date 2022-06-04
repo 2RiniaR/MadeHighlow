@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.AddComponent
 {
-    public record SucceedResult(
-        [NotNull] AddComponentAction Action,
-        [NotNull] AddComponentProcess Process
-    ) : AddComponentResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

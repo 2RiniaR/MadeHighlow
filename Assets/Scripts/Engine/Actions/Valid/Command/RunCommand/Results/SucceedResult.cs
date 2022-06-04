@@ -2,9 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.RunCommand
 {
-    public record SucceedResult(
-        [NotNull] RunCommandAction Action,
-        [NotNull] RunCommandProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<RunCommandRejection>> RejectionInterrupts
-    ) : RunCommandResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

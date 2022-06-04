@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
-    public record TargetNotFoundResult([NotNull] MoveEntityAction Action) : MoveEntityResult;
+    public record TargetNotFoundResult([NotNull] Action Action) : Result;
 }

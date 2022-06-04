@@ -1,52 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.AddComponent;
-using RineaR.MadeHighlow.Actions.AllocateID;
-using RineaR.MadeHighlow.Actions.BigBang;
 using RineaR.MadeHighlow.Actions.CreateCard;
-using RineaR.MadeHighlow.Actions.CreateComponent;
-using RineaR.MadeHighlow.Actions.CreateEntity;
-using RineaR.MadeHighlow.Actions.CreatePlayer;
-using RineaR.MadeHighlow.Actions.CreateTile;
-using RineaR.MadeHighlow.Actions.DeleteCard;
-using RineaR.MadeHighlow.Actions.DeleteComponent;
-using RineaR.MadeHighlow.Actions.DeleteEntity;
-using RineaR.MadeHighlow.Actions.DeleteTile;
-using RineaR.MadeHighlow.Actions.DestroyEntity;
-using RineaR.MadeHighlow.Actions.DestroyTile;
-using RineaR.MadeHighlow.Actions.DropCard;
-using RineaR.MadeHighlow.Actions.ElevateTile;
-using RineaR.MadeHighlow.Actions.EntityFly;
-using RineaR.MadeHighlow.Actions.EntityStep;
-using RineaR.MadeHighlow.Actions.EntityTeleport;
-using RineaR.MadeHighlow.Actions.EntityWalk;
-using RineaR.MadeHighlow.Actions.GenerateEntity;
-using RineaR.MadeHighlow.Actions.GenerateTile;
-using RineaR.MadeHighlow.Actions.IncrementTurn;
-using RineaR.MadeHighlow.Actions.InstantDamage;
-using RineaR.MadeHighlow.Actions.InstantDeath;
-using RineaR.MadeHighlow.Actions.InstantHeal;
-using RineaR.MadeHighlow.Actions.JoinPlayer;
-using RineaR.MadeHighlow.Actions.KnockBack;
-using RineaR.MadeHighlow.Actions.MoveEntity;
-using RineaR.MadeHighlow.Actions.PayCard;
-using RineaR.MadeHighlow.Actions.PlaceCard;
-using RineaR.MadeHighlow.Actions.PositionEntity;
-using RineaR.MadeHighlow.Actions.PositionTile;
-using RineaR.MadeHighlow.Actions.RegisterCard;
-using RineaR.MadeHighlow.Actions.RegisterComponent;
-using RineaR.MadeHighlow.Actions.RegisterEntity;
-using RineaR.MadeHighlow.Actions.RegisterPlayer;
-using RineaR.MadeHighlow.Actions.RegisterTile;
-using RineaR.MadeHighlow.Actions.RemoveComponent;
-using RineaR.MadeHighlow.Actions.ReserveCommand;
-using RineaR.MadeHighlow.Actions.RunCommand;
-using RineaR.MadeHighlow.Actions.StartCommands;
-using RineaR.MadeHighlow.Actions.SupplyCard;
-using RineaR.MadeHighlow.Actions.UnregisterCard;
-using RineaR.MadeHighlow.Actions.UnregisterEntity;
-using RineaR.MadeHighlow.Actions.UnregisterTile;
-using RineaR.MadeHighlow.Actions.UpdateTurn;
+using Action = RineaR.MadeHighlow.Actions.CreateCard.Action;
 
 namespace RineaR.MadeHighlow.Actions
 {
@@ -66,271 +21,271 @@ namespace RineaR.MadeHighlow.Actions
             return Reaction.Evaluate(history, action, initial => action.Evaluate(this, initial));
         }
 
-        public CreateCardResult CreateCard(IHistory history, CreateCardAction action)
+        public Result CreateCard(IHistory history, Action action)
         {
-            return new CreateCardEvaluator(Context, history, action).Evaluate();
+            return new Evaluator(Context, history, action).Evaluate();
         }
 
-        public DeleteCardResult DeleteCard(IHistory history, DeleteCardAction action)
+        public DeleteCard.Result DeleteCard(IHistory history, DeleteCard.Action action)
         {
-            return new DeleteCardEvaluator(Context, history, action).Evaluate();
+            return new DeleteCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public PlaceCardResult PlaceCard(IHistory history, PlaceCardAction action)
+        public PlaceCard.Result PlaceCard(IHistory history, PlaceCard.Action action)
         {
-            return new PlaceCardEvaluator(Context, history, action).Evaluate();
+            return new PlaceCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterCardResult RegisterCard(IHistory history, RegisterCardAction action)
+        public RegisterCard.Result RegisterCard(IHistory history, RegisterCard.Action action)
         {
-            return new RegisterCardEvaluator(Context, history, action).Evaluate();
+            return new RegisterCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public UnregisterCardResult UnregisterCard(IHistory history, UnregisterCardAction action)
+        public UnregisterCard.Result UnregisterCard(IHistory history, UnregisterCard.Action action)
         {
-            return new UnregisterCardEvaluator(Context, history, action).Evaluate();
+            return new UnregisterCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public CreateComponentResult CreateComponent(IHistory history, CreateComponentAction action)
+        public CreateComponent.Result CreateComponent(IHistory history, CreateComponent.Action action)
         {
-            return new CreateComponentEvaluator(Context, history, action).Evaluate();
+            return new CreateComponent.Evaluator(Context, history, action).Evaluate();
         }
 
-        public DeleteComponentResult DeleteComponent(IHistory history, DeleteComponentAction action)
+        public DeleteComponent.Result DeleteComponent(IHistory history, DeleteComponent.Action action)
         {
-            return new DeleteComponentEvaluator(Context, history, action).Evaluate();
+            return new DeleteComponent.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterComponentResult RegisterComponent(IHistory history, RegisterComponentAction action)
+        public RegisterComponent.Result RegisterComponent(IHistory history, RegisterComponent.Action action)
         {
-            return new RegisterComponentEvaluator(Context, history, action).Evaluate();
+            return new RegisterComponent.Evaluator(Context, history, action).Evaluate();
         }
 
-        public CreateEntityResult CreateEntity(IHistory history, CreateEntityAction action)
+        public CreateEntity.Result CreateEntity(IHistory history, CreateEntity.Action action)
         {
-            return new CreateEntityEvaluator(Context, history, action).Evaluate();
+            return new CreateEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public DeleteEntityResult DeleteEntity(IHistory history, DeleteEntityAction action)
+        public DeleteEntity.Result DeleteEntity(IHistory history, DeleteEntity.Action action)
         {
-            return new DeleteEntityEvaluator(Context, history, action).Evaluate();
+            return new DeleteEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public MoveEntityResult MoveEntity(IHistory history, MoveEntityAction action)
+        public MoveEntity.Result MoveEntity(IHistory history, MoveEntity.Action action)
         {
-            return new MoveEntityEvaluator(Context, history, action).Evaluate();
+            return new MoveEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public PositionEntityResult PositionEntity(IHistory history, PositionEntityAction action)
+        public PositionEntity.Result PositionEntity(IHistory history, PositionEntity.Action action)
         {
-            return new PositionEntityEvaluator(Context, history, action).Evaluate();
+            return new PositionEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterEntityResult RegisterEntity(IHistory history, RegisterEntityAction action)
+        public RegisterEntity.Result RegisterEntity(IHistory history, RegisterEntity.Action action)
         {
-            return new RegisterEntityEvaluator(Context, history, action).Evaluate();
+            return new RegisterEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public UnregisterEntityResult UnregisterEntity(IHistory history, UnregisterEntityAction action)
+        public UnregisterEntity.Result UnregisterEntity(IHistory history, UnregisterEntity.Action action)
         {
-            return new UnregisterEntityEvaluator(Context, history, action).Evaluate();
+            return new UnregisterEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public AllocateIDResult AllocateID(IHistory history)
+        public AllocateID.Result AllocateID(IHistory history)
         {
-            return new AllocateIDEvaluator(history).Evaluate();
+            return new AllocateID.Evaluator(history).Evaluate();
         }
 
-        public IncrementTurnResult IncrementTurn(IHistory history)
+        public IncrementTurn.Result IncrementTurn(IHistory history)
         {
-            return new IncrementTurnEvaluator(history).Evaluate();
+            return new IncrementTurn.Evaluator(history).Evaluate();
         }
 
-        public CreatePlayerResult CreatePlayer(IHistory history, CreatePlayerAction action)
+        public CreatePlayer.Result CreatePlayer(IHistory history, CreatePlayer.Action action)
         {
-            return new CreatePlayerEvaluator(Context, history, action).Evaluate();
+            return new CreatePlayer.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterPlayerResult RegisterPlayer(IHistory history, RegisterPlayerAction action)
+        public RegisterPlayer.Result RegisterPlayer(IHistory history, RegisterPlayer.Action action)
         {
-            return new RegisterPlayerEvaluator(Context, history, action).Evaluate();
+            return new RegisterPlayer.Evaluator(Context, history, action).Evaluate();
         }
 
-        public CreateTileResult CreateTile(IHistory history, CreateTileAction action)
+        public CreateTile.Result CreateTile(IHistory history, CreateTile.Action action)
         {
-            return new CreateTileEvaluator(Context, history, action).Evaluate();
+            return new CreateTile.Evaluator(Context, history, action).Evaluate();
         }
 
-        public DeleteTileResult DeleteTile(IHistory history, DeleteTileAction action)
+        public DeleteTile.Result DeleteTile(IHistory history, DeleteTile.Action action)
         {
-            return new DeleteTileEvaluator(Context, history, action).Evaluate();
+            return new DeleteTile.Evaluator(Context, history, action).Evaluate();
         }
 
-        public PositionTileResult PositionTile(IHistory history, PositionTileAction action)
+        public PositionTile.Result PositionTile(IHistory history, PositionTile.Action action)
         {
-            return new PositionTileEvaluator(Context, history, action).Evaluate();
+            return new PositionTile.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterTileResult RegisterTile(IHistory history, RegisterTileAction action)
+        public RegisterTile.Result RegisterTile(IHistory history, RegisterTile.Action action)
         {
-            return new RegisterTileEvaluator(Context, history, action).Evaluate();
+            return new RegisterTile.Evaluator(Context, history, action).Evaluate();
         }
 
-        public UnregisterTileResult UnregisterTile(IHistory history, UnregisterTileAction action)
+        public UnregisterTile.Result UnregisterTile(IHistory history, UnregisterTile.Action action)
         {
-            return new UnregisterTileEvaluator(Context, history, action).Evaluate();
+            return new UnregisterTile.Evaluator(Context, history, action).Evaluate();
         }
 
-        public ReactedResult<DropCardResult> DropCard(IHistory history, DropCardAction action)
+        public ReactedResult<DropCard.Result> DropCard(IHistory history, DropCard.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new DropCardEvaluator(Context, initial, action).Evaluate()
+                initial => new DropCard.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<PayCardResult> PayCard(IHistory history, PayCardAction action)
+        public ReactedResult<PayCard.Result> PayCard(IHistory history, PayCard.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new PayCardEvaluator(Context, initial, action).Evaluate()
+                initial => new PayCard.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<SupplyCardResult> SupplyCard(IHistory history, SupplyCardAction action)
+        public ReactedResult<SupplyCard.Result> SupplyCard(IHistory history, SupplyCard.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new SupplyCardEvaluator(Context, initial, action).Evaluate()
+                initial => new SupplyCard.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<ReserveCommandResult> ReserveCommand(IHistory history, ReserveCommandAction action)
+        public ReactedResult<ReserveCommand.Result> ReserveCommand(IHistory history, ReserveCommand.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new ReserveCommandEvaluator(Context, initial, action).Evaluate()
+                initial => new ReserveCommand.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<RunCommandResult> RunCommand(IHistory history, RunCommandAction action)
+        public ReactedResult<RunCommand.Result> RunCommand(IHistory history, RunCommand.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new RunCommandEvaluator(Context, initial, action).Evaluate()
+                initial => new RunCommand.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<StartCommandsResult> StartCommands(IHistory history, StartCommandsAction action)
+        public ReactedResult<StartCommands.Result> StartCommands(IHistory history, StartCommands.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new StartCommandsEvaluator(Context, initial, action).Evaluate()
+                initial => new StartCommands.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<AddComponentResult> AddComponent(IHistory history, AddComponentAction action)
+        public ReactedResult<AddComponent.Result> AddComponent(IHistory history, AddComponent.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new AddComponentEvaluator(Context, initial, action).Evaluate()
+                initial => new AddComponent.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<RemoveComponentResult> RemoveComponent(IHistory history, RemoveComponentAction action)
+        public ReactedResult<RemoveComponent.Result> RemoveComponent(IHistory history, RemoveComponent.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new RemoveComponentEvaluator(Context, initial, action).Evaluate()
+                initial => new RemoveComponent.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<DestroyEntityResult> DestroyEntity(IHistory history, DestroyEntityAction action)
+        public ReactedResult<DestroyEntity.Result> DestroyEntity(IHistory history, DestroyEntity.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new DestroyEntityEvaluator(Context, initial, action).Evaluate()
+                initial => new DestroyEntity.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<EntityFlyResult> EntityFly(IHistory history, EntityFlyAction action)
+        public ReactedResult<EntityFly.Result> EntityFly(IHistory history, EntityFly.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new EntityFlyEvaluator(Context, initial, action).Evaluate()
+                initial => new EntityFly.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<EntityStepResult> EntityStep(IHistory history, EntityStepAction action)
+        public ReactedResult<EntityStep.Result> EntityStep(IHistory history, EntityStep.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new EntityStepEvaluator(Context, initial, action).Evaluate()
+                initial => new EntityStep.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<EntityTeleportResult> EntityTeleport(IHistory history, EntityTeleportAction action)
+        public ReactedResult<EntityTeleport.Result> EntityTeleport(IHistory history, EntityTeleport.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new EntityTeleportEvaluator(Context, initial, action).Evaluate()
+                initial => new EntityTeleport.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<EntityWalkResult> EntityWalk(IHistory history, EntityWalkAction action)
+        public ReactedResult<EntityWalk.Result> EntityWalk(IHistory history, EntityWalk.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new EntityWalkEvaluator(Context, initial, action).Evaluate()
+                initial => new EntityWalk.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<GenerateEntityResult> GenerateEntity(IHistory history, GenerateEntityAction action)
+        public ReactedResult<GenerateEntity.Result> GenerateEntity(IHistory history, GenerateEntity.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new GenerateEntityEvaluator(Context, initial, action).Evaluate()
+                initial => new GenerateEntity.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<InstantDamageResult> InstantDamage(IHistory history, InstantDamageAction action)
+        public ReactedResult<InstantDamage.Result> InstantDamage(IHistory history, InstantDamage.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new InstantDamageEvaluator(Context, initial, action).Evaluate()
+                initial => new InstantDamage.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<InstantDeathResult> InstantDeath(IHistory history, InstantDeathAction action)
+        public ReactedResult<InstantDeath.Result> InstantDeath(IHistory history, InstantDeath.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new InstantDeathEvaluator(Context, initial, action).Evaluate()
+                initial => new InstantDeath.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<InstantHealResult> InstantHeal(IHistory history, InstantHealAction action)
+        public ReactedResult<InstantHeal.Result> InstantHeal(IHistory history, InstantHeal.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new InstantHealEvaluator(Context, initial, action).Evaluate()
+                initial => new InstantHeal.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
@@ -339,66 +294,66 @@ namespace RineaR.MadeHighlow.Actions
             throw new NotImplementedException();
         }
 
-        public ReactedResult<KnockBackResult> KnockBack(IHistory history, KnockBackAction action)
+        public ReactedResult<KnockBack.Result> KnockBack(IHistory history, KnockBack.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new KnockBackEvaluator(Context, initial, action).Evaluate()
+                initial => new KnockBack.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<BigBangResult> BigBang(IHistory history, BigBangAction action)
+        public ReactedResult<BigBang.Result> BigBang(IHistory history, BigBang.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new BigBangEvaluator(Context, initial, action).Evaluate()
+                initial => new BigBang.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<UpdateTurnResult> UpdateTurn(IHistory history, UpdateTurnAction action)
+        public ReactedResult<UpdateTurn.Result> UpdateTurn(IHistory history, UpdateTurn.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new UpdateTurnEvaluator(Context, initial, action).Evaluate()
+                initial => new UpdateTurn.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<JoinPlayerResult> JoinPlayer(IHistory history, JoinPlayerAction action)
+        public ReactedResult<JoinPlayer.Result> JoinPlayer(IHistory history, JoinPlayer.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new JoinPlayerEvaluator(Context, initial, action).Evaluate()
+                initial => new JoinPlayer.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<DestroyTileResult> DestroyTile(IHistory history, DestroyTileAction action)
+        public ReactedResult<DestroyTile.Result> DestroyTile(IHistory history, DestroyTile.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new DestroyTileEvaluator(Context, initial, action).Evaluate()
+                initial => new DestroyTile.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<ElevateTileResult> ElevateTile(IHistory history, ElevateTileAction action)
+        public ReactedResult<ElevateTile.Result> ElevateTile(IHistory history, ElevateTile.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new ElevateTileEvaluator(Context, initial, action).Evaluate()
+                initial => new ElevateTile.Evaluator(Context, initial, action).Evaluate()
             );
         }
 
-        public ReactedResult<GenerateTileResult> GenerateTile(IHistory history, GenerateTileAction action)
+        public ReactedResult<GenerateTile.Result> GenerateTile(IHistory history, GenerateTile.Action action)
         {
             return Reaction.Evaluate(
                 history,
                 action,
-                initial => new GenerateTileEvaluator(Context, initial, action).Evaluate()
+                initial => new GenerateTile.Evaluator(Context, initial, action).Evaluate()
             );
         }
     }

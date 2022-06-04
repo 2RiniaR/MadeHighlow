@@ -3,8 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.DeleteComponent
 {
     public record RejectedResult(
-        [NotNull] DeleteComponentAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DeleteComponentRejection>> RejectionInterrupts,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> Rejections,
         [NotNull] ComponentID RejectedID
-    ) : DeleteComponentResult;
+    ) : Result;
 }

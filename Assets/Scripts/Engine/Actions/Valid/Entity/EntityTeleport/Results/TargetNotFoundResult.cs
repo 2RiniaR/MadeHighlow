@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityTeleport
 {
-    public record TargetNotFoundResult([NotNull] EntityTeleportAction Action) : EntityTeleportResult;
+    public record TargetNotFoundResult([NotNull] Action Action) : Result;
 }

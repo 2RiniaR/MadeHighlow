@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityFly
 {
-    public record TargetNotFoundResult([NotNull] EntityFlyAction Action) : EntityFlyResult;
+    public record TargetNotFoundResult([NotNull] Action Action) : Result;
 }

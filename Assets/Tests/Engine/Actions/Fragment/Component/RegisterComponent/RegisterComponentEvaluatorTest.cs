@@ -38,8 +38,8 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         {
             var context = ContextWith(foundPlayer: Player);
             var history = HistoryWith(PlayerExistingWorld);
-            var action = new RegisterComponentAction(Player.PlayerID, ComponentID, ComponentStatus);
-            var evaluator = new RegisterComponentEvaluator(context, history, action);
+            var action = new Action(Player.PlayerID, ComponentID, ComponentStatus);
+            var evaluator = new Evaluator(context, history, action);
 
             var actual = evaluator.Evaluate();
 
@@ -55,8 +55,8 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         {
             var context = ContextWith(foundPlayer: null);
             var history = HistoryWith(PlayerNotExistingWorld);
-            var action = new RegisterComponentAction(Player.PlayerID, ComponentID, ComponentStatus);
-            var evaluator = new RegisterComponentEvaluator(context, history, action);
+            var action = new Action(Player.PlayerID, ComponentID, ComponentStatus);
+            var evaluator = new Evaluator(context, history, action);
 
             var actual = evaluator.Evaluate();
 

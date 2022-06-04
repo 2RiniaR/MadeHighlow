@@ -2,9 +2,5 @@ using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
-    public record SucceedResult(
-        [NotNull] GenerateEntityAction Action,
-        [NotNull] GenerateEntityProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityRejection>> RejectionInterrupts
-    ) : GenerateEntityResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

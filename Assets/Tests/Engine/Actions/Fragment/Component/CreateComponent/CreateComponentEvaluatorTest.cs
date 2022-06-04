@@ -1,6 +1,5 @@
 ﻿using Moq;
 using NUnit.Framework;
-using RineaR.MadeHighlow.Actions.AllocateID;
 using RineaR.MadeHighlow.Actions.RegisterComponent;
 
 namespace RineaR.MadeHighlow.Actions.CreateComponent
@@ -16,12 +15,12 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             var stubPlayer = PlayerGenerator.Empty with { ID = ID.From(1) };
             var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
             var stubComponent = ComponentGenerator.Empty;
-            var action = new CreateComponentAction(stubPlayer.PlayerID, stubComponent);
+            var action = new Action(stubPlayer.PlayerID, stubComponent);
 
-            var allocateIDEvent = new Event<AllocateIDResult>(
+            var allocateIDEvent = new Event<AllocateID.Result>(
                 new EventID(ID.From(2)),
                 new EventID(ID.From(1)),
-                new AllocateIDResult(ID.From(2))
+                new AllocateID.Result(ID.From(2))
             );
             var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
 
@@ -56,14 +55,14 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             initialHistory.SetupWorld(stubCurrentWorld);
             initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
 
-            var evaluator = new CreateComponentEvaluator(context, initialHistory.Object, action);
+            var evaluator = new Evaluator(context, initialHistory.Object, action);
 
             var actual = evaluator.Evaluate();
 
             var expected = new SucceedResult(
                 action,
-                new CreateComponentProcess(allocateIDEvent, registerComponentEvent),
-                ValueList<Interrupt<CreateComponentRejection>>.Empty
+                new Process(allocateIDEvent, registerComponentEvent),
+                ValueList<Interrupt<RejectionContext>>.Empty
             );
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -76,18 +75,14 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         {
             public Priority Priority { get; } = new(0);
 
-            public Interrupt<CreateComponentRejection> CreateComponentRejection(
+            public Interrupt<RejectionContext> CreateComponentRejection(
                 IHistory history,
-                CreateComponentAction action,
-                CreateComponentProcess process,
-                ValueList<Interrupt<CreateComponentRejection>> collected
+                Action action,
+                Process process,
+                ValueList<Interrupt<RejectionContext>> collected
             )
             {
-                return new Interrupt<CreateComponentRejection>(
-                    new Priority(0),
-                    ComponentID,
-                    new CreateComponentRejection()
-                );
+                return new Interrupt<RejectionContext>(new Priority(0), ComponentID, new RejectionContext());
             }
         }
 
@@ -106,12 +101,12 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             };
             var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
             var stubComponent = ComponentGenerator.Empty;
-            var action = new CreateComponentAction(stubPlayer.PlayerID, stubComponent);
+            var action = new Action(stubPlayer.PlayerID, stubComponent);
 
-            var allocateIDEvent = new Event<AllocateIDResult>(
+            var allocateIDEvent = new Event<AllocateID.Result>(
                 new EventID(ID.From(2)),
                 new EventID(ID.From(1)),
-                new AllocateIDResult(ID.From(2))
+                new AllocateID.Result(ID.From(2))
             );
             var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
 
@@ -146,18 +141,18 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             initialHistory.SetupWorld(stubCurrentWorld);
             initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
 
-            var evaluator = new CreateComponentEvaluator(context, initialHistory.Object, action);
+            var evaluator = new Evaluator(context, initialHistory.Object, action);
 
             var actual = evaluator.Evaluate();
 
             var expected = new RejectedResult(
                 action,
-                new CreateComponentProcess(allocateIDEvent, registerComponentEvent),
-                new ValueList<Interrupt<CreateComponentRejection>>(
-                    new Interrupt<CreateComponentRejection>(
+                new Process(allocateIDEvent, registerComponentEvent),
+                new ValueList<Interrupt<RejectionContext>>(
+                    new Interrupt<RejectionContext>(
                         new Priority(0),
                         stubPlayer.Components[0].ComponentID,
-                        new CreateComponentRejection()
+                        new RejectionContext()
                     )
                 ),
                 stubPlayer.Components[0].ComponentID
@@ -174,12 +169,12 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             var stubPlayer = PlayerGenerator.Empty with { ID = ID.From(1) };
             var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
             var stubComponent = ComponentGenerator.Empty;
-            var action = new CreateComponentAction(stubPlayer.PlayerID, stubComponent);
+            var action = new Action(stubPlayer.PlayerID, stubComponent);
 
-            var allocateIDEvent = new Event<AllocateIDResult>(
+            var allocateIDEvent = new Event<AllocateID.Result>(
                 new EventID(ID.From(2)),
                 new EventID(ID.From(1)),
-                new AllocateIDResult(ID.From(2))
+                new AllocateID.Result(ID.From(2))
             );
             var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
 
@@ -214,14 +209,14 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             initialHistory.SetupWorld(stubCurrentWorld);
             initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
 
-            var evaluator = new CreateComponentEvaluator(context, initialHistory.Object, action);
+            var evaluator = new Evaluator(context, initialHistory.Object, action);
 
             var actual = evaluator.Evaluate();
 
             var expected = new SucceedResult(
                 action,
-                new CreateComponentProcess(allocateIDEvent, registerComponentEvent),
-                ValueList<Interrupt<CreateComponentRejection>>.Empty
+                new Process(allocateIDEvent, registerComponentEvent),
+                ValueList<Interrupt<RejectionContext>>.Empty
             );
             Assert.That(actual, Is.EqualTo(expected));
         }

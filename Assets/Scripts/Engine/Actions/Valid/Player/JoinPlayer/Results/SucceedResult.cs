@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
-    public record SucceedResult(
-        [NotNull] JoinPlayerAction Action,
-        [NotNull] JoinPlayerProcess Process
-    ) : JoinPlayerResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

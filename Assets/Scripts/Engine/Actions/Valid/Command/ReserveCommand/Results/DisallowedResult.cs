@@ -3,8 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
     public record DisallowedResult(
-        [NotNull] ReserveCommandAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<ReserveCommandAcceptance>> AcceptanceInterrupts,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<Acceptance>> AcceptanceInterrupts,
         [CanBeNull] ComponentID DisallowedID
-    ) : ReserveCommandResult;
+    ) : Result;
 }

@@ -3,10 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.KnockBack
 {
     public record SucceedResult(
-        [NotNull] KnockBackAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<KnockBackCalculation>> Calculations,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<Calculation>> Calculations,
         [NotNull] KnockBack Calculated,
-        [NotNull] KnockBackProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<KnockBackRejection>> Rejections
-    ) : KnockBackResult;
+        [NotNull] Process Process
+    ) : Result;
 }

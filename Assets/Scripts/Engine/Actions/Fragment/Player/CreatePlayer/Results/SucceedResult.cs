@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.CreatePlayer
 {
-    public record SucceedResult(
-        [NotNull] CreatePlayerAction Action,
-        [NotNull] CreatePlayerProcess Process
-    ) : CreatePlayerResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

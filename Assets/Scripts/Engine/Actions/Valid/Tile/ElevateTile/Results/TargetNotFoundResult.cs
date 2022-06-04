@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
-    public record TargetNotFoundResult([NotNull] ElevateTileAction Action) : ElevateTileResult;
+    public record TargetNotFoundResult([NotNull] Action Action) : Result;
 }

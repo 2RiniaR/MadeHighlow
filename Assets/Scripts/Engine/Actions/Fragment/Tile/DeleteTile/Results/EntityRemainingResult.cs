@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
-    public record EntityRemainingResult([NotNull] DeleteTileAction Action) : DeleteTileResult;
+    public record EntityRemainingResult([NotNull] Action Action) : Result;
 }

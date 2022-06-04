@@ -1,11 +1,10 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.UnregisterTile;
 
 namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
     public record UnregisterTileFailedResult(
-        [NotNull] DeleteTileAction Action,
+        [NotNull] Action Action,
         [NotNull] [ItemNotNull] ValueList<Event<DeleteComponent.SucceedResult>> DeleteComponentEvents,
-        [NotNull] UnregisterTileResult Failed
-    ) : DeleteTileResult;
+        [NotNull] UnregisterTile.Result Failed
+    ) : Result;
 }

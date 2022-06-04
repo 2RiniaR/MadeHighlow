@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityStep
 {
-    public record CostOverwriteEffect([NotNull] EntityStepCost Value) : EntityStepCostEffect;
+    public record CostOverwriteEffect([NotNull] Cost Value) : CostEffect;
 }

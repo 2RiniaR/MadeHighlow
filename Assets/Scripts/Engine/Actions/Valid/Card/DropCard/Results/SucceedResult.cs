@@ -2,9 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DropCard
 {
-    public record SucceedResult(
-        [NotNull] DropCardAction Action,
-        [NotNull] DropCardProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<DropCardRejection>> RejectionInterrupts
-    ) : DropCardResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

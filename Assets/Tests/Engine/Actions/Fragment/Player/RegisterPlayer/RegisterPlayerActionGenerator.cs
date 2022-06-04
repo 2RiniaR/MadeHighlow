@@ -2,6 +2,6 @@
 {
     public static class RegisterPlayerActionGenerator
     {
-        public static RegisterPlayerAction Empty => new(ID.None, PlayerGenerator.Empty);
+        public static Action Empty => new(ID.None, PlayerGenerator.Empty);
     }
 }

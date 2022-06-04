@@ -1,10 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.RegisterCard;
 
 namespace RineaR.MadeHighlow.Actions.CreateCard
 {
-    public record RegisterCardFailedResult(
-        [NotNull] CreateCardAction Action,
-        [NotNull] RegisterCardResult Failed
-    ) : CreateCardResult;
+    public record RegisterCardFailedResult([NotNull] Action Action, [NotNull] RegisterCard.Result Failed) : Result;
 }

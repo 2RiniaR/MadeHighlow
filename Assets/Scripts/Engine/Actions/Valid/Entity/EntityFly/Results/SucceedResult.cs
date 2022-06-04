@@ -2,9 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityFly
 {
-    public record SucceedResult(
-        [NotNull] EntityFlyAction Action,
-        [NotNull] EntityFlyProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityFlyRejection>> RejectionInterrupts
-    ) : EntityFlyResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

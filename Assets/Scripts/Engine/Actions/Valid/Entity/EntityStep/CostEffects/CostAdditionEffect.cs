@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.EntityStep
 {
-    public record CostAdditionEffect(int Value) : EntityStepCostEffect;
+    public record CostAdditionEffect(int Value) : CostEffect;
 }

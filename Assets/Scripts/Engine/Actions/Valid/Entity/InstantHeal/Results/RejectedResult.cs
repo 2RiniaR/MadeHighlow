@@ -3,10 +3,10 @@
 namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
     public record RejectedResult(
-        [NotNull] InstantHealAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealCalculation>> CalculationInterrupts,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt<Calculation>> CalculationInterrupts,
         [NotNull] Heal Calculated,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantHealRejection>> RejectionInterrupts,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : InstantHealResult;
+    ) : Result;
 }

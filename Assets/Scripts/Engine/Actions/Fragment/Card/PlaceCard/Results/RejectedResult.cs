@@ -3,10 +3,10 @@
 namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
     public record RejectedResult(
-        [NotNull] PlaceCardAction Action,
+        [NotNull] Action Action,
         [CanBeNull] [ItemNotNull] ValueList<Interrupt<CardReplacement>> ReplacementInterrupts,
-        [NotNull] PlaceCardProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<PlaceCardRejection>> RejectionInterrupts,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : PlaceCardResult;
+    ) : Result;
 }

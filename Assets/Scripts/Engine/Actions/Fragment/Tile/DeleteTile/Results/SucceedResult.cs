@@ -2,6 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
-    public record SucceedResult
-        ([NotNull] DeleteTileAction Action, [NotNull] DeleteTileProcess Process) : DeleteTileResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

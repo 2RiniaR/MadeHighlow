@@ -3,9 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public record ExemptedResult(
-        [NotNull] PayCardAction Action,
-        [NotNull] PayCardProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<PayCardExemption>> ExemptionInterrupts,
+        [NotNull] Action Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> ExemptionInterrupts,
         [NotNull] ComponentID ExemptedID
-    ) : PayCardResult;
+    ) : Result;
 }

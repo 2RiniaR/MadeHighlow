@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityStep
 {
-    public record DestinationNotFoundResult([NotNull] EntityStepAction Action) : EntityStepResult;
+    public record DestinationNotFoundResult([NotNull] Action Action) : Result;
 }

@@ -11,11 +11,11 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
             var historyMock = new Mock<IHistory>();
             historyMock.SetupGet(history => history.World)
                 .Returns(WorldGenerator.Empty with { LatestAllocatedID = ID.From(1) });
-            var evaluator = new AllocateIDEvaluator(historyMock.Object);
+            var evaluator = new Evaluator(historyMock.Object);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new AllocateIDResult(ID.From(2));
+            var expected = new Result(ID.From(2));
             Assert.That(actual, Is.EqualTo(expected));
         }
     }

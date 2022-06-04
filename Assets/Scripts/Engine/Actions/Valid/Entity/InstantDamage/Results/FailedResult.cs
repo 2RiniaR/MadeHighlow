@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    public record FailedResult([NotNull] InstantDamageAction Action, FailedReason Reason) : InstantDamageResult;
+    public record FailedResult([NotNull] Action Action, FailedReason Reason) : Result;
 }

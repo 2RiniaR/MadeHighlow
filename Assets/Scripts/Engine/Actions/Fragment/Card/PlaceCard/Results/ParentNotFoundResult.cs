@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
-    public record ParentNotFoundResult([NotNull] PlaceCardAction Action) : PlaceCardResult;
+    public record ParentNotFoundResult([NotNull] Action Action) : Result;
 }

@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.UnregisterCard
 {
-    public record SucceedResult([NotNull] UnregisterCardAction Action) : UnregisterCardResult;
+    public record SucceedResult([NotNull] Action Action) : Result;
 }

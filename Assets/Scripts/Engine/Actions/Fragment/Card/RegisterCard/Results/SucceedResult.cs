@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.RegisterCard
 {
-    public record SucceedResult([NotNull] RegisterCardAction Action, [NotNull] Card Registered) : RegisterCardResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Card Registered) : Result;
 }

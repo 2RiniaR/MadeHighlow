@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.PositionTile
 {
-    public record SucceedResult([NotNull] PositionTileAction Action, [NotNull] Tile Positioned) : PositionTileResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Tile Positioned) : Result;
 }

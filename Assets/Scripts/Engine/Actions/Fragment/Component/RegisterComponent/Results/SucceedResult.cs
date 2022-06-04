@@ -2,6 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
-    public record SucceedResult
-        ([NotNull] RegisterComponentAction Action, [NotNull] Component Registered) : RegisterComponentResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Component Registered) : Result;
 }

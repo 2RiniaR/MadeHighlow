@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using RineaR.MadeHighlow.Actions.EvaluationFlows;
 
 namespace RineaR.MadeHighlow.Actions
 {
@@ -7,5 +8,6 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] IActionRunner Actions { get; }
         [NotNull] IWorldFinder Finder { get; }
         [NotNull] IRandomGenerator RandomGenerator { get; }
+        [NotNull] IEvaluationFlowProvider Flows { get; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public static class CreatePlayerActionGenerator
     {
-        public static CreatePlayerAction Empty => new(PlayerGenerator.Empty);
+        public static Action Empty => new(PlayerGenerator.Empty);
     }
 }

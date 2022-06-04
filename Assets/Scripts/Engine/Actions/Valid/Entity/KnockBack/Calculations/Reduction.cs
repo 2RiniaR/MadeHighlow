@@ -1,4 +1,4 @@
 ﻿namespace RineaR.MadeHighlow.Actions.KnockBack
 {
-    public record Reduction(KnockBackReduction Value) : KnockBackCalculation;
+    public record Reduction(KnockBackReduction Value) : Calculation;
 }

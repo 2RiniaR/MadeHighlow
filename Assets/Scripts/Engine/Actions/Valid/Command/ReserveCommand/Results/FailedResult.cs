@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
-    public record FailedResult([NotNull] ReserveCommandAction Action, FailedReason Reason) : ReserveCommandResult;
+    public record FailedResult([NotNull] Action Action, FailedReason Reason) : Result;
 }

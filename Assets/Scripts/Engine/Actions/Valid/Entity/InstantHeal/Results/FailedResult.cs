@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
-    public record FailedResult([NotNull] InstantHealAction Action, FailedReason Reason) : InstantHealResult;
+    public record FailedResult([NotNull] Action Action, FailedReason Reason) : Result;
 }

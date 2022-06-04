@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
             var registered = ComponentGenerator.Empty with { ID = ID.From(2), AttachedID = player.PlayerID };
             var world = WorldGenerator.Empty with { Players = new ValueList<Player>(player) };
             var result = new SucceedResult(RegisterComponentActionGenerator.Empty, registered);
-            var simulator = new RegisterComponentSimulator(context, world, result);
+            var simulator = new Simulator(context, world, result);
 
             var actual = simulator.Simulate();
 

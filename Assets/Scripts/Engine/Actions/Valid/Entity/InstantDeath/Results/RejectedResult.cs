@@ -3,8 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
     public record RejectedResult(
-        [NotNull] InstantDeathAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<InstantDeathRejection>> RejectionInterrupts,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : InstantDeathResult;
+    ) : Result;
 }

@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
-    public record DestroyedResult(
-        [NotNull] SupplyCardAction Action,
-        [NotNull] SupplyCardProcess Process
-    ) : SupplyCardResult;
+    public record DestroyedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

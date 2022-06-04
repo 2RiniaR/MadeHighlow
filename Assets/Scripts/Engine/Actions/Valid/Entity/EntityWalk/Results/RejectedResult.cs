@@ -3,9 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.EntityWalk
 {
     public record RejectedResult(
-        [NotNull] EntityWalkAction Action,
-        [NotNull] EntityWalkProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<EntityWalkRejection>> Interrupts,
+        [NotNull] Action Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> Interrupts,
         [NotNull] ComponentID RejectedID
-    ) : EntityWalkResult;
+    ) : Result;
 }

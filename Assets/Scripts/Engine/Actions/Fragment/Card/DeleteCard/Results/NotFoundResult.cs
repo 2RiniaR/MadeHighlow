@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
-    public record NotFoundResult([NotNull] DeleteCardAction Action) : DeleteCardResult;
+    public record NotFoundResult([NotNull] Action Action) : Result;
 }

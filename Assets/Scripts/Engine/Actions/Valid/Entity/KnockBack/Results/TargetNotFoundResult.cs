@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.KnockBack
 {
-    public record TargetNotFoundResult([NotNull] KnockBackAction Action) : KnockBackResult;
+    public record TargetNotFoundResult([NotNull] Action Action) : Result;
 }

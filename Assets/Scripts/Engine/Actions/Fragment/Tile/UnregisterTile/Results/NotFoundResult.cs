@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.UnregisterTile
 {
-    public record NotFoundResult([NotNull] UnregisterTileAction Action) : UnregisterTileResult;
+    public record NotFoundResult([NotNull] Action Action) : Result;
 }

@@ -1,10 +1,6 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.PositionEntity;
 
 namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
-    public record PositionFailedResult(
-        [NotNull] MoveEntityAction Action,
-        [NotNull] PositionEntityResult Failed
-    ) : MoveEntityResult;
+    public record PositionFailedResult([NotNull] Action Action, [NotNull] PositionEntity.Result Failed) : Result;
 }

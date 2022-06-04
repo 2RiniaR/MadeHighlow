@@ -3,9 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.GenerateEntity
 {
     public record RejectedResult(
-        [NotNull] GenerateEntityAction Action,
-        [NotNull] GenerateEntityProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateEntityRejection>> RejectionInterrupts,
+        [NotNull] Action Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : GenerateEntityResult;
+    ) : Result;
 }

@@ -3,8 +3,8 @@
 namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
     public record RejectedResult(
-        [NotNull] ElevateTileAction Action,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<ElevateTileRejection>> RejectionInterrupts,
+        [NotNull] Action Action,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : ElevateTileResult;
+    ) : Result;
 }

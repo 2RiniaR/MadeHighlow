@@ -3,9 +3,9 @@
 namespace RineaR.MadeHighlow.Actions.GenerateTile
 {
     public record RejectedResult(
-        [NotNull] GenerateTileAction Action,
-        [NotNull] GenerateTileProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<GenerateTileRejection>> RejectionInterrupts,
+        [NotNull] Action Action,
+        [NotNull] Process Process,
+        [NotNull] [ItemNotNull] ValueList<Interrupt> RejectionInterrupts,
         [NotNull] ComponentID RejectedID
-    ) : GenerateTileResult;
+    ) : Result;
 }

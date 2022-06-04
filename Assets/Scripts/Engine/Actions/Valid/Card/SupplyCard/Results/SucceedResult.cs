@@ -2,9 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
-    public record SucceedResult(
-        [NotNull] SupplyCardAction Action,
-        [NotNull] SupplyCardProcess Process,
-        [NotNull] [ItemNotNull] ValueList<Interrupt<SupplyCardRejection>> RejectionInterrupts
-    ) : SupplyCardResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }

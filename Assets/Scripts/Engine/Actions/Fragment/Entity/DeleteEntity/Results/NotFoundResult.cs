@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteEntity
 {
-    public record NotFoundResult([NotNull] DeleteEntityAction Action) : DeleteEntityResult;
+    public record NotFoundResult([NotNull] Action Action) : Result;
 }

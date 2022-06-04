@@ -10,8 +10,8 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
         {
             var context = new Mock<ISimulationContext>().Object;
             var world = WorldGenerator.Empty with { LatestAllocatedID = ID.From(1) };
-            var result = new AllocateIDResult(ID.From(2));
-            var simulator = new AllocateIDSimulator(context, world, result);
+            var result = new Result(ID.From(2));
+            var simulator = new Simulator(context, world, result);
 
             var actual = simulator.Simulate();
 

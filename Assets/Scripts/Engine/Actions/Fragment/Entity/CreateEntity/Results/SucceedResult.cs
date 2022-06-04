@@ -2,8 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
-    public record SucceedResult(
-        [NotNull] CreateEntityAction Action,
-        [NotNull] CreateEntityProcess Process
-    ) : CreateEntityResult;
+    public record SucceedResult([NotNull] Action Action, [NotNull] Process Process) : Result;
 }
