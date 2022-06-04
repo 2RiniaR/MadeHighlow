@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
     public class ReserveCommandEvaluator
     {
         public ReserveCommandEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             ReserveCommandAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ReserveCommandAction Action { get; }
 

@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
         [NotNull] UpdateTurnProcess Process
     ) : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new UpdateTurnSimulator(context, world, this).Simulate();
         }

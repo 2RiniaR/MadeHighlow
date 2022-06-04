@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
     public class PositionTileSimulator
     {
         public PositionTileSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] PositionTileResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private PositionTileResult Result { get; }
 

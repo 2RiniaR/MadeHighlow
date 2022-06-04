@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
     public class CreateComponentSimulator
     {
         public CreateComponentSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] CreateComponentResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private CreateComponentResult Result { get; }
 

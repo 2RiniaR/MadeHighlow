@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
     public class DeleteCardEvaluator
     {
         public DeleteCardEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] DeleteCardAction action
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DeleteCardAction Action { get; }

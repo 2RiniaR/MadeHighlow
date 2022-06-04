@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
     public class DestroyTileEvaluator
     {
         public DestroyTileEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             DestroyTileAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyTileAction Action { get; }

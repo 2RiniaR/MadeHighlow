@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
     public class RegisterComponentEvaluator
     {
         public RegisterComponentEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             RegisterComponentAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterComponentAction Action { get; }
 

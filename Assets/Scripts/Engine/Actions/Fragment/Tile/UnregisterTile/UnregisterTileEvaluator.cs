@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
     public class UnregisterTileEvaluator
     {
         public UnregisterTileEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] UnregisterTileAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private UnregisterTileAction Action { get; }
 

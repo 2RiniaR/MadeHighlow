@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
     public class DropCardSimulator
     {
         public DropCardSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] DropCardResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private DropCardResult Result { get; }
 

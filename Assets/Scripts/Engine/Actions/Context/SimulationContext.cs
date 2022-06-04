@@ -1,8 +1,10 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions
 {
-    public class SimulationContext
+    public class SimulationContext : ISimulationContext
     {
-        public SimulationContext(IWorldFinder finder, IWorldModifier modifier)
+        public SimulationContext([NotNull] IWorldFinder finder, [NotNull] IWorldModifier modifier)
         {
             Finder = finder;
             Modifier = modifier;

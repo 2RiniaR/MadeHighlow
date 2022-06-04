@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 {
     public class PayCardEvaluator
     {
-        public PayCardEvaluator([NotNull] EvaluationContext context, [NotNull] IHistory initial, PayCardAction action)
+        public PayCardEvaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, PayCardAction action)
         {
             Initial = initial;
             Context = context;
@@ -13,7 +13,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PayCardAction Action { get; }

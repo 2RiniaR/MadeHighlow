@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
         [NotNull] StartCommandsProcess Process
     ) : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new StartCommandsSimulator(context, world, this).Simulate();
         }

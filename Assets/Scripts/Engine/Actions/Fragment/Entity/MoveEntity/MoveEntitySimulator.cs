@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
     public class MoveEntitySimulator
     {
         public MoveEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] MoveEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private MoveEntityResult Result { get; }
 

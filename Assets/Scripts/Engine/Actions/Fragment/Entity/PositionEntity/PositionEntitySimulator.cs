@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
     public class PositionEntitySimulator
     {
         public PositionEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] PositionEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private PositionEntityResult Result { get; }
 

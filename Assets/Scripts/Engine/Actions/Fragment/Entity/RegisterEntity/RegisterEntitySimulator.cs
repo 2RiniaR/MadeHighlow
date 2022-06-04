@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
     public class RegisterEntitySimulator
     {
         public RegisterEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] RegisterEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private RegisterEntityResult Result { get; }
 

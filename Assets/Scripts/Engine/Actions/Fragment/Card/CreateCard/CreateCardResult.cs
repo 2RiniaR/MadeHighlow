@@ -2,7 +2,7 @@
 {
     public abstract record CreateCardResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new CreateCardSimulator(context, world, this).Simulate();
         }

@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
     public class PayCardSimulator
     {
         public PayCardSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] PayCardResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.PayCard
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private PayCardResult Result { get; }
 

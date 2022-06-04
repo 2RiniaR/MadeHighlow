@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
     public class RegisterEntityEvaluator
     {
         public RegisterEntityEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             RegisterEntityAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterEntityAction Action { get; }
 

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
     public class MoveEntityEvaluator
     {
         public MoveEntityEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             MoveEntityAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private MoveEntityAction Action { get; }

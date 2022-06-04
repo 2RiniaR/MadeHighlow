@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
     public class ReserveCommandSimulator
     {
         public ReserveCommandSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] ReserveCommandResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private ReserveCommandResult Result { get; }
 

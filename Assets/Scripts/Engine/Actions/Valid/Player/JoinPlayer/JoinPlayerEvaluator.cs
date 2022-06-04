@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
     public class JoinPlayerEvaluator
     {
         public JoinPlayerEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             JoinPlayerAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private JoinPlayerAction Action { get; }

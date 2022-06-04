@@ -2,7 +2,7 @@
 {
     public abstract record CreateEntityResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new CreateEntitySimulator(context, world, this).Simulate();
         }

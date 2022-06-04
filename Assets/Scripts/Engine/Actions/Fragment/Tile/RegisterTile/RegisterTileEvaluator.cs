@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
     public class RegisterTileEvaluator
     {
         public RegisterTileEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             RegisterTileAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterTileAction Action { get; }
 

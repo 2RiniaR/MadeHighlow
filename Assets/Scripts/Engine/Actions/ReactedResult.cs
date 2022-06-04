@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions
         [NotNull] [ItemNotNull] ValueList<Event<ReactedResult<IValidResult>>> Reactions
     ) : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new Timeline().Then(Predictions).Then(Body).Then(Reactions).Simulate(context, world);
         }

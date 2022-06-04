@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
     public class CreateTileSimulator
     {
         public CreateTileSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] CreateTileResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private CreateTileResult Result { get; }
 

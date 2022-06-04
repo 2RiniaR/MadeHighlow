@@ -2,7 +2,7 @@
 {
     public abstract record PositionEntityResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new PositionEntitySimulator(context, world, this).Simulate();
         }

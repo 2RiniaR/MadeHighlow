@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
     public class EntityTeleportSimulator
     {
         public EntityTeleportSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] EntityTeleportResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private EntityTeleportResult Result { get; }
 

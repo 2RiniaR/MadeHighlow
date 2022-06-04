@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
     public class EntityStepSimulator
     {
         public EntityStepSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] EntityStepResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private EntityStepResult Result { get; }
 

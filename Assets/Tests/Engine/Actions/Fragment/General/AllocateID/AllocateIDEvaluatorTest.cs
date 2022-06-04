@@ -3,19 +3,19 @@ using NUnit.Framework;
 
 namespace RineaR.MadeHighlow.Actions.AllocateID
 {
-    public class AllocateIDActionTest
+    public class AllocateIDEvaluatorTest
     {
         [Test]
         public void Evaluate_Always_ReturnsResult()
         {
-            var stubHistory = new Mock<IHistory>();
-            stubHistory.SetupGet(history => history.World)
+            var historyMock = new Mock<IHistory>();
+            historyMock.SetupGet(history => history.World)
                 .Returns(WorldGenerator.Empty with { LatestAllocatedID = ID.From(1) });
-            var action = new AllocateIDAction();
+            var evaluator = new AllocateIDEvaluator(historyMock.Object);
 
-            var actual = action.Evaluate(stubHistory.Object);
+            var actual = evaluator.Evaluate();
 
-            var expected = new AllocateIDResult(action, ID.From(2));
+            var expected = new AllocateIDResult(ID.From(2));
             Assert.That(actual, Is.EqualTo(expected));
         }
     }

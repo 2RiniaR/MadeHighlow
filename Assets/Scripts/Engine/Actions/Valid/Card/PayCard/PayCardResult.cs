@@ -2,7 +2,7 @@
 {
     public abstract record PayCardResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new PayCardSimulator(context, world, this).Simulate();
         }

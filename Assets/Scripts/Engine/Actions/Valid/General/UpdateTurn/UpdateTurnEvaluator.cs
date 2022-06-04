@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
     public class UpdateTurnEvaluator
     {
         public UpdateTurnEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] UpdateTurnAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private UpdateTurnAction Action { get; }

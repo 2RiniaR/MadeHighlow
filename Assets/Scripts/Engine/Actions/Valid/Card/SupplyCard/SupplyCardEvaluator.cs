@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public class SupplyCardEvaluator
     {
         public SupplyCardEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             SupplyCardAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private SupplyCardAction Action { get; }

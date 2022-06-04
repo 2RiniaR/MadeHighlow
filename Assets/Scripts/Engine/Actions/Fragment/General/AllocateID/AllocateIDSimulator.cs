@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
     public class AllocateIDSimulator
     {
         public AllocateIDSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] AllocateIDResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private AllocateIDResult Result { get; }
 

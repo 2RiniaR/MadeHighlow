@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
     public class KnockBackSimulator
     {
         public KnockBackSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] KnockBackResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private KnockBackResult Result { get; }
 

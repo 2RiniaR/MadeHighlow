@@ -2,7 +2,7 @@
 {
     public abstract record ReserveCommandResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new ReserveCommandSimulator(context, world, this).Simulate();
         }

@@ -2,7 +2,7 @@
 {
     public abstract record AddComponentResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new AddComponentSimulator(context, world, this).Simulate();
         }

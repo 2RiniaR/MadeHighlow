@@ -1,8 +1,14 @@
-﻿namespace RineaR.MadeHighlow.Actions
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions
 {
-    public class EvaluationContext
+    public class EvaluationContext : IEvaluationContext
     {
-        public EvaluationContext(IActionRunner actions, IWorldFinder finder, IRandomGenerator randomGenerator)
+        public EvaluationContext(
+            [NotNull] IActionRunner actions,
+            [NotNull] IWorldFinder finder,
+            [NotNull] IRandomGenerator randomGenerator
+        )
         {
             Actions = actions;
             Finder = finder;

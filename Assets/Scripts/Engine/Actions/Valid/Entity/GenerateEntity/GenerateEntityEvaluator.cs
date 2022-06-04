@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public class GenerateEntityEvaluator
     {
         public GenerateEntityEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             GenerateEntityAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private GenerateEntityAction Action { get; }

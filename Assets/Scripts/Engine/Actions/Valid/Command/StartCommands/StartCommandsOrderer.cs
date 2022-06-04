@@ -8,12 +8,12 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     /// </summary>
     public class StartCommandsOrderer
     {
-        public StartCommandsOrderer([NotNull] EvaluationContext context)
+        public StartCommandsOrderer([NotNull] IEvaluationContext context)
         {
             Context = context;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
 
         /// <summary>
         ///     命令の実行順を決定する

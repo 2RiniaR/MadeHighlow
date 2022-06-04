@@ -2,7 +2,7 @@
 {
     public abstract record DeleteComponentResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new DeleteComponentSimulator(context, world, this).Simulate();
         }

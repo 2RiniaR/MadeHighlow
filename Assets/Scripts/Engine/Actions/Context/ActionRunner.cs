@@ -52,13 +52,13 @@ namespace RineaR.MadeHighlow.Actions
 {
     public class ActionRunner : IActionRunner
     {
-        public ActionRunner([NotNull] EvaluationContext context)
+        public ActionRunner([NotNull] IEvaluationContext context)
         {
             Context = context;
             Reaction = new ReactionEvaluator(Context);
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private ReactionEvaluator Reaction { get; }
 
         public ReactedResult<IValidResult> Run(IHistory history, IValidAction action)

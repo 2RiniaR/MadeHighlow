@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public class ElevateTileEvaluator
     {
         public ElevateTileEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             ElevateTileAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private ElevateTileAction Action { get; }
 

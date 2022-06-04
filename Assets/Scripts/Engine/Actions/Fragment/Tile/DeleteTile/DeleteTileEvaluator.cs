@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
     public class DeleteTileEvaluator
     {
         public DeleteTileEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] DeleteTileAction action
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DeleteTileAction Action { get; }

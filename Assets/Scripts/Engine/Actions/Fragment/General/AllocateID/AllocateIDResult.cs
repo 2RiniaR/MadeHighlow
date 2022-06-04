@@ -2,7 +2,7 @@
 {
     public record AllocateIDResult(ID AllocatedID) : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new AllocateIDSimulator(context, world, this).Simulate();
         }

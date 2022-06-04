@@ -2,7 +2,7 @@
 {
     public abstract record RegisterComponentResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new RegisterComponentSimulator(context, world, this).Simulate();
         }

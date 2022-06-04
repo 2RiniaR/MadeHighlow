@@ -5,12 +5,12 @@ namespace RineaR.MadeHighlow.Actions
 {
     public class ReactionEvaluator
     {
-        public ReactionEvaluator([NotNull] EvaluationContext context)
+        public ReactionEvaluator([NotNull] IEvaluationContext context)
         {
             Context = context;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
 
         [NotNull]
         public ReactedResult<TResult> Evaluate<TResult>(

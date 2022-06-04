@@ -2,7 +2,7 @@
 {
     public abstract record DestroyTileResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new DestroyTileSimulator(context, world, this).Simulate();
         }

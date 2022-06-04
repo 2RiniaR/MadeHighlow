@@ -8,7 +8,7 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
     public class CreateEntityEvaluator
     {
         public CreateEntityEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             CreateEntityAction action
         )
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private CreateEntityAction Action { get; }

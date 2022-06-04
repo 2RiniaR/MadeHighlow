@@ -2,7 +2,7 @@
 {
     public abstract record InstantDamageResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new InstantDamageSimulator(context, world, this).Simulate();
         }

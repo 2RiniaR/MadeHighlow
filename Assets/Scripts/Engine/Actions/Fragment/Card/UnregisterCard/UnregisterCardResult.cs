@@ -2,7 +2,7 @@
 {
     public abstract record UnregisterCardResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new UnregisterCardSimulator(context, world, this).Simulate();
         }

@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     public class InstantDamageSimulator
     {
         public InstantDamageSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] InstantDamageResult result
         )
@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private InstantDamageResult Result { get; }
 

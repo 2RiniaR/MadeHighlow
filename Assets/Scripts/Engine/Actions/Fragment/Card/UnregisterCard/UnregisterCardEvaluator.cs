@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterCard
     public class UnregisterCardEvaluator
     {
         public UnregisterCardEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] UnregisterCardAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterCard
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private UnregisterCardAction Action { get; }
 

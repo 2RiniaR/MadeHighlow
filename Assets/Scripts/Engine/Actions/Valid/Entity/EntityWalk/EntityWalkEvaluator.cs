@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
     public class EntityWalkEvaluator
     {
         public EntityWalkEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             EntityWalkAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityWalkAction Action { get; }

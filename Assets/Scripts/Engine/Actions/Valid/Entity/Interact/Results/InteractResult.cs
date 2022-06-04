@@ -4,7 +4,7 @@ namespace RineaR.MadeHighlow.Actions
 {
     public record InteractResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             throw new NotImplementedException();
         }

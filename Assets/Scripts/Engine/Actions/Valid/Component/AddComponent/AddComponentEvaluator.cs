@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
     public class AddComponentEvaluator
     {
         public AddComponentEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             AddComponentAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private AddComponentAction Action { get; }

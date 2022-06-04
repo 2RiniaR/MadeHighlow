@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
     public class InstantDamageEvaluator
     {
         public InstantDamageEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] InstantDamageAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantDamageAction Action { get; }
 

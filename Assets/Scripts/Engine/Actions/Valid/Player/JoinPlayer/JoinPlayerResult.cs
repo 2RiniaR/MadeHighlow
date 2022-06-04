@@ -2,7 +2,7 @@
 {
     public abstract record JoinPlayerResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new JoinPlayerSimulator(context, world, this).Simulate();
         }

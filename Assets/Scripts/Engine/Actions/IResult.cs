@@ -5,6 +5,6 @@ namespace RineaR.MadeHighlow.Actions
     public interface IResult
     {
         [NotNull]
-        World Simulate([NotNull] SimulationContext context, [NotNull] World world);
+        World Simulate([NotNull] ISimulationContext context, [NotNull] World world);
     }
 }

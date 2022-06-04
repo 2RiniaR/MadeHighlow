@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
     public class ElevateTileSimulator
     {
         public ElevateTileSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] ElevateTileResult result
         )
@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private ElevateTileResult Result { get; }
 

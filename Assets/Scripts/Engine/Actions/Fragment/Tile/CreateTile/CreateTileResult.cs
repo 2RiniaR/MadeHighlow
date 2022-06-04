@@ -2,7 +2,7 @@
 {
     public abstract record CreateTileResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new CreateTileSimulator(context, world, this).Simulate();
         }

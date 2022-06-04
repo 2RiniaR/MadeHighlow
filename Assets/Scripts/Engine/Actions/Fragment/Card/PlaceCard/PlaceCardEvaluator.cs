@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
     public class PlaceCardEvaluator
     {
         public PlaceCardEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             PlaceCardAction action
         )
@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.PlaceCard
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private PlaceCardAction Action { get; }

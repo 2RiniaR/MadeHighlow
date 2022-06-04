@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
     public class SupplyCardSimulator
     {
         public SupplyCardSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] SupplyCardResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private SupplyCardResult Result { get; }
 

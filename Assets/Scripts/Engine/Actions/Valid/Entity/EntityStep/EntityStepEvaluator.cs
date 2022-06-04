@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
     public class EntityStepEvaluator
     {
         public EntityStepEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             EntityStepAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private EntityStepAction Action { get; }

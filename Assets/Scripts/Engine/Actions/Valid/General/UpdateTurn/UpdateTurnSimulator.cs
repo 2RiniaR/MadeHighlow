@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
     public class UpdateTurnSimulator
     {
         public UpdateTurnSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] UpdateTurnResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private UpdateTurnResult Result { get; }
 

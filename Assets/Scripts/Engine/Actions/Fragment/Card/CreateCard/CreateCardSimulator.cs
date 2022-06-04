@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
     public class CreateCardSimulator
     {
         public CreateCardSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] CreateCardResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.CreateCard
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private CreateCardResult Result { get; }
 

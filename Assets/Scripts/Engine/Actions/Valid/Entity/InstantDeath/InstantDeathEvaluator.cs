@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
     public class InstantDeathEvaluator
     {
         public InstantDeathEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] InstantDeathAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantDeathAction Action { get; }
 

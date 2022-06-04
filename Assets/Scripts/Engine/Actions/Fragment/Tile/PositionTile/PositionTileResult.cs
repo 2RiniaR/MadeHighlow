@@ -2,7 +2,7 @@
 {
     public abstract record PositionTileResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new PositionTileSimulator(context, world, this).Simulate();
         }

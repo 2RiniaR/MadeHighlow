@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
     public class UnregisterEntityEvaluator
     {
         public UnregisterEntityEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             [NotNull] UnregisterEntityAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private UnregisterEntityAction Action { get; }
 

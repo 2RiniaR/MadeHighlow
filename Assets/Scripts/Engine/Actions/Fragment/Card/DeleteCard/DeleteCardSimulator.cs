@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
     public class DeleteCardSimulator
     {
         public DeleteCardSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] DeleteCardResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private DeleteCardResult Result { get; }
 

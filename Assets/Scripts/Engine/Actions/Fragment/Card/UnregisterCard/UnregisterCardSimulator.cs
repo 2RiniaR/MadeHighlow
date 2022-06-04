@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterCard
     public class UnregisterCardSimulator
     {
         public UnregisterCardSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] UnregisterCardResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterCard
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private UnregisterCardResult Result { get; }
 

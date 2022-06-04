@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
     public class EntityWalkSimulator
     {
         public EntityWalkSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] EntityWalkResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private EntityWalkResult Result { get; }
 

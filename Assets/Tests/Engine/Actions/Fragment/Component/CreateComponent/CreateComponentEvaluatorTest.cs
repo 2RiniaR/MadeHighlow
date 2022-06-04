@@ -5,11 +5,14 @@ using RineaR.MadeHighlow.Actions.RegisterComponent;
 
 namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
-    public class CreateComponentActionTest
+    public class CreateComponentEvaluatorTest
     {
         [Test]
         public void Evaluate_Valid_ReturnsSucceed()
         {
+            var contextMock = new Mock<IEvaluationContext>();
+            var context = contextMock.Object;
+
             var stubPlayer = PlayerGenerator.Empty with { ID = ID.From(1) };
             var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
             var stubComponent = ComponentGenerator.Empty;
@@ -18,7 +21,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             var allocateIDEvent = new Event<AllocateIDResult>(
                 new EventID(ID.From(2)),
                 new EventID(ID.From(1)),
-                new AllocateIDResult(AllocateIDActionGenerator.Empty, ID.From(2))
+                new AllocateIDResult(ID.From(2))
             );
             var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
 
@@ -53,7 +56,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             initialHistory.SetupWorld(stubCurrentWorld);
             initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
 
-            var actual = action.Evaluate(initialHistory.Object);
+            var evaluator = new CreateComponentEvaluator(context, initialHistory.Object, action);
+
+            var actual = evaluator.Evaluate();
 
             var expected = new SucceedResult(
                 action,
@@ -89,6 +94,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [Test]
         public void Evaluate_Rejected_ReturnsFailed()
         {
+            var contextMock = new Mock<IEvaluationContext>();
+            var context = contextMock.Object;
+
             var stubPlayer = PlayerGenerator.Empty with
             {
                 ID = ID.From(1),
@@ -103,7 +111,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             var allocateIDEvent = new Event<AllocateIDResult>(
                 new EventID(ID.From(2)),
                 new EventID(ID.From(1)),
-                new AllocateIDResult(AllocateIDActionGenerator.Empty, ID.From(2))
+                new AllocateIDResult(ID.From(2))
             );
             var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
 
@@ -138,7 +146,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             initialHistory.SetupWorld(stubCurrentWorld);
             initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
 
-            var actual = action.Evaluate(initialHistory.Object);
+            var evaluator = new CreateComponentEvaluator(context, initialHistory.Object, action);
+
+            var actual = evaluator.Evaluate();
 
             var expected = new RejectedResult(
                 action,
@@ -158,6 +168,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [Test]
         public void Evaluate_RegisterFailed_ReturnsFailed()
         {
+            var contextMock = new Mock<IEvaluationContext>();
+            var context = contextMock.Object;
+
             var stubPlayer = PlayerGenerator.Empty with { ID = ID.From(1) };
             var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
             var stubComponent = ComponentGenerator.Empty;
@@ -166,7 +179,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             var allocateIDEvent = new Event<AllocateIDResult>(
                 new EventID(ID.From(2)),
                 new EventID(ID.From(1)),
-                new AllocateIDResult(AllocateIDActionGenerator.Empty, ID.From(2))
+                new AllocateIDResult(ID.From(2))
             );
             var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Result.AllocatedID };
 
@@ -201,7 +214,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             initialHistory.SetupWorld(stubCurrentWorld);
             initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
 
-            var actual = action.Evaluate(initialHistory.Object);
+            var evaluator = new CreateComponentEvaluator(context, initialHistory.Object, action);
+
+            var actual = evaluator.Evaluate();
 
             var expected = new SucceedResult(
                 action,

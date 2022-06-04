@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
     public class JoinPlayerSimulator
     {
         public JoinPlayerSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] JoinPlayerResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private JoinPlayerResult Result { get; }
 

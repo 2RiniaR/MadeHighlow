@@ -2,7 +2,7 @@
 {
     public abstract record DeleteEntityResult : IResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new DeleteEntitySimulator(context, world, this).Simulate();
         }

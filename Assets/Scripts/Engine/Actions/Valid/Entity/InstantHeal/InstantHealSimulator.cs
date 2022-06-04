@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public class InstantHealSimulator
     {
         public InstantHealSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] InstantHealResult result
         )
@@ -16,7 +16,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private InstantHealResult Result { get; }
 

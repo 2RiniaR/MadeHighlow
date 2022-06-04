@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
     public class RegisterTileSimulator
     {
         public RegisterTileSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] RegisterTileResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private RegisterTileResult Result { get; }
 

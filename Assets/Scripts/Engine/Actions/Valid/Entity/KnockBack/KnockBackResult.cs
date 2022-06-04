@@ -2,7 +2,7 @@
 {
     public abstract record KnockBackResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new KnockBackSimulator(context, world, this).Simulate();
         }

@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
     public class DeleteComponentEvaluator
     {
         public DeleteComponentEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             DeleteComponentAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private DeleteComponentAction Action { get; }
 

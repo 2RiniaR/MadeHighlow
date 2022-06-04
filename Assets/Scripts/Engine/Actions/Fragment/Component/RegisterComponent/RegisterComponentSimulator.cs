@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
     public class RegisterComponentSimulator
     {
         public RegisterComponentSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] RegisterComponentResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private RegisterComponentResult Result { get; }
 

@@ -2,7 +2,7 @@
 {
     public abstract record EntityFlyResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new EntityFlySimulator(context, world, this).Simulate();
         }

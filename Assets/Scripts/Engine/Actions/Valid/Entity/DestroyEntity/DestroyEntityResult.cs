@@ -2,7 +2,7 @@
 {
     public abstract record DestroyEntityResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new DestroyEntitySimulator(context, world, this).Simulate();
         }

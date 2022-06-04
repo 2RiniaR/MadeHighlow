@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
     public class DeleteEntitySimulator
     {
         public DeleteEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] DeleteEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private DeleteEntityResult Result { get; }
 

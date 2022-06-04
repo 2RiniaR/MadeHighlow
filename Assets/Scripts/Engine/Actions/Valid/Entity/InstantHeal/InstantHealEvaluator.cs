@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
     public class InstantHealEvaluator
     {
         public InstantHealEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             InstantHealAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private InstantHealAction Action { get; }
 

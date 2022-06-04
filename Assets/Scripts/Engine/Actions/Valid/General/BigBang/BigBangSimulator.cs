@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.BigBang
     public class BigBangSimulator
     {
         public BigBangSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] BigBangResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.BigBang
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private BigBangResult Result { get; }
 

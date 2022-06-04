@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
     public class UnregisterTileSimulator
     {
         public UnregisterTileSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] UnregisterTileResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterTile
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private UnregisterTileResult Result { get; }
 

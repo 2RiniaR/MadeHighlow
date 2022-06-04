@@ -2,7 +2,7 @@
 {
     public abstract record GenerateTileResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new GenerateTileSimulator(context, world, this).Simulate();
         }

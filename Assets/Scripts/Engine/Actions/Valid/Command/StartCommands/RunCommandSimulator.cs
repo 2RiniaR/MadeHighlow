@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
     public class StartCommandsSimulator
     {
         public StartCommandsSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] StartCommandsResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private StartCommandsResult Result { get; }
 

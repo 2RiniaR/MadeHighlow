@@ -6,7 +6,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
     public class DestroyEntityEvaluator
     {
         public DestroyEntityEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             DestroyEntityAction action
         )
@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DestroyEntityAction Action { get; }

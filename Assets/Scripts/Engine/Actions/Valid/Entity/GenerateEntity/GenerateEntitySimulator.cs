@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
     public class GenerateEntitySimulator
     {
         public GenerateEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] GenerateEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private GenerateEntityResult Result { get; }
 

@@ -2,7 +2,7 @@
 {
     public abstract record DropCardResult : IValidResult
     {
-        public World Simulate(SimulationContext context, World world)
+        public World Simulate(ISimulationContext context, World world)
         {
             return new DropCardSimulator(context, world, this).Simulate();
         }

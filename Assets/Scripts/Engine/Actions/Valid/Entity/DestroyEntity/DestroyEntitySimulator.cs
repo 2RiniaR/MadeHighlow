@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
     public class DestroyEntitySimulator
     {
         public DestroyEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] DestroyEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private DestroyEntityResult Result { get; }
 

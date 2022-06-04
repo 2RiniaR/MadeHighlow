@@ -5,7 +5,11 @@ namespace RineaR.MadeHighlow.Actions.DropCard
 {
     public class DropCardEvaluator
     {
-        public DropCardEvaluator([NotNull] EvaluationContext context, [NotNull] IHistory initial, DropCardAction action)
+        public DropCardEvaluator(
+            [NotNull] IEvaluationContext context,
+            [NotNull] IHistory initial,
+            DropCardAction action
+        )
         {
             Initial = initial;
             Context = context;
@@ -13,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.DropCard
             Simulating = Initial;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private DropCardAction Action { get; }

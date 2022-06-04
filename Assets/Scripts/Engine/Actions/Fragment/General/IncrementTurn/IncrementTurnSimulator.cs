@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
     public class IncrementTurnSimulator
     {
         public IncrementTurnSimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] IncrementTurnResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.IncrementTurn
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private IncrementTurnResult Result { get; }
 

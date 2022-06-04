@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
     public class UnregisterEntitySimulator
     {
         public UnregisterEntitySimulator(
-            [NotNull] SimulationContext context,
+            [NotNull] ISimulationContext context,
             [NotNull] World initial,
             [NotNull] UnregisterEntityResult result
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.UnregisterEntity
             Result = result;
         }
 
-        [NotNull] private SimulationContext Context { get; }
+        [NotNull] private ISimulationContext Context { get; }
         [NotNull] private World Initial { get; }
         [NotNull] private UnregisterEntityResult Result { get; }
 

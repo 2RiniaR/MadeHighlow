@@ -5,7 +5,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
     public class RegisterCardEvaluator
     {
         public RegisterCardEvaluator(
-            [NotNull] EvaluationContext context,
+            [NotNull] IEvaluationContext context,
             [NotNull] IHistory initial,
             RegisterCardAction action
         )
@@ -15,7 +15,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
             Action = action;
         }
 
-        [NotNull] private EvaluationContext Context { get; }
+        [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private RegisterCardAction Action { get; }
 
