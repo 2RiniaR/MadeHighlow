@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return succeedResult.Process.Timeline.Simulate(Context, Initial);
-            }
-
-            return Initial;
+            if (Result.Teleported == null) return Initial;
+            return Context.Modifier.UpdateEntity(Initial, Result.Teleported);
         }
     }
 }

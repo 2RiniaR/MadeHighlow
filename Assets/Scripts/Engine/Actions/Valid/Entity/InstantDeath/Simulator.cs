@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.InstantDeath
 {
@@ -19,17 +18,8 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                var target = Context.Finder.FindEntity(Initial, succeedResult.Action.TargetID) ??
-                             throw new ArgumentException();
-                var vitality = target.Vitality ?? throw new ArgumentException();
-
-                var modifiedTarget = target with { Vitality = vitality.Dead };
-                return Context.Modifier.UpdateEntity(Initial, modifiedTarget);
-            }
-
-            return Initial;
+            if (!Result.Confirmed) return Initial;
+            return Context.Modifier.UpdateEntity(Initial, Result.Dead);
         }
     }
 }

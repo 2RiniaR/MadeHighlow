@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterComponent
+namespace RineaR.MadeHighlow.Actions.CreateTile.RegisterTile
 {
     public class Evaluator
     {
@@ -20,16 +20,9 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         [NotNull]
         public Result Evaluate()
         {
-            if (!IsParentExists()) return Result;
-
             Confirm();
 
             return Result;
-        }
-
-        private bool IsParentExists()
-        {
-            return Context.Finder.FindAttachable(Initial.World, Action.ParentID) != null;
         }
 
         private void Confirm()
@@ -37,7 +30,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
             var registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
-                AttachedID = Action.ParentID,
+                Components = ValueList<Component>.Empty,
             };
             Result = Result with { Registered = registered };
         }

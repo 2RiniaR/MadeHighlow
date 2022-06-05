@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.BigBang
 {
@@ -18,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.BigBang
         [NotNull]
         public World Simulate()
         {
-            return Result.Process.Timeline.Simulate(Context, Initial);
+            throw new NotImplementedException();
         }
     }
 }

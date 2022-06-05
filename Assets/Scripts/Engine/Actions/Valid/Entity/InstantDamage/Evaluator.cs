@@ -17,75 +17,42 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
-
-        [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<Calculation>> CalculationInterrupts { get; set; }
-        [CanBeNull] private Damage Calculated { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
-
-            result = CheckCondition();
-            if (result != null) return result;
+            if (target == null) return Result;
+            if (!IsValid(target)) return Result;
 
             CalculateDamage();
+            DamageEntity(target);
 
             Context.Flows.CheckRejection(
                 history: Initial,
-                contextProvider: (history, collected) => new RejectionContext(
-                    history,
-                    collected,
-                    Action,
-                    CalculationInterrupts,
-                    Calculated
-                ),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    CalculationInterrupts,
-                    Calculated,
-                    rejection,
-                    rejectedID
-                )
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            return Result with { Confirmed = true };
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new FailedResult(Action, FailedReason.NoTarget);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result CheckCondition()
+        private bool IsValid([NotNull] Entity target)
         {
-            // そもそも体力という概念がないものには、ダメージが与えられない。
-            if (Target.Vitality == null)
-            {
-                return new FailedResult(Action, FailedReason.NoVitality);
-            }
+            if (target.Vitality == null) return false;
+            if (target.Vitality.IsDead) return false;
 
-            // 相手が生きてなければダメージは与えられないよ。仕方ないね。
-            if (Target.Vitality.IsDead)
-            {
-                return new FailedResult(Action, FailedReason.TargetDead);
-            }
-
-            return null;
+            return true;
         }
 
         private void CalculateDamage()
@@ -110,10 +77,10 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             }
         }
 
-        [NotNull]
-        private Result Succeed()
+        private void DamageEntity([NotNull] Entity target)
         {
-            return new SucceedResult(Action, CalculationInterrupts, Calculated);
+            var damagedTarget = target with { Vitality = Result.Calculated.Caused(target.Vitality) };
+            Result = Result with { Damaged = damagedTarget };
         }
     }
 }

@@ -9,23 +9,22 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
             Initial = initial;
             Context = context;
             Action = action;
-            Simulating = Initial;
             Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
-        [NotNull] private IHistory Simulating { get; }
         [NotNull] private Action Action { get; }
         [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
+
+            // TODO: タイルの上にいるエンティティのZ座標も変える必要がある
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -35,25 +34,20 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            Confirm(target);
+
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Tile FindTarget()
         {
-            Target = Context.Finder.FindTile(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindTile(Initial.World, Action.TargetID);
         }
 
-        [NotNull]
-        private Result Succeed()
+        private void Confirm([NotNull] Tile target)
         {
-            return new SucceedResult(Action);
+            Result = Result with { Elevated = target with { Elevation = Action.Elevate.Caused(target.Elevation) } };
         }
     }
 }

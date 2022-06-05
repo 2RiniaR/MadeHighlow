@@ -47,7 +47,7 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
         private void Register()
         {
             var action = new RegisterEntity.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
-            var result = Context.Actions.RegisterEntity(Simulating, action);
+            var result = new RegisterEntity.Evaluator(Context, Simulating, action).Evaluate();
             Simulating = Simulating.Appended(result, out var @event);
             Result = Result with { RegisterEntity = @event };
         }

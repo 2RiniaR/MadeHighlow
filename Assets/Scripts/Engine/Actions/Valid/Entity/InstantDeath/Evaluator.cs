@@ -22,13 +22,12 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
+            if (!IsValid(target)) return Result;
 
-            result = CheckCondition();
-            if (result != null) return result;
+            KillEntity(target);
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -38,43 +37,27 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            return Result with { Confirmed = true };
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new FailedResult(Action, FailedReason.NoTarget);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result CheckCondition()
+        private bool IsValid([NotNull] Entity target)
         {
-            // そもそも体力という概念がないものには、ダメージが与えられない。
-            if (Target.Vitality == null)
-            {
-                return new FailedResult(Action, FailedReason.NoVitality);
-            }
+            if (target.Vitality == null) return false;
+            if (target.Vitality.IsDead) return false;
 
-            // 相手が生きてなければダメージは与えられないよ。仕方ないね。
-            if (Target.Vitality.IsDead)
-            {
-                return new FailedResult(Action, FailedReason.TargetDead);
-            }
-
-            return null;
+            return true;
         }
 
-        [NotNull]
-        private Result Succeed()
+        private void KillEntity([NotNull] Entity target)
         {
-            return new SucceedResult(Action);
+            var damagedTarget = target with { Vitality = target.Vitality.Dead };
+            Result = Result with { Dead = damagedTarget };
         }
     }
 }

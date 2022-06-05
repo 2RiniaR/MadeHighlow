@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterTile
+namespace RineaR.MadeHighlow.Actions.CreatePlayer.RegisterPlayer
 {
     public record Result([NotNull] Action Action) : IResult
     {
@@ -9,6 +9,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
             return new Simulator(context, world, this).Simulate();
         }
 
-        public Tile Registered { get; init; }
+        public Player Registered { get; init; }
     }
 }

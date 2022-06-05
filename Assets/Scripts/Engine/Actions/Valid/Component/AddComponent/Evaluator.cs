@@ -22,11 +22,11 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
         [NotNull]
         public Result Evaluate()
         {
-            CreateComponent();
+            CreateTarget();
             return Result;
         }
 
-        private void CreateComponent()
+        private void CreateTarget()
         {
             var action = new CreateComponent.Action(Action.TargetID, Action.InitialStatus);
             var result = Context.Actions.CreateComponent(Simulating, action);

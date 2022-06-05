@@ -22,12 +22,9 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            CreateTarget();
 
-            result = CreateTarget();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.CreateTile.Content.Created == null) return Result;
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -37,32 +34,22 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result CreateTarget()
+        private void CreateTarget()
         {
-            var result = Context.Actions.CreateTile(Simulating, new CreateTile.Action(Action.InitialProps));
-            if (result is not CreateTile.SucceedResult succeedResult)
-            {
-                return new CreateTileFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            CreateTileEvent = succeedEvent;
-            return null;
+            var action = new CreateTile.Action(Action.InitialProps);
+            var result = Context.Actions.CreateTile(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { CreateTile = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(CreateTileEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Created = Action.InitialProps };
         }
     }
 }

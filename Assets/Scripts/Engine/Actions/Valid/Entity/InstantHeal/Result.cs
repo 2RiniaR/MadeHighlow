@@ -13,5 +13,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
         public ValueList<Interrupt<Calculation>> Calculations { get; init; }
         public Heal Calculated { get; init; }
         public Rejection Rejection { get; init; }
+
+        public bool Confirmed { get; init; } = false;
     }
 }

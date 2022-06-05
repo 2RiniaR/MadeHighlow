@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
 
         public Event<PositionEntity.Result> PositionEntity { get; init; }
         public Rejection Rejection { get; init; }
+        public Entity Teleported { get; init; }
     }
 }

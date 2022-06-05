@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 
         public Event<DeleteEntity.Result> DeleteEntity { get; init; }
         public Rejection Rejection { get; init; }
+        public bool Run { get; init; } = false;
     }
 }

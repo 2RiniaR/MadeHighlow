@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterCard
+namespace RineaR.MadeHighlow.Actions.CreateEntity.RegisterEntity
 {
     public record Result([NotNull] Action Action) : IResult
     {
@@ -9,6 +9,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
             return new Simulator(context, world, this).Simulate();
         }
 
-        public Card Registered { get; init; }
+        public Entity Registered { get; init; }
     }
 }

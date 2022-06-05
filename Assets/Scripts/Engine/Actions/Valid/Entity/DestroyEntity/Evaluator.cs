@@ -22,12 +22,9 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            DeleteTarget();
 
-            result = DeleteTarget();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.DeleteEntity.Content.Deleted == null) return Result;
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -37,32 +34,22 @@ namespace RineaR.MadeHighlow.Actions.DestroyEntity
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result DeleteTarget()
+        private void DeleteTarget()
         {
-            var result = Context.Actions.DeleteEntity(Simulating, new DeleteEntity.Action(Action.TargetID));
-            if (result is not DeleteEntity.SucceedResult succeedResult)
-            {
-                return new DeleteEntityFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            DeleteEntityEvent = succeedEvent;
-            return null;
+            var action = new DeleteEntity.Action(Action.TargetID);
+            var result = Context.Actions.DeleteEntity(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { DeleteEntity = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(DeleteEntityEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Run = true };
         }
     }
 }

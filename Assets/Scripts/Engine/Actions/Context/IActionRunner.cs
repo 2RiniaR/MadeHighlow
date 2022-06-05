@@ -18,19 +18,10 @@ namespace RineaR.MadeHighlow.Actions
         PlaceCard.Result PlaceCard([NotNull] IHistory history, [NotNull] PlaceCard.Action action);
 
         [NotNull]
-        RegisterCard.Result RegisterCard([NotNull] IHistory history, [NotNull] RegisterCard.Action action);
-
-        [NotNull]
         CreateComponent.Result CreateComponent([NotNull] IHistory history, [NotNull] CreateComponent.Action action);
 
         [NotNull]
         DeleteComponent.Result DeleteComponent([NotNull] IHistory history, [NotNull] DeleteComponent.Action action);
-
-        [NotNull]
-        RegisterComponent.Result RegisterComponent(
-            [NotNull] IHistory history,
-            [NotNull] RegisterComponent.Action action
-        );
 
         [NotNull]
         CreateEntity.Result CreateEntity([NotNull] IHistory history, [NotNull] CreateEntity.Action action);
@@ -45,9 +36,6 @@ namespace RineaR.MadeHighlow.Actions
         PositionEntity.Result PositionEntity([NotNull] IHistory history, [NotNull] PositionEntity.Action action);
 
         [NotNull]
-        RegisterEntity.Result RegisterEntity([NotNull] IHistory history, [NotNull] RegisterEntity.Action action);
-
-        [NotNull]
         AllocateID.Result AllocateID([NotNull] IHistory history);
 
         [NotNull]
@@ -57,9 +45,6 @@ namespace RineaR.MadeHighlow.Actions
         CreatePlayer.Result CreatePlayer([NotNull] IHistory history, [NotNull] CreatePlayer.Action action);
 
         [NotNull]
-        RegisterPlayer.Result RegisterPlayer([NotNull] IHistory history, [NotNull] RegisterPlayer.Action action);
-
-        [NotNull]
         CreateTile.Result CreateTile([NotNull] IHistory history, [NotNull] CreateTile.Action action);
 
         [NotNull]
@@ -67,9 +52,6 @@ namespace RineaR.MadeHighlow.Actions
 
         [NotNull]
         PositionTile.Result PositionTile([NotNull] IHistory history, [NotNull] PositionTile.Action action);
-
-        [NotNull]
-        RegisterTile.Result RegisterTile([NotNull] IHistory history, [NotNull] RegisterTile.Action action);
 
         [NotNull]
         ReactedResult<DropCard.Result> DropCard([NotNull] IHistory history, [NotNull] DropCard.Action action);

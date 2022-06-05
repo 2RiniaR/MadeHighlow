@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterComponent
+namespace RineaR.MadeHighlow.Actions.CreateCard.RegisterCard
 {
     public class Simulator
     {
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterComponent
         public World Simulate()
         {
             if (Result.Registered == null) return Initial;
-            return Context.Modifier.CreateComponent(Initial, Result.Registered);
+            return Context.Modifier.CreateCard(Initial, Result.Registered);
         }
     }
 }

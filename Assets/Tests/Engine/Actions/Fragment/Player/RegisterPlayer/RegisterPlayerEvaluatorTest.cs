@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
+using RineaR.MadeHighlow.Actions.CreatePlayer.RegisterPlayer;
 
 namespace RineaR.MadeHighlow.Actions.RegisterPlayer
 {

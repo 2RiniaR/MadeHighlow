@@ -36,11 +36,6 @@ namespace RineaR.MadeHighlow.Actions
             return new PlaceCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterCard.Result RegisterCard(IHistory history, RegisterCard.Action action)
-        {
-            return new RegisterCard.Evaluator(Context, history, action).Evaluate();
-        }
-
         public CreateComponent.Result CreateComponent(IHistory history, CreateComponent.Action action)
         {
             return new CreateComponent.Evaluator(Context, history, action).Evaluate();
@@ -49,11 +44,6 @@ namespace RineaR.MadeHighlow.Actions
         public DeleteComponent.Result DeleteComponent(IHistory history, DeleteComponent.Action action)
         {
             return new DeleteComponent.Evaluator(Context, history, action).Evaluate();
-        }
-
-        public RegisterComponent.Result RegisterComponent(IHistory history, RegisterComponent.Action action)
-        {
-            return new RegisterComponent.Evaluator(Context, history, action).Evaluate();
         }
 
         public CreateEntity.Result CreateEntity(IHistory history, CreateEntity.Action action)
@@ -76,11 +66,6 @@ namespace RineaR.MadeHighlow.Actions
             return new PositionEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterEntity.Result RegisterEntity(IHistory history, RegisterEntity.Action action)
-        {
-            return new RegisterEntity.Evaluator(Context, history, action).Evaluate();
-        }
-
         public AllocateID.Result AllocateID(IHistory history)
         {
             return new AllocateID.Evaluator(history).Evaluate();
@@ -96,11 +81,6 @@ namespace RineaR.MadeHighlow.Actions
             return new CreatePlayer.Evaluator(Context, history, action).Evaluate();
         }
 
-        public RegisterPlayer.Result RegisterPlayer(IHistory history, RegisterPlayer.Action action)
-        {
-            return new RegisterPlayer.Evaluator(Context, history, action).Evaluate();
-        }
-
         public CreateTile.Result CreateTile(IHistory history, CreateTile.Action action)
         {
             return new CreateTile.Evaluator(Context, history, action).Evaluate();
@@ -114,11 +94,6 @@ namespace RineaR.MadeHighlow.Actions
         public PositionTile.Result PositionTile(IHistory history, PositionTile.Action action)
         {
             return new PositionTile.Evaluator(Context, history, action).Evaluate();
-        }
-
-        public RegisterTile.Result RegisterTile(IHistory history, RegisterTile.Action action)
-        {
-            return new RegisterTile.Evaluator(Context, history, action).Evaluate();
         }
 
         public ReactedResult<DropCard.Result> DropCard(IHistory history, DropCard.Action action)

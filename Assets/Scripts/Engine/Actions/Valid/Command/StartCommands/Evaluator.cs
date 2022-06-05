@@ -34,7 +34,8 @@ namespace RineaR.MadeHighlow.Actions.StartCommands
             var events = ValueList<Event<ReactedResult<RunCommand.Result>>>.Empty;
             foreach (var command in orderedCommands)
             {
-                var result = Context.Actions.RunCommand(Initial, new RunCommand.Action(command));
+                var action = new RunCommand.Action(command);
+                var result = Context.Actions.RunCommand(Initial, action);
                 Simulating = Simulating.Appended(result, out var @event);
                 events = events.Add(@event);
             }

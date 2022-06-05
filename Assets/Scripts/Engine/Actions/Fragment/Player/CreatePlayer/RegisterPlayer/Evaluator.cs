@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterTile
+namespace RineaR.MadeHighlow.Actions.CreatePlayer.RegisterPlayer
 {
     public class Evaluator
     {

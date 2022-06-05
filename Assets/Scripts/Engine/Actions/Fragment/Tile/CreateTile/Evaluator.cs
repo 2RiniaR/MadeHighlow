@@ -47,7 +47,7 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
         private void Register()
         {
             var action = new RegisterTile.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
-            var result = Context.Actions.RegisterTile(Simulating, action);
+            var result = new RegisterTile.Evaluator(Context, Simulating, action).Evaluate();
             Simulating = Simulating.Appended(result, out var @event);
             Result = Result with { RegisterTile = @event };
         }

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterPlayer
+namespace RineaR.MadeHighlow.Actions.CreateComponent.RegisterComponent
 {
     public class Evaluator
     {
@@ -20,9 +20,16 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
         [NotNull]
         public Result Evaluate()
         {
+            if (!IsParentExists()) return Result;
+
             Confirm();
 
             return Result;
+        }
+
+        private bool IsParentExists()
+        {
+            return Context.Finder.FindAttachable(Initial.World, Action.ParentID) != null;
         }
 
         private void Confirm()
@@ -30,7 +37,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
             var registered = Action.InitialProps with
             {
                 ID = Action.AssignedID,
-                Components = ValueList<Component>.Empty,
+                AttachedID = Action.ParentID,
             };
             Result = Result with { Registered = registered };
         }

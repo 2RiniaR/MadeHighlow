@@ -11,5 +11,8 @@ namespace RineaR.MadeHighlow.Actions.InstantDeath
         }
 
         public Rejection Rejection { get; init; }
+        public Entity Dead { get; init; }
+
+        public bool Confirmed { get; init; }
     }
 }

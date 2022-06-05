@@ -17,45 +17,21 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
-            result = CreatePlayer();
-            if (result != null) return result;
-
-            WrapProcess();
-
-            return Succeed();
+            CreatePlayer();
+            return Result;
         }
 
-        [CanBeNull]
-        private Result CreatePlayer()
+        private void CreatePlayer()
         {
-            var result = Context.Actions.CreatePlayer(Simulating, new CreatePlayer.Action(Action.InitialPlayer));
-            if (result is not CreatePlayer.SucceedResult succeedResult)
-            {
-                return new CreatePlayerFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            CreatePlayerEvent = succeedEvent;
-
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(CreatePlayerEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            var action = new CreatePlayer.Action(Action.InitialPlayer);
+            var result = Context.Actions.CreatePlayer(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { CreatePlayer = @event };
         }
     }
 }

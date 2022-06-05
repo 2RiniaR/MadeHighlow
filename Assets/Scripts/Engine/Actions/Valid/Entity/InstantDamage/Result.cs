@@ -13,5 +13,8 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         public ValueList<Interrupt<Calculation>> Calculations { get; init; }
         public Damage Calculated { get; init; }
         public Rejection Rejection { get; init; }
+        public Entity Damaged { get; init; }
+
+        public bool Confirmed { get; init; }
     }
 }

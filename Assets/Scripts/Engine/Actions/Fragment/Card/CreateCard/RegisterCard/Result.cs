@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterPlayer
+namespace RineaR.MadeHighlow.Actions.CreateCard.RegisterCard
 {
     public record Result([NotNull] Action Action) : IResult
     {
@@ -9,6 +9,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterPlayer
             return new Simulator(context, world, this).Simulate();
         }
 
-        public Player Registered { get; init; }
+        public Card Registered { get; init; }
     }
 }

@@ -17,7 +17,7 @@ namespace RineaR.MadeHighlow.Actions.BigBang
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
@@ -25,52 +25,49 @@ namespace RineaR.MadeHighlow.Actions.BigBang
             JoinPlayers();
             GenerateTiles();
             GenerateEntities();
-            WrapProcess();
-            return Succeed();
+            return Result;
         }
 
         private void JoinPlayers()
         {
-            JoinPlayerEvents = ValueList<Event<ReactedResult<JoinPlayer.Result>>>.Empty;
+            var events = ValueList<Event<ReactedResult<JoinPlayer.Result>>>.Empty;
             foreach (var player in Action.InitialWorld.Players)
             {
-                var result = Context.Actions.JoinPlayer(Simulating, new JoinPlayer.Action(player));
+                var action = new JoinPlayer.Action(player);
+                var result = Context.Actions.JoinPlayer(Initial, action);
                 Simulating = Simulating.Appended(result, out var @event);
-                JoinPlayerEvents = JoinPlayerEvents.Add(@event);
+                events = events.Add(@event);
             }
+
+            Result = Result with { JoinPlayers = events };
         }
 
         private void GenerateTiles()
         {
-            GenerateTileEvents = ValueList<Event<ReactedResult<GenerateTile.Result>>>.Empty;
+            var events = ValueList<Event<ReactedResult<GenerateTile.Result>>>.Empty;
             foreach (var tile in Action.InitialWorld.Tiles)
             {
-                var result = Context.Actions.GenerateTile(Simulating, new GenerateTile.Action(tile));
+                var action = new GenerateTile.Action(tile);
+                var result = Context.Actions.GenerateTile(Initial, action);
                 Simulating = Simulating.Appended(result, out var @event);
-                GenerateTileEvents = GenerateTileEvents.Add(@event);
+                events = events.Add(@event);
             }
+
+            Result = Result with { GenerateTiles = events };
         }
 
         private void GenerateEntities()
         {
-            GenerateEntityEvents = ValueList<Event<ReactedResult<GenerateEntity.Result>>>.Empty;
+            var events = ValueList<Event<ReactedResult<GenerateEntity.Result>>>.Empty;
             foreach (var entity in Action.InitialWorld.Entities)
             {
-                var result = Context.Actions.GenerateEntity(Simulating, new GenerateEntity.Action(entity));
+                var action = new GenerateEntity.Action(entity);
+                var result = Context.Actions.GenerateEntity(Initial, action);
                 Simulating = Simulating.Appended(result, out var @event);
-                GenerateEntityEvents = GenerateEntityEvents.Add(@event);
+                events = events.Add(@event);
             }
-        }
 
-        private void WrapProcess()
-        {
-            Process = new Process(JoinPlayerEvents, GenerateTileEvents, GenerateEntityEvents);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new Result(Action, Process);
+            Result = Result with { GenerateEntities = events };
         }
     }
 }

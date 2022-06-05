@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.GenerateTile
 
         public Event<CreateTile.Result> CreateTile { get; init; }
         public Rejection Rejection { get; init; }
+        public Tile Created { get; init; }
     }
 }

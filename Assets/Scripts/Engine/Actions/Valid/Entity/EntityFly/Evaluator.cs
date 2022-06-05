@@ -23,15 +23,11 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
 
-            result = FollowRoute();
-            if (result != null) return result;
-
-            WrapProcess();
+            FollowRoute();
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -41,96 +37,68 @@ namespace RineaR.MadeHighlow.Actions.EntityFly
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result FollowRoute()
+        private void FollowRoute()
         {
-            FollowMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
+            var followMoves = ValueList<Event<MoveEntity.Result>>.Empty;
+            var prevFallMoves = ValueList<Event<MoveEntity.Result>>.Empty;
             foreach (var step in Action.Route.Steps)
             {
-                var result = Context.Actions.MoveEntity(
-                    Simulating,
-                    new MoveEntity.Action(Action.TargetID, step.Direction)
-                );
-                if (result is not MoveEntity.SucceedResult succeedResult)
-                {
-                    break;
-                }
+                var action = new MoveEntity.Action(Action.TargetID, step.Direction);
+                var result = Context.Actions.MoveEntity(Simulating, action);
+                var moved = Simulating.Appended(result, out var @event);
 
-                var moved = Simulating.Appended(succeedResult, out var succeedEvent);
-
-                var fallMoveEvents = Fall(Action.TargetID, moved);
-                if (fallMoveEvents == null)
-                {
-                    break;
-                }
+                var fallMoves = Fall(Action.TargetID, moved);
+                if (fallMoves == null) break;
 
                 Simulating = moved;
-                FollowMoveEvents = FollowMoveEvents!.Add(succeedEvent);
-                FallMoveEvents = fallMoveEvents;
+                followMoves = followMoves.Add(@event);
+                prevFallMoves = fallMoves;
             }
 
-            return null;
+            Result = Result with
+            {
+                FallMoves = prevFallMoves,
+                FollowMoves = followMoves,
+            };
         }
 
         [CanBeNull]
         [ItemNotNull]
-        private ValueList<Event<MoveEntity.SucceedResult>> Fall([NotNull] EntityID entityID, [NotNull] IHistory initial)
+        private ValueList<Event<MoveEntity.Result>> Fall([NotNull] EntityID entityID, [NotNull] IHistory initial)
         {
             var target = Context.Finder.FindEntity(initial.World, entityID) ??
                          throw new InvalidOperationException("この時点で必ず、移動対象のエンティティが存在するはず。");
 
-            if (target.Levitation)
-            {
-                return ValueList<Event<MoveEntity.SucceedResult>>.Empty;
-            }
+            if (target.Levitation) return ValueList<Event<MoveEntity.Result>>.Empty;
 
-            var destinationTile = target.Position3D.To2D().GetTile(initial.World) ??
+            var destinationTile = Context.Finder.FindTile(initial.World, target.Position3D.To2D()) ??
                                   throw new InvalidOperationException("この時点で必ず、落下先のタイルが存在するはず。");
+
             var destinationElevation = destinationTile.Elevation as GroundElevation ??
                                        throw new InvalidOperationException("この時点で必ず、落下先のタイルは着地可能なはず。");
+
             var distance = new Distance(target.Position3D.Z.Value - destinationElevation.Height.Value);
 
             var simulating = initial;
-            var events = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
+            var events = ValueList<Event<MoveEntity.Result>>.Empty;
             for (var i = 0; i < distance.Value; i++)
             {
-                var result = Context.Actions.MoveEntity(
-                    initial,
-                    new MoveEntity.Action(entityID, Direction3D.ZNegative)
-                );
-                if (result is not MoveEntity.SucceedResult succeedResult) return null;
-
-                simulating = simulating.Appended(succeedResult, out var succeedEvent);
-                events = events.Add(succeedEvent);
+                var action = new MoveEntity.Action(entityID, Direction3D.ZNegative);
+                var result = Context.Actions.MoveEntity(initial, action);
+                simulating = simulating.Appended(result, out var @event);
+                events = events.Add(@event);
             }
 
             return events;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(FollowMoveEvents, FallMoveEvents);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
         }
     }
 }

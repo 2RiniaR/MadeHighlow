@@ -54,7 +54,7 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
                 Result.AllocateID.Content.Allocated,
                 Action.InitialStatus
             );
-            var result = Context.Actions.RegisterComponent(Simulating, action);
+            var result = new RegisterComponent.Evaluator(Context, Simulating, action).Evaluate();
             Simulating = Simulating.Appended(result, out var @event);
             Result = Result with { RegisterComponent = @event };
         }

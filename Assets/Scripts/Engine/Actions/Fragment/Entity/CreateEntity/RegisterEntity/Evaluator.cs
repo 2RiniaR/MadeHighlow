@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterCard
+namespace RineaR.MadeHighlow.Actions.CreateEntity.RegisterEntity
 {
     public class Evaluator
     {
@@ -20,16 +20,9 @@ namespace RineaR.MadeHighlow.Actions.RegisterCard
         [NotNull]
         public Result Evaluate()
         {
-            if (!IsParentExists()) return Result;
-
             Confirm();
 
             return Result;
-        }
-
-        private bool IsParentExists()
-        {
-            return Context.Finder.FindPlayer(Initial.World, Action.ParentID) != null;
         }
 
         private void Confirm()

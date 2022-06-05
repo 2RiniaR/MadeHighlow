@@ -47,7 +47,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         private void Register()
         {
             var action = new RegisterPlayer.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
-            var result = Context.Actions.RegisterPlayer(Simulating, action);
+            var result = new RegisterPlayer.Evaluator(Context, Simulating, action).Evaluate();
             Simulating = Simulating.Appended(result, out var @event);
             Result = Result with { RegisterPlayer = @event };
         }

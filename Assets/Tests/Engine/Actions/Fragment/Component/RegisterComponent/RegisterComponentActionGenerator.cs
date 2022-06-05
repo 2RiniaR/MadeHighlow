@@ -1,4 +1,6 @@
-﻿namespace RineaR.MadeHighlow.Actions.RegisterComponent
+﻿using RineaR.MadeHighlow.Actions.CreateComponent.RegisterComponent;
+
+namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {
     public static class RegisterComponentActionGenerator
     {

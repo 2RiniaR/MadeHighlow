@@ -22,15 +22,12 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
 
-            result = Position();
-            if (result != null) return result;
-
-            WrapProcess();
+            Position();
+            if (Result.PositionEntity.Content.Positioned == null) return Result;
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -40,48 +37,28 @@ namespace RineaR.MadeHighlow.Actions.EntityTeleport
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            Confirm();
+
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result Position()
+        private void Position()
         {
-            var result = Context.Actions.PositionEntity(
-                Simulating,
-                new PositionEntity.Action(Action.TargetID, Action.Destination)
-            );
-            if (result is not PositionEntity.SucceedResult succeedResult)
-            {
-                return new PositionEntityFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            PositionEntityEvent = succeedEvent;
-
-            return null;
+            var action = new PositionEntity.Action(Action.TargetID, Action.Destination);
+            var result = Context.Actions.PositionEntity(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { PositionEntity = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(PositionEntityEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Teleported = Result.PositionEntity.Content.Positioned };
         }
     }
 }

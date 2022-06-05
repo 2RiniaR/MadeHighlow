@@ -8,9 +8,9 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         public int Value { get; } = Math.Max(0, Value);
 
         [NotNull]
-        public Health Caused([NotNull] Health health)
+        public Vitality Caused([NotNull] Vitality vitality)
         {
-            return new Health(health.Value - Value);
+            return vitality with { Health = new Health(vitality.Health.Value - Value) };
         }
     }
 }

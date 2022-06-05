@@ -1,5 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
+using RineaR.MadeHighlow.Actions.CreateComponent.RegisterComponent;
 
 namespace RineaR.MadeHighlow.Actions.RegisterComponent
 {

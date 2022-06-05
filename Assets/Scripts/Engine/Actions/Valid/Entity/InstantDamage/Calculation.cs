@@ -1,4 +1,9 @@
-﻿namespace RineaR.MadeHighlow.Actions.InstantDamage
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    public abstract record Calculation;
+    public record Calculation([NotNull] ComponentID Effector)
+    {
+        public DamageReduction Reduction { get; init; }
+    }
 }

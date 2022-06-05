@@ -22,11 +22,11 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
         [NotNull]
         public Result Evaluate()
         {
-            DeleteComponent();
+            DeleteTarget();
             return Result;
         }
 
-        private void DeleteComponent()
+        private void DeleteTarget()
         {
             var action = new DeleteComponent.Action(Action.TargetID);
             var result = Context.Actions.DeleteComponent(Simulating, action);

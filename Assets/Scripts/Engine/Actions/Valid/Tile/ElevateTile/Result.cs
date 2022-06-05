@@ -11,5 +11,6 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         }
 
         public Rejection Rejection { get; init; }
+        public Tile Elevated { get; init; }
     }
 }

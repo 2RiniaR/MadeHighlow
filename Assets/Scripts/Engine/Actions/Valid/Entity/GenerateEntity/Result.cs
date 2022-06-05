@@ -11,6 +11,7 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         }
 
         public Event<CreateEntity.Result> CreateEntity { get; init; }
+        public Entity Created { get; init; }
         public Rejection Rejection { get; init; }
     }
 }

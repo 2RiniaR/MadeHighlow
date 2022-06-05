@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.ElevateTile
 {
@@ -19,15 +18,8 @@ namespace RineaR.MadeHighlow.Actions.ElevateTile
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                var target = Context.Finder.FindTile(Initial, succeedResult.Action.TargetID) ??
-                             throw new AggregateException();
-                var modifiedTarget = target with { Elevation = succeedResult.Action.Elevate.Caused(target.Elevation) };
-                return Context.Modifier.UpdateTile(Initial, modifiedTarget);
-            }
-
-            return Initial;
+            if (Result.Elevated == null) return Initial;
+            return Context.Modifier.UpdateTile(Initial, Result.Elevated);
         }
     }
 }

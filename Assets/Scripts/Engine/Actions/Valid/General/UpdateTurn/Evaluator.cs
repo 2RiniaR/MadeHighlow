@@ -17,15 +17,14 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
             RunActions();
             IncrementTurn();
-            WrapProcess();
-            return Succeed();
+            return Result;
         }
 
         private void RunActions()
@@ -39,32 +38,24 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
                 interruptsQueue = interruptsQueue.EnqueueRange(interrupts);
             }
 
-            ActorInterrupts = interruptsQueue.ToValueList();
+            var actions = interruptsQueue.ToValueList();
 
-            ActorEvents = ValueList<Event<ReactedResult<IValidResult>>>.Empty;
-            foreach (var interrupt in ActorInterrupts)
+            var events = ValueList<Event<ReactedResult<IValidResult>>>.Empty;
+            foreach (var action in actions)
             {
-                var result = Context.Actions.Run(Simulating, interrupt.Effect);
+                var result = Context.Actions.Run(Simulating, action.Content);
                 Simulating = Simulating.Appended(result, out var @event);
-                ActorEvents = ActorEvents.Add(@event);
+                events = events.Add(@event);
             }
+
+            Result = Result with { ActorUpdates = events };
         }
 
         private void IncrementTurn()
         {
             var result = Context.Actions.IncrementTurn(Simulating);
             Simulating = Simulating.Appended(result, out var @event);
-            IncrementTurnEvent = @event;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(ActorEvents, IncrementTurnEvent);
-        }
-
-        private Result Succeed()
-        {
-            return new Result(Action, ActorInterrupts, Process);
+            Result = Result with { IncrementTurn = @event };
         }
     }
 }

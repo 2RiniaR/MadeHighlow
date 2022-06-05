@@ -22,12 +22,9 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            CreateTarget();
 
-            result = CreateTarget();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.CreateEntity.Content.Created == null) return Result;
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -37,32 +34,22 @@ namespace RineaR.MadeHighlow.Actions.GenerateEntity
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result CreateTarget()
+        private void CreateTarget()
         {
-            var result = Context.Actions.CreateEntity(Simulating, new CreateEntity.Action(Action.InitialProps));
-            if (result is not CreateEntity.SucceedResult succeedResult)
-            {
-                return new CreateEntityFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            CreateEntityEvent = succeedEvent;
-            return null;
+            var action = new CreateEntity.Action(Action.InitialProps);
+            var result = Context.Actions.CreateEntity(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { CreateEntity = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(CreateEntityEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Created = Action.InitialProps };
         }
     }
 }

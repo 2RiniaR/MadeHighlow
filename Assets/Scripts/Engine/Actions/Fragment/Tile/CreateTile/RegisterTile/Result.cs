@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterEntity
+namespace RineaR.MadeHighlow.Actions.CreateTile.RegisterTile
 {
     public record Result([NotNull] Action Action) : IResult
     {
@@ -9,6 +9,6 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
             return new Simulator(context, world, this).Simulate();
         }
 
-        public Entity Registered { get; init; }
+        public Tile Registered { get; init; }
     }
 }

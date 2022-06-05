@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterTile
+namespace RineaR.MadeHighlow.Actions.CreatePlayer.RegisterPlayer
 {
     public class Simulator
     {
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterTile
         public World Simulate()
         {
             if (Result.Registered == null) return Initial;
-            return Context.Modifier.CreateTile(Initial, Result.Registered);
+            return Context.Modifier.CreatePlayer(Initial, Result.Registered);
         }
     }
 }

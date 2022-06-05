@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.JoinPlayer
 {
@@ -18,12 +19,7 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return succeedResult.Process.Timeline.Simulate(Context, Initial);
-            }
-
-            return Initial;
+            throw new NotImplementedException();
         }
     }
 }

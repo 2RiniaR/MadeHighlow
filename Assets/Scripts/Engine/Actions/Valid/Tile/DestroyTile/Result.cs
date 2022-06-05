@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
 
         public Event<DeleteTile.Result> DeleteTile { get; init; }
         public Rejection Rejection { get; init; }
+        public TileID Deleted { get; init; }
     }
 }

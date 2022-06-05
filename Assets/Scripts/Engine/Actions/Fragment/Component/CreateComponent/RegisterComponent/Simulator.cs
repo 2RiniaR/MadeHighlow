@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.RegisterEntity
+namespace RineaR.MadeHighlow.Actions.CreateComponent.RegisterComponent
 {
     public class Simulator
     {
@@ -19,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.RegisterEntity
         public World Simulate()
         {
             if (Result.Registered == null) return Initial;
-            return Context.Modifier.CreateEntity(Initial, Result.Registered);
+            return Context.Modifier.CreateComponent(Initial, Result.Registered);
         }
     }
 }

@@ -22,12 +22,9 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            DeleteTarget();
 
-            result = DeleteTarget();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.DeleteTile.Content.Deleted == null) return Result;
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -37,32 +34,22 @@ namespace RineaR.MadeHighlow.Actions.DestroyTile
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result DeleteTarget()
+        private void DeleteTarget()
         {
-            var result = Context.Actions.DeleteTile(Simulating, new DeleteTile.Action(Action.TargetID));
-            if (result is not DeleteTile.SucceedResult succeedResult)
-            {
-                return new DeleteTileFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            DeleteTileEvent = succeedEvent;
-            return null;
+            var action = new DeleteTile.Action(Action.TargetID);
+            var result = Context.Actions.DeleteTile(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { DeleteTile = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(DeleteTileEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Deleted = Action.TargetID };
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace RineaR.MadeHighlow.Actions.RegisterPlayer
+﻿using RineaR.MadeHighlow.Actions.CreatePlayer.RegisterPlayer;
+
+namespace RineaR.MadeHighlow.Actions.RegisterPlayer
 {
     public static class RegisterPlayerActionGenerator
     {

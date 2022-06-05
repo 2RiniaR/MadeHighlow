@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.UpdateTurn
 {
@@ -18,7 +19,7 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
         [NotNull]
         public World Simulate()
         {
-            return Result.Process.Timeline.Simulate(Context, Initial);
+            throw new NotImplementedException();
         }
     }
 }
