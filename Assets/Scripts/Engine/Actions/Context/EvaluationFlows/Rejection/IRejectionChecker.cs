@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection
 {
     [NotNull]
-    public delegate TContext ContextProvider<TContext>(
+    public delegate TContext ContextProvider<out TContext>(
         [NotNull] IHistory history,
         [NotNull] [ItemNotNull] ValueList<Interrupt> collected
     );
@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection
     [NotNull]
     public delegate void RejectHandler([NotNull] Rejection rejection);
 
-    public interface IRejectionChecker<TContext>
+    public interface IRejectionChecker<in TContext>
     {
         void Check(
             [NotNull] IHistory history,

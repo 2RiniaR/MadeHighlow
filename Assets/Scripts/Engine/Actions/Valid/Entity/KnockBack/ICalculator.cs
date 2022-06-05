@@ -6,10 +6,6 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
     {
         [CanBeNull]
         [ItemNotNull]
-        public ValueList<Interrupt<Calculation>> KnockBackCalculations(
-            [NotNull] IHistory history,
-            [NotNull] Action action,
-            [NotNull] [ItemNotNull] ValueList<Interrupt<Calculation>> collected
-        );
+        public ValueList<Interrupt<Calculation>> Calculations([NotNull] CalculationContext context);
     }
 }

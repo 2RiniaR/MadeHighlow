@@ -1,8 +1,6 @@
-﻿using JetBrains.Annotations;
-
-namespace RineaR.MadeHighlow.Actions.InstantDamage
+﻿namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
-    public record Calculation([NotNull] ComponentID Effector)
+    public record Calculation
     {
         public DamageReduction Reduction { get; init; }
     }

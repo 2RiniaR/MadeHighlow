@@ -114,15 +114,6 @@ namespace RineaR.MadeHighlow.Actions
             );
         }
 
-        public ReactedResult<SupplyCard.Result> SupplyCard(IHistory history, SupplyCard.Action action)
-        {
-            return Reaction.Evaluate(
-                history,
-                action,
-                initial => new SupplyCard.Evaluator(Context, initial, action).Evaluate()
-            );
-        }
-
         public ReactedResult<ReserveCommand.Result> ReserveCommand(IHistory history, ReserveCommand.Action action)
         {
             return Reaction.Evaluate(

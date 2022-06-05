@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow.Actions.EntityStep
 {
     public record Action(
-        [NotNull] EntityID TargetID,
+        [NotNull] EntityID ActorID,
         [NotNull] Direction2D Direction,
         [NotNull] Cost Available
     ) : IValidAction

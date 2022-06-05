@@ -4,116 +4,98 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
     public class Evaluator
     {
+        [NotNull]
+        public delegate CalculationContext ContextProvider(
+            [NotNull] IHistory history,
+            [NotNull] [ItemNotNull] ValueList<Interrupt<Calculation>> collected
+        );
+
         public Evaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, Action action)
         {
             Initial = initial;
             Context = context;
             Action = action;
-            Simulating = Initial;
             Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
-        [NotNull] private IHistory Simulating { get; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
-
-        [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<Calculation>> CalculationInterrupts { get; set; }
-        [CanBeNull] private Heal Calculated { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
-
-            result = CheckCondition();
-            if (result != null) return result;
+            if (target == null) return Result;
+            if (!IsValid(target)) return Result;
 
             CalculateHeal();
+            var healed = Healed(target);
 
             Context.Flows.CheckRejection(
                 history: Initial,
                 contextProvider: (history, collected) => new RejectionContext(
                     history,
-                    collected,
-                    Action,
-                    CalculationInterrupts,
-                    Calculated
+                    Result with { Healed = healed },
+                    collected
                 ),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    CalculationInterrupts,
-                    Calculated,
-                    rejection,
-                    rejectedID
-                )
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            return Result with { Healed = healed };
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new FailedResult(Action, FailedReason.NoTarget);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result CheckCondition()
+        private bool IsValid([NotNull] Entity target)
         {
-            // そもそも体力という概念がないものには、ダメージが与えられない。
-            if (Target.Vitality == null)
-            {
-                return new FailedResult(Action, FailedReason.NoVitality);
-            }
+            if (target.Vitality == null) return false;
+            if (target.Vitality.IsDead) return false;
 
-            // 相手が生きてなければダメージは与えられないよ。仕方ないね。
-            if (Target.Vitality.IsDead)
-            {
-                return new FailedResult(Action, FailedReason.TargetDead);
-            }
-
-            return null;
+            return true;
         }
 
         private void CalculateHeal()
         {
             var effectors = Context.Finder.GetAllComponents<ICalculator>(Initial.World).Sort();
 
-            CalculationInterrupts = ValueList<Interrupt<Calculation>>.Empty;
+            var calculations = ValueList<Interrupt<Calculation>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.InstantHealCalculations(Initial, Action, CalculationInterrupts);
+                var context = new CalculationContext(Initial, Result, calculations);
+                var interrupts = effector.Calculations(context);
                 if (interrupts == null) continue;
-                CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
+                calculations = calculations.AddRange(interrupts);
             }
 
-            Calculated = Action.Heal;
-            foreach (var interrupt in CalculationInterrupts)
+            var heal = Action.Heal;
+            foreach (var calculation in calculations)
             {
-                if (interrupt.Content is ReduceCalculation reduceEffect)
+                if (calculation.Content.Reduction != null)
                 {
-                    Calculated = reduceEffect.HealReduction.Caused(Calculated);
+                    heal = calculation.Content.Reduction.Caused(heal);
                 }
             }
+
+            Result = Result with
+            {
+                Calculations = calculations,
+                Calculated = heal,
+            };
         }
 
         [NotNull]
-        private Result Succeed()
+        private Entity Healed([NotNull] Entity target)
         {
-            return new SucceedResult(Action, CalculationInterrupts, Calculated);
+            return target with { Vitality = Result.Calculated.Caused(target.Vitality) };
         }
     }
 }

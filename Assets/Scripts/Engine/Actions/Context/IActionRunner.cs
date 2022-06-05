@@ -60,9 +60,6 @@ namespace RineaR.MadeHighlow.Actions
         ReactedResult<PayCard.Result> PayCard([NotNull] IHistory history, [NotNull] PayCard.Action action);
 
         [NotNull]
-        ReactedResult<SupplyCard.Result> SupplyCard([NotNull] IHistory history, [NotNull] SupplyCard.Action action);
-
-        [NotNull]
         ReactedResult<ReserveCommand.Result> ReserveCommand(
             [NotNull] IHistory history,
             [NotNull] ReserveCommand.Action action

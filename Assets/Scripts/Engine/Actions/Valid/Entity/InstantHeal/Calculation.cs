@@ -1,4 +1,7 @@
 ﻿namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
-    public abstract record Calculation;
+    public record Calculation
+    {
+        public HealReduction Reduction { get; init; }
+    }
 }

@@ -14,5 +14,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         public KnockBack Calculated { get; init; }
         public Event<ReactedResult<EntityFly.Result>> EntityFly { get; init; }
         public Rejection Rejection { get; init; }
+
+        public bool IsConfirmed { get; init; }
     }
 }

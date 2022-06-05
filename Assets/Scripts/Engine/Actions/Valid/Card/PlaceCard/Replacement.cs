@@ -2,5 +2,5 @@
 
 namespace RineaR.MadeHighlow.Actions.PlaceCard
 {
-    public record CardReplacement([NotNull] CardID ReplacedID);
+    public record Replacement([NotNull] CardID CanReplace);
 }

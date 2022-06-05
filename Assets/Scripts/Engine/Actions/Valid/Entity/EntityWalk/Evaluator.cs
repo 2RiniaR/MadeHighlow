@@ -22,15 +22,11 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var actor = FindActor();
 
-            result = FindActor();
-            if (result != null) return result;
+            if (actor == null) return Result;
 
-            result = FollowRoute();
-            if (result != null) return result;
-
-            WrapProcess();
+            FollowRoute();
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -40,50 +36,28 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
 
             if (Result.Rejection != null) return Result;
 
-            return Succeed();
+            return Result with { IsConfirmed = true };
         }
 
         [CanBeNull]
-        private Result FindActor()
+        private Entity FindActor()
         {
-            Target = Context.Finder.FindEntity(Simulating.World, Action.ActorID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Simulating.World, Action.ActorID);
         }
 
-        [CanBeNull]
-        private Result FollowRoute()
+        private void FollowRoute()
         {
-            EntityStepEvents = ValueList<Event<ReactedResult<EntityStep.SucceedResult>>>.Empty;
+            var events = ValueList<Event<ReactedResult<EntityStep.Result>>>.Empty;
             foreach (var step in Action.Route.Steps)
             {
-                var result = Context.Actions.EntityStep(
-                    Simulating,
-                    new EntityStep.Action(Action.ActorID, step.Direction, Action.Available)
-                );
-                var succeedResult = result.BodyAs<EntityStep.SucceedResult>();
-                if (succeedResult == null) break;
+                var action = new EntityStep.Action(Action.ActorID, step.Direction, Action.Available);
+                var result = Context.Actions.EntityStep(Simulating, action);
 
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                EntityStepEvents = EntityStepEvents.Add(succeedEvent);
+                Simulating = Simulating.Appended(result, out var @event);
+                events = events.Add(@event);
             }
 
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(EntityStepEvents);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { EntitySteps = events };
         }
     }
 }

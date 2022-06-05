@@ -2,9 +2,9 @@
 
 namespace RineaR.MadeHighlow.Actions.EntityStep
 {
-    public record RejectionContext(
+    public record CostEffectContext(
         [NotNull] IHistory History,
         [NotNull] Result Result,
-        [NotNull] ValueList<Interrupt> Collected
+        [NotNull] ValueList<Interrupt<CostEffect>> Collected
     );
 }

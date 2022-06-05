@@ -19,116 +19,74 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
-
-        [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private ValueList<Interrupt<Calculation>> CalculationInterrupts { get; set; }
-        [CanBeNull] private KnockBack Calculated { get; set; }
-
-        [CanBeNull] private Event<ReactedResult<EntityFly.SucceedResult>> EntityFlyEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
 
             CalculateKnockBack();
-
-            result = Fly();
-            if (result != null) return result;
-
-            WrapProcess();
+            Fly();
 
             Context.Flows.CheckRejection(
                 history: Initial,
-                contextProvider: (history, collected) => new RejectionContext(
-                    history,
-                    collected,
-                    Action,
-                    CalculationInterrupts,
-                    Calculated,
-                    Process
-                ),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    CalculationInterrupts,
-                    Calculated,
-                    Process,
-                    rejection,
-                    rejectedID
-                )
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            return Result with { IsConfirmed = true };
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
         private void CalculateKnockBack()
         {
             var effectors = Context.Finder.GetAllComponents<ICalculator>(Initial.World).Sort();
 
-            CalculationInterrupts = ValueList<Interrupt<Calculation>>.Empty;
+            var calculations = ValueList<Interrupt<Calculation>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.KnockBackCalculations(Initial, Action, CalculationInterrupts);
+                var context = new CalculationContext(Simulating, Result, calculations);
+                var interrupts = effector.Calculations(context);
                 if (interrupts == null) continue;
-                CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
+                calculations = calculations.AddRange(interrupts);
             }
 
-            Calculated = Action.KnockBack;
-            foreach (var interrupt in CalculationInterrupts)
+            var knockBack = Action.KnockBack;
+            foreach (var calculation in calculations)
             {
-                if (interrupt.Content is Reduction reduction)
+                if (calculation.Content.Reduction != null)
                 {
-                    Calculated = reduction.Value.Caused(Calculated);
+                    knockBack = calculation.Content.Reduction.Caused(knockBack);
                 }
             }
-        }
 
-        [CanBeNull]
-        private Result Fly()
-        {
-            var steps = Enumerable.Range(0, Calculated.Distance.Value)
-                .Select(_ => new Step(Calculated.Direction))
-                .ToValueList();
-            var result = Context.Actions.EntityFly(Simulating, new EntityFly.Action(Action.TargetID, new Route(steps)));
-            var succeedResult = result.BodyAs<EntityFly.SucceedResult>();
-            if (succeedResult == null)
+            Result = Result with
             {
-                return new EntityFlyFailedResult(Action, CalculationInterrupts, Calculated, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            EntityFlyEvent = succeedEvent;
-
-            return null;
+                Calculations = calculations,
+                Calculated = knockBack,
+            };
         }
 
-        private void WrapProcess()
+        private void Fly()
         {
-            Process = new Process(EntityFlyEvent);
-        }
+            var steps = Enumerable.Range(0, Result.Calculated.Distance.Value)
+                .Select(_ => new Step(Result.Calculated.Direction))
+                .ToValueList();
 
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, CalculationInterrupts, Calculated, Process);
+            var action = new EntityFly.Action(Action.TargetID, new Route(steps));
+            var result = Context.Actions.EntityFly(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { EntityFly = @event };
         }
     }
 }

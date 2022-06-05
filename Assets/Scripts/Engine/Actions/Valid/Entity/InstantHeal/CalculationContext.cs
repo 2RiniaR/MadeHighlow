@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.InstantDamage
+namespace RineaR.MadeHighlow.Actions.InstantHeal
 {
     public record CalculationContext(
         [NotNull] IHistory History,

@@ -12,9 +12,17 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
 
         public ValueList<Interrupt<CostEffect>> CostEffects { get; init; }
         public Cost Expended { get; init; }
-        public ValueList<Event<MoveEntity.Result>> ClimbMoveEvents { get; init; }
-        public Event<MoveEntity.Result> ShiftMoveEvent { get; init; }
-        public ValueList<Event<MoveEntity.Result>> FallMoveEvents { get; init; }
+
+        public Distance ClimbDistance { get; init; }
+        public ValueList<Event<MoveEntity.Result>> ClimbMoves { get; init; }
+
+        public Event<MoveEntity.Result> ShiftMove { get; init; }
+
+        public Distance FallDistance { get; init; }
+        public ValueList<Event<MoveEntity.Result>> FallMoves { get; init; }
+
         public Rejection Rejection { get; init; }
+
+        public bool IsConfirmed { get; init; }
     }
 }

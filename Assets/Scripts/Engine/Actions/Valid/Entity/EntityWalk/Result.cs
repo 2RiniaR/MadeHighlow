@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.EntityWalk
 
         public ValueList<Event<ReactedResult<EntityStep.Result>>> EntitySteps { get; init; }
         public Rejection Rejection { get; init; }
+        public bool IsConfirmed { get; init; }
     }
 }

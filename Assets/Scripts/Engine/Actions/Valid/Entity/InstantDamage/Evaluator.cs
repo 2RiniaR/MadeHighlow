@@ -4,18 +4,22 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
 {
     public class Evaluator
     {
+        [NotNull]
+        public delegate CalculationContext ContextProvider(
+            [NotNull] IHistory history,
+            [NotNull] [ItemNotNull] ValueList<Interrupt<Calculation>> collected
+        );
+
         public Evaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, Action action)
         {
             Initial = initial;
             Context = context;
             Action = action;
-            Simulating = Initial;
             Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
-        [NotNull] private IHistory Simulating { get; }
         [NotNull] private Action Action { get; }
         [NotNull] private Result Result { get; set; }
 
@@ -28,17 +32,21 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
             if (!IsValid(target)) return Result;
 
             CalculateDamage();
-            DamageEntity(target);
+            var damaged = Damaged(target);
 
             Context.Flows.CheckRejection(
                 history: Initial,
-                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                contextProvider: (history, collected) => new RejectionContext(
+                    history,
+                    Result with { Damaged = damaged },
+                    collected
+                ),
                 onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
 
             if (Result.Rejection != null) return Result;
 
-            return Result with { Confirmed = true };
+            return Result with { Damaged = damaged };
         }
 
         [CanBeNull]
@@ -59,28 +67,35 @@ namespace RineaR.MadeHighlow.Actions.InstantDamage
         {
             var effectors = Context.Finder.GetAllComponents<ICalculator>(Initial.World).Sort();
 
-            CalculationInterrupts = ValueList<Interrupt<Calculation>>.Empty;
+            var calculations = ValueList<Interrupt<Calculation>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.InstantDamageCalculations(Initial, Action, CalculationInterrupts);
+                var context = new CalculationContext(Initial, Result, calculations);
+                var interrupts = effector.Calculations(context);
                 if (interrupts == null) continue;
-                CalculationInterrupts = CalculationInterrupts.AddRange(interrupts);
+                calculations = calculations.AddRange(interrupts);
             }
 
-            Calculated = Action.Damage;
-            foreach (var interrupt in CalculationInterrupts)
+            var damage = Action.Damage;
+            foreach (var calculation in calculations)
             {
-                if (interrupt.Content is ReduceCalculation reduceEffect)
+                if (calculation.Content.Reduction != null)
                 {
-                    Calculated = reduceEffect.DamageReduction.Caused(Calculated);
+                    damage = calculation.Content.Reduction.Caused(damage);
                 }
             }
+
+            Result = Result with
+            {
+                Calculations = calculations,
+                Calculated = damage,
+            };
         }
 
-        private void DamageEntity([NotNull] Entity target)
+        [NotNull]
+        private Entity Damaged([NotNull] Entity target)
         {
-            var damagedTarget = target with { Vitality = Result.Calculated.Caused(target.Vitality) };
-            Result = Result with { Damaged = damagedTarget };
+            return target with { Vitality = Result.Calculated.Caused(target.Vitality) };
         }
     }
 }

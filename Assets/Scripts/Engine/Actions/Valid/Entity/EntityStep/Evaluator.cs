@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.EntityStep
 {
@@ -17,224 +18,158 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-        [NotNull] private Result Result { get; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull] private static readonly Cost ClimbCost = new(5);
         [NotNull] private static readonly Cost HorizontalCost = new(1);
         [NotNull] private static readonly Cost FallCost = new(0);
 
-        [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Entity SteppingTarget { get; set; }
-        [CanBeNull] private GroundElevation DestinationElevation { get; set; }
-
-        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> ClimbMoveEvents { get; set; }
-        [CanBeNull] private Event<MoveEntity.SucceedResult> ShiftMoveEvent { get; set; }
-        [CanBeNull] private ValueList<Event<MoveEntity.SucceedResult>> FallMoveEvents { get; set; }
-        [CanBeNull] private Process Process { get; set; }
-
-        [CanBeNull] private ValueList<Interrupt<CostEffect>> CostEffectInterrupts { get; set; }
-        [CanBeNull] private Cost ExpendedCost { get; set; }
-
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var actor = FindActor();
 
-            result = FindActor();
-            if (result != null) return result;
+            if (actor == null) return Result;
 
-            result = FindDestination();
-            if (result != null) return result;
+            var tile = FindDestinationTile(actor);
 
-            result = MoveClimb();
-            if (result != null) return result;
+            if (tile == null || tile.Elevation is not GroundElevation ground || ground.Placeable == false)
+                return Result;
 
-            result = MoveShift();
-            if (result != null) return result;
+            MoveClimb(actor, ground);
+            actor = Result.ClimbDistance.Value == 0 ? actor : Result.ClimbMoves.Last().Content.Moved;
 
-            result = MoveFall();
-            if (result != null) return result;
+            if (actor == null) return Result;
 
-            WrapProcess();
+            MoveShift();
+            actor = Result.ShiftMove.Content.Moved;
 
-            result = CheckCostIsEnough();
-            if (result != null) return result;
+            if (actor == null) return Result;
+
+            MoveFall(actor, ground);
+            actor = Result.FallDistance.Value == 0 ? actor : Result.FallMoves.Last().Content.Moved;
+
+            if (actor == null) return Result;
+
+            CheckCostIsEnough();
+
+            if (Action.Available < Result.Expended) return Result;
 
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(
-                    history,
-                    collected,
-                    Action,
-                    Process,
-                    CostEffectInterrupts,
-                    ExpendedCost
-                ),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    Process,
-                    CostEffectInterrupts,
-                    ExpendedCost,
-                    rejection,
-                    rejectedID
-                )
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            return Result with { IsConfirmed = true };
         }
 
         [CanBeNull]
-        private Result FindActor()
+        private Entity FindActor()
         {
-            Target = Context.Finder.FindEntity(Simulating.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Simulating.World, Action.ActorID);
         }
 
         [CanBeNull]
-        private Result FindDestination()
+        private Tile FindDestinationTile([NotNull] Entity actor)
         {
-            var position = Target.Position3D.To2D().MoveTo(Action.Direction, new Distance(1));
-            var destination = position.GetTile(Simulating.World);
-
-            if (destination == null ||
-                destination.Elevation is not GroundElevation groundElevation ||
-                groundElevation.Placeable == false)
-            {
-                return new DestinationNotFoundResult(Action);
-            }
-
-            DestinationElevation = groundElevation;
-            return null;
+            var position = actor.Position3D.To2D().MoveTo(Action.Direction, new Distance(1));
+            return Context.Finder.FindTile(Simulating.World, position);
         }
 
-        [CanBeNull]
-        private Result MoveClimb()
+        private void MoveClimb([NotNull] Entity actor, [NotNull] GroundElevation ground)
         {
-            var distance = new Distance(DestinationElevation.Height.Value - Target.Position3D.Z.Value);
-            ClimbMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
+            Result = Result with { ClimbDistance = new Distance(ground.Height.Value - actor.Position3D.Z.Value) };
 
-            for (var i = 0; i < distance.Value; i++)
+            var events = ValueList<Event<MoveEntity.Result>>.Empty;
+            for (var i = 0; i < Result.ClimbDistance.Value; i++)
             {
-                var result = Context.Actions.MoveEntity(
-                    Simulating,
-                    new MoveEntity.Action(Action.TargetID, Direction3D.ZPositive)
-                );
-                if (result is not MoveEntity.SucceedResult succeedResult)
-                {
-                    return new ClimbFailedResult(Action, ClimbMoveEvents, result);
-                }
+                var action = new MoveEntity.Action(Action.ActorID, Direction3D.ZPositive);
+                var result = Context.Actions.MoveEntity(Simulating, action);
+                Simulating = Simulating.Appended(result, out var @event);
+                events = events.Add(@event);
 
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                ClimbMoveEvents = ClimbMoveEvents.Add(succeedEvent);
-                SteppingTarget = succeedResult.Process.PositionEntityEvent.Content.Positioned;
+                if (result.Moved == null) break;
             }
 
-            return null;
+            Result = Result with { ClimbMoves = events };
         }
 
-        [CanBeNull]
-        private Result MoveShift()
+        private void MoveShift()
         {
-            var result = Context.Actions.MoveEntity(
-                Simulating,
-                new MoveEntity.Action(Action.TargetID, Action.Direction.To3D)
-            );
-            if (result is not MoveEntity.SucceedResult succeedResult)
+            var action = new MoveEntity.Action(Action.ActorID, Action.Direction.To3D);
+            var result = Context.Actions.MoveEntity(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { ShiftMove = @event };
+        }
+
+        private void MoveFall([NotNull] Entity actor, [NotNull] GroundElevation ground)
+        {
+            Result = Result with { FallDistance = new Distance(actor.Position3D.Z.Value - ground.Height.Value) };
+
+            var events = ValueList<Event<MoveEntity.Result>>.Empty;
+            for (var i = 0; i < Result.FallDistance.Value; i++)
             {
-                return new ShiftFailedResult(Action, ClimbMoveEvents, result);
+                var action = new MoveEntity.Action(Action.ActorID, Direction3D.ZNegative);
+                var result = Context.Actions.MoveEntity(Simulating, action);
+                Simulating = Simulating.Appended(result, out var @event);
+                events = events.Add(@event);
+
+                if (result.Moved == null) break;
             }
 
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            ShiftMoveEvent = succeedEvent;
-            SteppingTarget = succeedResult.Process.PositionEntityEvent.Content.Positioned;
-
-            return null;
-        }
-
-        [CanBeNull]
-        private Result MoveFall()
-        {
-            var distance = new Distance(SteppingTarget.Position3D.Z.Value - DestinationElevation.Height.Value);
-            FallMoveEvents = ValueList<Event<MoveEntity.SucceedResult>>.Empty;
-
-            for (var i = 0; i < distance.Value; i++)
-            {
-                var result = Context.Actions.MoveEntity(
-                    Simulating,
-                    new MoveEntity.Action(Action.TargetID, Direction3D.ZPositive)
-                );
-                if (result is not MoveEntity.SucceedResult succeedResult)
-                {
-                    return new FallFailedResult(Action, ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents, result);
-                }
-
-                Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-                FallMoveEvents = FallMoveEvents.Add(succeedEvent);
-                SteppingTarget = succeedResult.Process.PositionEntityEvent.Content.Positioned;
-            }
-
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(ClimbMoveEvents, ShiftMoveEvent, FallMoveEvents);
+            Result = Result with { FallMoves = events };
         }
 
         [NotNull]
-        private static Cost BaseCost([NotNull] Process process)
+        private Cost BaseCost()
         {
-            return ClimbCost * process.ClimbMoveEvents.Count + HorizontalCost + FallCost * process.FallMoveEvents.Count;
+            return ClimbCost * Result.ClimbDistance.Value + HorizontalCost + FallCost * Result.FallDistance.Value;
         }
 
-        [CanBeNull]
-        private Result CheckCostIsEnough()
+        private void CheckCostIsEnough()
         {
-            CostEffectInterrupts = ValueList<Interrupt<CostEffect>>.Empty;
-            var effectors = Context.Finder.GetAllComponents<ICostEffector>(Simulating.World).Sort();
+            var effectors = Context.Finder.GetAllComponents<ICostEffector>(Initial.World).Sort();
+
+            var costEffects = ValueList<Interrupt<CostEffect>>.Empty;
             foreach (var effector in effectors)
             {
-                var interrupts = effector.EntityStepCostEffects(Simulating, Action, Process, CostEffectInterrupts);
+                var context = new CostEffectContext(Initial, Result, costEffects);
+                var interrupts = effector.CostEffects(context);
                 if (interrupts == null) continue;
-                CostEffectInterrupts = CostEffectInterrupts.AddRange(interrupts);
+                costEffects = costEffects.AddRange(interrupts);
             }
 
-            CostEffectInterrupts = CostEffectInterrupts.Sort();
-            ExpendedCost = BaseCost(Process);
-            foreach (var costInterrupt in CostEffectInterrupts)
+            costEffects = costEffects.Sort();
+
+            var cost = BaseCost();
+            foreach (var costEffect in costEffects)
             {
-                if (costInterrupt.Content is CostAdditionEffect addition)
+                if (costEffect.Content.AdditionValue != null)
                 {
-                    ExpendedCost += addition.Value;
+                    cost += costEffect.Content.AdditionValue.Value;
+                    continue;
                 }
-                else if (costInterrupt.Content is CostReductionEffect reduction)
+
+                if (costEffect.Content.ReductionValue != null)
                 {
-                    ExpendedCost -= reduction.Value;
+                    cost -= costEffect.Content.ReductionValue.Value;
+                    continue;
                 }
-                else if (costInterrupt.Content is CostOverwriteEffect overwrite)
+
+                if (costEffect.Content.OverwriteValue != null)
                 {
-                    ExpendedCost = overwrite.Value;
+                    cost = costEffect.Content.OverwriteValue;
                 }
             }
 
-            if (Action.Available > ExpendedCost)
+            Result = Result with
             {
-                return new CostOverResult(Action, Process, CostEffectInterrupts, ExpendedCost);
-            }
-
-            return null;
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process, CostEffectInterrupts, ExpendedCost);
+                CostEffects = costEffects,
+                Expended = cost,
+            };
         }
     }
 }

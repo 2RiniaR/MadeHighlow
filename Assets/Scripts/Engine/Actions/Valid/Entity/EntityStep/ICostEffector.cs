@@ -6,11 +6,6 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
     {
         [CanBeNull]
         [ItemNotNull]
-        public ValueList<Interrupt<CostEffect>> EntityStepCostEffects(
-            [NotNull] IHistory session,
-            [NotNull] Action action,
-            [NotNull] Process process,
-            [NotNull] [ItemNotNull] ValueList<Interrupt<CostEffect>> collected
-        );
+        public ValueList<Interrupt<CostEffect>> CostEffects([NotNull] CostEffectContext context);
     }
 }
