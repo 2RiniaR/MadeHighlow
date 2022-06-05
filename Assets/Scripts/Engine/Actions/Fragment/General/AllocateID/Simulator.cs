@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
         [NotNull]
         public World Simulate()
         {
-            return Initial with { LatestAllocatedID = Result.Allocated };
+            return Initial with { NextID = ID.From(Result.Allocated.InternalValue + 1) };
         }
     }
 }

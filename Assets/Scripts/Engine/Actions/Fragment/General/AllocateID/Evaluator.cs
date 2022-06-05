@@ -13,8 +13,7 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
 
         public Result Evaluate()
         {
-            var latestID = Initial.World.LatestAllocatedID;
-            return new Result(ID.From(latestID.InternalValue + 1));
+            return new Result(Initial.World.NextID);
         }
     }
 }

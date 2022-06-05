@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.CreatePlayer
 {
@@ -16,8 +15,9 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
-        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
+
+        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Result Result { get; set; }
 
         [NotNull]
@@ -25,15 +25,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         {
             AllocateID();
             Register();
-
-            if (Result.RegisterPlayer.Content.Registered == null) return Result;
-
-            CreateComponents();
-
-            if (Result.CreateComponents.Any(@event => @event.Content.Created == null)) return Result;
-
-            Confirm();
-
+            if (!TryCreateComponents()) return Result with { Created = null };
             return Result;
         }
 
@@ -49,31 +41,28 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
             var action = new RegisterPlayer.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
             var result = new RegisterPlayer.Evaluator(Context, Simulating, action).Evaluate();
             Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { RegisterPlayer = @event };
+            Result = Result with { Created = @event.Content.Registered };
         }
 
-        private void CreateComponents()
+        private bool TryCreateComponents()
         {
-            var cardID = Result.RegisterPlayer.Content.Registered.PlayerID;
             Result = Result with { CreateComponents = ValueList<Event<CreateComponent.Result>>.Empty };
             foreach (var component in Action.InitialProps.Components)
             {
-                var action = new CreateComponent.Action(cardID, component);
+                var action = new CreateComponent.Action(Result.Created.PlayerID, component);
                 var result = Context.Actions.CreateComponent(Simulating, action);
-                Simulating = Simulating.Appended(result, out var @event);
-                Result = Result with { CreateComponents = Result.CreateComponents.Add(@event) };
-            }
-        }
 
-        private void Confirm()
-        {
-            Result = Result with
-            {
-                Created = Result.RegisterPlayer.Content.Registered with
+                if (result.Created == null) return false;
+
+                Simulating = Simulating.Appended(result, out var @event);
+                Result = Result with
                 {
-                    Components = Result.CreateComponents.Select(@event => @event.Content.Created),
-                },
-            };
+                    CreateComponents = Result.CreateComponents.Add(@event),
+                    Created = Result.Created with { Components = Result.Created.Components.Add(result.Created) },
+                };
+            }
+
+            return true;
         }
     }
 }

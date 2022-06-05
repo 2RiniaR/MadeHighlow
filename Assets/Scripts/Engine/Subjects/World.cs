@@ -3,7 +3,7 @@
 namespace RineaR.MadeHighlow
 {
     public record World(
-        ID LatestAllocatedID,
+        ID NextID,
         [NotNull] [ItemNotNull] ValueList<Player> Players,
         [NotNull] [ItemNotNull] ValueList<Tile> Tiles,
         [NotNull] [ItemNotNull] ValueList<Entity> Entities,

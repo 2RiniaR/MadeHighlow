@@ -10,7 +10,6 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         }
 
         public Event<AllocateID.Result> AllocateID { get; init; }
-        public Event<RegisterPlayer.Result> RegisterPlayer { get; init; }
         public ValueList<Event<CreateComponent.Result>> CreateComponents { get; init; }
         public Player Created { get; init; }
     }

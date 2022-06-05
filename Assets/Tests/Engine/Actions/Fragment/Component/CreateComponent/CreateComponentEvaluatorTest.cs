@@ -1,162 +1,125 @@
 ﻿using Moq;
 using NUnit.Framework;
-using RineaR.MadeHighlow.Actions.RegisterComponent;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public class CreateComponentEvaluatorTest
     {
+        private static void SetupAllocateID(
+            Mock<IEvaluationContext> contextMock,
+            Mock<IHistory> historyMock,
+            IHistory nextHistory
+        )
+        {
+            contextMock.Setup(context => context.Actions.AllocateID(It.IsAny<IHistory>())).Returns(AllocateID.Content);
+            historyMock.SetupNextEvent(AllocateID, nextHistory);
+        }
+
+        private static void SetupNoRejection(Mock<IEvaluationContext> contextMock)
+        {
+            contextMock.Setup(
+                context => context.Flows.CheckRejection(
+                    It.IsAny<IHistory>(),
+                    It.IsAny<ContextProvider<RejectionContext>>(),
+                    It.IsAny<RejectHandler>()
+                )
+            );
+        }
+
+        private static void SetupParentExist(Mock<IEvaluationContext> contextMock)
+        {
+            contextMock.Setup(context => context.Finder.FindAttachable(It.IsAny<World>(), Parent.PlayerID))
+                .Returns(Parent);
+        }
+
+        private static void SetupParentNotExist(Mock<IEvaluationContext> contextMock)
+        {
+            contextMock.Setup(context => context.Finder.FindAttachable(It.IsAny<World>(), Parent.PlayerID))
+                .Returns(null as IAttachable);
+        }
+
+        private static void SetupRejection(Mock<IEvaluationContext> contextMock, Rejection rejection)
+        {
+            contextMock.Setup(
+                    context => context.Flows.CheckRejection(
+                        It.IsAny<IHistory>(),
+                        It.IsAny<ContextProvider<RejectionContext>>(),
+                        It.IsAny<RejectHandler>()
+                    )
+                )
+                .Callback(
+                    (IHistory _, ContextProvider<RejectionContext> _, RejectHandler rejectHandler) =>
+                        rejectHandler(rejection)
+                );
+        }
+
+        private static Player Parent { get; } = PlayerGenerator.Empty with { ID = ID.From(1) };
+
+        private static Component InitialProps { get; } = ComponentGenerator.Empty;
+        private static ID ComponentID { get; } = ID.From(2);
+
+        private static Component RejectedComponent { get; } = ComponentGenerator.Empty with { ID = ID.From(3) };
+        private static Rejection Rejection { get; } = new(RejectedComponent.ComponentID);
+
+        private static EventID BeforeEventID { get; } = new(ID.From(1));
+        private static EventID AllocateIDEventID { get; } = new(ID.From(2));
+
+        private static Event<AllocateID.Result> AllocateID { get; } = new(
+            AllocateIDEventID,
+            BeforeEventID,
+            new AllocateID.Result(ComponentID)
+        );
+
         [Test]
         public void Evaluate_Valid_ReturnsSucceed()
         {
             var contextMock = new Mock<IEvaluationContext>();
+            SetupParentExist(contextMock);
+            SetupNoRejection(contextMock);
             var context = contextMock.Object;
 
-            var stubPlayer = PlayerGenerator.Empty with { ID = ID.From(1) };
-            var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
-            var stubComponent = ComponentGenerator.Empty;
-            var action = new Action(stubPlayer.PlayerID, stubComponent);
+            var initialHistoryMock = new Mock<IHistory>();
+            SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
+            var initialHistory = initialHistoryMock.Object;
 
-            var allocateIDEvent = new Event<AllocateID.Result>(
-                new EventID(ID.From(2)),
-                new EventID(ID.From(1)),
-                new AllocateID.Result(ID.From(2))
-            );
-            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Content.Allocated };
-
-            var registerComponentEvent = new Event<RegisterComponent.SucceedResult>(
-                new EventID(ID.From(3)),
-                new EventID(ID.From(2)),
-                new RegisterComponent.SucceedResult(
-                    RegisterComponentActionGenerator.Empty,
-                    stubComponent with { ID = ID.From(2), AttachedID = stubPlayer.PlayerID }
-                )
-            );
-            var registerComponentWorld = allocateIDWorld with
-            {
-                Players = new ValueList<Player>(
-                    stubPlayer with
-                    {
-                        Components = new ValueList<Component>(
-                            stubComponent with { ID = ID.From(2), AttachedID = stubPlayer.PlayerID }
-                        ),
-                    }
-                ),
-            };
-
-            var registerComponentHistory = new Mock<IHistory>();
-            registerComponentHistory.SetupWorld(registerComponentWorld);
-
-            var allocateIDHistory = new Mock<IHistory>();
-            allocateIDHistory.SetupWorld(allocateIDWorld);
-            allocateIDHistory.SetupNextEvent(registerComponentEvent, registerComponentHistory.Object);
-
-            var initialHistory = new Mock<IHistory>();
-            initialHistory.SetupWorld(stubCurrentWorld);
-            initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
-
-            var evaluator = new Evaluator(context, initialHistory.Object, action);
+            var action = new Action(Parent.PlayerID, InitialProps);
+            var evaluator = new Evaluator(context, initialHistory, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new SucceedResult(
-                action,
-                new Process(allocateIDEvent, registerComponentEvent),
-                ValueList<Interrupt<RejectionContext>>.Empty
-            );
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        private record RejectorComponent(ID ID, IAttachableID AttachedID, Duration Duration) : Component(
-            ID,
-            AttachedID,
-            Duration
-        ), ICreateComponentRejector
-        {
-            public Priority Priority { get; } = new(0);
-
-            public Interrupt<RejectionContext> CreateComponentRejection(
-                IHistory history,
-                Action action,
-                Process process,
-                ValueList<Interrupt<RejectionContext>> collected
-            )
+            var expected = new Result(action)
             {
-                return new Interrupt<RejectionContext>(new Priority(0), ComponentID, new RejectionContext());
-            }
+                AllocateID = AllocateID,
+                Rejection = null,
+                Created = InitialProps with { ID = ComponentID, AttachedID = Parent.PlayerID },
+            };
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
         public void Evaluate_Rejected_ReturnsFailed()
         {
             var contextMock = new Mock<IEvaluationContext>();
+            SetupParentExist(contextMock);
+            SetupRejection(contextMock, Rejection);
             var context = contextMock.Object;
 
-            var stubPlayer = PlayerGenerator.Empty with
-            {
-                ID = ID.From(1),
-                Components = new ValueList<Component>(
-                    new RejectorComponent(ID.From(2), new PlayerID(ID.From(1)), new UnlimitedDuration())
-                ),
-            };
-            var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
-            var stubComponent = ComponentGenerator.Empty;
-            var action = new Action(stubPlayer.PlayerID, stubComponent);
+            var initialHistoryMock = new Mock<IHistory>();
+            SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
+            var initialHistory = initialHistoryMock.Object;
 
-            var allocateIDEvent = new Event<AllocateID.Result>(
-                new EventID(ID.From(2)),
-                new EventID(ID.From(1)),
-                new AllocateID.Result(ID.From(2))
-            );
-            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Content.Allocated };
-
-            var registerComponentEvent = new Event<RegisterComponent.SucceedResult>(
-                new EventID(ID.From(3)),
-                new EventID(ID.From(2)),
-                new RegisterComponent.SucceedResult(
-                    RegisterComponentActionGenerator.Empty,
-                    stubComponent with { ID = ID.From(2), AttachedID = stubPlayer.PlayerID }
-                )
-            );
-            var registerComponentWorld = allocateIDWorld with
-            {
-                Players = new ValueList<Player>(
-                    stubPlayer with
-                    {
-                        Components = new ValueList<Component>(
-                            stubComponent with { ID = ID.From(2), AttachedID = stubPlayer.PlayerID }
-                        ),
-                    }
-                ),
-            };
-
-            var registerComponentHistory = new Mock<IHistory>();
-            registerComponentHistory.SetupWorld(registerComponentWorld);
-
-            var allocateIDHistory = new Mock<IHistory>();
-            allocateIDHistory.SetupWorld(allocateIDWorld);
-            allocateIDHistory.SetupNextEvent(registerComponentEvent, registerComponentHistory.Object);
-
-            var initialHistory = new Mock<IHistory>();
-            initialHistory.SetupWorld(stubCurrentWorld);
-            initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
-
-            var evaluator = new Evaluator(context, initialHistory.Object, action);
+            var action = new Action(Parent.PlayerID, InitialProps);
+            var evaluator = new Evaluator(context, initialHistory, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new RejectedResult(
-                action,
-                new Process(allocateIDEvent, registerComponentEvent),
-                new ValueList<Interrupt<RejectionContext>>(
-                    new Interrupt<RejectionContext>(
-                        new Priority(0),
-                        stubPlayer.Components[0].ComponentID,
-                        new RejectionContext()
-                    )
-                ),
-                stubPlayer.Components[0].ComponentID
-            );
+            var expected = new Result(action)
+            {
+                AllocateID = AllocateID,
+                Rejection = Rejection,
+                Created = null,
+            };
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -164,60 +127,25 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         public void Evaluate_RegisterFailed_ReturnsFailed()
         {
             var contextMock = new Mock<IEvaluationContext>();
+            SetupParentNotExist(contextMock);
+            SetupNoRejection(contextMock);
             var context = contextMock.Object;
 
-            var stubPlayer = PlayerGenerator.Empty with { ID = ID.From(1) };
-            var stubCurrentWorld = WorldGenerator.Empty with { Players = new ValueList<Player>(stubPlayer) };
-            var stubComponent = ComponentGenerator.Empty;
-            var action = new Action(stubPlayer.PlayerID, stubComponent);
+            var initialHistoryMock = new Mock<IHistory>();
+            SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
+            var initialHistory = initialHistoryMock.Object;
 
-            var allocateIDEvent = new Event<AllocateID.Result>(
-                new EventID(ID.From(2)),
-                new EventID(ID.From(1)),
-                new AllocateID.Result(ID.From(2))
-            );
-            var allocateIDWorld = stubCurrentWorld with { LatestAllocatedID = allocateIDEvent.Content.Allocated };
-
-            var registerComponentEvent = new Event<RegisterComponent.SucceedResult>(
-                new EventID(ID.From(3)),
-                new EventID(ID.From(2)),
-                new RegisterComponent.SucceedResult(
-                    RegisterComponentActionGenerator.Empty,
-                    stubComponent with { ID = ID.From(2), AttachedID = stubPlayer.PlayerID }
-                )
-            );
-            var registerComponentWorld = allocateIDWorld with
-            {
-                Players = new ValueList<Player>(
-                    stubPlayer with
-                    {
-                        Components = new ValueList<Component>(
-                            stubComponent with { ID = ID.From(2), AttachedID = stubPlayer.PlayerID }
-                        ),
-                    }
-                ),
-            };
-
-            var registerComponentHistory = new Mock<IHistory>();
-            registerComponentHistory.SetupWorld(registerComponentWorld);
-
-            var allocateIDHistory = new Mock<IHistory>();
-            allocateIDHistory.SetupWorld(allocateIDWorld);
-            allocateIDHistory.SetupNextEvent(registerComponentEvent, registerComponentHistory.Object);
-
-            var initialHistory = new Mock<IHistory>();
-            initialHistory.SetupWorld(stubCurrentWorld);
-            initialHistory.SetupNextEvent(allocateIDEvent, allocateIDHistory.Object);
-
-            var evaluator = new Evaluator(context, initialHistory.Object, action);
+            var action = new Action(Parent.PlayerID, InitialProps);
+            var evaluator = new Evaluator(context, initialHistory, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new SucceedResult(
-                action,
-                new Process(allocateIDEvent, registerComponentEvent),
-                ValueList<Interrupt<RejectionContext>>.Empty
-            );
+            var expected = new Result(action)
+            {
+                AllocateID = null,
+                Rejection = null,
+                Created = null,
+            };
             Assert.That(actual, Is.EqualTo(expected));
         }
     }

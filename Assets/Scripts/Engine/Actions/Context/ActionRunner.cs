@@ -31,11 +31,6 @@ namespace RineaR.MadeHighlow.Actions
             return new DeleteCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public PlaceCard.Result PlaceCard(IHistory history, PlaceCard.Action action)
-        {
-            return new PlaceCard.Evaluator(Context, history, action).Evaluate();
-        }
-
         public CreateComponent.Result CreateComponent(IHistory history, CreateComponent.Action action)
         {
             return new CreateComponent.Evaluator(Context, history, action).Evaluate();
@@ -111,6 +106,15 @@ namespace RineaR.MadeHighlow.Actions
                 history,
                 action,
                 initial => new PayCard.Evaluator(Context, initial, action).Evaluate()
+            );
+        }
+
+        public ReactedResult<SupplyCard.Result> SupplyCard(IHistory history, SupplyCard.Action action)
+        {
+            return Reaction.Evaluate(
+                history,
+                action,
+                initial => new SupplyCard.Evaluator(Context, initial, action).Evaluate()
             );
         }
 

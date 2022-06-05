@@ -16,16 +16,17 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
+
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            AllocateID();
-            Register();
+            if (!IsParentExists()) return Result;
 
-            if (Result.RegisterComponent.Content.Registered == null) return Result;
+            AllocateID();
+            Create();
 
             Context.Flows.CheckRejection(
                 history: Initial,
@@ -33,11 +34,14 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
                 onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
 
-            if (Result.Rejection != null) return Result;
-
-            Confirm();
+            if (Result.Rejection != null) return Result with { Created = null };
 
             return Result;
+        }
+
+        private bool IsParentExists()
+        {
+            return Context.Finder.FindAttachable(Initial.World, Action.TargetID) != null;
         }
 
         private void AllocateID()
@@ -47,21 +51,14 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             Result = Result with { AllocateID = @event };
         }
 
-        private void Register()
+        private void Create()
         {
-            var action = new RegisterComponent.Action(
-                Action.TargetID,
-                Result.AllocateID.Content.Allocated,
-                Action.InitialStatus
-            );
-            var result = new RegisterComponent.Evaluator(Context, Simulating, action).Evaluate();
-            Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { RegisterComponent = @event };
-        }
-
-        private void Confirm()
-        {
-            Result = Result with { Created = Result.RegisterComponent.Content.Registered };
+            var created = Action.InitialStatus with
+            {
+                ID = Result.AllocateID.Content.Allocated,
+                AttachedID = Action.TargetID,
+            };
+            Result = Result with { Created = created };
         }
     }
 }

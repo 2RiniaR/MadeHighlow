@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.PlaceCard
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public class Simulator
     {

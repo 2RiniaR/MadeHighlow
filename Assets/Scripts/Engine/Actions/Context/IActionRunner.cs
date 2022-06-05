@@ -15,9 +15,6 @@ namespace RineaR.MadeHighlow.Actions
         DeleteCard.Result DeleteCard([NotNull] IHistory history, [NotNull] DeleteCard.Action action);
 
         [NotNull]
-        PlaceCard.Result PlaceCard([NotNull] IHistory history, [NotNull] PlaceCard.Action action);
-
-        [NotNull]
         CreateComponent.Result CreateComponent([NotNull] IHistory history, [NotNull] CreateComponent.Action action);
 
         [NotNull]
@@ -58,6 +55,9 @@ namespace RineaR.MadeHighlow.Actions
 
         [NotNull]
         ReactedResult<PayCard.Result> PayCard([NotNull] IHistory history, [NotNull] PayCard.Action action);
+
+        [NotNull]
+        ReactedResult<SupplyCard.Result> SupplyCard([NotNull] IHistory history, [NotNull] SupplyCard.Action action);
 
         [NotNull]
         ReactedResult<ReserveCommand.Result> ReserveCommand(

@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
-namespace RineaR.MadeHighlow.Actions.PlaceCard
+namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
     public record Result([NotNull] Action Action) : IValidResult
     {

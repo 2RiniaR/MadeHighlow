@@ -9,13 +9,13 @@ namespace RineaR.MadeHighlow.Actions.AllocateID
         public void Simulate_Always_ReturnsUpdated()
         {
             var context = new Mock<ISimulationContext>().Object;
-            var world = WorldGenerator.Empty with { LatestAllocatedID = ID.From(1) };
-            var result = new Result(ID.From(2));
+            var world = WorldGenerator.Empty with { NextID = ID.From(1) };
+            var result = new Result(ID.From(1));
             var simulator = new Simulator(context, world, result);
 
             var actual = simulator.Simulate();
 
-            var expected = world with { LatestAllocatedID = ID.From(2) };
+            var expected = world with { NextID = ID.From(2) };
             Assert.That(actual, Is.EqualTo(expected));
         }
     }

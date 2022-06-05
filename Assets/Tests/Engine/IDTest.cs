@@ -18,28 +18,6 @@ namespace RineaR.MadeHighlow
         #region Equals
 
         [Test]
-        public void Equals_NoneAndNone_ReturnsFalse()
-        {
-            var id1 = ID.None;
-            var id2 = ID.None;
-
-            var actual = id1.Equals(id2);
-
-            Assert.That(actual, Is.False);
-        }
-
-        [Test]
-        public void Equals_NoneAndValue_ReturnsFalse()
-        {
-            var id1 = ID.From(1);
-            var id2 = ID.None;
-
-            var actual = id1.Equals(id2);
-
-            Assert.That(actual, Is.False);
-        }
-
-        [Test]
         public void Equals_DifferentValue_ReturnsFalse()
         {
             var id1 = ID.From(1);
