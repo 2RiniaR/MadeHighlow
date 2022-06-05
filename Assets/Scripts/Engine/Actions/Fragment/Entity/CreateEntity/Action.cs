@@ -2,5 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
-    public record Action([NotNull] Entity InitialProps);
+    public interface IAction
+    {
+        [NotNull] Entity InitialProps { get; init; }
+    }
+
+    public record Action([NotNull] Entity InitialProps) : IAction;
 }

@@ -2,7 +2,7 @@
 
 namespace RineaR.MadeHighlow.Actions.CreatePlayer
 {
-    public record Result([NotNull] Action Action) : IResult
+    public record Result([NotNull] IAction Action) : IResult
     {
         public World Simulate(ISimulationContext context, World world)
         {

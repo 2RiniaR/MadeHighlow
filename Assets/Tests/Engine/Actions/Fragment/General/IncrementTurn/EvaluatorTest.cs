@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace RineaR.MadeHighlow.Actions.IncrementTurn
 {
-    public class IncrementTurnEvaluatorTest
+    public class EvaluatorTest
     {
         private static IHistory GenerateHistory()
         {

@@ -2,5 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteTile
 {
-    public record Action([NotNull] TileID TargetID);
+    public interface IAction
+    {
+        [NotNull] TileID TargetID { get; init; }
+    }
+
+    public record Action([NotNull] TileID TargetID) : IAction;
 }

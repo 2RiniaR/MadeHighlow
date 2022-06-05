@@ -3,7 +3,7 @@ using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
-    public record Result([NotNull] Action Action) : IValidResult
+    public record Result([NotNull] IAction Action) : IValidResult
     {
         public World Simulate(ISimulationContext context, World world)
         {

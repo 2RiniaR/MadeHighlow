@@ -2,5 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.CreateTile
 {
-    public record Action([NotNull] Tile InitialProps);
+    public interface IAction
+    {
+        [NotNull] Tile InitialProps { get; init; }
+    }
+
+    public record Action([NotNull] Tile InitialProps) : IAction;
 }

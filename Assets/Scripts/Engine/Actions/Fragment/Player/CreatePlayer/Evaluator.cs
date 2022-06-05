@@ -40,8 +40,8 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         {
             var action = new RegisterPlayer.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
             var result = new RegisterPlayer.Evaluator(Context, Simulating, action).Evaluate();
-            Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { Created = @event.Content.Registered };
+            Simulating = Simulating.Appended(result, out _);
+            Result = Result with { Created = result.Registered };
         }
 
         private bool TryCreateComponents()
@@ -51,15 +51,14 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
             {
                 var action = new CreateComponent.Action(Result.Created.PlayerID, component);
                 var result = Context.Actions.CreateComponent(Simulating, action);
-
-                if (result.Created == null) return false;
-
                 Simulating = Simulating.Appended(result, out var @event);
                 Result = Result with
                 {
                     CreateComponents = Result.CreateComponents.Add(@event),
                     Created = Result.Created with { Components = Result.Created.Components.Add(result.Created) },
                 };
+
+                if (result.Created == null) return false;
             }
 
             return true;

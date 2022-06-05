@@ -2,5 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.DeleteCard
 {
-    public record Action([NotNull] CardID TargetID);
+    public interface IAction
+    {
+        [NotNull] CardID TargetID { get; init; }
+    }
+
+    public record Action([NotNull] CardID TargetID) : IAction;
 }

@@ -2,5 +2,10 @@
 
 namespace RineaR.MadeHighlow.Actions.CreatePlayer
 {
-    public record Action([NotNull] Player InitialProps);
+    public interface IAction
+    {
+        [NotNull] Player InitialProps { get; init; }
+    }
+
+    public record Action([NotNull] Player InitialProps) : IAction;
 }

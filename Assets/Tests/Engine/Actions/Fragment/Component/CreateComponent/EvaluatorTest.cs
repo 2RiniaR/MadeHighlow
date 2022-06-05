@@ -4,7 +4,7 @@ using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
-    public class CreateComponentEvaluatorTest
+    public class EvaluatorTest
     {
         private static void SetupAllocateID(
             Mock<IEvaluationContext> contextMock,
@@ -12,8 +12,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             IHistory nextHistory
         )
         {
-            contextMock.Setup(context => context.Actions.AllocateID(It.IsAny<IHistory>())).Returns(AllocateID.Content);
-            historyMock.SetupNextEvent(AllocateID, nextHistory);
+            contextMock.Setup(context => context.Actions.AllocateID(It.IsAny<IHistory>()))
+                .Returns(Constants.AllocateIDEvent.Content);
+            historyMock.SetupNextEvent(Constants.AllocateIDEvent, nextHistory);
         }
 
         private static void SetupNoRejection(Mock<IEvaluationContext> contextMock)
@@ -29,13 +30,13 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
 
         private static void SetupParentExist(Mock<IEvaluationContext> contextMock)
         {
-            contextMock.Setup(context => context.Finder.FindAttachable(It.IsAny<World>(), Parent.PlayerID))
-                .Returns(Parent);
+            contextMock.Setup(context => context.Finder.FindAttachable(It.IsAny<World>(), Constants.Parent.PlayerID))
+                .Returns(Constants.Parent);
         }
 
         private static void SetupParentNotExist(Mock<IEvaluationContext> contextMock)
         {
-            contextMock.Setup(context => context.Finder.FindAttachable(It.IsAny<World>(), Parent.PlayerID))
+            contextMock.Setup(context => context.Finder.FindAttachable(It.IsAny<World>(), Constants.Parent.PlayerID))
                 .Returns(null as IAttachable);
         }
 
@@ -54,23 +55,6 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
                 );
         }
 
-        private static Player Parent { get; } = PlayerGenerator.Empty with { ID = ID.From(1) };
-
-        private static Component InitialProps { get; } = ComponentGenerator.Empty;
-        private static ID ComponentID { get; } = ID.From(2);
-
-        private static Component RejectedComponent { get; } = ComponentGenerator.Empty with { ID = ID.From(3) };
-        private static Rejection Rejection { get; } = new(RejectedComponent.ComponentID);
-
-        private static EventID BeforeEventID { get; } = new(ID.From(1));
-        private static EventID AllocateIDEventID { get; } = new(ID.From(2));
-
-        private static Event<AllocateID.Result> AllocateID { get; } = new(
-            AllocateIDEventID,
-            BeforeEventID,
-            new AllocateID.Result(ComponentID)
-        );
-
         [Test]
         public void Evaluate_Valid_ReturnsSucceed()
         {
@@ -83,17 +67,12 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
             var initialHistory = initialHistoryMock.Object;
 
-            var action = new Action(Parent.PlayerID, InitialProps);
+            var action = new Action(Constants.Parent.PlayerID, Constants.InitialProps);
             var evaluator = new Evaluator(context, initialHistory, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new Result(action)
-            {
-                AllocateID = AllocateID,
-                Rejection = null,
-                Created = InitialProps with { ID = ComponentID, AttachedID = Parent.PlayerID },
-            };
+            var expected = Constants.SucceedResult(action);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -102,29 +81,24 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         {
             var contextMock = new Mock<IEvaluationContext>();
             SetupParentExist(contextMock);
-            SetupRejection(contextMock, Rejection);
+            SetupRejection(contextMock, Constants.Rejection);
             var context = contextMock.Object;
 
             var initialHistoryMock = new Mock<IHistory>();
             SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
             var initialHistory = initialHistoryMock.Object;
 
-            var action = new Action(Parent.PlayerID, InitialProps);
+            var action = new Action(Constants.Parent.PlayerID, Constants.InitialProps);
             var evaluator = new Evaluator(context, initialHistory, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new Result(action)
-            {
-                AllocateID = AllocateID,
-                Rejection = Rejection,
-                Created = null,
-            };
+            var expected = Constants.RejectedResult(action);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
-        public void Evaluate_RegisterFailed_ReturnsFailed()
+        public void Evaluate_NoParent_ReturnsFailed()
         {
             var contextMock = new Mock<IEvaluationContext>();
             SetupParentNotExist(contextMock);
@@ -135,17 +109,12 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
             SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
             var initialHistory = initialHistoryMock.Object;
 
-            var action = new Action(Parent.PlayerID, InitialProps);
+            var action = new Action(Constants.Parent.PlayerID, Constants.InitialProps);
             var evaluator = new Evaluator(context, initialHistory, action);
 
             var actual = evaluator.Evaluate();
 
-            var expected = new Result(action)
-            {
-                AllocateID = null,
-                Rejection = null,
-                Created = null,
-            };
+            var expected = Constants.FailedResult(action);
             Assert.That(actual, Is.EqualTo(expected));
         }
     }

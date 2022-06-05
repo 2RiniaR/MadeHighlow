@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace RineaR.MadeHighlow.Actions.AllocateID
 {
-    public class AllocateIDEvaluatorTest
+    public class EvaluatorTest
     {
         private static IHistory GenerateHistory()
         {

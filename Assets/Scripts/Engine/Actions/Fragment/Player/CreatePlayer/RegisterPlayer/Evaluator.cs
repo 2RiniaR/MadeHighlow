@@ -15,6 +15,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer.RegisterPlayer
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
+
         [NotNull] private Result Result { get; set; }
 
         [NotNull]
