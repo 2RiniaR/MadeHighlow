@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.DestroyEntity
 {

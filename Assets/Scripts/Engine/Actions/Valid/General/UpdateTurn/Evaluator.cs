@@ -4,23 +4,20 @@ namespace RineaR.MadeHighlow.Actions.UpdateTurn
 {
     public class Evaluator
     {
-        public Evaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, [NotNull] Action action)
+        public Evaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, Action action)
         {
             Initial = initial;
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private ValueList<Interrupt<IValidAction>> ActorInterrupts { get; set; }
-        [CanBeNull] [ItemNotNull] private ValueList<Event<ReactedResult<IValidResult>>> ActorEvents { get; set; }
-        [CanBeNull] private Event<IncrementTurn.Result> IncrementTurnEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; }
 
         [NotNull]
         public Result Evaluate()

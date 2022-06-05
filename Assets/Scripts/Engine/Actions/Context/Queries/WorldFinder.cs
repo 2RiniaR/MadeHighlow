@@ -14,6 +14,11 @@ namespace RineaR.MadeHighlow.Actions
             return GetAllTiles(world).Find(tile => tile.TileID == id);
         }
 
+        public Tile FindTile(World world, Position2D position2D)
+        {
+            throw new NotImplementedException();
+        }
+
         public ValueList<Player> GetAllPlayers(World world)
         {
             return world.Players;

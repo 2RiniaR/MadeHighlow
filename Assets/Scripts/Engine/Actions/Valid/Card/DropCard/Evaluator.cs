@@ -10,64 +10,46 @@ namespace RineaR.MadeHighlow.Actions.DropCard
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Event<DeleteCard.SucceedResult> DeleteCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            DeleteTarget();
 
-            result = DeleteTarget();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.DeleteCard.Content.Deleted == null) return Result;
 
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action, Process),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    Process,
-                    rejection,
-                    rejectedID
-                )
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
-        private Result DeleteTarget()
+        private void DeleteTarget()
         {
-            var result = Context.Actions.DeleteCard(Simulating, new DeleteCard.Action(Action.TargetID));
-            if (result is not DeleteCard.SucceedResult succeedResult)
-            {
-                return new DeleteCardFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            DeleteCardEvent = succeedEvent;
-
-            return null;
+            var action = new DeleteCard.Action(Action.TargetID);
+            var result = Context.Actions.DeleteCard(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { DeleteCard = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(DeleteCardEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Deleted = Action.TargetID };
         }
     }
 }

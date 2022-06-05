@@ -42,7 +42,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
 
         private void Confirm()
         {
-            Result = Result with { DeletedID = Result.Action.TargetID };
+            Result = Result with { Deleted = Result.Action.TargetID };
         }
     }
 }

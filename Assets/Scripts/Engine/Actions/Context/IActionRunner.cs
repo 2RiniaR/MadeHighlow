@@ -21,9 +21,6 @@ namespace RineaR.MadeHighlow.Actions
         RegisterCard.Result RegisterCard([NotNull] IHistory history, [NotNull] RegisterCard.Action action);
 
         [NotNull]
-        UnregisterCard.Result UnregisterCard([NotNull] IHistory history, [NotNull] UnregisterCard.Action action);
-
-        [NotNull]
         CreateComponent.Result CreateComponent([NotNull] IHistory history, [NotNull] CreateComponent.Action action);
 
         [NotNull]
@@ -51,9 +48,6 @@ namespace RineaR.MadeHighlow.Actions
         RegisterEntity.Result RegisterEntity([NotNull] IHistory history, [NotNull] RegisterEntity.Action action);
 
         [NotNull]
-        UnregisterEntity.Result UnregisterEntity([NotNull] IHistory history, [NotNull] UnregisterEntity.Action action);
-
-        [NotNull]
         AllocateID.Result AllocateID([NotNull] IHistory history);
 
         [NotNull]
@@ -76,9 +70,6 @@ namespace RineaR.MadeHighlow.Actions
 
         [NotNull]
         RegisterTile.Result RegisterTile([NotNull] IHistory history, [NotNull] RegisterTile.Action action);
-
-        [NotNull]
-        UnregisterTile.Result UnregisterTile([NotNull] IHistory history, [NotNull] UnregisterTile.Action action);
 
         [NotNull]
         ReactedResult<DropCard.Result> DropCard([NotNull] IHistory history, [NotNull] DropCard.Action action);

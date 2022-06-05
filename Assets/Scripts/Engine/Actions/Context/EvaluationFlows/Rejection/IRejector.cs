@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection
+namespace RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection
 {
     public interface IRejector<TContext>
     {

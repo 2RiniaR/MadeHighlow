@@ -10,7 +10,6 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
         }
 
         public ValueList<Event<DeleteComponent.Result>> DeleteComponents { get; init; }
-        public Event<UnregisterEntity.Result> UnregisterEntity { get; init; }
-        public EntityID DeletedID { get; init; }
+        public EntityID Deleted { get; init; }
     }
 }

@@ -10,7 +10,6 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
         }
 
         public ValueList<Event<DeleteComponent.Result>> DeleteComponents { get; init; }
-        public Event<UnregisterTile.Result> UnregisterTile { get; init; }
-        public TileID DeletedID { get; init; }
+        public TileID Deleted { get; init; }
     }
 }

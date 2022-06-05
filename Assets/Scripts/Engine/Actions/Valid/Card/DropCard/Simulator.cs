@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.DropCard
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return succeedResult.Process.Timeline.Simulate(Context, Initial);
-            }
-
-            return Initial;
+            if (Result.Deleted == null) return Initial;
+            return Context.Modifier.DeleteCard(Initial, Result.Deleted);
         }
     }
 }

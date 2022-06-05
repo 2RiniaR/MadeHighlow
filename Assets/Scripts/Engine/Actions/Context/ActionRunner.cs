@@ -41,11 +41,6 @@ namespace RineaR.MadeHighlow.Actions
             return new RegisterCard.Evaluator(Context, history, action).Evaluate();
         }
 
-        public UnregisterCard.Result UnregisterCard(IHistory history, UnregisterCard.Action action)
-        {
-            return new UnregisterCard.Evaluator(Context, history, action).Evaluate();
-        }
-
         public CreateComponent.Result CreateComponent(IHistory history, CreateComponent.Action action)
         {
             return new CreateComponent.Evaluator(Context, history, action).Evaluate();
@@ -86,11 +81,6 @@ namespace RineaR.MadeHighlow.Actions
             return new RegisterEntity.Evaluator(Context, history, action).Evaluate();
         }
 
-        public UnregisterEntity.Result UnregisterEntity(IHistory history, UnregisterEntity.Action action)
-        {
-            return new UnregisterEntity.Evaluator(Context, history, action).Evaluate();
-        }
-
         public AllocateID.Result AllocateID(IHistory history)
         {
             return new AllocateID.Evaluator(history).Evaluate();
@@ -129,11 +119,6 @@ namespace RineaR.MadeHighlow.Actions
         public RegisterTile.Result RegisterTile(IHistory history, RegisterTile.Action action)
         {
             return new RegisterTile.Evaluator(Context, history, action).Evaluate();
-        }
-
-        public UnregisterTile.Result UnregisterTile(IHistory history, UnregisterTile.Action action)
-        {
-            return new UnregisterTile.Evaluator(Context, history, action).Evaluate();
         }
 
         public ReactedResult<DropCard.Result> DropCard(IHistory history, DropCard.Action action)

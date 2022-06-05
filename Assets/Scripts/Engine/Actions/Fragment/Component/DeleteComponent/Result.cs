@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.DeleteComponent
 {
@@ -11,6 +11,6 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
         }
 
         public Rejection Rejection { get; init; }
-        public ComponentID DeletedID { get; init; }
+        public ComponentID Deleted { get; init; }
     }
 }

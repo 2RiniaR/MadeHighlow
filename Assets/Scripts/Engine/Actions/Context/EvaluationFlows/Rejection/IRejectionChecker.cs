@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection
+namespace RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection
 {
     [NotNull]
     public delegate TContext ContextProvider<TContext>(

@@ -27,11 +27,5 @@ namespace RineaR.MadeHighlow
             var vector = direction2D.ToVector() * distance.Value;
             return this + vector;
         }
-
-        [CanBeNull]
-        public Tile GetTile([NotNull] World world)
-        {
-            return world.Tiles.Find(tile => tile.Position2D == this);
-        }
     }
 }

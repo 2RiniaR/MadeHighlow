@@ -18,8 +18,8 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
         [NotNull]
         public World Simulate()
         {
-            if (Result.DeletedID == null) return Initial;
-            return Context.Modifier.DeleteEntity(Initial, Result.DeletedID);
+            if (Result.Deleted == null) return Initial;
+            return Context.Modifier.DeleteEntity(Initial, Result.Deleted);
         }
     }
 }

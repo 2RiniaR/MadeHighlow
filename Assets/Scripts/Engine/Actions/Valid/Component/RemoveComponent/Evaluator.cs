@@ -10,51 +10,28 @@ namespace RineaR.MadeHighlow.Actions.RemoveComponent
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Event<DeleteComponent.SucceedResult> DeleteComponentEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
-            result = DeleteComponent();
-            if (result != null) return result;
-
-            WrapProcess();
-            return Succeed();
+            DeleteComponent();
+            return Result;
         }
 
-        [CanBeNull]
-        private Result DeleteComponent()
+        private void DeleteComponent()
         {
-            var result = Context.Actions.DeleteComponent(Simulating, new DeleteComponent.Action(Action.TargetID));
-            if (result is not DeleteComponent.SucceedResult succeedResult)
-            {
-                return new DeleteComponentFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            DeleteComponentEvent = succeedEvent;
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(DeleteComponentEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            var action = new DeleteComponent.Action(Action.TargetID);
+            var result = Context.Actions.DeleteComponent(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { DeleteComponent = @event };
         }
     }
 }

@@ -6,17 +6,20 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
 {
     public class Evaluator
     {
-        public Evaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, [NotNull] Action action)
+        public Evaluator([NotNull] IEvaluationContext context, [NotNull] IHistory initial, Action action)
         {
             Initial = initial;
             Context = context;
             Action = action;
+            Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
+        [NotNull] private Result Result { get; }
 
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private ValueList<Interrupt<Calculation>> CalculationInterrupts { get; set; }
@@ -91,7 +94,7 @@ namespace RineaR.MadeHighlow.Actions.KnockBack
             Calculated = Action.KnockBack;
             foreach (var interrupt in CalculationInterrupts)
             {
-                if (interrupt.Effect is Reduction reduction)
+                if (interrupt.Content is Reduction reduction)
                 {
                     Calculated = reduction.Value.Caused(Calculated);
                 }

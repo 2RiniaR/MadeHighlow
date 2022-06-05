@@ -10,15 +10,14 @@ namespace RineaR.MadeHighlow.Actions.JoinPlayer
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Event<CreatePlayer.SucceedResult> CreatePlayerEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; }
 
         [NotNull]
         public Result Evaluate()

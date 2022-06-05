@@ -10,54 +10,28 @@ namespace RineaR.MadeHighlow.Actions.AddComponent
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Event<CreateComponent.SucceedResult> CreateComponentEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
-            result = CreateComponent();
-            if (result != null) return result;
-
-            WrapProcess();
-            return Succeed();
+            CreateComponent();
+            return Result;
         }
 
-        [CanBeNull]
-        private Result CreateComponent()
+        private void CreateComponent()
         {
-            var result = Context.Actions.CreateComponent(
-                Simulating,
-                new CreateComponent.Action(Action.TargetID, Action.InitialStatus)
-            );
-            if (result is not CreateComponent.SucceedResult succeedResult)
-            {
-                return new CreateComponentFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            CreateComponentEvent = succeedEvent;
-            return null;
-        }
-
-        private void WrapProcess()
-        {
-            Process = new Process(CreateComponentEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            var action = new CreateComponent.Action(Action.TargetID, Action.InitialStatus);
+            var result = Context.Actions.CreateComponent(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { CreateComponent = @event };
         }
     }
 }

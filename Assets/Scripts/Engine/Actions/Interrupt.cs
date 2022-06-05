@@ -14,9 +14,9 @@ namespace RineaR.MadeHighlow.Actions
     }
 
     /// <remarks>`Sort`を行うと、`Priority`で指定した優先度順に並び替えが行われる</remarks>
-    public record Interrupt<TEffect>(
+    public record Interrupt<TContent>(
         [NotNull] Priority Priority,
         [NotNull] ComponentID ComponentID,
-        [NotNull] TEffect Effect
+        [NotNull] TContent Content
     ) : Interrupt(Priority, ComponentID);
 }

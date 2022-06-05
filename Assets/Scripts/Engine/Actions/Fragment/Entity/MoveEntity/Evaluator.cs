@@ -10,83 +10,58 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Event<PositionEntity.SucceedResult> PositionEntityEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
 
-            result = Position();
-            if (result != null) return result;
-
-            WrapProcess();
+            Position(target);
+            if (Result.PositionEntity.Content.Positioned == null) return Result;
 
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action, Process),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    Process,
-                    rejection,
-                    rejectedID
-                )
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new TargetNotFoundResult(Action);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result Position()
+        private void Position([NotNull] Entity target)
         {
-            var result = Context.Actions.PositionEntity(
-                Simulating,
-                new PositionEntity.Action(Action.TargetID, Target.Position3D.MoveTo(Action.Direction, new Distance(1)))
+            var action = new PositionEntity.Action(
+                Action.TargetID,
+                target.Position3D.MoveTo(Action.Direction, new Distance(1))
             );
-            if (result is not PositionEntity.SucceedResult succeedResult)
-            {
-                return new PositionFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            PositionEntityEvent = succeedEvent;
-            return null;
+            var result = Context.Actions.PositionEntity(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { PositionEntity = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(PositionEntityEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Moved = Result.PositionEntity.Content.Positioned };
         }
     }
 }

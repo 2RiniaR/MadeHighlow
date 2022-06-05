@@ -10,69 +10,46 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Event<PlaceCard.SucceedResult> PlaceCardEvent { get; set; }
-
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            PlaceCard();
 
-            result = PlaceCard();
-            if (result != null) return result;
-
-            WrapProcess();
+            if (Result.PlaceCard.Content.CreateCard.Content.Created == null) return Result;
 
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action, Process),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    Process,
-                    rejection,
-                    rejectedID
-                )
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result PlaceCard()
+        private void PlaceCard()
         {
-            var result = Context.Actions.PlaceCard(
-                Simulating,
-                new PlaceCard.Action(Action.TargetID, Action.InitialStatus)
-            );
-            if (result is not PlaceCard.SucceedResult succeedResult)
-            {
-                return new PlaceCardFailedResult(Action, result);
-            }
-
-            Simulating = Simulating.Appended(succeedResult, out var succeedEvent);
-            PlaceCardEvent = succeedEvent;
-
-            return null;
+            var action = new PlaceCard.Action(Action.TargetID, Action.InitialStatus);
+            var result = Context.Actions.PlaceCard(Simulating, action);
+            Simulating = Simulating.Appended(result, out var @event);
+            Result = Result with { PlaceCard = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(PlaceCardEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Supplied = Result.PlaceCard.Content.CreateCard.Content.Created };
         }
     }
 }

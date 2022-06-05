@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection
+namespace RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection
 {
     public class RejectionChecker<TContext> : IRejectionChecker<TContext>
     {
@@ -15,18 +15,18 @@ namespace RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection
         {
             var rejectors = Context.Finder.GetAllComponents<IRejector<TContext>>(history.World).Sort();
 
-            var interrupts = ValueList<Interrupt>.Empty;
+            var rejections = ValueList<Interrupt>.Empty;
             foreach (var rejector in rejectors)
             {
-                var context = contextProvider(history, interrupts);
+                var context = contextProvider(history, rejections);
                 var interrupt = rejector.Rejection(context);
                 if (interrupt == null) continue;
-                interrupts = interrupts.Add(interrupt);
+                rejections = rejections.Add(interrupt);
             }
 
-            if (interrupts.IsEmpty) return;
+            if (rejections.IsEmpty) return;
 
-            var rejection = new Rejection(interrupts[0].ComponentID);
+            var rejection = new Rejection(rejections[0].ComponentID);
             onRejected(rejection);
         }
     }

@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.RunCommand
 {
@@ -13,5 +13,6 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         public ValueList<Event<ReactedResult<IValidResult>>> CommandActions { get; init; }
         public Event<ReactedResult<PayCard.Result>> PayCard { get; init; }
         public Rejection Rejection { get; init; }
+        public bool Run { get; init; }
     }
 }

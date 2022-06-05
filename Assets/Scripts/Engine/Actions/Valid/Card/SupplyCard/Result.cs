@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.SupplyCard
 {
@@ -12,5 +12,7 @@ namespace RineaR.MadeHighlow.Actions.SupplyCard
 
         public Event<PlaceCard.Result> PlaceCard { get; init; }
         public Rejection Rejection { get; init; }
+        public Card Replaced { get; init; }
+        public Card Supplied { get; init; }
     }
 }

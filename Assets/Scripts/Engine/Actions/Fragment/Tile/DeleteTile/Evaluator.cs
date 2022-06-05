@@ -30,11 +30,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
 
             DeleteComponents(target);
 
-            if (Result.DeleteComponents.Any(@event => @event.Content.DeletedID == null)) return Result;
-
-            Unregister();
-
-            if (Result.UnregisterTile.Content.UnregisteredID == null) return Result;
+            if (Result.DeleteComponents.Any(@event => @event.Content.Deleted == null)) return Result;
 
             Confirm();
 
@@ -64,17 +60,9 @@ namespace RineaR.MadeHighlow.Actions.DeleteTile
             }
         }
 
-        private void Unregister()
-        {
-            var action = new UnregisterTile.Action(Action.TargetID);
-            var result = Context.Actions.UnregisterTile(Simulating, action);
-            Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { UnregisterTile = @event };
-        }
-
         private void Confirm()
         {
-            Result = Result with { DeletedID = Action.TargetID };
+            Result = Result with { Deleted = Result.Action.TargetID };
         }
     }
 }

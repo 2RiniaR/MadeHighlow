@@ -9,11 +9,15 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Initial = initial;
             Context = context;
             Action = action;
+            Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
+        [NotNull] private IHistory Simulating { get; }
         [NotNull] private Action Action { get; }
+        [NotNull] private Result Result { get; }
 
         [CanBeNull] private Entity Target { get; set; }
         [CanBeNull] private ValueList<Interrupt<Calculation>> CalculationInterrupts { get; set; }
@@ -99,7 +103,7 @@ namespace RineaR.MadeHighlow.Actions.InstantHeal
             Calculated = Action.Heal;
             foreach (var interrupt in CalculationInterrupts)
             {
-                if (interrupt.Effect is ReduceCalculation reduceEffect)
+                if (interrupt.Content is ReduceCalculation reduceEffect)
                 {
                     Calculated = reduceEffect.HealReduction.Caused(Calculated);
                 }

@@ -1,4 +1,6 @@
-﻿namespace RineaR.MadeHighlow.Actions.ReserveCommand
+﻿using JetBrains.Annotations;
+
+namespace RineaR.MadeHighlow.Actions.ReserveCommand
 {
-    public record Acceptance(bool Allowed);
+    public record Acceptance([NotNull] ComponentID Applied, bool IsAllowed);
 }

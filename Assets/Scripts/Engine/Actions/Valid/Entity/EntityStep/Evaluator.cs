@@ -10,12 +10,14 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
+        [NotNull] private Result Result { get; }
 
         [NotNull] private static readonly Cost ClimbCost = new(5);
         [NotNull] private static readonly Cost HorizontalCost = new(1);
@@ -207,15 +209,15 @@ namespace RineaR.MadeHighlow.Actions.EntityStep
             ExpendedCost = BaseCost(Process);
             foreach (var costInterrupt in CostEffectInterrupts)
             {
-                if (costInterrupt.Effect is CostAdditionEffect addition)
+                if (costInterrupt.Content is CostAdditionEffect addition)
                 {
                     ExpendedCost += addition.Value;
                 }
-                else if (costInterrupt.Effect is CostReductionEffect reduction)
+                else if (costInterrupt.Content is CostReductionEffect reduction)
                 {
                     ExpendedCost -= reduction.Value;
                 }
-                else if (costInterrupt.Effect is CostOverwriteEffect overwrite)
+                else if (costInterrupt.Content is CostOverwriteEffect overwrite)
                 {
                     ExpendedCost = overwrite.Value;
                 }

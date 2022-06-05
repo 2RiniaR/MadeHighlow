@@ -10,58 +10,34 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Entity Target { get; set; }
-        [CanBeNull] private Entity Positioned { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
+            if (!IsPositionable(target)) return Result;
 
-            result = Position();
-            if (result != null) return result;
+            Confirm(target);
 
-            return Succeed();
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Entity FindTarget()
         {
-            Target = Context.Finder.FindEntity(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new FailedResult(Action, FailedReason.TargetNotExist);
-            }
-
-            return null;
+            return Context.Finder.FindEntity(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result Position()
-        {
-            if (!IsPositionable(Initial, Target, Action.Destination))
-            {
-                return new FailedResult(Action, FailedReason.CantEnter);
-            }
-
-            Positioned = Target;
-            return null;
-        }
-
-        private static bool IsPositionable(
-            [NotNull] IHistory history,
-            [NotNull] Entity entity,
-            [NotNull] Position3D dest
-        )
+        private bool IsPositionable([NotNull] Entity target)
         {
             /*
              * 【エンティティが設置可能な条件】
@@ -87,20 +63,20 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
              *     |-------|-------|-------|-------|-------|-------|-------|-------|-------|
              */
 
-            var landingTile = dest.To2D().GetTile(history.World);
-            var destHeight = dest.Z;
+            var landingTile = Context.Finder.FindTile(Initial.World, Action.Destination.To2D());
+            var destHeight = Action.Destination.Z;
 
             if (landingTile == null || // (1)
                 landingTile.Elevation is AbyssElevation) // (2)
             {
-                return entity.Levitation;
+                return target.Levitation;
             }
 
             if (landingTile.Elevation is GroundElevation ground) // (3) ~ (7)
             {
                 if (ground.Height < destHeight) // (3), (4)
                 {
-                    return ground.Placeable || entity.Levitation;
+                    return ground.Placeable || target.Levitation;
                 }
 
                 if (ground.Height == destHeight) // (5), (6)
@@ -119,10 +95,9 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
             throw new InvalidOperationException();
         }
 
-        [NotNull]
-        private Result Succeed()
+        private void Confirm([NotNull] Entity target)
         {
-            return new SucceedResult(Action, Positioned);
+            Result = Result with { Positioned = target with { Position3D = Action.Destination } };
         }
     }
 }

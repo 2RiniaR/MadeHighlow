@@ -9,85 +9,56 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action) { IsAllowed = false };
+            AcceptanceChecker = new AcceptanceChecker(Context);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
+        [NotNull] private Result Result { get; set; }
 
-        [CanBeNull] private ValueList<Interrupt<Acceptance>> AcceptanceInterrupts { get; set; }
+        [NotNull] private AcceptanceChecker AcceptanceChecker { get; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            if (!IsValid()) return Result;
 
-            result = PreValidation();
-            if (result != null) return result;
+            AcceptanceChecker.Check(
+                history: Initial,
+                contextProvider: (history, collected) => new AcceptanceContext(history, Result, collected),
+                onApplied: acceptance =>
+                {
+                    Result = Result with { Applied = acceptance.Applied, IsAllowed = acceptance.IsAllowed };
+                }
+            );
 
-            result = CheckAcceptance();
-            if (result != null) return result;
+            if (!Result.IsAllowed) return Result;
 
-            return Disallowed();
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result PreValidation()
+        private bool IsValid()
         {
             var card = Context.Finder.FindCard(Initial.World, Action.Command.CardID);
-            if (card == null)
-            {
-                return new FailedResult(Action, FailedReason.CardNotFound);
-            }
+            if (card == null) return false;
 
             var unit = Context.Finder.FindUnit(Initial.World, Action.Command.UnitID);
-            if (unit == null)
-            {
-                return new FailedResult(Action, FailedReason.UnitNotFound);
-            }
+            if (unit == null) return false;
 
             var player = Context.Finder.FindPlayer(Initial.World, card.OwnerPlayerID);
-            if (player == null)
-            {
-                return new FailedResult(Action, FailedReason.OwnerNotFound);
-            }
+            if (player == null) return false;
+            if (unit.FollowingID != player.PlayerID) return false;
 
-            if (unit.FollowingID != player.PlayerID)
-            {
-                return new FailedResult(Action, FailedReason.NotOwner);
-            }
-
-            return null;
+            return true;
         }
 
-        [CanBeNull]
-        private Result CheckAcceptance()
+        private void Confirm()
         {
-            var effectors = Context.Finder.GetAllComponents<IAcceptor>(Initial.World).Sort();
-
-            AcceptanceInterrupts = ValueList<Interrupt<Acceptance>>.Empty;
-            foreach (var effector in effectors)
-            {
-                var interrupt = effector.ReserveCommandAcceptance(Initial, Action, AcceptanceInterrupts);
-                if (interrupt == null) continue;
-                AcceptanceInterrupts = AcceptanceInterrupts.Add(interrupt);
-            }
-
-            if (AcceptanceInterrupts.IsEmpty) return null;
-
-            var applied = AcceptanceInterrupts[0];
-            if (applied.Effect.Allowed)
-            {
-                return new SucceedResult(Action, AcceptanceInterrupts, applied.ComponentID);
-            }
-
-            return new DisallowedResult(Action, AcceptanceInterrupts, applied.ComponentID);
-        }
-
-        [NotNull]
-        private Result Disallowed()
-        {
-            return new DisallowedResult(Action, AcceptanceInterrupts, null);
+            Result = Result with { Reserved = Action.Command };
         }
     }
 }

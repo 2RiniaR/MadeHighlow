@@ -10,112 +10,72 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull]
-        [ItemNotNull]
-        private ValueList<Event<ReactedResult<IValidResult>>> CommandActionEvents { get; set; }
-
-        [CanBeNull] private Event<ReactedResult<PayCard.Result>> PayCardEvent { get; set; }
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
-
-            result = PreValidation();
-            if (result != null) return result;
+            if (!IsValid()) return Result;
 
             ActuateCommand();
             PayUsedCard();
 
-            WrapProcess();
-
             Context.Flows.CheckRejection(
-                history: Simulating,
-                contextProvider: (history, collected) => new RejectionContext(history, collected, Action, Process),
-                onRejected: (rejection, rejectedID) => result = new RejectedResult(
-                    Action,
-                    Process,
-                    rejection,
-                    rejectedID
-                )
+                history: Initial,
+                contextProvider: (history, collected) => new RejectionContext(history, Result, collected),
+                onRejected: rejection => { Result = Result with { Rejection = rejection }; }
             );
-            if (result != null) return result;
 
-            return Succeed();
+            if (Result.Rejection != null) return Result;
+
+            Confirm();
+
+            return Result;
         }
 
-        [CanBeNull]
-        private Result PreValidation()
+        private bool IsValid()
         {
             var unit = Context.Finder.FindUnit(Initial.World, Action.Command.UnitID);
-
-            if (unit == null)
-            {
-                return new FailedResult(Action, FailedReason.UnitNotFound);
-            }
-
-            if (unit.IsDead)
-            {
-                return new FailedResult(Action, FailedReason.UnitIsDead);
-            }
+            if (unit == null) return false;
+            if (unit.IsDead) return false;
 
             var card = Context.Finder.FindCard(Initial.World, Action.Command.CardID);
-            if (card == null)
-            {
-                return new FailedResult(Action, FailedReason.CardNotFound);
-            }
+            if (card == null) return false;
 
             var player = Context.Finder.FindPlayer(Initial.World, card.OwnerPlayerID);
-            if (player == null)
-            {
-                return new FailedResult(Action, FailedReason.PlayerNotFound);
-            }
+            if (player == null) return false;
+            if (unit.FollowingID != player.PlayerID) return false;
 
-            if (unit.FollowingID != player.PlayerID)
-            {
-                return new FailedResult(Action, FailedReason.NotOwner);
-            }
-
-            return null;
+            return true;
         }
 
         private void ActuateCommand()
         {
-            CommandActionEvents = ValueList<Event<ReactedResult<IValidResult>>>.Empty;
             var actions = Action.Command.ActionsIn(Simulating);
-
-            foreach (var action in actions)
-            {
-                var result = Context.Actions.Run(Simulating, action);
-                Simulating = Simulating.Appended(result, out var @event);
-                CommandActionEvents = CommandActionEvents.Add(@event);
-            }
+            var simulating = Simulating;
+            var events = Context.Flows.IterateActions(ref simulating, actions);
+            Simulating = simulating;
+            Result = Result with { CommandActions = events };
         }
 
         private void PayUsedCard()
         {
-            var result = Context.Actions.PayCard(Simulating, new PayCard.Action(Action.Command.CardID));
+            var action = new PayCard.Action(Action.Command.CardID);
+            var result = Context.Actions.PayCard(Simulating, action);
             Simulating = Simulating.Appended(result, out var @event);
-            PayCardEvent = @event;
+            Result = Result with { PayCard = @event };
         }
 
-        private void WrapProcess()
+        private void Confirm()
         {
-            Process = new Process(CommandActionEvents, PayCardEvent);
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Process);
+            Result = Result with { Run = true };
         }
     }
 }

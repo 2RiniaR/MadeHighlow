@@ -10,7 +10,6 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
         }
 
         public ValueList<Event<DeleteComponent.Result>> DeleteComponents { get; init; }
-        public Event<UnregisterCard.Result> UnregisterCard { get; init; }
-        public CardID DeletedID { get; init; }
+        public CardID Deleted { get; init; }
     }
 }

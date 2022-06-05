@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.PayCard
 {
@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.PayCard
 
         public Event<DeleteCard.Result> DeleteCard { get; init; }
         public Rejection Rejection { get; init; }
+        public CardID Deleted { get; init; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.RunCommand
 {
@@ -18,12 +19,8 @@ namespace RineaR.MadeHighlow.Actions.RunCommand
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return succeedResult.Process.Timeline.Simulate(Context, Initial);
-            }
-
-            return Initial;
+            if (!Result.Run) return Initial;
+            throw new NotImplementedException();
         }
     }
 }

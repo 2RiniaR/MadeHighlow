@@ -9,7 +9,8 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
             return new Simulator(context, world, this).Simulate();
         }
 
-        public ComponentID AllowedID { get; init; }
-        public ComponentID DisallowedID { get; init; }
+        public ComponentID Applied { get; init; }
+        public bool IsAllowed { get; init; }
+        public Command Reserved { get; init; }
     }
 }

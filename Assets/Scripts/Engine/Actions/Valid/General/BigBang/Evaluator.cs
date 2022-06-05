@@ -10,26 +10,14 @@ namespace RineaR.MadeHighlow.Actions.BigBang
             Context = context;
             Action = action;
             Simulating = Initial;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull]
-        [ItemNotNull]
-        private ValueList<Event<ReactedResult<JoinPlayer.Result>>> JoinPlayerEvents { get; set; }
-
-        [CanBeNull]
-        [ItemNotNull]
-        private ValueList<Event<ReactedResult<GenerateTile.Result>>> GenerateTileEvents { get; set; }
-
-        [CanBeNull]
-        [ItemNotNull]
-        private ValueList<Event<ReactedResult<GenerateEntity.Result>>> GenerateEntityEvents { get; set; }
-
-        [CanBeNull] private Process Process { get; set; }
+        [NotNull] private Result Result { get; }
 
         [NotNull]
         public Result Evaluate()

@@ -9,62 +9,41 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
             Initial = initial;
             Context = context;
             Action = action;
+            Result = new Result(Action);
         }
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
         [NotNull] private Action Action { get; }
-
-        [CanBeNull] private Tile Target { get; set; }
-        [CanBeNull] private Tile Positioned { get; set; }
+        [NotNull] private Result Result { get; set; }
 
         [NotNull]
         public Result Evaluate()
         {
-            Result result;
+            var target = FindTarget();
 
-            result = FindTarget();
-            if (result != null) return result;
+            if (target == null) return Result;
+            if (IsTileExistAtSamePosition()) return Result;
 
-            result = Position();
-            if (result != null) return result;
+            Confirm(target);
 
-            return Succeed();
+            return Result;
         }
 
         [CanBeNull]
-        private Result FindTarget()
+        private Tile FindTarget()
         {
-            Target = Context.Finder.FindTile(Initial.World, Action.TargetID);
-            if (Target == null)
-            {
-                return new FailedResult(Action, FailedReason.TileNotExist);
-            }
-
-            return null;
+            return Context.Finder.FindTile(Initial.World, Action.TargetID);
         }
 
-        [CanBeNull]
-        private Result Position()
+        private bool IsTileExistAtSamePosition()
         {
-            if (!IsPositionable(Initial, Action.Destination))
-            {
-                return new FailedResult(Action, FailedReason.ResolveFailed);
-            }
-
-            Positioned = Target;
-            return null;
+            return Context.Finder.FindTile(Initial.World, Action.Destination) != null;
         }
 
-        private static bool IsPositionable([NotNull] IHistory history, [NotNull] Position2D dest)
+        private void Confirm([NotNull] Tile target)
         {
-            return dest.GetTile(history.World) == null;
-        }
-
-        [NotNull]
-        private Result Succeed()
-        {
-            return new SucceedResult(Action, Positioned);
+            Result = Result with { Positioned = target with { Position2D = Action.Destination } };
         }
     }
 }

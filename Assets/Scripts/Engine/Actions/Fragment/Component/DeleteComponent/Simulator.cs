@@ -18,8 +18,8 @@ namespace RineaR.MadeHighlow.Actions.DeleteComponent
         [NotNull]
         public World Simulate()
         {
-            if (Result.DeletedID == null) return Initial;
-            return Context.Modifier.DeleteComponent(Initial, Result.DeletedID);
+            if (Result.Deleted == null) return Initial;
+            return Context.Modifier.DeleteComponent(Initial, Result.Deleted);
         }
     }
 }

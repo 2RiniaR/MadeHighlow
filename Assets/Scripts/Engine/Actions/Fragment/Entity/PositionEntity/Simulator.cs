@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.PositionEntity
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return Context.Modifier.UpdateEntity(Initial, succeedResult.Positioned);
-            }
-
-            return Initial;
+            if (Result.Positioned == null) return Initial;
+            return Context.Modifier.UpdateEntity(Initial, Result.Positioned);
         }
     }
 }

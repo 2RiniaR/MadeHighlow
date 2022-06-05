@@ -18,8 +18,8 @@ namespace RineaR.MadeHighlow.Actions.DeleteCard
         [NotNull]
         public World Simulate()
         {
-            if (Result.DeletedID == null) return Initial;
-            return Context.Modifier.DeleteCard(Initial, Result.DeletedID);
+            if (Result.Deleted == null) return Initial;
+            return Context.Modifier.DeleteCard(Initial, Result.Deleted);
         }
     }
 }

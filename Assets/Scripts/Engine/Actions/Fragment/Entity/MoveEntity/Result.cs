@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.MoveEntity
 {
@@ -12,5 +12,6 @@ namespace RineaR.MadeHighlow.Actions.MoveEntity
 
         public Event<PositionEntity.Result> PositionEntity { get; init; }
         public Rejection Rejection { get; init; }
+        public Entity Moved { get; init; }
     }
 }

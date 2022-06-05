@@ -11,6 +11,9 @@ namespace RineaR.MadeHighlow.Actions
         [CanBeNull]
         Tile FindTile([NotNull] World world, [NotNull] TileID id);
 
+        [CanBeNull]
+        Tile FindTile([NotNull] World world, [NotNull] Position2D position2D);
+
         [NotNull]
         [ItemNotNull]
         ValueList<Player> GetAllPlayers([NotNull] World world);

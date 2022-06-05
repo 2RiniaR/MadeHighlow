@@ -18,12 +18,8 @@ namespace RineaR.MadeHighlow.Actions.PositionTile
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return Context.Modifier.UpdateTile(Initial, succeedResult.Positioned);
-            }
-
-            return Initial;
+            if (Result.Positioned == null) return Initial;
+            return Context.Modifier.UpdateTile(Initial, Result.Positioned);
         }
     }
 }

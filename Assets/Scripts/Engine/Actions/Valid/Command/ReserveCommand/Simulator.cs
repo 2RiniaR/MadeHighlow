@@ -18,15 +18,8 @@ namespace RineaR.MadeHighlow.Actions.ReserveCommand
         [NotNull]
         public World Simulate()
         {
-            if (Result is SucceedResult succeedResult)
-            {
-                return Initial with
-                {
-                    ReservedCommands = Initial.ReservedCommands.Add(succeedResult.Action.Command),
-                };
-            }
-
-            return Initial;
+            if (!Result.IsAllowed) return Initial;
+            return Initial with { ReservedCommands = Initial.ReservedCommands.Add(Result.Reserved) };
         }
     }
 }

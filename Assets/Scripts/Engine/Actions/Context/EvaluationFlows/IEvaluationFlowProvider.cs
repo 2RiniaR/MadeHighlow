@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using RineaR.MadeHighlow.Actions.EvaluationFlows.CheckRejection;
+using RineaR.MadeHighlow.Actions.EvaluationFlows.Rejection;
 
 namespace RineaR.MadeHighlow.Actions.EvaluationFlows
 {
@@ -9,6 +9,12 @@ namespace RineaR.MadeHighlow.Actions.EvaluationFlows
             [NotNull] IHistory history,
             [NotNull] ContextProvider<TContext> contextProvider,
             [NotNull] RejectHandler onRejected
+        );
+
+        [NotNull]
+        ValueList<Event<ReactedResult<IValidResult>>> IterateActions(
+            [NotNull] ref IHistory history,
+            [NotNull] [ItemNotNull] ValueList<IValidAction> actions
         );
     }
 }

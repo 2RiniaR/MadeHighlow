@@ -29,11 +29,7 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
 
             DeleteComponents(target);
 
-            if (Result.DeleteComponents.Any(@event => @event.Content.DeletedID == null)) return Result;
-
-            Unregister();
-
-            if (Result.UnregisterEntity.Content.UnregisteredID == null) return Result;
+            if (Result.DeleteComponents.Any(@event => @event.Content.Deleted == null)) return Result;
 
             Confirm();
 
@@ -58,17 +54,9 @@ namespace RineaR.MadeHighlow.Actions.DeleteEntity
             }
         }
 
-        private void Unregister()
-        {
-            var action = new UnregisterEntity.Action(Action.TargetID);
-            var result = Context.Actions.UnregisterEntity(Simulating, action);
-            Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { UnregisterEntity = @event };
-        }
-
         private void Confirm()
         {
-            Result = Result with { DeletedID = Action.TargetID };
+            Result = Result with { Deleted = Result.Action.TargetID };
         }
     }
 }
