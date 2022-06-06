@@ -6,15 +6,10 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
 {
     public class EvaluatorTest
     {
-        private static void SetupAllocateID(
-            Mock<IEvaluationContext> contextMock,
-            Mock<IHistory> historyMock,
-            IHistory nextHistory
-        )
+        private static void SetupAllocateID(Mock<IEvaluationContext> contextMock)
         {
             contextMock.Setup(context => context.Actions.AllocateID(It.IsAny<IHistory>()))
                 .Returns(Constants.AllocateIDEvent.Content);
-            historyMock.SetupNextEvent(Constants.AllocateIDEvent, nextHistory);
         }
 
         private static void SetupNoRejection(Mock<IEvaluationContext> contextMock)
@@ -59,16 +54,16 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         public void Evaluate_Valid_ReturnsSucceed()
         {
             var contextMock = new Mock<IEvaluationContext>();
+            SetupAllocateID(contextMock);
             SetupParentExist(contextMock);
             SetupNoRejection(contextMock);
-            var context = contextMock.Object;
 
-            var initialHistoryMock = new Mock<IHistory>();
-            SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
-            var initialHistory = initialHistoryMock.Object;
+            var historyMock = new Mock<IHistory>();
+            HistoryBuilder.New.UseMock(historyMock).Then(Constants.AllocateIDEvent).Setup();
+
 
             var action = new Action(Constants.Parent.PlayerID, Constants.InitialProps);
-            var evaluator = new Evaluator(context, initialHistory, action);
+            var evaluator = new Evaluator(contextMock.Object, historyMock.Object, action);
 
             var actual = evaluator.Evaluate();
 
@@ -80,16 +75,15 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         public void Evaluate_Rejected_ReturnsFailed()
         {
             var contextMock = new Mock<IEvaluationContext>();
+            SetupAllocateID(contextMock);
             SetupParentExist(contextMock);
             SetupRejection(contextMock, Constants.Rejection);
-            var context = contextMock.Object;
 
-            var initialHistoryMock = new Mock<IHistory>();
-            SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
-            var initialHistory = initialHistoryMock.Object;
+            var historyMock = new Mock<IHistory>();
+            HistoryBuilder.New.UseMock(historyMock).Then(Constants.AllocateIDEvent).Setup();
 
             var action = new Action(Constants.Parent.PlayerID, Constants.InitialProps);
-            var evaluator = new Evaluator(context, initialHistory, action);
+            var evaluator = new Evaluator(contextMock.Object, historyMock.Object, action);
 
             var actual = evaluator.Evaluate();
 
@@ -101,16 +95,15 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
         public void Evaluate_NoParent_ReturnsFailed()
         {
             var contextMock = new Mock<IEvaluationContext>();
+            SetupAllocateID(contextMock);
             SetupParentNotExist(contextMock);
             SetupNoRejection(contextMock);
-            var context = contextMock.Object;
 
-            var initialHistoryMock = new Mock<IHistory>();
-            SetupAllocateID(contextMock, initialHistoryMock, Mock.Of<IHistory>());
-            var initialHistory = initialHistoryMock.Object;
+            var historyMock = new Mock<IHistory>();
+            HistoryBuilder.New.UseMock(historyMock).Then(Constants.AllocateIDEvent).Setup();
 
             var action = new Action(Constants.Parent.PlayerID, Constants.InitialProps);
-            var evaluator = new Evaluator(context, initialHistory, action);
+            var evaluator = new Evaluator(contextMock.Object, historyMock.Object, action);
 
             var actual = evaluator.Evaluate();
 

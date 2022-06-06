@@ -7,7 +7,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
     {
         private static void SetupCreate(Mock<ISimulationContext> contextMock)
         {
-            contextMock.Setup(context => context.Modifier.CreatePlayer(Constants.BeforeWorld, Constants.Created))
+            contextMock.Setup(context => context.Modifier.CreatePlayer(Constants.BeforeWorld, Constants.CreatedPlayer))
                 .Returns(Constants.AfterWorld);
         }
 
@@ -16,13 +16,15 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         {
             var contextMock = new Mock<ISimulationContext>();
             SetupCreate(contextMock);
-            var context = contextMock.Object;
-            var simulator = new Simulator(context, Constants.BeforeWorld, Constants.SucceedResult(Mock.Of<IAction>()));
+            var simulator = new Simulator(
+                contextMock.Object,
+                Constants.BeforeWorld,
+                Constants.SucceedResult(Mock.Of<IAction>())
+            );
 
             var actual = simulator.Simulate();
 
-            var expected = Constants.AfterWorld;
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual, Is.EqualTo(Constants.AfterWorld));
         }
 
         [Test]
@@ -30,13 +32,15 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         {
             var contextMock = new Mock<ISimulationContext>();
             SetupCreate(contextMock);
-            var context = contextMock.Object;
-            var simulator = new Simulator(context, Constants.BeforeWorld, Constants.FailedResult(Mock.Of<IAction>()));
+            var simulator = new Simulator(
+                contextMock.Object,
+                Constants.BeforeWorld,
+                Constants.FailedResult(Mock.Of<IAction>())
+            );
 
             var actual = simulator.Simulate();
 
-            var expected = Constants.BeforeWorld;
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual, Is.EqualTo(Constants.BeforeWorld));
         }
     }
 }

@@ -7,7 +7,9 @@ namespace RineaR.MadeHighlow.Actions.CreateComponent
     {
         private static void SetupCreate(Mock<ISimulationContext> contextMock)
         {
-            contextMock.Setup(context => context.Modifier.CreateComponent(Constants.BeforeWorld, Constants.Created))
+            contextMock.Setup(
+                    context => context.Modifier.CreateComponent(Constants.BeforeWorld, Constants.CreatedComponent)
+                )
                 .Returns(Constants.AfterWorld);
         }
 

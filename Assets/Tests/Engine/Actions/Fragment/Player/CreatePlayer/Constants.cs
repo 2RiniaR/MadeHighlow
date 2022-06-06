@@ -12,38 +12,27 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
         public static Component UnattachedComponent3 { get; } = ComponentGenerator.Empty;
         public static Component AttachedComponent3 { get; } = ComponentGenerator.Empty with { ID = ID.From(4) };
 
-        public static ID AllocatedID { get; } = ID.From(1);
-
         public static Player InitialProps { get; } = PlayerGenerator.Empty with
         {
             Components = new ValueList<Component>(UnattachedComponent1, UnattachedComponent2, UnattachedComponent3),
         };
 
-        public static Player Registered { get; } = InitialProps with
+        public static Player CreatedPlayer { get; } = InitialProps with
         {
-            ID = AllocatedID,
-            Components = ValueList<Component>.Empty,
-        };
-
-        public static Player Created { get; } = InitialProps with
-        {
-            ID = AllocatedID,
+            ID = ID.From(1),
             Components = new ValueList<Component>(AttachedComponent1, AttachedComponent2, AttachedComponent3),
         };
-
-        public static World BeforeWorld { get; } = WorldGenerator.Empty with { Players = ValueList<Player>.Empty };
-        public static World AfterWorld { get; } = BeforeWorld with { Players = new ValueList<Player>(Created) };
 
         public static Event<AllocateID.Result> AllocateIDEvent { get; } = new(
             new EventID(ID.From(2)),
             new EventID(ID.From(1)),
-            new AllocateID.Result(AllocatedID)
+            new AllocateID.Result(CreatedPlayer.ID)
         );
 
         public static Event<RegisterPlayer.Result> RegisterPlayerEvent { get; } = new(
             new EventID(ID.From(3)),
             AllocateIDEvent.ID,
-            new RegisterPlayer.Result(Mock.Of<RegisterPlayer.IAction>()) { Registered = Registered }
+            new RegisterPlayer.Result(Mock.Of<RegisterPlayer.IAction>())
         );
 
         public static Event<CreateComponent.Result> CreateComponentEvent1 { get; } = new(
@@ -80,7 +69,7 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
                     CreateComponentEvent2,
                     CreateComponentEvent3
                 ),
-                Created = Created,
+                Created = CreatedPlayer,
             };
         }
 
@@ -96,5 +85,8 @@ namespace RineaR.MadeHighlow.Actions.CreatePlayer
                 Created = null,
             };
         }
+
+        public static World BeforeWorld { get; } = WorldGenerator.Empty with { Players = ValueList<Player>.Empty };
+        public static World AfterWorld { get; } = BeforeWorld with { Players = new ValueList<Player>(CreatedPlayer) };
     }
 }

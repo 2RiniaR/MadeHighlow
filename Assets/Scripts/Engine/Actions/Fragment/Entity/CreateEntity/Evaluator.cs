@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.CreateEntity
 {
@@ -16,8 +15,9 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
-        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
+
+        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Result Result { get; set; }
 
         [NotNull]
@@ -25,15 +25,7 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
         {
             AllocateID();
             Register();
-
-            if (Result.RegisterEntity.Content.Registered == null) return Result;
-
-            CreateComponents();
-
-            if (Result.CreateComponents.Any(@event => @event.Content.Created == null)) return Result;
-
-            Confirm();
-
+            if (!TryCreateComponents()) return Result with { Created = null };
             return Result;
         }
 
@@ -48,32 +40,28 @@ namespace RineaR.MadeHighlow.Actions.CreateEntity
         {
             var action = new RegisterEntity.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
             var result = new RegisterEntity.Evaluator(Context, Simulating, action).Evaluate();
-            Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { RegisterEntity = @event };
+            Simulating = Simulating.Appended(result, out _);
+            Result = Result with { Created = result.Registered };
         }
 
-        private void CreateComponents()
+        private bool TryCreateComponents()
         {
-            var cardID = Result.RegisterEntity.Content.Registered.EntityID;
             Result = Result with { CreateComponents = ValueList<Event<CreateComponent.Result>>.Empty };
             foreach (var component in Action.InitialProps.Components)
             {
-                var action = new CreateComponent.Action(cardID, component);
+                var action = new CreateComponent.Action(Result.Created.EntityID, component);
                 var result = Context.Actions.CreateComponent(Simulating, action);
                 Simulating = Simulating.Appended(result, out var @event);
-                Result = Result with { CreateComponents = Result.CreateComponents.Add(@event) };
-            }
-        }
-
-        private void Confirm()
-        {
-            Result = Result with
-            {
-                Created = Result.RegisterEntity.Content.Registered with
+                Result = Result with
                 {
-                    Components = Result.CreateComponents.Select(@event => @event.Content.Created),
-                },
-            };
+                    CreateComponents = Result.CreateComponents.Add(@event),
+                    Created = Result.Created with { Components = Result.Created.Components.Add(result.Created) },
+                };
+
+                if (result.Created == null) return false;
+            }
+
+            return true;
         }
     }
 }

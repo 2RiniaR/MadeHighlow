@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace RineaR.MadeHighlow.Actions.CreateTile
 {
@@ -16,8 +15,9 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
 
         [NotNull] private IEvaluationContext Context { get; }
         [NotNull] private IHistory Initial { get; }
-        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Action Action { get; }
+
+        [NotNull] private IHistory Simulating { get; set; }
         [NotNull] private Result Result { get; set; }
 
         [NotNull]
@@ -25,15 +25,7 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
         {
             AllocateID();
             Register();
-
-            if (Result.RegisterTile.Content.Registered == null) return Result;
-
-            CreateComponents();
-
-            if (Result.CreateComponents.Any(@event => @event.Content.Created == null)) return Result;
-
-            Confirm();
-
+            if (!TryCreateComponents()) return Result with { Created = null };
             return Result;
         }
 
@@ -48,32 +40,28 @@ namespace RineaR.MadeHighlow.Actions.CreateTile
         {
             var action = new RegisterTile.Action(Result.AllocateID.Content.Allocated, Action.InitialProps);
             var result = new RegisterTile.Evaluator(Context, Simulating, action).Evaluate();
-            Simulating = Simulating.Appended(result, out var @event);
-            Result = Result with { RegisterTile = @event };
+            Simulating = Simulating.Appended(result, out _);
+            Result = Result with { Created = result.Registered };
         }
 
-        private void CreateComponents()
+        private bool TryCreateComponents()
         {
-            var cardID = Result.RegisterTile.Content.Registered.TileID;
             Result = Result with { CreateComponents = ValueList<Event<CreateComponent.Result>>.Empty };
             foreach (var component in Action.InitialProps.Components)
             {
-                var action = new CreateComponent.Action(cardID, component);
+                var action = new CreateComponent.Action(Result.Created.TileID, component);
                 var result = Context.Actions.CreateComponent(Simulating, action);
                 Simulating = Simulating.Appended(result, out var @event);
-                Result = Result with { CreateComponents = Result.CreateComponents.Add(@event) };
-            }
-        }
-
-        private void Confirm()
-        {
-            Result = Result with
-            {
-                Created = Result.RegisterTile.Content.Registered with
+                Result = Result with
                 {
-                    Components = Result.CreateComponents.Select(@event => @event.Content.Created),
-                },
-            };
+                    CreateComponents = Result.CreateComponents.Add(@event),
+                    Created = Result.Created with { Components = Result.Created.Components.Add(result.Created) },
+                };
+
+                if (result.Created == null) return false;
+            }
+
+            return true;
         }
     }
 }
