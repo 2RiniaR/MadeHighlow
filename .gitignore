@@ -1,0 +1,8 @@
+﻿# Plastic SCMをメインで使用するため、gitではスクリプトのみの変更を追跡できれば良い
+*
+!/[Aa]ssets/
+!/[Aa]ssets/[Ss]cripts/
+!/[Aa]ssets/[Ss]cripts/**/
+!/[Aa]ssets/[Ss]cripts/**/*.cs
+!/ignore.conf
+!/.gitignore
