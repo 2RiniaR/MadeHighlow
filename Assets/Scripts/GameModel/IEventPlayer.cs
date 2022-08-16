@@ -3,8 +3,8 @@ using Cysharp.Threading.Tasks;
 
 namespace RineaR.MadeHighlow.GameModel
 {
-    public interface IClient
+    public interface IEventPlayer
     {
-        UniTask SelectStrategy(Player submitter, CancellationToken token);
+        UniTask PlayEventsToLatest(CancellationToken token);
     }
 }

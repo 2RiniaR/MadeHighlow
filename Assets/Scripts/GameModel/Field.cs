@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
 {
-    public class Field : MonoBehaviour, IField
+    public class Field : MonoBehaviour
     {
         private List<FieldTransform> _objects = new();
 

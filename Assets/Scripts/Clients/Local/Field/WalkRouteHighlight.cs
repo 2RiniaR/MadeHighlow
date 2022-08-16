@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RineaR.MadeHighlow.GameData.CardEffects;
 using RineaR.MadeHighlow.GameModel;
 using RineaR.MadeHighlow.GameModel.Geometry;
 using UniRx;
@@ -15,7 +14,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         /// <summary>
         ///     途中経路のハイライトを生成する際に、使用されるテンプレート。
         /// </summary>
-        [Header("Settings")] [Tooltip("途中経路のハイライトを生成する際に、使用されるテンプレート。")]
+        [Header("Settings")]
+        [Tooltip("途中経路のハイライトを生成する際に、使用されるテンプレート。")]
         public FieldTransform path;
 
         /// <summary>
@@ -74,12 +74,12 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
             }
         }
 
-        private void UpdateRoute(WalkRoute route)
+        private void UpdateRoute(WalkRoutePrediction routePrediction)
         {
-            if (route == null || _source == null) return;
+            if (routePrediction == null || _source == null) return;
 
             for (var i = 0; i < _pathBuffers.Count; i++)
-                if (route.Positions.Count <= i)
+                if (routePrediction.Positions.Count <= i)
                 {
                     _pathBuffers[i].field = null;
                     _pathBuffers[i].position = FieldVector3.Zero;
@@ -88,8 +88,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
                 else
                 {
                     _pathBuffers[i].gameObject.SetActive(true);
-                    _pathBuffers[i].field = route.Walker.FieldTransform.field;
-                    _pathBuffers[i].position = route.Positions[i].To3D(0);
+                    _pathBuffers[i].field = routePrediction.Walker.fieldTransform.field;
+                    _pathBuffers[i].position = routePrediction.Positions[i].To3D(0);
                 }
 
             for (var i = 0; i < _checkpointBuffers.Count; i++)
@@ -102,7 +102,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
                 else
                 {
                     _checkpointBuffers[i].gameObject.SetActive(true);
-                    _checkpointBuffers[i].field = route.Walker.FieldTransform.field;
+                    _checkpointBuffers[i].field = routePrediction.Walker.fieldTransform.field;
                     _checkpointBuffers[i].position = _source.Checkpoints[i].Destination.To3D(0);
                 }
         }

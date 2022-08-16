@@ -1,25 +1,41 @@
-﻿using RineaR.MadeHighlow.GameModel.Interfaces.Entity;
+﻿using System;
+using RineaR.MadeHighlow.GameModel.Interfaces.Entity;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace RineaR.MadeHighlow.GameModel
 {
     [RequireComponent(typeof(Entity))]
     public class Life : MonoBehaviour
     {
-        [Min(0)] public int health;
-        [Min(0)] public int maxHealth;
-        public ISession Session { get; private set; }
-        public Entity Entity { get; private set; }
+        [Min(0)]
+        public int health;
+
+        [Min(0)]
+        public int maxHealth;
+
+        public Session session;
+        public Entity entity;
+
+        private void Reset()
+        {
+            RefreshReferences();
+        }
 
         private void Start()
         {
-            Session = GameModel.Session.ContextOf(this);
-            Entity = GetComponent<Entity>();
+            RefreshReferences();
         }
 
         private void OnValidate()
         {
             health = Mathf.Clamp(health, 0, maxHealth);
+        }
+
+        private void RefreshReferences()
+        {
+            entity = GetComponent<Entity>() ?? throw new NullReferenceException();
+            session ??= GetComponentInParent<Session>();
         }
 
         /// <summary>
@@ -28,7 +44,7 @@ namespace RineaR.MadeHighlow.GameModel
         /// <param name="damage">与えるダメージ量</param>
         public void Damage(int? damage)
         {
-            var effectors = Session.Field.GetComponentsInChildren<IDamageEffector>();
+            var effectors = session.field.GetComponentsInChildren<IDamageEffector>();
             foreach (var effector in effectors) effector.OnDamage(this, ref damage);
 
             if (damage == null) return;
@@ -41,7 +57,7 @@ namespace RineaR.MadeHighlow.GameModel
         /// </summary>
         public void Kill(float? probability)
         {
-            var effectors = Session.Field.GetComponentsInChildren<IKillEffector>();
+            var effectors = session.field.GetComponentsInChildren<IKillEffector>();
             foreach (var effector in effectors) effector.OnKill(this, ref probability);
 
             if (probability == null) return;
@@ -56,7 +72,7 @@ namespace RineaR.MadeHighlow.GameModel
         /// <param name="heal">回復量</param>
         public void Heal(int? heal)
         {
-            var effectors = Session.Field.GetComponentsInChildren<IHealEffector>();
+            var effectors = session.field.GetComponentsInChildren<IHealEffector>();
             foreach (var effector in effectors) effector.OnHeal(this, ref heal);
 
             if (heal == null) return;

@@ -9,19 +9,17 @@ namespace RineaR.MadeHighlow.GameModel
     public class Tile : MonoBehaviour
     {
         public TileSetting setting;
-        public FieldTransform FieldTransform { get; private set; }
+        public FieldTransform fieldTransform;
 
         private void Reset()
         {
-            FieldTransform = GetComponent<FieldTransform>();
-            if (FieldTransform == null) throw new Exception();
+            RefreshReferences();
+            FormatName();
         }
 
         private void Start()
         {
-            FieldTransform = GetComponent<FieldTransform>();
-            if (FieldTransform == null) throw new Exception();
-
+            RefreshReferences();
             FormatName();
         }
 
@@ -30,15 +28,16 @@ namespace RineaR.MadeHighlow.GameModel
             FormatName();
         }
 
-        private void OnValidate()
+        private void RefreshReferences()
         {
-            FieldTransform = GetComponentInParent<FieldTransform>();
+            fieldTransform = GetComponent<FieldTransform>() ?? throw new NullReferenceException();
         }
 
         public void FormatName()
         {
-            if (setting == null) return;
-            name = $"Tile - {setting.displayName} {FieldTransform.position}";
+            var nameText = setting ? setting.displayName : "???";
+            var positionText = fieldTransform ? fieldTransform.position.ToString() : "(?, ?, ?)";
+            name = $"Tile - {nameText} {positionText}";
         }
     }
 }

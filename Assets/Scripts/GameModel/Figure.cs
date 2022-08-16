@@ -11,30 +11,19 @@ namespace RineaR.MadeHighlow.GameModel
         public FigureSetting setting;
         public int strength;
         public FigureMedo medo;
-        public FieldTransform FieldTransform { get; private set; }
-        public Entity Entity { get; private set; }
-        public Life Life { get; private set; }
-        public ISession Session { get; private set; }
+        public FieldTransform fieldTransform;
+        public Entity entity;
+        public Life life;
+        public Session session;
 
         private void Reset()
         {
-            FieldTransform = GetComponentInParent<FieldTransform>();
-            if (FieldTransform == null) throw new Exception();
-            Entity = GetComponentInParent<Entity>();
-            if (Entity == null) throw new Exception();
-            Life = GetComponentInParent<Life>();
-            if (Life == null) throw new Exception();
+            RefreshReferences();
         }
 
         private void Start()
         {
-            Session = GameModel.Session.ContextOf(this);
-            FieldTransform = GetComponent<FieldTransform>();
-            if (FieldTransform == null) throw new Exception();
-            Entity = GetComponentInParent<Entity>();
-            if (Entity == null) throw new Exception();
-            Life = GetComponentInParent<Life>();
-            if (Life == null) throw new Exception();
+            RefreshReferences();
         }
 
         private void Update()
@@ -42,15 +31,17 @@ namespace RineaR.MadeHighlow.GameModel
             FormatName();
         }
 
-        private void OnValidate()
+        private void RefreshReferences()
         {
-            FieldTransform = GetComponentInParent<FieldTransform>();
-            Entity = GetComponentInParent<Entity>();
+            fieldTransform = GetComponent<FieldTransform>() ?? throw new NullReferenceException();
+            entity = GetComponent<Entity>() ?? throw new NullReferenceException();
+            life = GetComponent<Life>() ?? throw new NullReferenceException();
+            session ??= GetComponentInParent<Session>();
         }
 
         public void FormatName()
         {
-            name = $"Figure -  {FieldTransform.position}";
+            name = $"Figure -  {fieldTransform.position}";
         }
     }
 }

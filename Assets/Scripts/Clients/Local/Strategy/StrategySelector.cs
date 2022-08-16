@@ -12,11 +12,18 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
     ///     行動選択ウィンドウ
     /// </summary>
     [RequireComponent(typeof(Window))]
-    public class StrategySelector : MonoBehaviour, MainInputActions.IStrategySelectorActions
+    public class StrategySelector : MonoBehaviour, IStrategySelector, MainInputActions.IStrategySelectorActions
     {
-        [Header("Requirements")] public Window window;
-        [Header("Settings")] public StrategyChecker strategyChecker;
-        [Header("Views")] public SelfPlayerView selfPlayerView;
+        [Header("Requirements")]
+        public Window window;
+
+        public Client client;
+
+        [Header("Settings")]
+        public StrategyChecker strategyChecker;
+
+        [Header("Views")]
+        public SelfPlayerView selfPlayerView;
 
         private readonly Subject<Unit> _onSubmit = new();
         private CancellationTokenSource _cancellationTokenSource;
@@ -31,6 +38,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         private void Start()
         {
             window = GetComponent<Window>() ?? throw new NullReferenceException();
+            client = GetComponentInParent<Client>();
+            if (client != null) client.StrategySelector = this;
         }
 
         private void OnEnable()
@@ -51,6 +60,13 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
             _onSubmit.Dispose();
         }
 
+        public async UniTask SelectStrategy(Player submitter, CancellationToken token)
+        {
+            selfPlayerView.SetSource(submitter);
+            await _onSubmit.First().ToUniTask(cancellationToken: token);
+            window.Close();
+        }
+
         public void OnSubmit(InputAction.CallbackContext context)
         {
             if (context.performed == false) return;
@@ -61,13 +77,6 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         {
             if (!strategyChecker.IsValid()) return;
             _onSubmit.OnNext(Unit.Default);
-        }
-
-        public async UniTask SelectStrategy(Player submitter, CancellationToken token)
-        {
-            selfPlayerView.SetSource(submitter);
-            await _onSubmit.First().ToUniTask(cancellationToken: token);
-            window.Close();
         }
     }
 }

@@ -6,16 +6,21 @@ namespace RineaR.MadeHighlow.GameModel
     public class League : MonoBehaviour
     {
         public List<Figure> figures;
-        public Player Owner { get; private set; }
+        public Player owner;
 
         private void Reset()
         {
-            Owner = Player.OwnerOf(this);
+            RefreshReferences();
         }
 
         private void Start()
         {
-            Owner = Player.OwnerOf(this);
+            RefreshReferences();
+        }
+
+        private void RefreshReferences()
+        {
+            owner ??= GetComponentInParent<Player>();
         }
 
         public void Join(Figure figure)

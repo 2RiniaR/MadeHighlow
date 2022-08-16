@@ -9,7 +9,7 @@ namespace RineaR.MadeHighlow.GameModel
     {
         public List<Player> players;
 
-        public async UniTask DetermineCommands(CancellationToken token)
+        public async UniTask SelectStrategy(CancellationToken token)
         {
             await UniTask.WhenAll(players.Select(player => player.SelectStrategy(token)));
         }

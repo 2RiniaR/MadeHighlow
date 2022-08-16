@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
@@ -10,20 +8,16 @@ namespace RineaR.MadeHighlow.GameModel
         public CommandQuickness quickness;
         public Figure figure;
         public List<Card> payCards;
-        private readonly List<ICommandRunner> _runners = new();
+        private ICommandRunner _runner;
 
         public void RegisterRunner(ICommandRunner runner)
         {
-            _runners.Add(runner);
+            _runner = runner;
         }
 
-        public async UniTask Run(CancellationToken token)
+        public ICommandResult Run()
         {
-            foreach (var runner in _runners)
-            {
-                await runner.Run(token);
-                if (token.IsCancellationRequested) return;
-            }
+            return _runner.RunCommand();
         }
     }
 }

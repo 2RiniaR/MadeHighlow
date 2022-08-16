@@ -12,10 +12,10 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         public float moveCameraSpeed = 1f;
         public LayerMask focusLayerMask;
         public float maxFocusDistance = Mathf.Infinity;
+        public ExplorerFocusViewer focusViewer;
+        public ExplorerFocusHighlight focusHighlight;
         private CameraController _cameraController;
         private MainInputActions _input;
-        public ExplorerFocusViewer FocusViewer { get; private set; }
-        public ExplorerFocusHighlight FocusHighlight { get; private set; }
 
         public Focus Focus { get; private set; }
 
@@ -25,12 +25,15 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
             _input.WorldExplorer.SetCallbacks(this);
         }
 
+        private void Reset()
+        {
+            RefreshReferences();
+        }
+
         private void Start()
         {
-            FocusViewer = GetComponentInChildren<ExplorerFocusViewer>();
-            FocusHighlight = GetComponentInChildren<ExplorerFocusHighlight>();
+            RefreshReferences();
             Focus = new Focus();
-
             var camera = GetComponentInChildren<CinemachineVirtualCamera>();
             var transposer = camera.GetCinemachineComponent<CinemachineFramingTransposer>();
             _cameraController = new CameraController(camera, transposer);
@@ -74,6 +77,12 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
             ZoomCamera(context.ReadValue<float>());
         }
 
+        private void RefreshReferences()
+        {
+            focusViewer = GetComponentInChildren<ExplorerFocusViewer>();
+            focusHighlight = GetComponentInChildren<ExplorerFocusHighlight>();
+        }
+
         private void UpdateCamera()
         {
             _cameraController.ZoomSpeed = zoomCameraSpeed;
@@ -92,8 +101,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
 
         private void UpdateView()
         {
-            FocusViewer.source = Focus.Current;
-            FocusHighlight.source = Focus.Current;
+            focusViewer.source = Focus.Current;
+            focusHighlight.source = Focus.Current;
         }
 
         public void MoveCamera(Vector2 value)

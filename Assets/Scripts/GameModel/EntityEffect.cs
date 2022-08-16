@@ -1,16 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
 {
-    [DisallowMultipleComponent]
-    public abstract class EntityEffect : MonoBehaviour
+    public class EntityEffect : MonoBehaviour
     {
-        public Entity Entity { get; private set; }
+        public Entity entity;
 
-        protected void Start()
+        private void Reset()
         {
-            Entity = GetComponentInParent<Entity>();
-            if (Entity == null) Debug.LogError("親にEntityが存在しません。");
+            RefreshReferences();
+        }
+
+        private void Start()
+        {
+            RefreshReferences();
+        }
+
+        private void RefreshReferences()
+        {
+            entity = GetComponent<Entity>() ?? throw new NullReferenceException();
         }
     }
 }

@@ -19,10 +19,10 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
     {
         public Window window;
         public WalkRouteHighlight highlight;
+        public Explorer explorer;
         private readonly Subject<WalkRoute> _onSubmit = new();
         private WalkRouteEntry _entry;
         private MainInputActions _input;
-        public Explorer Explorer { get; private set; }
 
         private void Awake()
         {
@@ -59,10 +59,10 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         public void OnAddCheckpoint(InputAction.CallbackContext context)
         {
             if (context.performed == false) return;
-            var target = Explorer.Focus.Current;
+            var target = explorer.Focus.Current;
             if (target == null) return;
 
-            AddCheckpoint(target.FieldTransform.position.To2D());
+            AddCheckpoint(target.fieldTransform.position.To2D());
         }
 
         public void OnUndoCheckpoint(InputAction.CallbackContext context)
@@ -80,16 +80,16 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         public void OnSubmit(InputAction.CallbackContext context)
         {
             if (context.performed == false) return;
-            var target = Explorer.Focus.Current;
+            var target = explorer.Focus.Current;
             if (target == null) return;
 
             // ダブルクリックしたタイルが最後に選択したタイルだった時のみ、ルート確定とする
-            if (target.FieldTransform.position.To2D() == _entry.LatestCheckpoint) SubmitEntry();
+            if (target.fieldTransform.position.To2D() == _entry.LatestCheckpoint) SubmitEntry();
         }
 
         private void RefreshReferences()
         {
-            Explorer = GetComponent<Explorer>() ?? throw new NullReferenceException();
+            explorer = GetComponent<Explorer>() ?? throw new NullReferenceException();
             window = GetComponent<Window>() ?? throw new NullReferenceException();
             highlight = GetComponentInChildren<WalkRouteHighlight>();
         }
@@ -127,8 +127,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         public void SubmitEntry()
         {
             if (_entry == null) return;
-            var route = _entry.Current;
-            _onSubmit.OnNext(route);
+            var prediction = _entry.CurrentPrediction;
+            _onSubmit.OnNext(prediction.Route);
 
             _entry.Dispose();
             _entry = null;

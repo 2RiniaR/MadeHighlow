@@ -11,7 +11,6 @@ namespace RineaR.MadeHighlow.Clients.Local.Debugger
     {
         public Figure walker;
         public bool activateOnStart;
-
         public WalkRouteSelector walkRouteSelector;
 
         private CancellationTokenSource _cancellationTokenSource;

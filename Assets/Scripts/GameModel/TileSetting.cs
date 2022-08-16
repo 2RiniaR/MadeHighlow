@@ -7,6 +7,8 @@ namespace RineaR.MadeHighlow.GameModel
     {
         public Sprite icon;
         public string displayName;
-        [TextArea] public string description;
+
+        [TextArea]
+        public string description;
     }
 }

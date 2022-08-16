@@ -9,7 +9,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 {
     public class LeagueView : MonoBehaviour
     {
-        [Header("Views")] public List<FigureView> figureViews;
+        [Header("Views")]
+        public List<FigureView> figureViews;
 
         public void SetSource(League source)
         {

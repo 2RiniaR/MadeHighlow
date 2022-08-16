@@ -6,7 +6,9 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 {
     public class SelfPlayerView : MonoBehaviour
     {
-        [Header("Views")] public LeagueView leagueView;
+        [Header("Views")]
+        public LeagueView leagueView;
+
         public DeckView deckView;
 
         private void Start()

@@ -6,7 +6,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 {
     public class DeckView : MonoBehaviour
     {
-        [Header("Views")] public List<CardView> cardViews;
+        [Header("Views")]
+        public List<CardView> cardViews;
 
         public void SetSource(Deck source)
         {

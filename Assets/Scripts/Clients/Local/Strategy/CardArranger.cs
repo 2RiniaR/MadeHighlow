@@ -39,8 +39,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
             {
                 var route = await SelectWalkRoute(target, token);
                 if (token.IsCancellationRequested) return;
-                var runner = walk.Activate(route);
-                target.Session.CommandStack.Push(runner.command);
+                var runner = walk.Activate(target, route);
+                target.session.commandStack.Push(runner.command);
             }
         }
     }

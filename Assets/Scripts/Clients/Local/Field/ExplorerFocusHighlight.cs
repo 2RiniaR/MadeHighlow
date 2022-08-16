@@ -9,26 +9,36 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
     public class ExplorerFocusHighlight : MonoBehaviour
     {
         public Tile source;
-        public FieldTransform FieldTransform { get; private set; }
+        public FieldTransform fieldTransform;
+
+        private void Reset()
+        {
+            RefreshReferences();
+        }
 
         private void Start()
         {
-            FieldTransform = GetComponent<FieldTransform>() ?? throw new NullReferenceException();
-            FieldTransform.positionBindingMode = FieldTransform.PositionBindingMode.Lock;
+            RefreshReferences();
+            fieldTransform.positionBindingMode = FieldTransform.PositionBindingMode.Lock;
         }
 
         private void Update()
         {
             if (source == null)
             {
-                FieldTransform.field = null;
-                FieldTransform.position = FieldVector3.Zero;
+                fieldTransform.field = null;
+                fieldTransform.position = FieldVector3.Zero;
             }
             else
             {
-                FieldTransform.field = source.FieldTransform.field;
-                FieldTransform.position = source.FieldTransform.position;
+                fieldTransform.field = source.fieldTransform.field;
+                fieldTransform.position = source.fieldTransform.position;
             }
+        }
+
+        private void RefreshReferences()
+        {
+            fieldTransform = GetComponent<FieldTransform>() ?? throw new NullReferenceException();
         }
     }
 }

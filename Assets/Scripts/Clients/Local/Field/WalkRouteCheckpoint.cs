@@ -14,7 +14,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
             Walker = walker;
             Destination = destination;
             PreviousCheckpoint = previousCheckpoint;
-            StartPosition = PreviousCheckpoint?.Destination ?? Walker.FieldTransform.position.To2D();
+            StartPosition = PreviousCheckpoint?.Destination ?? Walker.fieldTransform.position.To2D();
             Path = ResolvePath();
         }
 

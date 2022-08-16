@@ -12,9 +12,15 @@ namespace RineaR.MadeHighlow.Clients.Local
     {
         private static Window _current;
 
-        [Header("States")] [NonEditable] public Window parent;
-        [NonEditable] public Window child;
-        [NonEditable] public bool pausing;
+        [Header("States")]
+        [NonEditable]
+        public Window parent;
+
+        [NonEditable]
+        public Window child;
+
+        [NonEditable]
+        public bool pausing;
 
         public static Window Current => _current ? _current : CreateRoute();
 

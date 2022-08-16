@@ -7,9 +7,12 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 {
     public class CardView : MonoBehaviour
     {
-        [Header("States")] public Card source;
+        [Header("States")]
+        public Card source;
 
-        [Header("Views")] public Image baseImage;
+        [Header("Views")]
+        public Image baseImage;
+
         public Image frameImage;
         public Image commandImage;
         public Image quicknessImage;

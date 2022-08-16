@@ -24,10 +24,5 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
             Dragging = null;
             _onDropped.OnNext((cardDragger, target));
         }
-
-        public static CardDraggingContext ContextOf(Component component)
-        {
-            return component.GetComponentInParent<CardDraggingContext>();
-        }
     }
 }

@@ -21,12 +21,12 @@ namespace RineaR.MadeHighlow.GameModel
 
         private void Reset()
         {
-            field ??= Session.ContextOf(this)?.Field;
+            RefreshReferences();
         }
 
         private void Start()
         {
-            field ??= Session.ContextOf(this)?.Field;
+            RefreshReferences();
         }
 
         private void Update()
@@ -41,6 +41,11 @@ namespace RineaR.MadeHighlow.GameModel
                     AdjustFieldPositionFromWorld();
                     break;
             }
+        }
+
+        private void RefreshReferences()
+        {
+            field ??= GetComponentInParent<Field>();
         }
 
         private void AdjustWorldPositionFromField()

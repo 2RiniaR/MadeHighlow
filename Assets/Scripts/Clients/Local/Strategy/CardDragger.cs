@@ -9,8 +9,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
     public class CardDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public CardView view;
+        public CardDraggingContext context;
         private Vector3 _startDragPosition;
-        public CardDraggingContext Context { get; private set; }
 
         private void Reset()
         {
@@ -20,13 +20,12 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         private void Start()
         {
             RefreshReferences();
-            Context = CardDraggingContext.ContextOf(this);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             _startDragPosition = transform.position;
-            Context.PublishCardHovered(this);
+            context.PublishCardHovered(this);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -37,13 +36,14 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         public void OnEndDrag(PointerEventData eventData)
         {
             var target = DecideTarget(eventData);
-            Context.PublishCardDropped(this, target);
+            context.PublishCardDropped(this, target);
             transform.position = _startDragPosition;
         }
 
         private void RefreshReferences()
         {
             view = GetComponent<CardView>() ?? throw new NullReferenceException();
+            context ??= GetComponentInParent<CardDraggingContext>();
         }
 
         private void FollowPointer(Vector2 pointerPosition)

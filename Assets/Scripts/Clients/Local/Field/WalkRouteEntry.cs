@@ -11,7 +11,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
     public class WalkRouteEntry : IDisposable
     {
         private readonly List<WalkRouteCheckpoint> _checkpoints = new();
-        private readonly Subject<WalkRoute> _onUpdated = new();
+        private readonly Subject<WalkRoutePrediction> _onUpdated = new();
 
         public WalkRouteEntry(Figure walker)
         {
@@ -20,8 +20,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         }
 
         public Figure Walker { get; }
-        public WalkRoute Current { get; private set; }
-        public IObservable<WalkRoute> OnUpdated => _onUpdated;
+        public WalkRoutePrediction CurrentPrediction { get; private set; }
+        public IObservable<WalkRoutePrediction> OnUpdated => _onUpdated;
         public IReadOnlyList<WalkRouteCheckpoint> Checkpoints => _checkpoints;
         public FieldVector2 LatestCheckpoint => _checkpoints[^1].Destination;
 
@@ -53,9 +53,10 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         private void UpdateRoute()
         {
             var directions = Checkpoints.SelectMany(checkpoint => checkpoint.Path);
-            var route = new WalkRoute(Walker, directions);
-            Current = route;
-            _onUpdated.OnNext(route);
+            var route = new WalkRoute(directions);
+            var prediction = new WalkRoutePrediction(Walker, route);
+            CurrentPrediction = prediction;
+            _onUpdated.OnNext(prediction);
         }
     }
 }

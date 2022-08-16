@@ -11,18 +11,23 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 {
     public class FigureView : MonoBehaviour
     {
-        [Header("States")] public Figure source;
+        [Header("States")]
+        public Figure source;
 
         public Card selectedCard;
 
-        [Header("Views")] public Image faceImage;
+        [Header("Views")]
+        public Image faceImage;
+
         public Image iconImage;
         public TMP_Text nameText;
         public Image healthGauge;
         public TMP_Text healthText;
         public CardView cardView;
 
-        [Header("Interfaces")] public CardDropTarget cardDropArea;
+        [Header("Interfaces")]
+        public CardDropTarget cardDropArea;
+
         public CardArranger cardArranger;
 
         private CancellationTokenSource _cancellationTokenSource;
@@ -72,8 +77,8 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
             faceImage.sprite = source.setting.faceImage;
             iconImage.sprite = source.setting.iconImage;
             nameText.text = source.setting.displayName;
-            healthGauge.fillAmount = (float)source.Life.health / source.Life.maxHealth;
-            healthText.text = Mathf.Clamp(source.Life.health, 0, 999).ToString();
+            healthGauge.fillAmount = (float)source.life.health / source.life.maxHealth;
+            healthText.text = Mathf.Clamp(source.life.health, 0, 999).ToString();
         }
 
         private void ResetElements()

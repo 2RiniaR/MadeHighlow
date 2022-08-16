@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
@@ -7,23 +8,19 @@ namespace RineaR.MadeHighlow.GameModel
     [RequireComponent(typeof(FieldTransform))]
     public class Entity : MonoBehaviour
     {
+        public FieldTransform fieldTransform;
+        public Life life;
         private readonly List<EntityEffect> _effects = new();
-        public IEnumerable<EntityEffect> Effects => _effects;
-        public FieldTransform FieldTransform { get; private set; }
-        public Life Life { get; private set; }
+        public ReadOnlyCollection<EntityEffect> Effects => new(_effects);
 
         private void Reset()
         {
-            FieldTransform = GetComponentInParent<FieldTransform>();
-            if (FieldTransform == null) throw new Exception();
+            RefreshReferences();
         }
 
         private void Start()
         {
-            FieldTransform = GetComponent<FieldTransform>();
-            if (FieldTransform == null) throw new Exception();
-
-            Life = GetComponent<Life>();
+            RefreshReferences();
         }
 
         private void Update()
@@ -31,14 +28,15 @@ namespace RineaR.MadeHighlow.GameModel
             FormatName();
         }
 
-        private void OnValidate()
+        private void RefreshReferences()
         {
-            FieldTransform = GetComponentInParent<FieldTransform>();
+            fieldTransform = GetComponent<FieldTransform>() ?? throw new NullReferenceException();
+            life = GetComponent<Life>() ?? throw new NullReferenceException();
         }
 
         public void FormatName()
         {
-            name = $"Entity -  {FieldTransform.position}";
+            name = $"Entity -  {fieldTransform.position}";
         }
     }
 }

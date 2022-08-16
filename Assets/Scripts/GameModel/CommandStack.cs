@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
@@ -14,12 +13,7 @@ namespace RineaR.MadeHighlow.GameModel
     public class CommandStack : MonoBehaviour
     {
         private readonly List<Command> _commands = new();
-        private CommandOrderer _orderer;
-
-        private void Awake()
-        {
-            _orderer = new CommandOrderer();
-        }
+        public ReadOnlyCollection<Command> ReservedCommands => new(_commands);
 
         public void Push(Command command)
         {
@@ -30,18 +24,6 @@ namespace RineaR.MadeHighlow.GameModel
         private void ClearReservations()
         {
             _commands.Clear();
-        }
-
-        private void ResolveOrder()
-        {
-            _orderer.Resolve(_commands);
-            foreach (var command in _commands) command.transform.SetSiblingIndex(_commands.Count - 1);
-        }
-
-        public async UniTask RunAll(CancellationToken token)
-        {
-            foreach (var command in _commands) await command.Run(token);
-            ClearReservations();
         }
     }
 }

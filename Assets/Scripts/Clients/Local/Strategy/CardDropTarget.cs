@@ -9,13 +9,19 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
     {
         public Image areaIndicatorImage;
         public bool droppable = true;
+        public CardDraggingContext context;
         private readonly Subject<CardDragger> _onDropped = new();
         private bool _draggingExist;
         public bool Opening => _draggingExist && droppable;
 
+        private void Reset()
+        {
+            RefreshReferences();
+        }
+
         private void Start()
         {
-            var context = CardDraggingContext.ContextOf(this);
+            RefreshReferences();
             context.OnHovered.Subscribe(OnCardHovered).AddTo(this);
             context.OnDropped.Subscribe(x => OnCardDropped(x.card, x.target)).AddTo(this);
         }
@@ -28,6 +34,11 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         private void OnDestroy()
         {
             _onDropped.Dispose();
+        }
+
+        private void RefreshReferences()
+        {
+            context ??= GetComponentInParent<CardDraggingContext>();
         }
 
         public void OnCardHovered(CardDragger cardDragger)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
@@ -8,9 +9,11 @@ namespace RineaR.MadeHighlow.GameModel
         /// <summary>
         ///     命令の実行順を決定する
         /// </summary>
-        public void Resolve(List<Command> commands)
+        public ReadOnlyCollection<Command> Resolve(IEnumerable<Command> commands)
         {
-            commands.Sort(Compare);
+            var commandsList = new List<Command>(commands);
+            commandsList.Sort(Compare);
+            return new ReadOnlyCollection<Command>(commandsList);
         }
 
         /// <summary>
@@ -55,16 +58,16 @@ namespace RineaR.MadeHighlow.GameModel
 
         private int CompareHealth(Command command1, Command command2)
         {
-            var entity1 = command1.figure.Entity;
-            var entity2 = command2.figure.Entity;
+            var entity1 = command1.figure.entity;
+            var entity2 = command2.figure.entity;
             if (entity1 == null) return entity2 == null ? 0 : -1;
             if (entity2 == null) return 1;
 
-            if (entity1.Life == null) return entity2.Life == null ? 0 : -1;
-            if (entity2.Life == null) return 1;
+            if (entity1.life == null) return entity2.life == null ? 0 : -1;
+            if (entity2.life == null) return 1;
 
-            var health1 = entity1.Life.health;
-            var health2 = entity2.Life.health;
+            var health1 = entity1.life.health;
+            var health2 = entity2.life.health;
 
             return health2.CompareTo(health1);
         }

@@ -9,12 +9,16 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
     [RequireComponent(typeof(Card))]
     public class WalkActivator : MonoBehaviour
     {
-        [Header("Requirements")] public Card card;
+        [Header("Requirements")]
+        public Session session;
 
-        [Header("Settings")] public WalkRunner originalRunner;
-        [Min(0)] public int availableCost;
+        public Card card;
 
-        public ISession Session { get; private set; }
+        [Header("Settings")]
+        public WalkRunner originalRunner;
+
+        [Min(0)]
+        public int availableCost;
 
         private void Reset()
         {
@@ -30,17 +34,17 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
         private void RefreshReferences()
         {
             card = GetComponent<Card>() ?? throw new NullReferenceException();
-            Session = GameModel.Session.ContextOf(this);
+            session ??= GetComponentInParent<Session>();
         }
 
-        public WalkRunner Activate(WalkRoute route)
+        public WalkRunner Activate(Figure walker, WalkRoute route)
         {
             var walkRunner = Instantiate(originalRunner);
             walkRunner.name = originalRunner.name;
             walkRunner.Route = route;
             walkRunner.command.payCards = new List<Card> { card };
             walkRunner.command.quickness = card.quickness;
-            walkRunner.command.figure = route.Walker;
+            walkRunner.command.figure = walker;
             return walkRunner;
         }
     }

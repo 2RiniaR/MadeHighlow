@@ -10,12 +10,17 @@ namespace RineaR.MadeHighlow.GameModel
 
         private void Reset()
         {
-            owner ??= Player.OwnerOf(this);
+            RefreshReferences();
         }
 
         private void Start()
         {
-            owner ??= Player.OwnerOf(this);
+            RefreshReferences();
+        }
+
+        private void RefreshReferences()
+        {
+            owner ??= GetComponentInParent<Player>();
         }
 
         public void AddCard(Card card)

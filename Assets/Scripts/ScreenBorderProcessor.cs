@@ -10,7 +10,8 @@ namespace RineaR.MadeHighlow
 #endif
     public class ScreenBorderProcessor : InputProcessor<Vector2>
     {
-        [Tooltip("")] public float BorderWidthRate = 0.1f;
+        [Tooltip("")]
+        public float BorderWidthRate = 0.1f;
 #if UNITY_EDITOR
         static ScreenBorderProcessor()
         {
