@@ -1,7 +1,7 @@
 ﻿using RineaR.MadeHighlow.GameModel;
 using UnityEngine;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     public class Focus
     {
@@ -19,11 +19,22 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
 
         public Tile GetFocusTile(Vector2 screenPosition)
         {
-            if (Camera.main == null) return null;
-            var ray = Camera.main.ScreenPointToRay(screenPosition);
-            if (!Physics.Raycast(ray, out var hit, MaxDistance, TargetLayerMask)) return null;
+            if (Camera.main == null)
+            {
+                return null;
+            }
 
-            if (hit.collider == _previousHit) return _previousTarget;
+            var ray = Camera.main.ScreenPointToRay(screenPosition);
+            if (!Physics.Raycast(ray, out var hit, MaxDistance, TargetLayerMask))
+            {
+                return null;
+            }
+
+            if (hit.collider == _previousHit)
+            {
+                return _previousTarget;
+            }
+
             _previousHit = hit.collider;
 
             var target = hit.collider.GetComponentInParent<Tile>();

@@ -49,13 +49,25 @@ namespace RineaR.MadeHighlow.GameModel.Geometry
 
         public static FieldDirection2 FromVector(FieldVector2 vector)
         {
-            if (vector == FieldVector2.XPositive) return HorizontalPositive;
+            if (vector == FieldVector2.XPositive)
+            {
+                return HorizontalPositive;
+            }
 
-            if (vector == FieldVector2.XNegative) return HorizontalNegative;
+            if (vector == FieldVector2.XNegative)
+            {
+                return HorizontalNegative;
+            }
 
-            if (vector == FieldVector2.YPositive) return VerticalPositive;
+            if (vector == FieldVector2.YPositive)
+            {
+                return VerticalPositive;
+            }
 
-            if (vector == FieldVector2.YNegative) return VerticalNegative;
+            if (vector == FieldVector2.YNegative)
+            {
+                return VerticalNegative;
+            }
 
             throw new ArgumentException("The vector could not be convert to direction.");
         }

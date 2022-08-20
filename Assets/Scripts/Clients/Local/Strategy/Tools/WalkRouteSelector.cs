@@ -8,7 +8,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     /// <summary>
     ///     歩行ルートを選択するインタフェース
@@ -52,39 +52,65 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
 
         private void OnDestroy()
         {
+            _input.Dispose();
             _onSubmit.Dispose();
             _entry?.Dispose();
         }
 
         public void OnAddCheckpoint(InputAction.CallbackContext context)
         {
-            if (context.performed == false) return;
+            if (context.performed == false)
+            {
+                return;
+            }
+
             var target = explorer.Focus.Current;
-            if (target == null) return;
+            if (target == null)
+            {
+                return;
+            }
 
             AddCheckpoint(target.fieldTransform.position.To2D());
         }
 
         public void OnUndoCheckpoint(InputAction.CallbackContext context)
         {
-            if (context.performed == false) return;
+            if (context.performed == false)
+            {
+                return;
+            }
+
             UndoCheckpoint();
         }
 
         public void OnResetCheckpoints(InputAction.CallbackContext context)
         {
-            if (context.performed == false) return;
+            if (context.performed == false)
+            {
+                return;
+            }
+
             ResetCheckpoints();
         }
 
         public void OnSubmit(InputAction.CallbackContext context)
         {
-            if (context.performed == false) return;
+            if (context.performed == false)
+            {
+                return;
+            }
+
             var target = explorer.Focus.Current;
-            if (target == null) return;
+            if (target == null)
+            {
+                return;
+            }
 
             // ダブルクリックしたタイルが最後に選択したタイルだった時のみ、ルート確定とする
-            if (target.fieldTransform.position.To2D() == _entry.LatestCheckpoint) SubmitEntry();
+            if (target.fieldTransform.position.To2D() == _entry.LatestCheckpoint)
+            {
+                SubmitEntry();
+            }
         }
 
         private void RefreshReferences()
@@ -103,37 +129,54 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
         public void StartEntry(Figure walker)
         {
             _entry = new WalkRouteEntry(walker);
-            if (highlight != null) highlight.SetEntry(_entry);
+            if (highlight != null)
+            {
+                highlight.SetEntry(_entry);
+            }
         }
 
         public void AddCheckpoint(FieldVector2 position)
         {
-            if (_entry == null) return;
+            if (_entry == null)
+            {
+                return;
+            }
+
             _entry.AddCheckpoint(position);
         }
 
         public void UndoCheckpoint()
         {
-            if (_entry == null) return;
+            if (_entry == null)
+            {
+                return;
+            }
+
             _entry.UndoCheckpoint();
         }
 
         public void ResetCheckpoints()
         {
-            if (_entry == null) return;
+            if (_entry == null)
+            {
+                return;
+            }
+
             _entry.ResetCheckpoints();
         }
 
         public void SubmitEntry()
         {
-            if (_entry == null) return;
+            if (_entry == null)
+            {
+                return;
+            }
+
             var prediction = _entry.CurrentPrediction;
             _onSubmit.OnNext(prediction.Route);
 
             _entry.Dispose();
             _entry = null;
-
-            window.Close();
         }
     }
 }

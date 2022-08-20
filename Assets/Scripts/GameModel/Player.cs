@@ -8,8 +8,8 @@ namespace RineaR.MadeHighlow.GameModel
     {
         public League league;
         public Deck deck;
-        public Client client;
         public Session session;
+        private IStrategySelector _strategySelector;
 
         private void Reset()
         {
@@ -21,14 +21,46 @@ namespace RineaR.MadeHighlow.GameModel
             RefreshReferences();
         }
 
+        private void OnDestroy()
+        {
+            DisconnectStrategySelector();
+        }
+
+        public void ConnectStrategySelector(IStrategySelector client)
+        {
+            if (_strategySelector != null)
+            {
+                DisconnectStrategySelector();
+            }
+
+            _strategySelector = client;
+            Debug.Log($"{name}: Strategy Selector が接続されました。", this);
+        }
+
+        public void DisconnectStrategySelector()
+        {
+            if (_strategySelector == null)
+            {
+                return;
+            }
+
+            _strategySelector = null;
+            Debug.Log($"{name}: Strategy Selector の接続が切断されました。", this);
+        }
+
         private void RefreshReferences()
         {
             session ??= GetComponentInParent<Session>();
         }
 
-        public UniTask SelectStrategy(CancellationToken token)
+        public async UniTask SelectStrategy(CancellationToken token)
         {
-            return client.SelectStrategy(this, token);
+            if (_strategySelector == null)
+            {
+                return;
+            }
+
+            await _strategySelector.SelectStrategy(token);
         }
     }
 }

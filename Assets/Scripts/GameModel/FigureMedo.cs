@@ -9,8 +9,16 @@ namespace RineaR.MadeHighlow.GameModel
 
         public int CompareTo(FigureMedo other)
         {
-            if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
+            if (ReferenceEquals(this, other))
+            {
+                return 0;
+            }
+
+            if (ReferenceEquals(null, other))
+            {
+                return 1;
+            }
+
             return value.CompareTo(other.value);
         }
     }

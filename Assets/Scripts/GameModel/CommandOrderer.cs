@@ -28,15 +28,24 @@ namespace RineaR.MadeHighlow.GameModel
         {
             // (1) 「コマンドの早さ」が早い順に行動する。
             var quicknessCompare = CompareQuickness(command1, command2);
-            if (quicknessCompare != 0) return quicknessCompare;
+            if (quicknessCompare != 0)
+            {
+                return quicknessCompare;
+            }
 
             // (2) (1)が同一の場合、「行動するフィギュアのメド」が高い順に行動する。
             var medoCompare = CompareMedo(command1, command2);
-            if (medoCompare != 0) return medoCompare;
+            if (medoCompare != 0)
+            {
+                return medoCompare;
+            }
 
             // (3) (2)が同一の場合、「行動するフィギュアの体力」が高い順に行動する。
             var healthCompare = CompareHealth(command1, command2);
-            if (healthCompare != 0) return healthCompare;
+            if (healthCompare != 0)
+            {
+                return healthCompare;
+            }
 
             // (4) (3)が同一の場合、コマンドの実行順はランダムとなる。
             return CompareRandom();
@@ -58,23 +67,14 @@ namespace RineaR.MadeHighlow.GameModel
 
         private int CompareHealth(Command command1, Command command2)
         {
-            var entity1 = command1.figure.entity;
-            var entity2 = command2.figure.entity;
-            if (entity1 == null) return entity2 == null ? 0 : -1;
-            if (entity2 == null) return 1;
-
-            if (entity1.life == null) return entity2.life == null ? 0 : -1;
-            if (entity2.life == null) return 1;
-
-            var health1 = entity1.life.health;
-            var health2 = entity2.life.health;
-
+            var health1 = command1.figure != null ? command1.figure.life.health : 0;
+            var health2 = command2.figure != null ? command2.figure.life.health : 0;
             return health2.CompareTo(health1);
         }
 
         private int CompareRandom()
         {
-            return Random.Range(0f, 1f) > 1 / 2f ? 1 : 0;
+            return Random.Range(0f, 1f) > 0.5f ? 1 : 0;
         }
     }
 }

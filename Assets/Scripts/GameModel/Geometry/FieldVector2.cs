@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel.Geometry
 {
@@ -73,6 +74,11 @@ namespace RineaR.MadeHighlow.GameModel.Geometry
         public static bool operator !=(FieldVector2 l, FieldVector2 r)
         {
             return !(l == r);
+        }
+
+        public Vector2Int ToVector2Int()
+        {
+            return new Vector2Int(horizontal, vertical);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,46 +6,58 @@ namespace RineaR.MadeHighlow.GameModel
 {
     public class Session : MonoBehaviour
     {
-        public int turn;
+        [Header("Settings")]
         public Field field;
+
         public CommandStack commandStack;
-        public EventRunner eventRunner;
-        public PlayerContainer players;
-        public ClientContainer clients;
-        private readonly List<Player> _ranking = new();
+        public EventProcessor eventProcessor;
+        public EventPerformerConnector eventPerformerConnector;
+        public PlayerConnector playerConnector;
+        public EventLogger eventLogger;
+
+        [Header("States")]
+        public int turn;
+
         private CancellationTokenSource _cancellationTokenSource;
 
-        private void Awake()
+        public void StartGame()
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _cancellationTokenSource.RegisterRaiseCancelOnDestroy(this);
+            LoopAsync(_cancellationTokenSource.Token).Forget();
         }
 
-        private void Start()
+        public async UniTask LoopAsync(CancellationToken token)
         {
             turn = 0;
-            _ranking.Clear();
-            Run(_cancellationTokenSource.Token).Forget();
-        }
 
-        public async UniTask Run(CancellationToken token)
-        {
             while (true)
             {
-                await players.SelectStrategy(token);
+                turn += 1;
+                Debug.Log($"{name}: ターン {turn} が開始しました。", this);
 
-                eventRunner.RunCommandsByOrder(commandStack.ReservedCommands);
-                eventRunner.UpdateTurn();
+                await playerConnector.SelectStrategy(token);
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
 
-                await clients.PlayEventsToLatest(token);
+                eventProcessor.RunCommandsByOrder(commandStack.ReservedCommands);
+                eventProcessor.UpdateTurn();
 
-                if (IsGameSet()) break;
+                await eventPerformerConnector.PerformToLatest(token);
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                await UniTask.Yield(token);
             }
         }
 
-        private bool IsGameSet()
+        public void StopGame()
         {
-            return _ranking.Count == players.players.Count;
+            _cancellationTokenSource.Cancel();
         }
     }
 }

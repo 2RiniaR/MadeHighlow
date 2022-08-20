@@ -6,7 +6,7 @@ using RineaR.MadeHighlow.GameModel;
 using RineaR.MadeHighlow.GameModel.Geometry;
 using UniRx;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     public class WalkRouteEntry : IDisposable
     {

@@ -3,7 +3,7 @@ using RineaR.MadeHighlow.GameModel;
 using RineaR.MadeHighlow.GameModel.Geometry;
 using UnityEngine;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     [RequireComponent(typeof(FieldTransform))]
     public class ExplorerFocusHighlight : MonoBehaviour

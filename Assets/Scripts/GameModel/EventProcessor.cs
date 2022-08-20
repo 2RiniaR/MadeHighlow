@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
 {
-    public class EventRunner : MonoBehaviour
+    public class EventProcessor : MonoBehaviour
     {
         public EventLogger logger;
         private readonly CommandOrderer _orderer = new();
@@ -13,7 +13,10 @@ namespace RineaR.MadeHighlow.GameModel
         {
             var orderedCommands = _orderer.Resolve(commands);
 
-            foreach (var command in orderedCommands) RunCommandSingle(command);
+            foreach (var command in orderedCommands)
+            {
+                RunCommandSingle(command);
+            }
         }
 
         public void RunCommandSingle(Command command)

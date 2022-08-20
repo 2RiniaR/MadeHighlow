@@ -26,7 +26,11 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
         public override string ToString()
         {
             var result = "WalkRoute:";
-            for (var i = 0; i < _directions.Count; i++) result += $"\n[{i}] {_directions[i].ToString()}";
+            for (var i = 0; i < _directions.Count; i++)
+            {
+                result += $"\n[{i}] {_directions[i].ToString()}";
+            }
+
             return result;
         }
     }

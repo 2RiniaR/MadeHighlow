@@ -48,7 +48,11 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 
         public void OnCardDropped(CardDragger cardDragger, CardDropTarget target)
         {
-            if (target == this && Opening) _onDropped.OnNext(cardDragger);
+            if (target == this && Opening)
+            {
+                _onDropped.OnNext(cardDragger);
+            }
+
             _draggingExist = false;
         }
 

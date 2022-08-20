@@ -3,7 +3,7 @@ using RineaR.MadeHighlow.GameData.CardEffects;
 using RineaR.MadeHighlow.GameModel;
 using RineaR.MadeHighlow.GameModel.Geometry;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     public class WalkRoutePrediction
     {

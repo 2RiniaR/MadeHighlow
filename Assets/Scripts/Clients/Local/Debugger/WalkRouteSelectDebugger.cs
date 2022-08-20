@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using RineaR.MadeHighlow.Clients.Local.Field;
+using RineaR.MadeHighlow.Clients.Local.Strategy.Tools;
 using RineaR.MadeHighlow.GameModel;
 using UnityEngine;
 
@@ -30,7 +30,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Debugger
         {
             if (activateOnStart)
             {
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
+                await UniTask.Yield(token);
                 await Run(token);
             }
         }
@@ -43,10 +43,21 @@ namespace RineaR.MadeHighlow.Clients.Local.Debugger
 
         private async UniTask Run(CancellationToken token)
         {
-            if (walker == null) Debug.LogError("Please set walker.");
-            var window = Window.Current.OpenAsChild(walkRouteSelector.window).GetComponent<WalkRouteSelector>() ??
-                         throw new NullReferenceException();
-            var route = await window.SelectWalkRoute(walker, token);
+            if (walker == null)
+            {
+                Debug.LogError("Please set walker.");
+            }
+
+            var window = Window.GetRoute().CreateChild(walkRouteSelector.window);
+            window.Open();
+
+            var selector = window.GetComponent<WalkRouteSelector>() ?? throw new NullReferenceException();
+            var route = await selector.SelectWalkRoute(walker, token);
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             Debug.Log(route);
         }
     }

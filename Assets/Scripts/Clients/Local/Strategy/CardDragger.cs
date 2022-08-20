@@ -48,7 +48,11 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 
         private void FollowPointer(Vector2 pointerPosition)
         {
-            if (Camera.main == null) return;
+            if (Camera.main == null)
+            {
+                return;
+            }
+
             var targetPosition = new Vector3(pointerPosition.x, pointerPosition.y, -1);
             transform.position = targetPosition;
         }
@@ -62,9 +66,17 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
             CardDropTarget target = null;
             foreach (var hit in raycastHits)
             {
-                if (minDepth <= hit.depth) continue;
+                if (minDepth <= hit.depth)
+                {
+                    continue;
+                }
+
                 var component = hit.gameObject.GetComponent<CardDropTarget>();
-                if (component == null) continue;
+                if (component == null)
+                {
+                    continue;
+                }
+
                 target = component;
             }
 

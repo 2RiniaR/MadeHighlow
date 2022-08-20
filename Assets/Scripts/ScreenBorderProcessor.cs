@@ -27,9 +27,21 @@ namespace RineaR.MadeHighlow
 
         private float RateIn(float value, float min, float max)
         {
-            if (min >= max) throw new ArgumentException();
-            if (value < min) return 0;
-            if (value > max) return 1;
+            if (min >= max)
+            {
+                throw new ArgumentException();
+            }
+
+            if (value < min)
+            {
+                return 0;
+            }
+
+            if (value > max)
+            {
+                return 1;
+            }
+
             return (value - min) / (max - min);
         }
 

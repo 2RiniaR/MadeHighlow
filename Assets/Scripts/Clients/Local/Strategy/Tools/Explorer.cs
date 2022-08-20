@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     public class Explorer : MonoBehaviour, MainInputActions.IWorldExplorerActions
     {
@@ -73,7 +73,11 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
 
         public void OnZoomCamera(InputAction.CallbackContext context)
         {
-            if (context.performed == false) return;
+            if (context.performed == false)
+            {
+                return;
+            }
+
             ZoomCamera(context.ReadValue<float>());
         }
 

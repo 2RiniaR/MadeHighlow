@@ -5,6 +5,6 @@ namespace RineaR.MadeHighlow.GameModel
 {
     public interface IStrategySelector
     {
-        UniTask SelectStrategy(Player submitter, CancellationToken token);
+        UniTask SelectStrategy(CancellationToken token);
     }
 }

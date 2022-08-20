@@ -45,9 +45,15 @@ namespace RineaR.MadeHighlow.GameModel
         public void Damage(int? damage)
         {
             var effectors = session.field.GetComponentsInChildren<IDamageEffector>();
-            foreach (var effector in effectors) effector.OnDamage(this, ref damage);
+            foreach (var effector in effectors)
+            {
+                effector.OnDamage(this, ref damage);
+            }
 
-            if (damage == null) return;
+            if (damage == null)
+            {
+                return;
+            }
 
             health = Mathf.Max(0, health - damage.Value);
         }
@@ -58,11 +64,21 @@ namespace RineaR.MadeHighlow.GameModel
         public void Kill(float? probability)
         {
             var effectors = session.field.GetComponentsInChildren<IKillEffector>();
-            foreach (var effector in effectors) effector.OnKill(this, ref probability);
+            foreach (var effector in effectors)
+            {
+                effector.OnKill(this, ref probability);
+            }
 
-            if (probability == null) return;
+            if (probability == null)
+            {
+                return;
+            }
 
-            if (Random.Range(0f, 1f) > probability) return;
+            if (Random.Range(0f, 1f) > probability)
+            {
+                return;
+            }
+
             health = 0;
         }
 
@@ -73,9 +89,15 @@ namespace RineaR.MadeHighlow.GameModel
         public void Heal(int? heal)
         {
             var effectors = session.field.GetComponentsInChildren<IHealEffector>();
-            foreach (var effector in effectors) effector.OnHeal(this, ref heal);
+            foreach (var effector in effectors)
+            {
+                effector.OnHeal(this, ref heal);
+            }
 
-            if (heal == null) return;
+            if (heal == null)
+            {
+                return;
+            }
 
             health = Mathf.Min(maxHealth, health + heal.Value);
         }

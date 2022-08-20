@@ -4,17 +4,18 @@ using Cysharp.Threading.Tasks;
 using RineaR.MadeHighlow.Clients.Local.Strategy;
 using RineaR.MadeHighlow.GameModel;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace RineaR.MadeHighlow.Clients.Local.Debugger
 {
     public class SelectStrategyDebugger : MonoBehaviour
     {
-        public Player submitter;
+        [Header("Settings")]
         public bool activateOnStart;
 
-        [FormerlySerializedAs("strategyWindow")]
         public StrategySelector strategySelector;
+
+        [Header("References on scene")]
+        public Player submitter;
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -33,7 +34,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Debugger
         {
             if (activateOnStart)
             {
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
+                await UniTask.Yield(token);
                 await Run(token);
             }
         }
@@ -46,10 +47,21 @@ namespace RineaR.MadeHighlow.Clients.Local.Debugger
 
         private async UniTask Run(CancellationToken token)
         {
-            if (submitter == null) Debug.LogError("Please set submitter.");
-            var window = Window.Current.OpenAsChild(strategySelector.window).GetComponent<StrategySelector>() ??
-                         throw new NullReferenceException();
-            await window.SelectStrategy(submitter, token);
+            if (submitter == null)
+            {
+                Debug.LogError("Please set submitter.");
+            }
+
+            var window = Window.GetRoute().CreateChild(strategySelector.window);
+            window.Open();
+
+            var selector = window.GetComponent<StrategySelector>() ?? throw new NullReferenceException();
+            await selector.SelectStrategy(token);
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
             Debug.Log("Submitted!");
         }
     }

@@ -4,7 +4,7 @@ using RineaR.MadeHighlow.GameModel.Geometry;
 using UniRx;
 using UnityEngine;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     /// <summary>
     ///     歩行ルートのハイライト表示
@@ -76,9 +76,13 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
 
         private void UpdateRoute(WalkRoutePrediction routePrediction)
         {
-            if (routePrediction == null || _source == null) return;
+            if (routePrediction == null || _source == null)
+            {
+                return;
+            }
 
             for (var i = 0; i < _pathBuffers.Count; i++)
+            {
                 if (routePrediction.Positions.Count <= i)
                 {
                     _pathBuffers[i].field = null;
@@ -91,8 +95,10 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
                     _pathBuffers[i].field = routePrediction.Walker.fieldTransform.field;
                     _pathBuffers[i].position = routePrediction.Positions[i].To3D(0);
                 }
+            }
 
             for (var i = 0; i < _checkpointBuffers.Count; i++)
+            {
                 if (_source.Checkpoints.Count <= i)
                 {
                     _checkpointBuffers[i].field = null;
@@ -105,6 +111,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
                     _checkpointBuffers[i].field = routePrediction.Walker.fieldTransform.field;
                     _checkpointBuffers[i].position = _source.Checkpoints[i].Destination.To3D(0);
                 }
+            }
         }
     }
 }

@@ -61,17 +61,35 @@ namespace RineaR.MadeHighlow.GameModel.Geometry
 
         public static FieldDirection3 FromVector(FieldVector3 vector)
         {
-            if (vector == FieldVector3.XPositive) return HorizontalPositive;
+            if (vector == FieldVector3.XPositive)
+            {
+                return HorizontalPositive;
+            }
 
-            if (vector == FieldVector3.XNegative) return HorizontalNegative;
+            if (vector == FieldVector3.XNegative)
+            {
+                return HorizontalNegative;
+            }
 
-            if (vector == FieldVector3.YPositive) return VerticalPositive;
+            if (vector == FieldVector3.YPositive)
+            {
+                return VerticalPositive;
+            }
 
-            if (vector == FieldVector3.YNegative) return VerticalNegative;
+            if (vector == FieldVector3.YNegative)
+            {
+                return VerticalNegative;
+            }
 
-            if (vector == FieldVector3.ZPositive) return HeightPositive;
+            if (vector == FieldVector3.ZPositive)
+            {
+                return HeightPositive;
+            }
 
-            if (vector == FieldVector3.ZNegative) return HeightNegative;
+            if (vector == FieldVector3.ZNegative)
+            {
+                return HeightNegative;
+            }
 
             throw new ArgumentException("The vector could not be convert to direction.");
         }

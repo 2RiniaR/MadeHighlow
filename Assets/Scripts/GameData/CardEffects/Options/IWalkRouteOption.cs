@@ -1,4 +1,4 @@
-﻿using RineaR.MadeHighlow.Clients.Local.Field;
+﻿using RineaR.MadeHighlow.Clients.Local.Strategy.Tools;
 using RineaR.MadeHighlow.GameModel;
 
 namespace RineaR.MadeHighlow.GameData.CardEffects.Options

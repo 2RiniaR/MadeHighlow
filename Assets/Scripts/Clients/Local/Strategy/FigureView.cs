@@ -28,6 +28,7 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         [Header("Interfaces")]
         public CardDropTarget cardDropArea;
 
+        [Header("Settings")]
         public CardArranger cardArranger;
 
         private CancellationTokenSource _cancellationTokenSource;
@@ -42,9 +43,10 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 
         private void Start()
         {
-            cardView = GetComponentInChildren<CardView>();
-            cardDropArea = GetComponentInChildren<CardDropTarget>();
-            if (cardDropArea != null) cardDropArea.OnDropAsObservable().Subscribe(OnCardDropped).AddTo(this);
+            if (cardDropArea != null)
+            {
+                cardDropArea.OnDropAsObservable().Subscribe(OnCardDropped).AddTo(this);
+            }
         }
 
         private void Update()
@@ -56,11 +58,16 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
         private void OnDestroy()
         {
             _onCardSet.Dispose();
+            _cancellationTokenSource.Dispose();
         }
 
         private void OnCardDropped(CardDragger dragger)
         {
-            if (source == null || dragger == null) return;
+            if (source == null || dragger == null)
+            {
+                return;
+            }
+
             _onCardSet.OnNext(dragger);
             cardDropArea.droppable = false;
             cardArranger.Arrange(dragger.view.source, source, _cancellationTokenSource.Token).Forget();

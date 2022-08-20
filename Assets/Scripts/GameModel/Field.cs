@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using RineaR.MadeHighlow.GameModel.Geometry;
 using UnityEngine;
@@ -8,6 +9,37 @@ namespace RineaR.MadeHighlow.GameModel
     public class Field : MonoBehaviour
     {
         private List<FieldTransform> _objects = new();
+        public ReadOnlyCollection<FieldTransform> Objects => _objects.AsReadOnly();
+
+        private void Start()
+        {
+            UnlockObjects();
+        }
+
+        private void CollectObjects()
+        {
+            _objects = GetComponentsInChildren<FieldTransform>().ToList();
+            _objects.Sort((obj1, obj2) =>
+            {
+                var horizontalCompare = obj1.position.horizontal.CompareTo(obj2.position.horizontal);
+                if (horizontalCompare != 0)
+                {
+                    return horizontalCompare;
+                }
+
+                var verticalCompare = obj1.position.vertical.CompareTo(obj2.position.vertical);
+                if (verticalCompare != 0)
+                {
+                    return verticalCompare;
+                }
+
+                return obj1.position.height.CompareTo(obj2.position.height);
+            });
+            foreach (var obj in _objects)
+            {
+                obj.transform.SetSiblingIndex(_objects.Count - 1);
+            }
+        }
 
         public FieldVector3 WorldPositionToField(Vector3 position)
         {
@@ -30,18 +62,13 @@ namespace RineaR.MadeHighlow.GameModel
             );
         }
 
-        private void CollectObjects()
+        public Vector3 FieldVectorToWorld(FieldVector3 fieldVector)
         {
-            _objects = GetComponentsInChildren<FieldTransform>().ToList();
-            _objects.Sort((obj1, obj2) =>
-            {
-                var horizontalCompare = obj1.position.horizontal.CompareTo(obj2.position.horizontal);
-                if (horizontalCompare != 0) return horizontalCompare;
-                var verticalCompare = obj1.position.vertical.CompareTo(obj2.position.vertical);
-                if (verticalCompare != 0) return verticalCompare;
-                return obj1.position.height.CompareTo(obj2.position.height);
-            });
-            foreach (var obj in _objects) obj.transform.SetSiblingIndex(_objects.Count - 1);
+            return new Vector3(
+                fieldVector.horizontal,
+                fieldVector.height,
+                fieldVector.vertical
+            );
         }
 
         [ContextMenu("Unlock all objects")]
@@ -49,7 +76,9 @@ namespace RineaR.MadeHighlow.GameModel
         {
             CollectObjects();
             foreach (var fieldTransform in _objects)
+            {
                 fieldTransform.positionBindingMode = FieldTransform.PositionBindingMode.Input;
+            }
         }
 
         [ContextMenu("Lock all objects")]
@@ -57,7 +86,9 @@ namespace RineaR.MadeHighlow.GameModel
         {
             CollectObjects();
             foreach (var fieldTransform in _objects)
+            {
                 fieldTransform.positionBindingMode = FieldTransform.PositionBindingMode.Lock;
+            }
         }
     }
 }

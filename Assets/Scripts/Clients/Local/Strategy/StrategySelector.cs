@@ -12,15 +12,16 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
     ///     行動選択ウィンドウ
     /// </summary>
     [RequireComponent(typeof(Window))]
-    public class StrategySelector : MonoBehaviour, IStrategySelector, MainInputActions.IStrategySelectorActions
+    public class StrategySelector : MonoBehaviour, MainInputActions.IStrategySelectorActions
     {
         [Header("Requirements")]
         public Window window;
 
-        public Client client;
-
         [Header("Settings")]
         public StrategyChecker strategyChecker;
+
+        [Header("References on scene")]
+        public Player player;
 
         [Header("Views")]
         public SelfPlayerView selfPlayerView;
@@ -35,11 +36,14 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
             _input.StrategySelector.SetCallbacks(this);
         }
 
+        private void Reset()
+        {
+            RefreshReferences();
+        }
+
         private void Start()
         {
-            window = GetComponent<Window>() ?? throw new NullReferenceException();
-            client = GetComponentInParent<Client>();
-            if (client != null) client.StrategySelector = this;
+            RefreshReferences();
         }
 
         private void OnEnable()
@@ -57,25 +61,42 @@ namespace RineaR.MadeHighlow.Clients.Local.Strategy
 
         private void OnDestroy()
         {
+            _input.Dispose();
             _onSubmit.Dispose();
-        }
-
-        public async UniTask SelectStrategy(Player submitter, CancellationToken token)
-        {
-            selfPlayerView.SetSource(submitter);
-            await _onSubmit.First().ToUniTask(cancellationToken: token);
-            window.Close();
         }
 
         public void OnSubmit(InputAction.CallbackContext context)
         {
-            if (context.performed == false) return;
+            if (context.performed == false)
+            {
+                return;
+            }
+
             Submit();
+        }
+
+        private void RefreshReferences()
+        {
+            window = GetComponent<Window>() ?? throw new NullReferenceException();
+        }
+
+        /// <summary>
+        ///     戦略を選択させ、完了するまで待つ。
+        /// </summary>
+        public async UniTask SelectStrategy(CancellationToken token)
+        {
+            selfPlayerView.SetSource(player);
+            await _onSubmit.First().ToUniTask(cancellationToken: token);
+            await UniTask.Yield(token);
         }
 
         public void Submit()
         {
-            if (!strategyChecker.IsValid()) return;
+            if (!strategyChecker.IsValid())
+            {
+                return;
+            }
+
             _onSubmit.OnNext(Unit.Default);
         }
     }

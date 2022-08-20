@@ -10,10 +10,7 @@ namespace RineaR.MadeHighlow.GameData.Commands
     [RequireComponent(typeof(Command))]
     public class WalkRunner : MonoBehaviour, ICommandRunner
     {
-        public bool enableClimb;
-        public bool enableDown;
         public Command command;
-        public Figure figure;
         public WalkRoute Route { get; set; }
 
         private void Reset()
@@ -33,12 +30,16 @@ namespace RineaR.MadeHighlow.GameData.Commands
             var movedDirections = new List<FieldDirection2>();
             foreach (var direction in Route.Directions)
             {
-                figure.fieldTransform.position += direction.ToVector().To3D(0);
+                command.figure.fieldTransform.position += direction.ToVector().To3D(0);
                 movedDirections.Add(direction);
             }
 
             // 起こったことを出力する
-            return new WalkResult { Route = new WalkRoute(movedDirections) };
+            return new WalkResult
+            {
+                Route = new WalkRoute(movedDirections),
+                Walker = command.figure,
+            };
         }
 
         private void RefreshReferences()

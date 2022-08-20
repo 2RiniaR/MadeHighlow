@@ -31,7 +31,11 @@ namespace RineaR.MadeHighlow.GameModel
 
         private void Update()
         {
-            if (field == null) return;
+            if (field == null)
+            {
+                return;
+            }
+
             switch (positionBindingMode)
             {
                 case PositionBindingMode.Lock:
@@ -46,6 +50,11 @@ namespace RineaR.MadeHighlow.GameModel
         private void RefreshReferences()
         {
             field ??= GetComponentInParent<Field>();
+        }
+
+        public Vector3 GetWorldPosition()
+        {
+            return field.FieldPositionToWorld(position);
         }
 
         private void AdjustWorldPositionFromField()

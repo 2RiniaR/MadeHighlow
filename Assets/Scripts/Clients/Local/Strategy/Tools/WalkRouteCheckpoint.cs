@@ -4,7 +4,7 @@ using RineaR.MadeHighlow.GameModel;
 using RineaR.MadeHighlow.GameModel.Geometry;
 using UnityEngine;
 
-namespace RineaR.MadeHighlow.Clients.Local.Field
+namespace RineaR.MadeHighlow.Clients.Local.Strategy.Tools
 {
     public class WalkRouteCheckpoint
     {
@@ -30,10 +30,16 @@ namespace RineaR.MadeHighlow.Clients.Local.Field
             var path = new List<FieldDirection2>();
             var xSign = (int)Mathf.Sign(difference.horizontal);
             for (var i = 0; i < Mathf.Abs(difference.horizontal); i++)
+            {
                 path.Add(FieldDirection2.FromVector(new FieldVector2 { horizontal = xSign, vertical = 0 }));
+            }
+
             var ySign = (int)Mathf.Sign(difference.vertical);
             for (var i = 0; i < Mathf.Abs(difference.vertical); i++)
+            {
                 path.Add(FieldDirection2.FromVector(new FieldVector2 { horizontal = 0, vertical = ySign }));
+            }
+
             return path;
         }
     }
