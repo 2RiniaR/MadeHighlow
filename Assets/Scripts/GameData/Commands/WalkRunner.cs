@@ -10,6 +10,9 @@ namespace RineaR.MadeHighlow.GameData.Commands
     [RequireComponent(typeof(Command))]
     public class WalkRunner : MonoBehaviour, ICommandRunner
     {
+        [Min(0)]
+        public int costLimit;
+
         public Command command;
         public WalkRoute Route { get; set; }
 
@@ -26,18 +29,46 @@ namespace RineaR.MadeHighlow.GameData.Commands
 
         public ICommandResult RunCommand()
         {
-            // 状態を更新する
-            var movedDirections = new List<FieldDirection2>();
+            var cost = 0;
+            var directions = new List<FieldDirection2>();
             foreach (var direction in Route.Directions)
             {
-                command.figure.fieldTransform.position += direction.ToVector().To3D(0);
-                movedDirections.Add(direction);
+                var start = command.figure.fieldTransform.position;
+                var end2D = start.To2D() + direction.ToVector();
+
+                var tile = command.session.field.FindTileWithPosition(end2D);
+
+                // 移動先にタイルが存在しない場合、移動を中断する。
+                if (tile == null)
+                {
+                    break;
+                }
+
+                var climbHeight = tile.elevation - start.height;
+                cost += climbHeight switch
+                {
+                    2 => 15,
+                    1 => 5,
+                    0 => 1,
+                    -1 => 1,
+                    -2 => 1,
+                    _ => int.MaxValue,
+                };
+
+                // 使用可能なコストを超えた場合、移動を中断する。
+                if (cost > costLimit)
+                {
+                    break;
+                }
+
+                var end = end2D.To3D(tile.elevation);
+                command.figure.MoveTo(end);
+                directions.Add(direction);
             }
 
-            // 起こったことを出力する
             return new WalkResult
             {
-                Route = new WalkRoute(movedDirections),
+                Route = new WalkRoute(directions),
                 Walker = command.figure,
             };
         }
@@ -50,7 +81,7 @@ namespace RineaR.MadeHighlow.GameData.Commands
         [ContextMenu("Print Route")]
         private void PrintRoute()
         {
-            Debug.Log(Route);
+            this.LogInfo(Route.ToString());
         }
     }
 }

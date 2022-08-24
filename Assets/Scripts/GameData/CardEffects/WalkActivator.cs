@@ -18,7 +18,7 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
         public WalkRunner originalRunner;
 
         [Min(0)]
-        public int availableCost;
+        public int costLimit;
 
         private void Reset()
         {
@@ -28,7 +28,7 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
         private void Start()
         {
             RefreshReferences();
-            card.optionText = availableCost.ToString();
+            card.optionText = costLimit.ToString();
         }
 
         private void RefreshReferences()
@@ -42,9 +42,11 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
             var walkRunner = Instantiate(originalRunner);
             walkRunner.name = originalRunner.name;
             walkRunner.Route = route;
+            walkRunner.costLimit = costLimit;
             walkRunner.command.payCards = new List<Card> { card };
             walkRunner.command.quickness = card.quickness;
             walkRunner.command.figure = walker;
+            walkRunner.command.session = session;
             return walkRunner;
         }
     }

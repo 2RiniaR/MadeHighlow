@@ -25,21 +25,42 @@ namespace RineaR.MadeHighlow.GameModel
             players = new List<Player>(_players);
         }
 
+        private void OnDestroy()
+        {
+            foreach (var player in new List<Player>(_players))
+            {
+                Leave(player);
+            }
+        }
+
+        /// <summary>
+        ///     プレイヤーをゲームに参加させる。
+        /// </summary>
+        /// <param name="player">参加するプレイヤー。</param>
         public void Join(Player player)
         {
             _players.Add(player);
-            Debug.Log($"{name}: Player（{player.name}）が接続されました。", this);
+            this.LogInfo($"プレイヤー（{player.name}）がゲームに参加しました。");
         }
 
+        /// <summary>
+        ///     プレイヤーをゲームから離脱させる。
+        /// </summary>
+        /// <param name="player">離脱するプレイヤー。</param>
         public void Leave(Player player)
         {
             _players.Remove(player);
-            Debug.Log($"{name}: Player（{player.name}）の接続が切断されました。", this);
+            this.LogInfo($"プレイヤー（{player.name}）がゲームから離脱しました。");
         }
 
+        /// <summary>
+        ///     全てのプレイヤーに、行動を選択させる。
+        /// </summary>
         public async UniTask SelectStrategy(CancellationToken token)
         {
+            this.LogInfo("すべてのプレイヤーが行動を選択するのを待っています...");
             await UniTask.WhenAll(_players.Select(player => player.SelectStrategy(token)));
+            this.LogInfo("すべてのプレイヤーが行動の選択を完了しました。");
         }
     }
 }

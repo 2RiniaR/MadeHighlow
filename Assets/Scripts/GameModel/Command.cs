@@ -7,6 +7,7 @@ namespace RineaR.MadeHighlow.GameModel
     {
         public CommandQuickness quickness;
         public Figure figure;
+        public Session session;
         public List<Card> payCards;
         private ICommandRunner _runner;
 

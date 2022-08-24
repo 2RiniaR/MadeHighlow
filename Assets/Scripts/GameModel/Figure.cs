@@ -1,4 +1,4 @@
-﻿using System;
+﻿using RineaR.MadeHighlow.GameModel.Geometry;
 using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
@@ -33,15 +33,20 @@ namespace RineaR.MadeHighlow.GameModel
 
         private void RefreshReferences()
         {
-            fieldTransform = GetComponent<FieldTransform>() ?? throw new NullReferenceException();
-            entity = GetComponent<Entity>() ?? throw new NullReferenceException();
-            life = GetComponent<Life>() ?? throw new NullReferenceException();
+            fieldTransform = this.GetRequireComponent<FieldTransform>();
+            entity = this.GetRequireComponent<Entity>();
+            life = this.GetRequireComponent<Life>();
             session ??= GetComponentInParent<Session>();
         }
 
         public void FormatName()
         {
             name = $"Figure -  {fieldTransform.position}";
+        }
+
+        public void MoveTo(FieldVector3 position)
+        {
+            fieldTransform.position = position;
         }
     }
 }

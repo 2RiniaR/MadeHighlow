@@ -5,17 +5,26 @@ using Random = UnityEngine.Random;
 
 namespace RineaR.MadeHighlow.GameModel
 {
+    /// <summary>
+    ///     生存の概念。
+    /// </summary>
     [RequireComponent(typeof(Entity))]
     public class Life : MonoBehaviour
     {
+        [Header("Requirements")]
+        public Entity entity;
+
+        [Header("References on scene")]
+        public Session session;
+
+        [Header("States")]
         [Min(0)]
+        [Tooltip("現在の体力。")]
         public int health;
 
         [Min(0)]
+        [Tooltip("現在の体力の最大値。")]
         public int maxHealth;
-
-        public Session session;
-        public Entity entity;
 
         private void Reset()
         {

@@ -10,6 +10,7 @@ namespace RineaR.MadeHighlow.GameModel
     {
         public TileSetting setting;
         public FieldTransform fieldTransform;
+        public int elevation;
 
         private void Reset()
         {

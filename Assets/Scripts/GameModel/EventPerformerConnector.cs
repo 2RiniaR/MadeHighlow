@@ -9,16 +9,24 @@ namespace RineaR.MadeHighlow.GameModel
     {
         private readonly List<IEventPerformer> _performers = new();
 
+        private void OnDestroy()
+        {
+            foreach (var performer in new List<IEventPerformer>(_performers))
+            {
+                Disconnect(performer);
+            }
+        }
+
         public void Connect(IEventPerformer eventPerformer)
         {
             _performers.Add(eventPerformer);
-            Debug.Log($"{name}: Event Performer が接続されました。", this);
+            this.LogInfo("演出クライアントが接続されました。");
         }
 
         public void Disconnect(IEventPerformer eventPerformer)
         {
             _performers.Remove(eventPerformer);
-            Debug.Log($"{name}: Event Performer の接続が切断されました。", this);
+            this.LogInfo("演出クライアントの接続が切断されました。");
         }
 
         public async UniTask PerformToLatest(CancellationToken token)

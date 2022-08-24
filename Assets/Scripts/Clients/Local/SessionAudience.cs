@@ -22,7 +22,10 @@ namespace RineaR.MadeHighlow.Clients.Local
 
         private void OnDestroy()
         {
-            player.session.eventPerformerConnector.Disconnect(this);
+            if (player.session.eventPerformerConnector != null)
+            {
+                player.session.eventPerformerConnector.Disconnect(this);
+            }
         }
 
         public async UniTask PerformToLatest(CancellationToken token)

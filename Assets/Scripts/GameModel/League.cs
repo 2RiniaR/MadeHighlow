@@ -3,9 +3,14 @@ using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
 {
+    /// <summary>
+    ///     複数のフィギュアで構成されるチーム
+    /// </summary>
     public class League : MonoBehaviour
     {
+        [Header("References on scene")]
         public List<Figure> figures;
+
         public Player owner;
 
         private void Reset()
@@ -25,23 +30,14 @@ namespace RineaR.MadeHighlow.GameModel
 
         public void Join(Figure figure)
         {
-            if (figure.transform.parent != transform)
-            {
-                Debug.LogWarning("The joining figure must be place in children of the league.");
-                return;
-            }
-
             figures.Add(figure);
+            this.LogInfo($"フィギュア（{figure.name}）がチームに参加しました。");
         }
 
         public void Leave(Figure figure)
         {
             figures.Remove(figure);
-        }
-
-        public static League ContainerOf(Figure figure)
-        {
-            return figure.GetComponentInParent<League>();
+            this.LogInfo($"フィギュア（{figure.name}）がチームから脱退しました。");
         }
     }
 }

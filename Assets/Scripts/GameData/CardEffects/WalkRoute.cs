@@ -20,6 +20,8 @@ namespace RineaR.MadeHighlow.GameData.CardEffects
 
         private bool Validation()
         {
+            // 直前の移動方向と逆方向には、移動することができない。
+            // 
             return true;
         }
 

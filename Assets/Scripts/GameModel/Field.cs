@@ -6,9 +6,16 @@ using UnityEngine;
 
 namespace RineaR.MadeHighlow.GameModel
 {
+    /// <summary>
+    ///     ゲームの舞台となるフィールド。複数のタイルとエンティティで構成される。
+    /// </summary>
+    /// <remarks>
+    ///     各座標(h, w)において、タイルは2つ以上存在しないことを保証する。
+    /// </remarks>
     public class Field : MonoBehaviour
     {
         private List<FieldTransform> _objects = new();
+        private Dictionary<FieldVector2, Tile> _tiles = new();
         public ReadOnlyCollection<FieldTransform> Objects => _objects.AsReadOnly();
 
         private void Start()
@@ -19,6 +26,8 @@ namespace RineaR.MadeHighlow.GameModel
         private void CollectObjects()
         {
             _objects = GetComponentsInChildren<FieldTransform>().ToList();
+            _tiles = GetComponentsInChildren<Tile>()
+                .ToDictionary(tile => tile.fieldTransform.position.To2D(), tile => tile);
             _objects.Sort((obj1, obj2) =>
             {
                 var horizontalCompare = obj1.position.horizontal.CompareTo(obj2.position.horizontal);
@@ -89,6 +98,16 @@ namespace RineaR.MadeHighlow.GameModel
             {
                 fieldTransform.positionBindingMode = FieldTransform.PositionBindingMode.Lock;
             }
+        }
+
+        public Tile FindTileWithPosition(FieldVector2 position)
+        {
+            if (_tiles.TryGetValue(position, out var tile))
+            {
+                return tile;
+            }
+
+            return null;
         }
     }
 }
